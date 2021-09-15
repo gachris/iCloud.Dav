@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net40;netcoreapp3.1</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>iCloud.Dav.Core_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
+		<RepositoryUrl>https://github.com/gachris/iCloud.Api/tree/master/Api/iCloud.dav.Core</RepositoryUrl>
+		<Authors>gachris</Authors>
+		<DefineConstants Condition="'$(TargetFramework)'=='net40'">net40</DefineConstants>
+		<DefineConstants Condition="'$(TargetFramework)'!='net40'">others_frameworks</DefineConstants>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net40'">
+		<PackageReference Include="Microsoft.Bcl" Version="1.1.10" />
+		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
+		<PackageReference Include="Microsoft.Bcl.Build" Version="1.0.14" />
+		<PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<Target Name="CopyPackage" AfterTargets="Pack" Condition=" '$(Configuration)' == 'Debug'">
+		<Exec Command="xcopy /Y &quot;$(ProjectDir)bin\Debug\*.*&quot; &quot;C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\&quot;" />
+	</Target>
+
+</Project>

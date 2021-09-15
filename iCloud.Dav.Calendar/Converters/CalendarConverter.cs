@@ -1,0 +1,42 @@
+﻿using iCloud.Dav.Calendar.Types;
+using iCloud.Dav.Calendar.Utils;
+using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+
+namespace iCloud.Dav.Calendar.Converters
+{
+    internal class CalendarConverter : TypeConverter
+    {
+        /// <summary>
+        /// TypeConverter method override.
+        /// </summary>
+        /// <param name="context">ITypeDescriptorContext</param>
+        /// <param name="sourceType">Type to convert from</param>
+        /// <returns>true if conversion is possible</returns>
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(Multistatus<Prop>))
+                return true;
+            return false;
+        }
+
+        /// <summary>
+        /// TypeConverter method implementation.
+        /// </summary>
+        /// <param name="context">ITypeDescriptorContext</param>
+        /// <param name="culture">current culture (see CLR specs)</param>
+        /// <param name="value">value to convert from</param>
+        /// <returns>value that is result of conversion</returns>
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value != null)
+            {
+                var multistatusItem = ((Multistatus<Prop>)value).Responses?.FirstOrDefault();
+                return multistatusItem.ToCalendar();
+            }
+            throw GetConvertFromException(value);
+        }
+    }
+}

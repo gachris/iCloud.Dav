@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net40;netcoreapp3.1</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Authors>gachris</Authors>
+		<RepositoryUrl>https://github.com/gachris/iCloud.Api/tree/master/Api/iCloud.dav.People</RepositoryUrl>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>iCloud.Dav.People_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
+		<DefineConstants Condition="'$(TargetFramework)'=='net40'">net40</DefineConstants>
+		<DefineConstants Condition="'$(TargetFramework)'!='net40'">others_frameworks</DefineConstants>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net40'">
+		<PackageReference Include="Microsoft.Bcl" Version="1.1.10" />
+		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
+		<PackageReference Include="Microsoft.Bcl.Build" Version="1.0.14" />
+		<PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="antlr.runtime">
+			<HintPath>..\Reference\Ical.Net.2.3.0\antlr.runtime.dll</HintPath>
+		</Reference>
+		<Reference Include="Ical.Net">
+			<HintPath>..\Reference\Ical.Net.2.3.0\Ical.Net.dll</HintPath>
+		</Reference>
+		<Reference Include="ICalVCard">
+			<HintPath>..\Reference\ICalVCard.1.0.0\ICalVCard.dll</HintPath>
+		</Reference>
+		<Reference Include="NodaTime">
+			<HintPath>..\Reference\Ical.Net.2.3.0\NodaTime.dll</HintPath>
+		</Reference>
+		<Content Include="..\Reference\Ical.Net.2.3.0\antlr.runtime.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\net40</PackagePath>
+		</Content>
+		<Content Include="..\Reference\Ical.Net.2.3.0\antlr.runtime.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\netcoreapp3.1</PackagePath>
+		</Content>
+		<Content Include="..\Reference\Ical.Net.2.3.0\Ical.Net.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\net40</PackagePath>
+		</Content>
+		<Content Include="..\Reference\Ical.Net.2.3.0\Ical.Net.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\netcoreapp3.1</PackagePath>
+		</Content>
+		<Content Include="..\Reference\ICalVCard.1.0.0\ICalVCard.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\net40</PackagePath>
+		</Content>
+		<Content Include="..\Reference\ICalVCard.1.0.0\ICalVCard.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\netcoreapp3.1</PackagePath>
+		</Content>
+		<Content Include="..\Reference\Ical.Net.2.3.0\NodaTime.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\net40</PackagePath>
+		</Content>
+		<Content Include="..\Reference\Ical.Net.2.3.0\NodaTime.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\netcoreapp3.1</PackagePath>
+		</Content>
+		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
+		<ProjectReference Include="..\iCloud.Dav.Core\iCloud.Dav.Core.csproj" />
+	</ItemGroup>
+
+	<Target Name="CopyPackage" AfterTargets="Pack" Condition=" '$(Configuration)' == 'Debug'">
+		<Exec Command="xcopy /Y &quot;$(ProjectDir)bin\Debug\*.*&quot; &quot;C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\&quot;" />
+	</Target>
+
+</Project>

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Include="..\iCloud.Sync.App.net40\Program.cs" Link="Program.cs" />
+	</ItemGroup>
+
+</Project>

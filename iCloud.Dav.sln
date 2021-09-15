@@ -1,0 +1,87 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{F84F9D75-1D2E-4054-AA74-211066AE7486}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{7669B0E5-A101-402D-B385-2E040F2C6FC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ICalVCard.1.0.0", "ICalVCard.1.0.0", "{8BA09AA0-4A52-4B5E-9AC7-F84E215432C2}"
+	ProjectSection(SolutionItems) = preProject
+		Reference\ICalVCard.1.0.0\ICalVCard.dll = Reference\ICalVCard.1.0.0\ICalVCard.dll
+		Reference\ICalVCard.1.0.0\ICalVCard.xml = Reference\ICalVCard.1.0.0\ICalVCard.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ical.Net.2.3.0", "Ical.Net.2.3.0", "{FF4B02C5-D25F-40AF-BAE8-89F1FBDC8238}"
+	ProjectSection(SolutionItems) = preProject
+		Reference\Ical.Net.2.3.0\antlr.runtime.dll = Reference\Ical.Net.2.3.0\antlr.runtime.dll
+		Reference\Ical.Net.2.3.0\antlr.runtime.xml = Reference\Ical.Net.2.3.0\antlr.runtime.xml
+		Reference\Ical.Net.2.3.0\Ical.Net.Collections.dll = Reference\Ical.Net.2.3.0\Ical.Net.Collections.dll
+		Reference\Ical.Net.2.3.0\Ical.Net.dll = Reference\Ical.Net.2.3.0\Ical.Net.dll
+		Reference\Ical.Net.2.3.0\Ical.Net.xml = Reference\Ical.Net.2.3.0\Ical.Net.xml
+		Reference\Ical.Net.2.3.0\NodaTime.dll = Reference\Ical.Net.2.3.0\NodaTime.dll
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Sync.App.netcoreapp3.1", "iCloud.Sync.App.netcoreapp3.1\iCloud.Sync.App.netcoreapp3.1.csproj", "{F6EF85E9-CF84-40A4-9C3E-59D163DC54B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCloud.Sync.App.net40", "iCloud.Sync.App.net40\iCloud.Sync.App.net40.csproj", "{5A160432-0D46-4549-8A9C-EB7295A30DAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Auth", "iCloud.dav.Auth\iCloud.Dav.Auth.csproj", "{729FB11E-E019-451B-B67D-7E5F2EEC04E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar", "iCloud.dav.Calendar\iCloud.Dav.Calendar.csproj", "{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Core", "iCloud.dav.Core\iCloud.Dav.Core.csproj", "{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.People", "iCloud.dav.People\iCloud.Dav.People.csproj", "{406FFBB4-1168-4844-809B-047A695E12A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCloud.Dav.UnitTest", "iCloud.dav.UnitTest\iCloud.Dav.UnitTest.csproj", "{094AB791-5D12-4172-9CD3-8FA6AED0FD86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6EF85E9-CF84-40A4-9C3E-59D163DC54B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6EF85E9-CF84-40A4-9C3E-59D163DC54B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6EF85E9-CF84-40A4-9C3E-59D163DC54B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6EF85E9-CF84-40A4-9C3E-59D163DC54B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A160432-0D46-4549-8A9C-EB7295A30DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A160432-0D46-4549-8A9C-EB7295A30DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A160432-0D46-4549-8A9C-EB7295A30DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A160432-0D46-4549-8A9C-EB7295A30DAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{406FFBB4-1168-4844-809B-047A695E12A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{406FFBB4-1168-4844-809B-047A695E12A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{406FFBB4-1168-4844-809B-047A695E12A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{406FFBB4-1168-4844-809B-047A695E12A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{094AB791-5D12-4172-9CD3-8FA6AED0FD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{094AB791-5D12-4172-9CD3-8FA6AED0FD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{094AB791-5D12-4172-9CD3-8FA6AED0FD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{094AB791-5D12-4172-9CD3-8FA6AED0FD86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8BA09AA0-4A52-4B5E-9AC7-F84E215432C2} = {7669B0E5-A101-402D-B385-2E040F2C6FC3}
+		{FF4B02C5-D25F-40AF-BAE8-89F1FBDC8238} = {7669B0E5-A101-402D-B385-2E040F2C6FC3}
+		{F6EF85E9-CF84-40A4-9C3E-59D163DC54B9} = {F84F9D75-1D2E-4054-AA74-211066AE7486}
+		{5A160432-0D46-4549-8A9C-EB7295A30DAD} = {F84F9D75-1D2E-4054-AA74-211066AE7486}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1A95244-02F6-4521-A76A-67E543384CFA}
+	EndGlobalSection
+EndGlobal
