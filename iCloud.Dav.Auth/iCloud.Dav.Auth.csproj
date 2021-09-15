@@ -6,17 +6,17 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>iCloud.Dav.Auth_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
-		<RepositoryUrl>https://github.com/gachris/iCloud.Api/tree/master/Api/iCloud.dav.Auth</RepositoryUrl>
+		<RepositoryUrl>https://github.com/gachris/iCloud.Dav/tree/master/iCloud.Dav.Auth</RepositoryUrl>
 		<Authors>gachris</Authors>
-		<DefineConstants Condition="'$(TargetFramework)'=='net40'">net40</DefineConstants>
-		<DefineConstants Condition="'$(TargetFramework)'!='net40'">others_frameworks</DefineConstants>
 		<PackageId>iCloud.Dav.Auth</PackageId>
 		<Product>iCloud.Dav.Auth</Product>
+		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav</PackageProjectUrl>
+		<Copyright>Copyright © 2021.</Copyright>
+		<Description>Package for accessing contacts and calendars of the iCloud provider with the CalDav / CardDav protocol.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<NoWarn>1701;1702;1591</NoWarn>
+		<DefineConstants Condition="'$(TargetFramework)'=='net40'">net40</DefineConstants>
+		<DefineConstants Condition="'$(TargetFramework)'!='net40'">others_frameworks</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='net40'">
