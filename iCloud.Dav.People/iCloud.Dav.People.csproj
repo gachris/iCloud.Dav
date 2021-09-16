@@ -70,7 +70,6 @@
 			<PackagePath>lib\netcoreapp3.1</PackagePath>
 		</Content>
 		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
-		<ProjectReference Include="..\iCloud.Dav.Core\iCloud.Dav.Core.csproj" />
 	</ItemGroup>
 
 </Project>

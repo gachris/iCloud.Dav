@@ -10,4 +10,9 @@
 	  <Compile Include="..\iCloud.Sync.App.net40\Program.cs" Link="Program.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="iCloud.Dav.Calendar" Version="1.0.0" />
+	  <PackageReference Include="iCloud.Dav.People" Version="1.0.0" />
+	</ItemGroup>
+
 </Project>

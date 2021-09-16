@@ -27,7 +27,7 @@ namespace iCloud.Sync.App
 
         public static void EventsCalendar()
         {
-            CalendarService service = GetService();
+            CalendarService service = GetCalendarService();
             string eventId = Guid.NewGuid().ToString().ToUpper();
             string calendarId = Guid.NewGuid().ToString().ToUpper();
 
@@ -93,7 +93,7 @@ namespace iCloud.Sync.App
 
         public static void RemindersCalendar()
         {
-            CalendarService service = GetService();
+            CalendarService service = GetCalendarService();
             string calendarId = Guid.NewGuid().ToString().ToUpper();
             string reminderId = Guid.NewGuid().ToString().ToUpper();
 
@@ -459,10 +459,10 @@ namespace iCloud.Sync.App
             }
         }
 
-        private static CalendarService _service;
-        private static CalendarService GetService()
+        private static CalendarService _calendarService;
+        private static CalendarService GetCalendarService()
         {
-            if (_service == null)
+            if (_calendarService == null)
             {
                 IDataStore dataStore = new FileDataStore("icloudStore");
 
@@ -474,13 +474,13 @@ namespace iCloud.Sync.App
                     .GetAwaiter()
                     .GetResult();
 
-                _service = new CalendarService(new BaseClientService.Initializer()
+                _calendarService = new CalendarService(new BaseClientService.Initializer()
                 {
                     ApplicationName = "iCloud.SyncApp",
                     HttpClientInitializer = credential
                 });
             }
-            return _service;
+            return _calendarService;
         }
 
         private static NetworkCredential _networkCredential;
