@@ -1,18 +1,10 @@
 ﻿using Ical.Net.DataTypes;
-using iCloud.Dav.Auth;
-using iCloud.Dav.Auth.Utils.Store;
 using iCloud.Dav.Calendar;
-using iCloud.Dav.Calendar.Resources;
 using iCloud.Dav.Calendar.Services;
-using iCloud.Dav.Core.Response;
-using iCloud.Dav.Core.Services;
 using iCloud.Dav.People;
-using iCloud.Dav.People.Resources;
 using iCloud.Dav.People.Services;
 using System;
 using System.Linq;
-using System.Net;
-using System.Threading;
 
 namespace iCloud.Sync.App
 {
@@ -27,7 +19,7 @@ namespace iCloud.Sync.App
 
         public static void EventsCalendar()
         {
-            CalendarService service = GetCalendarService();
+            CalendarService service = Services.GetCalendarService();
             string eventId = Guid.NewGuid().ToString().ToUpper();
             string calendarId = Guid.NewGuid().ToString().ToUpper();
 
@@ -93,7 +85,7 @@ namespace iCloud.Sync.App
 
         public static void RemindersCalendar()
         {
-            CalendarService service = GetCalendarService();
+            CalendarService service = Services.GetCalendarService();
             string calendarId = Guid.NewGuid().ToString().ToUpper();
             string reminderId = Guid.NewGuid().ToString().ToUpper();
 
@@ -157,7 +149,7 @@ namespace iCloud.Sync.App
 
         public static void People()
         {
-            PeopleService service = GetPeopleService();
+            PeopleService service = Services.GetPeopleService();
             string personId = Guid.NewGuid().ToString().ToUpper();
             string contactGroupId = Guid.NewGuid().ToString().ToUpper();
 
@@ -219,105 +211,6 @@ namespace iCloud.Sync.App
             var contactGroupDeleteResponseObject = ContactGroupMethods.Delete(service.ContactGroups, contactGroupId, resourceName);
         }
 
-        class IdentityCardMethods
-        {
-            public static IdentityCardList GetList(IdentityCardResource identityCardResource)
-            {
-                IdentityCardResource.ListRequest listRequest = identityCardResource.List();
-                return listRequest.Execute();
-            }
-        }
-
-        class ContactGroupMethods
-        {
-            public static ContactGroupsList GetList(ContactGroupsResource contactGroupsResource, string resourceName)
-            {
-                ContactGroupsResource.ListRequest listRequest = contactGroupsResource.List(resourceName);
-                return listRequest.Execute();
-            }
-
-            public static ContactGroup Get(ContactGroupsResource contactGroupsResource, string uniqueId, string resourceName)
-            {
-                ContactGroupsResource.GetRequest getRequest = contactGroupsResource.Get(uniqueId, resourceName);
-                return getRequest.Execute();
-            }
-
-            public static InsertResponseObject Insert(ContactGroupsResource contactGroupsResource, ContactGroup contactGroup, string resourceName)
-            {
-                ContactGroupsResource.InsertRequest insertRequest = contactGroupsResource.Insert(contactGroup, resourceName);
-                return insertRequest.Execute();
-            }
-
-            public static UpdateResponseObject Update(ContactGroupsResource contactGroupsResource, ContactGroup contactGroup, string resourceName)
-            {
-                ContactGroupsResource.UpdateRequest updateRequest = contactGroupsResource.Update(contactGroup, resourceName);
-                return updateRequest.Execute();
-            }
-
-            public static DeleteResponseObject Delete(ContactGroupsResource contactGroupsResource, string uniqueId, string resourceName)
-            {
-                ContactGroupsResource.DeleteRequest deleteRequest = contactGroupsResource.Delete(uniqueId, resourceName);
-                return deleteRequest.Execute();
-            }
-        }
-
-        class PeopleMethods
-        {
-            public static PersonList GetList(PeopleResource peopleResource, string resourceName)
-            {
-                PeopleResource.ListRequest listRequest = peopleResource.List(resourceName);
-                return listRequest.Execute();
-            }
-
-            public static Person Get(PeopleResource peopleResource, string uniqueId, string resourceName)
-            {
-                PeopleResource.GetRequest getRequest = peopleResource.Get(uniqueId, resourceName);
-                return getRequest.Execute();
-            }
-
-            public static InsertResponseObject Insert(PeopleResource peopleResource, Person person, string resourceName)
-            {
-                PeopleResource.InsertRequest insertRequest = peopleResource.Insert(person, resourceName);
-                return insertRequest.Execute();
-            }
-
-            public static UpdateResponseObject Update(PeopleResource peopleResource, Person person, string resourceName)
-            {
-                PeopleResource.UpdateRequest updateRequest = peopleResource.Update(person, resourceName);
-                return updateRequest.Execute();
-            }
-
-            public static DeleteResponseObject Delete(PeopleResource peopleResource, string uniqueId, string resourceName)
-            {
-                PeopleResource.DeleteRequest deleteRequest = peopleResource.Delete(uniqueId, resourceName);
-                return deleteRequest.Execute();
-            }
-        }
-
-        private static PeopleService _peopleService;
-        private static PeopleService GetPeopleService()
-        {
-            if (_peopleService == null)
-            {
-                IDataStore dataStore = new FileDataStore("icloudStore");
-
-                UserCredential credential = AuthorizationBroker.AuthorizeAsync("gachris",
-                    NetworkCredential,
-                    CancellationToken.None,
-                    dataStore)
-                    .ConfigureAwait(false)
-                    .GetAwaiter()
-                    .GetResult();
-
-                _peopleService = new PeopleService(new BaseClientService.Initializer()
-                {
-                    ApplicationName = "iCloud.SyncApp",
-                    HttpClientInitializer = credential
-                });
-            }
-            return _peopleService;
-        }
-
         public void AddTimezone()
         {
             //var timezone = Ical.Net.VTimeZone.FromSystemTimeZone(TimeZoneInfo.Local, DateTime.Now, true);
@@ -358,142 +251,6 @@ namespace iCloud.Sync.App
                 return universalTimeString;
             }
             return default;
-        }
-
-        class CalendarMethods
-        {
-            public static CalendarEntryList GetList(CalendarsResource calendarsResource)
-            {
-                CalendarsResource.ListRequest listRequest = calendarsResource.List();
-                return listRequest.Execute();
-            }
-
-            public static CalendarEntry Get(CalendarsResource calendarsResource, string calendarId)
-            {
-                CalendarsResource.GetRequest getRequest = calendarsResource.Get(calendarId);
-                return getRequest.Execute();
-            }
-
-            public static InsertResponseObject Insert(CalendarsResource calendarsResource, CalendarEntry calendarEntry)
-            {
-                CalendarsResource.InsertRequest insertRequest = calendarsResource.Insert(calendarEntry);
-                return insertRequest.Execute();
-            }
-
-            public static UpdateResponseObject Update(CalendarsResource calendarsResource, CalendarEntry calendarEntry)
-            {
-                CalendarsResource.UpdateRequest updateRequest = calendarsResource.Update(calendarEntry);
-                return updateRequest.Execute();
-            }
-
-            public static DeleteResponseObject Delete(CalendarsResource calendarsResource, string calendarId)
-            {
-                CalendarsResource.DeleteRequest deleteRequest = calendarsResource.Delete(calendarId);
-                return deleteRequest.Execute();
-            }
-        }
-
-        class EventMethods
-        {
-            public static EventList GetList(EventsResource eventsResource, string calendarId)
-            {
-                EventsResource.ListRequest request = eventsResource.List(calendarId);
-                return request.Execute();
-            }
-
-            public static Event Get(EventsResource eventsResource, string calendarId, string eventId)
-            {
-                EventsResource.GetRequest request = eventsResource.Get(calendarId, eventId);
-                return request.Execute();
-            }
-
-            public static InsertResponseObject Insert(EventsResource eventsResource, Event @event, string calendarId)
-            {
-                EventsResource.InsertRequest request = eventsResource.Insert(@event, calendarId);
-                return request.Execute();
-            }
-
-            public static UpdateResponseObject Update(EventsResource eventsResource, Event @event, string calendarId)
-            {
-                EventsResource.UpdateRequest request = eventsResource.Update(@event, calendarId);
-                return request.Execute();
-            }
-
-            public static DeleteResponseObject Delete(EventsResource eventsResource, string calendarId, string eventId)
-            {
-                EventsResource.DeleteRequest request = eventsResource.Delete(calendarId, eventId);
-                return request.Execute();
-            }
-        }
-
-        class ReminderMethods
-        {
-            public static ReminderList GetList(RemindersResource eventsResource, string calendarId)
-            {
-                RemindersResource.ListRequest request = eventsResource.List(calendarId);
-                return request.Execute();
-            }
-
-            public static Reminder Get(RemindersResource eventsResource, string calendarId, string reminderId)
-            {
-                RemindersResource.GetRequest request = eventsResource.Get(calendarId, reminderId);
-                return request.Execute();
-            }
-
-            public static InsertResponseObject Insert(RemindersResource eventsResource, Reminder reminder, string calendarId)
-            {
-                RemindersResource.InsertRequest request = eventsResource.Insert(reminder, calendarId);
-                return request.Execute();
-            }
-
-            public static UpdateResponseObject Update(RemindersResource eventsResource, Reminder reminder, string calendarId)
-            {
-                RemindersResource.UpdateRequest request = eventsResource.Update(reminder, calendarId);
-                return request.Execute();
-            }
-
-            public static DeleteResponseObject Delete(RemindersResource eventsResource, string calendarId, string reminderId)
-            {
-                RemindersResource.DeleteRequest request = eventsResource.Delete(calendarId, reminderId);
-                return request.Execute();
-            }
-        }
-
-        private static CalendarService _calendarService;
-        private static CalendarService GetCalendarService()
-        {
-            if (_calendarService == null)
-            {
-                IDataStore dataStore = new FileDataStore("icloudStore");
-
-                UserCredential credential = AuthorizationBroker.AuthorizeAsync("gachris",
-                    NetworkCredential,
-                    CancellationToken.None,
-                    dataStore)
-                    .ConfigureAwait(false)
-                    .GetAwaiter()
-                    .GetResult();
-
-                _calendarService = new CalendarService(new BaseClientService.Initializer()
-                {
-                    ApplicationName = "iCloud.SyncApp",
-                    HttpClientInitializer = credential
-                });
-            }
-            return _calendarService;
-        }
-
-        private static NetworkCredential _networkCredential;
-        public static NetworkCredential NetworkCredential
-        {
-            get
-            {
-                if (_networkCredential == null)
-                {
-                    _networkCredential = new NetworkCredential("icloud.email", "icloud.app-specific-password");
-                }
-                return _networkCredential;
-            }
         }
     }
 }
