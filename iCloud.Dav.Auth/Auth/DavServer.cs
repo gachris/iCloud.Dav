@@ -29,12 +29,12 @@ namespace iCloud.Dav.Auth
         /// 
         /// </summary>
         [JsonProperty("id")]
-        public string Id { get; }
+        public string Id { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         [JsonProperty("url")]
-        public string Url { get; }
+        public string Url { get; set; }
     }
 }

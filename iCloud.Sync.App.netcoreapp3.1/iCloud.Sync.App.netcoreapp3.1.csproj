@@ -7,15 +7,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\iCloud.Sync.App.net40\Credentials.cs" Link="Credentials.cs" />
 	  <Compile Include="..\iCloud.Sync.App.net40\Program.cs" Link="Program.cs" />
 	  <Compile Include="..\iCloud.Sync.App.net40\ResourcesMethods.cs" Link="ResourcesMethods.cs" />
 	  <Compile Include="..\iCloud.Sync.App.net40\Services.cs" Link="Services.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="iCloud.Dav.Calendar" Version="1.0.0" />
-	  <PackageReference Include="iCloud.Dav.People" Version="1.0.0" />
+	  <PackageReference Include="iCloud.Dav.Calendar" Version="1.0.1" />
+	  <PackageReference Include="iCloud.Dav.People" Version="1.0.1" />
 	</ItemGroup>
 
 </Project>

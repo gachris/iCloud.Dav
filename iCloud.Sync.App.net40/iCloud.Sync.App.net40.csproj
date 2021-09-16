@@ -35,28 +35,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="antlr.runtime, Version=2.7.6.2, Culture=neutral, PublicKeyToken=33517596b1f7d484, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.People.1.0.0\lib\net40\antlr.runtime.dll</HintPath>
+      <HintPath>..\packages\iCloud.Dav.People.1.0.1\lib\net40\antlr.runtime.dll</HintPath>
     </Reference>
     <Reference Include="Ical.Net, Version=2.1.0.30342, Culture=neutral, PublicKeyToken=33517596b1f7d484, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.People.1.0.0\lib\net40\Ical.Net.dll</HintPath>
+      <HintPath>..\packages\iCloud.Dav.People.1.0.1\lib\net40\Ical.Net.dll</HintPath>
     </Reference>
     <Reference Include="Ical.Net.Collections, Version=2.1.0.30341, Culture=neutral, PublicKeyToken=33517596b1f7d484, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.Calendar.1.0.0\lib\net40\Ical.Net.Collections.dll</HintPath>
+      <HintPath>..\packages\iCloud.Dav.Calendar.1.0.1\lib\net40\Ical.Net.Collections.dll</HintPath>
     </Reference>
     <Reference Include="ICalVCard, Version=1.0.0.4, Culture=neutral, PublicKeyToken=26a5cf2f11806274, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.People.1.0.0\lib\net40\ICalVCard.dll</HintPath>
+      <HintPath>..\packages\iCloud.Dav.People.1.0.1\lib\net40\ICalVCard.dll</HintPath>
     </Reference>
-    <Reference Include="iCloud.Dav.Auth, Version=1.0.0.0, Culture=neutral, PublicKeyToken=778e3f9e072be1f8, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.Auth.1.0.0\lib\net40\iCloud.Dav.Auth.dll</HintPath>
+    <Reference Include="iCloud.Dav.Auth, Version=1.0.1.0, Culture=neutral, PublicKeyToken=778e3f9e072be1f8, processorArchitecture=MSIL">
+      <HintPath>..\packages\iCloud.Dav.Auth.1.0.1\lib\net40\iCloud.Dav.Auth.dll</HintPath>
     </Reference>
-    <Reference Include="iCloud.Dav.Calendar, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1658affd531a48d0, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.Calendar.1.0.0\lib\net40\iCloud.Dav.Calendar.dll</HintPath>
+    <Reference Include="iCloud.Dav.Calendar, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1658affd531a48d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\iCloud.Dav.Calendar.1.0.1\lib\net40\iCloud.Dav.Calendar.dll</HintPath>
     </Reference>
-    <Reference Include="iCloud.Dav.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b61575b2f6f24c72, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.Core.1.0.0\lib\net40\iCloud.Dav.Core.dll</HintPath>
+    <Reference Include="iCloud.Dav.Core, Version=1.0.1.0, Culture=neutral, PublicKeyToken=b61575b2f6f24c72, processorArchitecture=MSIL">
+      <HintPath>..\packages\iCloud.Dav.Core.1.0.1\lib\net40\iCloud.Dav.Core.dll</HintPath>
     </Reference>
-    <Reference Include="iCloud.Dav.People, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e85bb97d6e99604e, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.People.1.0.0\lib\net40\iCloud.Dav.People.dll</HintPath>
+    <Reference Include="iCloud.Dav.People, Version=1.0.1.0, Culture=neutral, PublicKeyToken=e85bb97d6e99604e, processorArchitecture=MSIL">
+      <HintPath>..\packages\iCloud.Dav.People.1.0.1\lib\net40\iCloud.Dav.People.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
@@ -71,7 +71,7 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NodaTime, Version=1.3.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
-      <HintPath>..\packages\iCloud.Dav.People.1.0.0\lib\net40\NodaTime.dll</HintPath>
+      <HintPath>..\packages\iCloud.Dav.People.1.0.1\lib\net40\NodaTime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -105,7 +105,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Credentials.cs" />
     <Compile Include="Services.cs" />
     <Compile Include="ResourcesMethods.cs" />
     <Compile Include="Program.cs" />

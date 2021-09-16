@@ -221,7 +221,7 @@ namespace iCloud.Dav.UnitTest
 
 
         [TestMethod]
-        public void PeopleTestMethod()
+        public void People()
         {
             PeopleService service = Services.GetPeopleService();
             string personId = Guid.NewGuid().ToString().ToUpper();

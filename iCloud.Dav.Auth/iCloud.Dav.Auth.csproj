@@ -17,6 +17,7 @@
 		<NoWarn>1701;1702;1591</NoWarn>
 		<DefineConstants Condition="'$(TargetFramework)'=='net40'">net40</DefineConstants>
 		<DefineConstants Condition="'$(TargetFramework)'!='net40'">others_frameworks</DefineConstants>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='net40'">

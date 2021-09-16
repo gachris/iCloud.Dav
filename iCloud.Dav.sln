@@ -27,15 +27,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Sync.App.netcoreapp3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCloud.Sync.App.net40", "iCloud.Sync.App.net40\iCloud.Sync.App.net40.csproj", "{5A160432-0D46-4549-8A9C-EB7295A30DAD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Auth", "iCloud.dav.Auth\iCloud.Dav.Auth.csproj", "{729FB11E-E019-451B-B67D-7E5F2EEC04E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Auth", "iCloud.Dav.Auth\iCloud.Dav.Auth.csproj", "{729FB11E-E019-451B-B67D-7E5F2EEC04E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar", "iCloud.dav.Calendar\iCloud.Dav.Calendar.csproj", "{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar", "iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj", "{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Core", "iCloud.dav.Core\iCloud.Dav.Core.csproj", "{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Core", "iCloud.Dav.Core\iCloud.Dav.Core.csproj", "{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.People", "iCloud.dav.People\iCloud.Dav.People.csproj", "{406FFBB4-1168-4844-809B-047A695E12A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.People", "iCloud.Dav.People\iCloud.Dav.People.csproj", "{406FFBB4-1168-4844-809B-047A695E12A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCloud.Dav.UnitTest", "iCloud.dav.UnitTest\iCloud.Dav.UnitTest.csproj", "{094AB791-5D12-4172-9CD3-8FA6AED0FD86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCloud.Dav.UnitTest", "iCloud.Dav.UnitTest\iCloud.Dav.UnitTest.csproj", "{094AB791-5D12-4172-9CD3-8FA6AED0FD86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
