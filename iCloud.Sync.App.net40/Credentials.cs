@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace iCloud.Dav.UnitTest
+namespace iCloud.Sync.App
 {
     public static class Credentials
     {
@@ -11,7 +11,7 @@ namespace iCloud.Dav.UnitTest
             {
                 if (_networkCredential == null)
                 {
-                    _networkCredential = new NetworkCredential("icloud.email", "icloud.app-specific-password");
+                    _networkCredential = new NetworkCredential("christosgatzos@gmail.com", "qvuo-sfko-rklg-mgbi");
                 }
                 return _networkCredential;
             }

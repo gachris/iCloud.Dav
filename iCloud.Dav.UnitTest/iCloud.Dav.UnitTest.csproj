@@ -64,9 +64,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Credentials.cs" />
-    <Compile Include="PeopleServiceTest.cs" />
-    <Compile Include="CalendarServiceTest.cs" />
+    <Compile Include="..\iCloud.Sync.App.net40\Credentials.cs">
+      <Link>Credentials.cs</Link>
+    </Compile>
+    <Compile Include="..\iCloud.Sync.App.net40\ResourcesMethods.cs">
+      <Link>ResourcesMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\iCloud.Sync.App.net40\Services.cs">
+      <Link>Services.cs</Link>
+    </Compile>
+    <Compile Include="Resources.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
