@@ -1,22 +1,26 @@
 ﻿using Ical.Net.DataTypes;
+using iCloud.Dav.Auth;
+using iCloud.Dav.Auth.Utils.Store;
 using iCloud.Dav.Calendar;
+using iCloud.Dav.Calendar.Resources;
 using iCloud.Dav.Calendar.Services;
-using iCloud.Dav.People;
-using iCloud.Dav.People.Services;
-using iCloud.Sync.App;
+using iCloud.Dav.Core.Response;
+using iCloud.Dav.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using System.Net;
+using System.Threading;
 
 namespace iCloud.Dav.UnitTest
 {
     [TestClass]
-    public class Resources
+    public class CalendarServiceTest
     {
         [TestMethod]
         public void EventsCalendar()
         {
-            CalendarService service = Services.GetCalendarService();
+            CalendarService service = GetService();
             string eventId = Guid.NewGuid().ToString().ToUpper();
             string calendarId = Guid.NewGuid().ToString().ToUpper();
 
@@ -121,7 +125,7 @@ namespace iCloud.Dav.UnitTest
         [TestMethod]
         public void RemindersCalendar()
         {
-            CalendarService service = Services.GetCalendarService();
+            CalendarService service = GetService();
             string calendarId = Guid.NewGuid().ToString().ToUpper();
             string reminderId = Guid.NewGuid().ToString().ToUpper();
 
@@ -219,72 +223,6 @@ namespace iCloud.Dav.UnitTest
             Assert.IsNotNull(calendarDeleteResponseObject);
         }
 
-
-        [TestMethod]
-        public void PeopleTestMethod()
-        {
-            PeopleService service = Services.GetPeopleService();
-            string personId = Guid.NewGuid().ToString().ToUpper();
-            string contactGroupId = Guid.NewGuid().ToString().ToUpper();
-
-            // get identity cards
-            IdentityCardList identityCards = IdentityCardMethods.GetList(service.IdentityCard);
-
-            // get resourceName
-            string resourceName = identityCards.FirstOrDefault().ResourceName;
-
-            // create new contactGroup 
-            ContactGroup contactGroup = new ContactGroup();
-            contactGroup.UniqueId = contactGroupId;
-            contactGroup.FamilyName = "New Group Description";
-            contactGroup.FormattedName = "New Group Description";
-
-            // insert contact group
-            var contactGroupInsertResponseObject = ContactGroupMethods.Insert(service.ContactGroups, contactGroup, resourceName);
-
-            // create new person 
-            Person person = new Person();
-            person.UniqueId = personId;
-            person.FamilyName = "New Contact Description";
-            person.FormattedName = "New Contact Description";
-
-            // insert person
-            var insertResponseObject = PeopleMethods.Insert(service.People, person, resourceName);
-
-            // get contact groups
-            ContactGroupsList contactGroups = ContactGroupMethods.GetList(service.ContactGroups, resourceName);
-
-            // get contact group
-            contactGroup = ContactGroupMethods.Get(service.ContactGroups, contactGroupId, resourceName);
-
-            // update contact group fields
-            contactGroup.FormattedName = "Updated Group Description";
-            contactGroup.FamilyName = "Updated Group Description";
-            contactGroup.MemberResourceNames.Add(personId);
-
-            // update contact group
-            var contactGroupUpdateResponseObject1 = ContactGroupMethods.Update(service.ContactGroups, contactGroup, resourceName);
-
-            // get persons 
-            PersonList personList = PeopleMethods.GetList(service.People, resourceName);
-
-            // get person
-            person = PeopleMethods.Get(service.People, personId, resourceName);
-
-            // update person fields
-            person.FormattedName = "Updated Contact Description";
-            person.FamilyName = "Updated Contact Description";
-
-            // update person
-            var updateResponseObject = PeopleMethods.Update(service.People, person, resourceName);
-
-            // delete person
-            var deleteResponseObject1 = PeopleMethods.Delete(service.People, personId, resourceName);
-
-            // delete contact group
-            var contactGroupDeleteResponseObject = ContactGroupMethods.Delete(service.ContactGroups, contactGroupId, resourceName);
-        }
-
         public void AddTimezone()
         {
             //var timezone = Ical.Net.VTimeZone.FromSystemTimeZone(TimeZoneInfo.Local, DateTime.Now, true);
@@ -325,6 +263,129 @@ namespace iCloud.Dav.UnitTest
                 return universalTimeString;
             }
             return default;
+        }
+
+        class CalendarMethods
+        {
+            public static CalendarEntryList GetList(CalendarsResource calendarsResource)
+            {
+                CalendarsResource.ListRequest listRequest = calendarsResource.List();
+                return listRequest.Execute();
+            }
+
+            public static CalendarEntry Get(CalendarsResource calendarsResource, string calendarId)
+            {
+                CalendarsResource.GetRequest getRequest = calendarsResource.Get(calendarId);
+                return getRequest.Execute();
+            }
+
+            public static InsertResponseObject Insert(CalendarsResource calendarsResource, CalendarEntry calendarEntry)
+            {
+                CalendarsResource.InsertRequest insertRequest = calendarsResource.Insert(calendarEntry);
+                return insertRequest.Execute();
+            }
+
+            public static UpdateResponseObject Update(CalendarsResource calendarsResource, CalendarEntry calendarEntry)
+            {
+                CalendarsResource.UpdateRequest updateRequest = calendarsResource.Update(calendarEntry);
+                return updateRequest.Execute();
+            }
+
+            public static DeleteResponseObject Delete(CalendarsResource calendarsResource, string calendarId)
+            {
+                CalendarsResource.DeleteRequest deleteRequest = calendarsResource.Delete(calendarId);
+                return deleteRequest.Execute();
+            }
+        }
+
+        class EventMethods
+        {
+            public static EventList GetList(EventsResource eventsResource, string calendarId)
+            {
+                EventsResource.ListRequest request = eventsResource.List(calendarId);
+                return request.Execute();
+            }
+
+            public static Event Get(EventsResource eventsResource, string calendarId, string eventId)
+            {
+                EventsResource.GetRequest request = eventsResource.Get(calendarId, eventId);
+                return request.Execute();
+            }
+
+            public static InsertResponseObject Insert(EventsResource eventsResource, Event @event, string calendarId)
+            {
+                EventsResource.InsertRequest request = eventsResource.Insert(@event, calendarId);
+                return request.Execute();
+            }
+
+            public static UpdateResponseObject Update(EventsResource eventsResource, Event @event, string calendarId)
+            {
+                EventsResource.UpdateRequest request = eventsResource.Update(@event, calendarId);
+                return request.Execute();
+            }
+
+            public static DeleteResponseObject Delete(EventsResource eventsResource, string calendarId, string eventId)
+            {
+                EventsResource.DeleteRequest request = eventsResource.Delete(calendarId, eventId);
+                return request.Execute();
+            }
+        }
+
+        class ReminderMethods
+        {
+            public static ReminderList GetList(RemindersResource eventsResource, string calendarId)
+            {
+                RemindersResource.ListRequest request = eventsResource.List(calendarId);
+                return request.Execute();
+            }
+
+            public static Reminder Get(RemindersResource eventsResource, string calendarId, string reminderId)
+            {
+                RemindersResource.GetRequest request = eventsResource.Get(calendarId, reminderId);
+                return request.Execute();
+            }
+
+            public static InsertResponseObject Insert(RemindersResource eventsResource, Reminder reminder, string calendarId)
+            {
+                RemindersResource.InsertRequest request = eventsResource.Insert(reminder, calendarId);
+                return request.Execute();
+            }
+
+            public static UpdateResponseObject Update(RemindersResource eventsResource, Reminder reminder, string calendarId)
+            {
+                RemindersResource.UpdateRequest request = eventsResource.Update(reminder, calendarId);
+                return request.Execute();
+            }
+
+            public static DeleteResponseObject Delete(RemindersResource eventsResource, string calendarId, string reminderId)
+            {
+                RemindersResource.DeleteRequest request = eventsResource.Delete(calendarId, reminderId);
+                return request.Execute();
+            }
+        }
+
+        private static CalendarService _service;
+        private static CalendarService GetService()
+        {
+            if (_service == null)
+            {
+                IDataStore dataStore = new FileDataStore("icloudStore");
+
+                UserCredential credential = AuthorizationBroker.AuthorizeAsync("gachris",
+                    Credentials.NetworkCredential, 
+                    CancellationToken.None,
+                    dataStore)
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
+
+                _service = new CalendarService(new BaseClientService.Initializer()
+                {
+                    ApplicationName = "iCloud.SyncApp",
+                    HttpClientInitializer = credential
+                });
+            }
+            return _service;
         }
     }
 }
