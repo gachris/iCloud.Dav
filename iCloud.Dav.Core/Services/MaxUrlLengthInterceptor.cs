@@ -30,29 +30,19 @@ namespace iCloud.Dav.Core.Services
         {
             if (request.Method != HttpMethod.Get || request.RequestUri.AbsoluteUri.Length <= maxUrlLength)
             {
-#if net40
-                return TaskEx.Delay(0);
-#endif
-#if others_frameworks
-                return Task.Delay(0);
-#endif
+                return Task.Delay(0, cancellationToken);
             }
             request.Method = HttpMethod.Post;
             string query = request.RequestUri.Query;
             if (!string.IsNullOrEmpty(query))
             {
-                request.Content = new StringContent(query.Substring(1));
+                request.Content = new StringContent(query[1..]);
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
                 string str = request.RequestUri.ToString();
                 request.RequestUri = (new Uri(str.Remove(str.IndexOf("?"))));
             }
             request.Headers.Add("X-HTTP-Method-Override", "GET");
-#if net40
-            return TaskEx.Delay(0);
-#endif
-#if others_frameworks
-            return Task.Delay(0);
-#endif
+            return Task.Delay(0, cancellationToken);
         }
     }
 }

@@ -54,7 +54,7 @@ namespace iCloud.Sync.App
                 .GetAwaiter()
                 .GetResult();
 
-            //// use this if you want to remove stored credentials
+            // use this if you want to remove stored credentials
             //credential.RevokeTokenAsync(CancellationToken.None).ConfigureAwait(false)
             //    .GetAwaiter()
             //    .GetResult();
@@ -69,7 +69,7 @@ namespace iCloud.Sync.App
             {
                 if (_networkCredential == null)
                 {
-                    _networkCredential = new NetworkCredential("xxxxxxxxx@xxx.com", "xxxx-xxxx-xxxx-xxxx");
+                    _networkCredential = new NetworkCredential("xxxxxx@xxxx.com", "xxxx-xxxx-xxxx-xxxx");
                 }
                 return _networkCredential;
             }

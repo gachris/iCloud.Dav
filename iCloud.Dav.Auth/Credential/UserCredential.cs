@@ -17,7 +17,7 @@ namespace iCloud.Dav.Auth
     {
         /// <summary>Gets Logger.</summary>
         protected static readonly ILogger Logger = ApplicationContext.Logger.ForType<UserCredential>();
-        private readonly object _lockObject = new object();
+        private readonly object _lockObject = new();
         private readonly IAuthorizationCodeFlow _flow;
         private readonly string _userId;
         private Token _token;
@@ -27,20 +27,20 @@ namespace iCloud.Dav.Auth
         {
             get
             {
-                lock (this._lockObject)
-                    return this._token;
+                lock (_lockObject)
+                    return _token;
             }
             set
             {
-                lock (this._lockObject)
-                    this._token = value;
+                lock (_lockObject)
+                    _token = value;
             }
         }
 
         /// <summary>Gets the user identity.</summary>
         public string UserId
         {
-            get { return this._userId; }
+            get { return _userId; }
         }
 
         /// <summary>Constructs a new credential instance.</summary>
@@ -49,9 +49,9 @@ namespace iCloud.Dav.Auth
         /// <param name="token">An initial token for the user.</param>
         public UserCredential(IAuthorizationCodeFlow flow, string userId, Token token)
         {
-            this._flow = flow;
-            this._userId = userId;
-            this._token = token;
+            _flow = flow;
+            _userId = userId;
+            _token = token;
         }
 
         /// <summary>
@@ -61,14 +61,9 @@ namespace iCloud.Dav.Auth
         /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
         public async Task InterceptAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            this.GetAccessTokenForRequestAsync();
-            this._flow.AccessMethod.Intercept(request, this.Token.AccessToken);
-#if net40
-            await TaskEx.Delay(0);
-#endif
-#if others_frameworks
-            await Task.Delay(0);
-#endif
+            GetAccessTokenForRequestAsync();
+            _flow.AccessMethod.Intercept(request, Token.AccessToken);
+            await Task.Delay(0, cancellationToken);
         }
 
         /// <summary>
@@ -84,13 +79,8 @@ namespace iCloud.Dav.Auth
         {
             if (args.Response.StatusCode != HttpStatusCode.Unauthorized)
                 return false;
-            bool flag = !object.Equals(Token.AccessToken, this._flow.AccessMethod.GetAccessToken(args.Request));
-#if net40
-            await TaskEx.Delay(0);
-#endif
-#if others_frameworks
+            bool flag = !object.Equals(Token.AccessToken, _flow.AccessMethod.GetAccessToken(args.Request));
             await Task.Delay(0);
-#endif
             return flag;
         }
 
@@ -108,8 +98,8 @@ namespace iCloud.Dav.Auth
         /// <returns>The access token.</returns>
         public virtual string GetAccessTokenForRequestAsync()
         {
-            if (this.Token != null)
-                return this.Token.AccessToken;
+            if (Token != null)
+                return Token.AccessToken;
             else return null;
         }
 
@@ -121,12 +111,12 @@ namespace iCloud.Dav.Auth
         /// <returns><c>true</c> if the token was revoked successfully.</returns>
         public async Task<bool> RevokeTokenAsync(CancellationToken cancellationToken)
         {
-            if (this.Token == null)
+            if (Token == null)
             {
                 UserCredential.Logger.Warning("Token is already null, no need to revoke it.");
                 return false;
             }
-            await this._flow.RevokeTokenAsync(this._userId, this.Token.AccessToken, cancellationToken).ConfigureAwait(false);
+            await _flow.RevokeTokenAsync(_userId, Token.AccessToken, cancellationToken).ConfigureAwait(false);
             UserCredential.Logger.Info("Access token was revoked successfully");
             return true;
         }
@@ -140,11 +130,11 @@ namespace iCloud.Dav.Auth
         {
             if (principal == PrincipalHomeSet.AddressBookHomeSet)
             {
-                return this.Token?.PeoplePrincipal?.AddressBookHomeSet;
+                return Token?.PeoplePrincipal?.AddressBookHomeSet;
             }
             else
             {
-                return this.Token?.CalendarPrincipal?.CalendarHomeSet;
+                return Token?.CalendarPrincipal?.CalendarHomeSet;
             }
         }
     }

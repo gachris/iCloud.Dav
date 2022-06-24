@@ -46,23 +46,23 @@ namespace iCloud.Dav.Core.Services
         /// <summary>Constructs a new back-off handler with the given initializer.</summary>
         public BackOffHandler(BackOffHandler.Initializer initializer)
         {
-            this.BackOff = initializer.BackOff;
-            this.MaxTimeSpan = initializer.MaxTimeSpan;
-            this.HandleExceptionFunc = initializer.HandleExceptionFunc;
-            this.HandleUnsuccessfulResponseFunc = initializer.HandleUnsuccessfulResponseFunc;
+            BackOff = initializer.BackOff;
+            MaxTimeSpan = initializer.MaxTimeSpan;
+            HandleExceptionFunc = initializer.HandleExceptionFunc;
+            HandleUnsuccessfulResponseFunc = initializer.HandleUnsuccessfulResponseFunc;
         }
 
         public virtual async Task<bool> HandleResponseAsync(HandleUnsuccessfulResponseArgs args)
         {
-            if (this.HandleUnsuccessfulResponseFunc != null && this.HandleUnsuccessfulResponseFunc(args.Response))
-                return await this.HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
+            if (HandleUnsuccessfulResponseFunc != null && HandleUnsuccessfulResponseFunc(args.Response))
+                return await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
             return false;
         }
 
         public virtual async Task<bool> HandleExceptionAsync(HandleExceptionArgs args)
         {
-            if (this.HandleExceptionFunc != null && this.HandleExceptionFunc(args.Exception))
-                return await this.HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
+            if (HandleExceptionFunc != null && HandleExceptionFunc(args.Exception))
+                return await HandleAsync(args.SupportsRetry, args.CurrentFailedTry, args.CancellationToken).ConfigureAwait(false);
             return false;
         }
 
@@ -74,12 +74,12 @@ namespace iCloud.Dav.Core.Services
         /// </summary>
         private async Task<bool> HandleAsync(bool supportsRetry, int currentFailedTry, CancellationToken cancellationToken)
         {
-            if (!supportsRetry || this.BackOff.MaxNumOfRetries < currentFailedTry)
+            if (!supportsRetry || BackOff.MaxNumOfRetries < currentFailedTry)
                 return false;
-            TimeSpan ts = this.BackOff.GetNextBackOff(currentFailedTry);
-            if (ts > this.MaxTimeSpan || ts < TimeSpan.Zero)
+            TimeSpan ts = BackOff.GetNextBackOff(currentFailedTry);
+            if (ts > MaxTimeSpan || ts < TimeSpan.Zero)
                 return false;
-            await this.Wait(ts, cancellationToken).ConfigureAwait(false);
+            await Wait(ts, cancellationToken).ConfigureAwait(false);
             BackOffHandler.Logger.Debug("Back-Off handled the error. Waited {0}ms before next retry...", (object)ts.TotalMilliseconds);
             return true;
         }
@@ -90,12 +90,7 @@ namespace iCloud.Dav.Core.Services
         /// the middle.</param>
         protected virtual async Task Wait(TimeSpan ts, CancellationToken cancellationToken)
         {
-#if net40
-            await TaskEx.Delay(ts, cancellationToken).ConfigureAwait(false);
-#endif
-#if others_frameworks
             await Task.Delay(ts, cancellationToken);
-#endif
         }
 
         /// <summary>An initializer class to initialize a back-off handler.</summary>
@@ -111,8 +106,8 @@ namespace iCloud.Dav.Core.Services
             /// </summary>
             public static readonly Func<Exception, bool> DefaultHandleExceptionFunc = ex =>
             {
-                if (!(ex is TaskCanceledException))
-                    return !(ex is OperationCanceledException);
+                if (ex is not TaskCanceledException)
+                    return ex is not OperationCanceledException;
                 return false;
             };
 
@@ -141,10 +136,10 @@ namespace iCloud.Dav.Core.Services
             /// <summary>Constructs a new initializer by the given back-off.</summary>
             public Initializer(IBackOff backOff)
             {
-                this.BackOff = backOff;
-                this.HandleExceptionFunc = BackOffHandler.Initializer.DefaultHandleExceptionFunc;
-                this.HandleUnsuccessfulResponseFunc = BackOffHandler.Initializer.DefaultHandleUnsuccessfulResponseFunc;
-                this.MaxTimeSpan = TimeSpan.FromSeconds(16.0);
+                BackOff = backOff;
+                HandleExceptionFunc = BackOffHandler.Initializer.DefaultHandleExceptionFunc;
+                HandleUnsuccessfulResponseFunc = BackOffHandler.Initializer.DefaultHandleUnsuccessfulResponseFunc;
+                MaxTimeSpan = TimeSpan.FromSeconds(16.0);
             }
         }
     }

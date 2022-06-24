@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net40;netcoreapp3.1</TargetFrameworks>
+		<TargetFrameworks>net6.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
@@ -9,24 +9,15 @@
 		<RepositoryUrl>https://github.com/gachris/iCloud.Dav/tree/master/iCloud.Dav.Core</RepositoryUrl>
 		<Authors>gachris</Authors>
 		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav</PackageProjectUrl>
-		<Copyright>Copyright © 2021.</Copyright>
+		<Copyright>Copyright © 2022.</Copyright>
 		<Description>Package for accessing contacts and calendars of the iCloud provider with the CalDav / CardDav protocol.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591</NoWarn>
-		<DefineConstants Condition="'$(TargetFramework)'=='net40'">net40</DefineConstants>
-		<DefineConstants Condition="'$(TargetFramework)'!='net40'">others_frameworks</DefineConstants>
-		<Version>1.0.1</Version>
+		<Version>2.0.0</Version>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'=='net40'">
-		<PackageReference Include="Microsoft.Bcl" Version="1.1.10" />
-		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
-		<PackageReference Include="Microsoft.Bcl.Build" Version="1.0.14" />
-		<PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
-	</ItemGroup>
-
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
 </Project>

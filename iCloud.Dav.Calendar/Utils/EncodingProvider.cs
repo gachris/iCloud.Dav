@@ -13,6 +13,9 @@ namespace iCloud.Dav.Calendar.Utils
             this._mSerializationContext = ctx;
         }
 
+#pragma warning disable CA1041 // Provide ObsoleteAttribute message
+        [Obsolete]
+#pragma warning restore CA1041 // Provide ObsoleteAttribute message
         protected byte[] Decode7Bit(string value)
         {
             try
