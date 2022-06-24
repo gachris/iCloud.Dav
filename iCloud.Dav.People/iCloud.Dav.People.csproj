@@ -17,35 +17,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="antlr.runtime">
-			<HintPath>..\Ical.Net.2.3.0\antlr.runtime.dll</HintPath>
-		</Reference>
-		<Reference Include="Ical.Net">
-			<HintPath>..\Ical.Net.2.3.0\Ical.Net.dll</HintPath>
-		</Reference>
 		<Reference Include="ICalVCard">
 			<HintPath>..\ICalVCard.1.0.0\ICalVCard.dll</HintPath>
 		</Reference>
-		<Reference Include="NodaTime">
-			<HintPath>..\Ical.Net.2.3.0\NodaTime.dll</HintPath>
-		</Reference>
-		<Content Include="..\Ical.Net.2.3.0\antlr.runtime.dll">
-			<Pack>true</Pack>
-			<PackagePath>lib\net6.0</PackagePath>
-		</Content>
-		<Content Include="..\Ical.Net.2.3.0\Ical.Net.dll">
-			<Pack>true</Pack>
-			<PackagePath>lib\net6.0</PackagePath>
-		</Content>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Ical.Net" Version="4.2.0" />
+		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Include="..\ICalVCard.1.0.0\ICalVCard.dll">
 			<Pack>true</Pack>
 			<PackagePath>lib\net6.0</PackagePath>
 		</Content>
-		<Content Include="..\Ical.Net.2.3.0\NodaTime.dll">
-			<Pack>true</Pack>
-			<PackagePath>lib\net6.0</PackagePath>
-		</Content>
-		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
 	</ItemGroup>
 
 </Project>

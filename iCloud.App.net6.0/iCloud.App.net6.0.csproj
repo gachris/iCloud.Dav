@@ -7,18 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="antlr.runtime">
-			<HintPath>..\Ical.Net.2.3.0\antlr.runtime.dll</HintPath>
-		</Reference>
-		<Reference Include="Ical.Net">
-			<HintPath>..\Ical.Net.2.3.0\Ical.Net.dll</HintPath>
-		</Reference>
-		<Reference Include="Ical.Net.Collections">
-			<HintPath>..\Ical.Net.2.3.0\Ical.Net.Collections.dll</HintPath>
-		</Reference>
-		<Reference Include="NodaTime">
-			<HintPath>..\Ical.Net.2.3.0\NodaTime.dll</HintPath>
-		</Reference>
 		<Reference Include="ICalVCard">
 			<HintPath>..\ICalVCard.1.0.0\ICalVCard.dll</HintPath>
 		</Reference>
