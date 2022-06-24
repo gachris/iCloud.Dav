@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "iCloud.Sync.App.netcoreapp3.1": {
+    "iCloud.App.net6.0": {
       "commandName": "Project"
     }
   }
