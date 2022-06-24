@@ -1,7 +1,6 @@
 ﻿using Ical.Net.Serialization;
-using iCloud.Dav.ICalendar.Request;
-using iCloud.Dav.ICalendar.Types;
-using iCloud.Dav.ICalendar.Utils;
+using iCloud.Dav.Calendar.Request;
+using iCloud.Dav.Calendar.Types;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
@@ -9,13 +8,11 @@ using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
 using System;
 
-namespace iCloud.Dav.ICalendar.Resources
+namespace iCloud.Dav.Calendar.Resources
 {
     /// <summary>The "calendars" collection of methods.</summary>
     public class CalendarsResource
     {
-        private const string Resource = "calendars";
-
         /// <summary>The service which this resource belongs to.</summary>
         private readonly IClientService _service;
 

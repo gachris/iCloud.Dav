@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace iCloud.Dav.ICalendar.Utils
+namespace iCloud.Dav.Calendar.Utils
 {
     internal class SerializationUtil
     {

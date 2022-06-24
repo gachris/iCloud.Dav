@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.ICalendar.Utils;
+﻿using iCloud.Dav.Calendar.Utils;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace iCloud.Dav.ICalendar.Converters
+namespace iCloud.Dav.Calendar.Converters
 {
     internal class ReminderConverter : TypeConverter
     {

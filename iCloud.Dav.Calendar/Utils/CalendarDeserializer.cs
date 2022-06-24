@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace iCloud.Dav.ICalendar.Utils
+namespace iCloud.Dav.Calendar.Utils
 {
     public class CalendarDeserializer
     {

@@ -1,7 +1,7 @@
 ﻿using Ical.Net.Serialization;
-using iCloud.Dav.ICalendar.Request;
-using iCloud.Dav.ICalendar.Types;
-using iCloud.Dav.ICalendar.Utils;
+using iCloud.Dav.Calendar.Request;
+using iCloud.Dav.Calendar.Types;
+using iCloud.Dav.Calendar.Utils;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
@@ -9,13 +9,11 @@ using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
 using System;
 
-namespace iCloud.Dav.ICalendar.Resources
+namespace iCloud.Dav.Calendar.Resources
 {
     /// <summary>The "reminders" collection of methods.</summary>
     public class RemindersResource
     {
-        private const string Resource = "reminders";
-
         /// <summary>The service which this resource belongs to.</summary>
         private readonly IClientService _service;
 
@@ -105,7 +103,7 @@ namespace iCloud.Dav.ICalendar.Resources
             /// <summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                Calendarquery calendarquery = new Calendarquery()
+                var calendarquery = new Calendarquery()
                 {
                     Prop = new Prop() { Calendardata = Calendardata.Default, Getetag = Getetag.Default },
                     Filter = new Filter() { Compfilter = new Compfilter() { Name = "VCALENDAR", Child = new Compfilter() { Name = "VTODO" } } }
@@ -114,7 +112,7 @@ namespace iCloud.Dav.ICalendar.Resources
                 var timeMin = TimeMin.ToFilterTime();
                 var timeMax = TimeMax.ToFilterTime();
 
-                if (!String.IsNullOrEmpty(timeMin) || !String.IsNullOrEmpty(timeMax))
+                if (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
                     calendarquery.Filter.Compfilter.Child.Timerange = new Timerange { Start = timeMin, End = timeMax };
 
                 return calendarquery;
@@ -193,7 +191,7 @@ namespace iCloud.Dav.ICalendar.Resources
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
                 Body = body.ThrowIfNull(nameof(body));
-                if (String.IsNullOrEmpty(body.Uid))
+                if (string.IsNullOrEmpty(body.Uid))
                     body.Uid = Guid.NewGuid().ToString().ToUpper();
                 ReminderId = body.Uid;
                 InitParameters();

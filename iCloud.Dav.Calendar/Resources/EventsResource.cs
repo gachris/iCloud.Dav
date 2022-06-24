@@ -1,7 +1,7 @@
 ﻿using Ical.Net.Serialization;
-using iCloud.Dav.ICalendar.Request;
-using iCloud.Dav.ICalendar.Types;
-using iCloud.Dav.ICalendar.Utils;
+using iCloud.Dav.Calendar.Request;
+using iCloud.Dav.Calendar.Types;
+using iCloud.Dav.Calendar.Utils;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
@@ -9,13 +9,11 @@ using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
 using System;
 
-namespace iCloud.Dav.ICalendar.Resources
+namespace iCloud.Dav.Calendar.Resources
 {
     /// <summary>The "events" collection of methods.</summary>
     public class EventsResource
     {
-        private const string Resource = "events";
-
         /// <summary>The service which this resource belongs to.</summary>
         private readonly IClientService _service;
 
@@ -193,7 +191,7 @@ namespace iCloud.Dav.ICalendar.Resources
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
                 Body = body.ThrowIfNull(nameof(body));
-                if (String.IsNullOrEmpty(body.Uid))
+                if (string.IsNullOrEmpty(body.Uid))
                     body.Uid = Guid.NewGuid().ToString().ToUpper();
                 EventId = body.Uid;
                 InitParameters();

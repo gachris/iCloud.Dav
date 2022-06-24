@@ -1,4 +1,4 @@
-﻿namespace iCloud.Dav.ICalendar.Types
+﻿namespace iCloud.Dav.Calendar.Types
 {
     public class PropValue
     {

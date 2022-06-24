@@ -1,5 +1,4 @@
-﻿using iCloud.Dav.Core.Request;
-using iCloud.Dav.Core.Services;
+﻿using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
 using iCloud.Dav.People.Request;
 using iCloud.Dav.People.Types;
@@ -9,21 +8,19 @@ namespace iCloud.Dav.People.Resources
     /// <summary>The "IdentityCard" collection of methods.</summary>
     public class IdentityCardResource
     {
-        private const string _resource = "identityCard";
-
         /// <summary>The service which this resource belongs to.</summary>
         private readonly IClientService _service;
 
         /// <summary>Constructs a new resource.</summary>
         public IdentityCardResource(IClientService service)
         {
-            this._service = service;
+            _service = service;
         }
 
         /// <summary>Returns the identity cards on the user's identity card list.</summary>
         public virtual ListRequest List()
         {
-            return new ListRequest(this._service);
+            return new ListRequest(_service);
         }
 
         /// <summary>Returns the identity cards on the user's identity card list.</summary>
@@ -32,7 +29,7 @@ namespace iCloud.Dav.People.Resources
             /// <summary>Constructs a new Get request.</summary>
             public ListRequest(IClientService service) : base(service)
             {
-                this.InitParameters();
+                InitParameters();
             }
 
             ///<summary>Gets the method name.</summary>

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace iCloud.Dav.ICalendar
+namespace iCloud.Dav.Calendar
 {
     public class PrivilegeCollection : List<string>, IEnumerable, IEnumerable<string>, ICollection, ICollection<string>, IList, IList<string>
     {

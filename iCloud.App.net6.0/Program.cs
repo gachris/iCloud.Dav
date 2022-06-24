@@ -1,8 +1,6 @@
 ﻿using Ical.Net.DataTypes;
-using iCloud.Dav.ICalendar;
-using iCloud.Dav.ICalendar.Services;
+using iCloud.Dav.Calendar;
 using iCloud.Dav.People;
-using iCloud.Dav.People.Services;
 using System;
 using System.Linq;
 
@@ -19,166 +17,178 @@ namespace iCloud.Sync.App
 
         public static void EventsCalendar()
         {
-            CalendarService service = Services.GetCalendarService();
-            string eventId = Guid.NewGuid().ToString().ToUpper();
-            string calendarId = Guid.NewGuid().ToString().ToUpper();
+            var service = Services.GetCalendarService();
+            var eventId = Guid.NewGuid().ToString().ToUpper();
+            var calendarId = Guid.NewGuid().ToString().ToUpper();
 
             // create new calendar 
-            CalendarEntry calendarToInsert = new CalendarEntry();
-            calendarToInsert.Id = calendarId;
-            calendarToInsert.Summary = "New calendar from calendar test method";
-            calendarToInsert.Color = "#FFFFFFFF";
+            var calendarToInsert = new CalendarEntry
+            {
+                Id = calendarId,
+                Summary = "New calendar from calendar test method",
+                Color = "#FFFFFFFF"
+            };
             calendarToInsert.SupportedCalendarComponents.Add("VEVENT");
 
             // insert calendar
-            var insertResponseObject = CalendarMethods.Insert(service.Calendars, calendarToInsert);
+            _ = CalendarMethods.Insert(service.Calendars, calendarToInsert);
 
             // get calendars
-            CalendarEntryList calendarEntries = CalendarMethods.GetList(service.Calendars);
+            var calendarEntries = CalendarMethods.GetList(service.Calendars);
             var insertedCalendar = calendarEntries.Where(x => x.Id == calendarToInsert.Id).SingleOrDefault();
 
             // update calendar fields
-            CalendarEntry calendarToUpdate = (CalendarEntry)insertedCalendar.Clone();
+            var calendarToUpdate = (CalendarEntry)insertedCalendar.Clone();
             calendarToUpdate.Summary = "Updated calendar from calendar test method";
             calendarToUpdate.Color = "#FF000000";
 
             // update calendar
-            var updateResponseObject = CalendarMethods.Update(service.Calendars, calendarToUpdate);
+            _ = CalendarMethods.Update(service.Calendars, calendarToUpdate);
 
             // get calendar
-            var updatedCalendar = CalendarMethods.Get(service.Calendars, calendarId);
+            _ = CalendarMethods.Get(service.Calendars, calendarId);
 
             // create new event 
-            Event eventToInserted = new Event();
-            eventToInserted.Uid = eventId;
-            eventToInserted.Summary = "New event from event test method";
-            eventToInserted.Description = "New event from event test method";
-            eventToInserted.Start = new CalDateTime(DateTime.Now);
-            eventToInserted.End = new CalDateTime(DateTime.Now.AddHours(1));
+            var eventToInserted = new Event
+            {
+                Uid = eventId,
+                Summary = "New event from event test method",
+                Description = "New event from event test method",
+                Start = new CalDateTime(DateTime.Now),
+                End = new CalDateTime(DateTime.Now.AddHours(1))
+            };
 
             // insert event
-            var eventInsertResponseObject = EventMethods.Insert(service.Events, eventToInserted, calendarId);
+            _ = EventMethods.Insert(service.Events, eventToInserted, calendarId);
 
             // get events
-            EventList eventList = EventMethods.GetList(service.Events, calendarId);
+            var eventList = EventMethods.GetList(service.Events, calendarId);
             var insertedEvent = eventList.Where(x => x.Uid == eventToInserted.Uid).SingleOrDefault();
 
             // update event fields
-            Event eventToUpdate = (Event)insertedEvent.Clone();
+            var eventToUpdate = (Event)insertedEvent.Clone();
             eventToUpdate.Summary = "Updated event from event test method";
             eventToUpdate.Description = "Updated event from event test method";
             eventToUpdate.Start = new CalDateTime(DateTime.Now.AddHours(1));
             eventToUpdate.End = new CalDateTime(DateTime.Now.AddHours(2));
 
             // update event
-            var eventUpdateResponseObject = EventMethods.Update(service.Events, eventToUpdate, calendarId);
+            _ = EventMethods.Update(service.Events, eventToUpdate, calendarId);
 
             // get event
-            var updatedEvent = EventMethods.Get(service.Events, calendarId, eventId);
+            _ = EventMethods.Get(service.Events, calendarId, eventId);
 
             // delete event
-            var eventDeleteResponseObject = EventMethods.Delete(service.Events, calendarId, eventId);
+            _ = EventMethods.Delete(service.Events, calendarId, eventId);
 
             // delete calendar
-            var calendarDeleteResponseObject = CalendarMethods.Delete(service.Calendars, calendarId);
+            _ = CalendarMethods.Delete(service.Calendars, calendarId);
         }
 
         public static void RemindersCalendar()
         {
-            CalendarService service = Services.GetCalendarService();
-            string calendarId = Guid.NewGuid().ToString().ToUpper();
-            string reminderId = Guid.NewGuid().ToString().ToUpper();
+            var service = Services.GetCalendarService();
+            var calendarId = Guid.NewGuid().ToString().ToUpper();
+            var reminderId = Guid.NewGuid().ToString().ToUpper();
 
             // create new calendar 
-            CalendarEntry calendarToInsert = new CalendarEntry();
-            calendarToInsert.Id = calendarId;
-            calendarToInsert.Summary = "New reminder list from reminders test method";
-            calendarToInsert.Color = "#FFFFFFFF";
+            var calendarToInsert = new CalendarEntry
+            {
+                Id = calendarId,
+                Summary = "New reminder list from reminders test method",
+                Color = "#FFFFFFFF"
+            };
             calendarToInsert.SupportedCalendarComponents.Add("VTODO");
 
             // insert calendar
-            var insertResponseObject = CalendarMethods.Insert(service.Calendars, calendarToInsert);
+            _ = CalendarMethods.Insert(service.Calendars, calendarToInsert);
 
             // get calendars
-            CalendarEntryList calendarEntries = CalendarMethods.GetList(service.Calendars);
+            var calendarEntries = CalendarMethods.GetList(service.Calendars);
             var insertedCalendar = calendarEntries.Where(x => x.Id == calendarToInsert.Id).SingleOrDefault();
 
             // update calendar fields
-            CalendarEntry calendarToUpdate = (CalendarEntry)insertedCalendar.Clone();
+            var calendarToUpdate = (CalendarEntry)insertedCalendar.Clone();
             calendarToUpdate.Summary = "Updated reminder list from reminders test method";
             calendarToUpdate.Color = "#FF000000";
 
             // update calendar
-            var updateResponseObject = CalendarMethods.Update(service.Calendars, calendarToUpdate);
+            _ = CalendarMethods.Update(service.Calendars, calendarToUpdate);
 
             // get calendar
-            var updatedCalendar = CalendarMethods.Get(service.Calendars, calendarId);
+            _ = CalendarMethods.Get(service.Calendars, calendarId);
 
             // create new reminder 
-            Reminder reminderToInserted = new Reminder();
-            reminderToInserted.Uid = reminderId;
-            reminderToInserted.Summary = "New reminder from reminder test method";
-            reminderToInserted.Description = "New reminder from reminder test method";
-            reminderToInserted.Start = new CalDateTime(DateTime.Now);
+            var reminderToInserted = new Reminder
+            {
+                Uid = reminderId,
+                Summary = "New reminder from reminder test method",
+                Description = "New reminder from reminder test method",
+                Start = new CalDateTime(DateTime.Now)
+            };
 
             // insert reminder
-            var reminderInsertResponseObject = ReminderMethods.Insert(service.Reminders, reminderToInserted, calendarId);
+            _ = ReminderMethods.Insert(service.Reminders, reminderToInserted, calendarId);
 
             // get reminders
-            ReminderList reminderList = ReminderMethods.GetList(service.Reminders, calendarId);
+            var reminderList = ReminderMethods.GetList(service.Reminders, calendarId);
             var insertedReminder = reminderList.Where(x => x.Uid == reminderToInserted.Uid).SingleOrDefault();
 
             // update event fields
-            Reminder reminderToUpdate = (Reminder)insertedReminder.Clone();
+            var reminderToUpdate = (Reminder)insertedReminder.Clone();
             reminderToUpdate.Summary = "Updated reminder from reminder test method";
             reminderToUpdate.Description = "Updated reminder from reminder test method";
             reminderToUpdate.Start = new CalDateTime(DateTime.Now.AddHours(1));
 
             // update event
-            var eventUpdateResponseObject = ReminderMethods.Update(service.Reminders, reminderToUpdate, calendarId);
+            _ = ReminderMethods.Update(service.Reminders, reminderToUpdate, calendarId);
 
             // get event
-            var updatedReminnder = ReminderMethods.Get(service.Reminders, calendarId, reminderId);
+            _ = ReminderMethods.Get(service.Reminders, calendarId, reminderId);
 
             // delete event
-            var eventDeleteResponseObject = ReminderMethods.Delete(service.Reminders, calendarId, reminderId);
+            _ = ReminderMethods.Delete(service.Reminders, calendarId, reminderId);
 
             // delete calendar
-            var calendarDeleteResponseObject = CalendarMethods.Delete(service.Calendars, calendarId);
+            _ = CalendarMethods.Delete(service.Calendars, calendarId);
         }
 
         public static void People()
         {
-            PeopleService service = Services.GetPeopleService();
+            var service = Services.GetPeopleService();
             string personId = Guid.NewGuid().ToString().ToUpper();
             string contactGroupId = Guid.NewGuid().ToString().ToUpper();
 
             // get identity cards
-            IdentityCardList identityCards = IdentityCardMethods.GetList(service.IdentityCard);
+            var identityCards = IdentityCardMethods.GetList(service.IdentityCard);
 
             // get resourceName
-            string resourceName = identityCards.FirstOrDefault().ResourceName;
+            var resourceName = identityCards.FirstOrDefault().ResourceName;
 
             // create new contactGroup 
-            ContactGroup contactGroup = new ContactGroup();
-            contactGroup.UniqueId = contactGroupId;
-            contactGroup.FamilyName = "New Group Description";
-            contactGroup.FormattedName = "New Group Description";
+            var contactGroup = new ContactGroup
+            {
+                UniqueId = contactGroupId,
+                FamilyName = "New Group Description",
+                FormattedName = "New Group Description"
+            };
 
             // insert contact group
-            var contactGroupInsertResponseObject = ContactGroupMethods.Insert(service.ContactGroups, contactGroup, resourceName);
+            _ = ContactGroupMethods.Insert(service.ContactGroups, contactGroup, resourceName);
 
             // create new person 
-            Person person = new Person();
-            person.UniqueId = personId;
-            person.FamilyName = "New Contact Description";
-            person.FormattedName = "New Contact Description";
+            var person = new Person
+            {
+                UniqueId = personId,
+                FamilyName = "New Contact Description",
+                FormattedName = "New Contact Description"
+            };
 
             // insert person
-            var insertResponseObject = PeopleMethods.Insert(service.People, person, resourceName);
+            _ = PeopleMethods.Insert(service.People, person, resourceName);
 
             // get contact groups
-            ContactGroupsList contactGroups = ContactGroupMethods.GetList(service.ContactGroups, resourceName);
+            _ = ContactGroupMethods.GetList(service.ContactGroups, resourceName);
 
             // get contact group
             contactGroup = ContactGroupMethods.Get(service.ContactGroups, contactGroupId, resourceName);
@@ -189,10 +199,10 @@ namespace iCloud.Sync.App
             contactGroup.MemberResourceNames.Add(personId);
 
             // update contact group
-            var contactGroupUpdateResponseObject1 = ContactGroupMethods.Update(service.ContactGroups, contactGroup, resourceName);
+            _ = ContactGroupMethods.Update(service.ContactGroups, contactGroup, resourceName);
 
             // get persons 
-            PersonList personList = PeopleMethods.GetList(service.People, resourceName);
+            _ = PeopleMethods.GetList(service.People, resourceName);
 
             // get person
             person = PeopleMethods.Get(service.People, personId, resourceName);
@@ -202,16 +212,16 @@ namespace iCloud.Sync.App
             person.FamilyName = "Updated Contact Description";
 
             // update person
-            var updateResponseObject = PeopleMethods.Update(service.People, person, resourceName);
+            _ = PeopleMethods.Update(service.People, person, resourceName);
 
             // delete person
-            var deleteResponseObject1 = PeopleMethods.Delete(service.People, personId, resourceName);
+            _ = PeopleMethods.Delete(service.People, personId, resourceName);
 
             // delete contact group
-            var contactGroupDeleteResponseObject = ContactGroupMethods.Delete(service.ContactGroups, contactGroupId, resourceName);
+            _ = ContactGroupMethods.Delete(service.ContactGroups, contactGroupId, resourceName);
         }
 
-        public void AddTimezone()
+        public static void AddTimezone()
         {
             //var timezone = Ical.Net.VTimeZone.FromSystemTimeZone(TimeZoneInfo.Local, DateTime.Now, true);
 

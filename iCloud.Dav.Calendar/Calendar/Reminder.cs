@@ -1,18 +1,18 @@
 ﻿using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
-using iCloud.Dav.ICalendar.Converters;
+using iCloud.Dav.Calendar.Converters;
+using iCloud.Dav.Calendar.Utils;
 using iCloud.Dav.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Text;
-using iCloud.Dav.ICalendar.Utils;
-using Ical.Net;
 using System.Linq;
+using System.Text;
+using IcalCalendar = Ical.Net.Calendar;
 
-namespace iCloud.Dav.ICalendar
+namespace iCloud.Dav.Calendar
 {
     [TypeConverter(typeof(ReminderConverter))]
     public class Reminder : Todo, IDirectResponseSchema, ICloneable
@@ -31,9 +31,9 @@ namespace iCloud.Dav.ICalendar
 
         public virtual string ETag { get; set; }
 
-        public static IList<Calendar> LoadFromStream(Stream stream)
+        public static IList<IcalCalendar> LoadFromStream(Stream stream)
         {
-            return CalendarDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).OfType<Calendar>().ToList();
+            return CalendarDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).OfType<IcalCalendar>().ToList();
         }
 
         public object Clone()

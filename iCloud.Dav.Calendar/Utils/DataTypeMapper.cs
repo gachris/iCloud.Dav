@@ -5,7 +5,7 @@ using Ical.Net.Serialization;
 using System;
 using System.Collections.Generic;
 
-namespace iCloud.Dav.ICalendar.Utils
+namespace iCloud.Dav.Calendar.Utils
 {
     internal class DataTypeMapper
     {

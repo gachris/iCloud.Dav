@@ -36,8 +36,8 @@ namespace iCloud.Dav.People.Utils
 
                 foreach (var person in personList)
                 {
-                    List<Membership> memberships = new List<Membership>();
-                    IEnumerable<ContactGroup> contactGroups = contactGroupList.Where(contactGoup => contactGoup.MemberResourceNames.Contains(person.UniqueId));
+                    var memberships = new List<Membership>();
+                    var contactGroups = contactGroupList.Where(contactGoup => contactGoup.MemberResourceNames.Contains(person.UniqueId));
                     foreach (var contactGroup in contactGroups)
                     {
                         var membership = new Membership()
@@ -61,9 +61,9 @@ namespace iCloud.Dav.People.Utils
             foreach (var multistatusItem in responses)
             {
                 var cardUrl = multistatusItem.Url.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                if (cardUrl.Count() == 3)
+                if (cardUrl.Length == 3)
                 {
-                    IdentityCard card = new IdentityCard()
+                    var card = new IdentityCard()
                     {
                         ResourceName = cardUrl.Last(),
                         UniqueId = cardUrl.Last(),
@@ -80,7 +80,7 @@ namespace iCloud.Dav.People.Utils
             var listItems = new ContactGroupsList();
             foreach (var response in responses)
             {
-                ContactGroup card = new ContactGroup(response.Propstat.Prop.Addressdata.Value)
+                var card = new ContactGroup(response.Propstat.Prop.Addressdata.Value)
                 {
                     Url = response.Url,
                     ETag = response.Propstat.Prop.Getetag.Value,

@@ -1,6 +1,6 @@
 ﻿using Ical.Net.CalendarComponents;
 
-namespace iCloud.Dav.ICalendar
+namespace iCloud.Dav.Calendar
 {
     public class Daylight : CalendarComponent
     {

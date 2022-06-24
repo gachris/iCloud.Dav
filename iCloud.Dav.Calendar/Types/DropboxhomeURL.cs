@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Types
+namespace iCloud.Dav.Calendar.Types
 {
     [XmlRoot(ElementName = "dropbox-home-URL", Namespace = "http://calendarserver.org/ns/")]
     public class DropboxhomeURL

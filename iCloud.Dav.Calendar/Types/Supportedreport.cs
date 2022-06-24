@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Types
+namespace iCloud.Dav.Calendar.Types
 {
     [XmlRoot(ElementName = "supported-report", Namespace = "DAV:")]
     public class Supportedreport

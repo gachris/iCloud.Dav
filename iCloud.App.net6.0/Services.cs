@@ -1,6 +1,6 @@
 ﻿using iCloud.Dav.Auth;
 using iCloud.Dav.Auth.Utils.Store;
-using iCloud.Dav.ICalendar.Services;
+using iCloud.Dav.Calendar.Services;
 using iCloud.Dav.Core.Services;
 using iCloud.Dav.People.Services;
 using System.Net;

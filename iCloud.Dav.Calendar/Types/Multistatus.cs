@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Types
+namespace iCloud.Dav.Calendar.Types
 {
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
     public class Multistatus<TProp>

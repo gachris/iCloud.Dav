@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Types
+namespace iCloud.Dav.Calendar.Types
 {
     [XmlRoot(ElementName = "current-user-principal", Namespace = "DAV:")]
     public class Currentuserprincipal

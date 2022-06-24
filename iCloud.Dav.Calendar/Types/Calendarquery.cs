@@ -1,7 +1,7 @@
-﻿using iCloud.Dav.ICalendar.Types;
+﻿using iCloud.Dav.Calendar.Types;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Request
+namespace iCloud.Dav.Calendar.Request
 {
     [XmlRoot(ElementName = "calendar-query", Namespace = "urn:ietf:params:xml:ns:caldav")]
     public class Calendarquery

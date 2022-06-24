@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Types
+namespace iCloud.Dav.Calendar.Types
 {
     [XmlRoot(ElementName = "supported-calendar-component-set", Namespace = "urn:ietf:params:xml:ns:caldav")]
     public class SupportedCalendarComponentSet

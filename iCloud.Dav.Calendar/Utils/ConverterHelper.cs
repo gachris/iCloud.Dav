@@ -1,11 +1,11 @@
-﻿using iCloud.Dav.ICalendar.Types;
+﻿using iCloud.Dav.Calendar.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace iCloud.Dav.ICalendar.Utils
+namespace iCloud.Dav.Calendar.Utils
 {
     internal static class ConverterHelper
     {

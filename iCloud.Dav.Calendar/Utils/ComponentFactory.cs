@@ -2,7 +2,7 @@
 using Ical.Net.CalendarComponents;
 using Ical.Net.Serialization;
 
-namespace iCloud.Dav.ICalendar.Utils
+namespace iCloud.Dav.Calendar.Utils
 {
     public class ComponentFactory : CalendarComponentFactory
     {
@@ -17,7 +17,7 @@ namespace iCloud.Dav.ICalendar.Utils
                 "VJOURNAL" => new Journal(),
                 "VTIMEZONE" => new VTimeZone(),
                 "VTODO" => new Reminder(),
-                "VCALENDAR" => new Calendar(),
+                "VCALENDAR" => new Ical.Net.Calendar(),
                 "DAYLIGHT" or "STANDARD" => new VTimeZoneInfo(),
                 _ => new CalendarComponent(),
             };

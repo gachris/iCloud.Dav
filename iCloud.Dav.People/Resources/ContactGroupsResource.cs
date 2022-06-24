@@ -10,29 +10,26 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace iCloud.Dav.People.Resources
 {
     /// <summary>The "ContactGroups" collection of methods.</summary>
     public class ContactGroupsResource
     {
-        private const string _resource = "contactGroups";
-
         /// <summary>The service which this resource belongs to.</summary>
         private readonly IClientService _service;
 
         /// <summary>Constructs a new resource.</summary>
         public ContactGroupsResource(IClientService service)
         {
-            this._service = service;
+            _service = service;
         }
 
         /// <summary>Returns the Contact Groups on the user's Contact Group list.</summary>
         /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
         public virtual ListRequest List(string resourceName)
         {
-            return new ListRequest(this._service, resourceName);
+            return new ListRequest(_service, resourceName);
         }
 
         /// <summary>Returns a contact group from the user's contact group list.</summary>
@@ -40,7 +37,7 @@ namespace iCloud.Dav.People.Resources
         /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
         public virtual GetRequest Get(string uniqueId, string resourceName)
         {
-            return new GetRequest(this._service, uniqueId, resourceName);
+            return new GetRequest(_service, uniqueId, resourceName);
         }
 
         /// <summary>Inserts Contact Group into the user's contact group list.</summary>
@@ -48,7 +45,7 @@ namespace iCloud.Dav.People.Resources
         /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
         public virtual InsertRequest Insert(ContactGroup body, string resourceName)
         {
-            return new InsertRequest(this._service, body, resourceName);
+            return new InsertRequest(_service, body, resourceName);
         }
 
         /// <summary>Updates an existing contact group on the user's contact group list.</summary>
@@ -56,7 +53,7 @@ namespace iCloud.Dav.People.Resources
         /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
         public virtual UpdateRequest Update(ContactGroup body, string resourceName)
         {
-            return new UpdateRequest(this._service, body, resourceName);
+            return new UpdateRequest(_service, body, resourceName);
         }
 
         /// <summary>Removes a contact group from the user's contact group list.</summary>
@@ -64,7 +61,7 @@ namespace iCloud.Dav.People.Resources
         /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
         public virtual DeleteRequest Delete(string uniqueId, string resourceName)
         {
-            return new DeleteRequest(this._service, uniqueId, resourceName);
+            return new DeleteRequest(_service, uniqueId, resourceName);
         }
 
         /// <summary>Returns the contact groups on the user's contact group list.</summary>
@@ -73,8 +70,8 @@ namespace iCloud.Dav.People.Resources
             /// <summary>Constructs a new List request.</summary>
             public ListRequest(IClientService service, string resourceName) : base(service)
             {
-                this.ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-                this.InitParameters();
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+                InitParameters();
             }
 
             /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -125,7 +122,7 @@ namespace iCloud.Dav.People.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("resourceName", new Parameter
+                RequestParameters.Add("resourceName", new Parameter
                 {
                     Name = "resourceName",
                     IsRequired = true,
@@ -140,9 +137,9 @@ namespace iCloud.Dav.People.Resources
             /// <summary>Constructs a new Get request.</summary>
             public GetRequest(IClientService service, string uniqueId, string resourceName) : base(service)
             {
-                this.UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
-                this.ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-                this.InitParameters();
+                UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+                InitParameters();
             }
 
             /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -167,13 +164,13 @@ namespace iCloud.Dav.People.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("resourceName", new Parameter
+                RequestParameters.Add("resourceName", new Parameter
                 {
                     Name = "resourceName",
                     IsRequired = true,
                     ParameterType = "path",
                 });
-                this.RequestParameters.Add("uniqueId", new Parameter
+                RequestParameters.Add("uniqueId", new Parameter
                 {
                     Name = "uniqueId",
                     IsRequired = true,
@@ -188,13 +185,13 @@ namespace iCloud.Dav.People.Resources
             /// <summary>Constructs a new Insert request.</summary>
             public InsertRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
             {
-                this.ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-                this.Body = body.ThrowIfNull(nameof(body));
-                if (string.IsNullOrEmpty(this.Body.UniqueId))
-                    this.Body.UniqueId = Guid.NewGuid().ToString().ToUpper();
-                this.UniqueId = this.Body.UniqueId;
-                this.ETagAction = ETagAction.IfMatch;
-                this.InitParameters();
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+                Body = body.ThrowIfNull(nameof(body));
+                if (string.IsNullOrEmpty(Body.UniqueId))
+                    Body.UniqueId = Guid.NewGuid().ToString().ToUpper();
+                UniqueId = Body.UniqueId;
+                ETagAction = ETagAction.IfMatch;
+                InitParameters();
             }
 
             /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -223,19 +220,15 @@ namespace iCloud.Dav.People.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    using (StreamWriter textWriter = new StreamWriter(stream))
-                    {
-                        CardStandardWriter writer = new CardStandardWriter();
-                        writer.Write(this.Body, textWriter, Encoding.UTF8.WebName);
-                        textWriter.Flush();
+                using var stream = new MemoryStream();
+                using var textWriter = new StreamWriter(stream);
+                var writer = new CardStandardWriter();
+                writer.Write(Body, textWriter, Encoding.UTF8.WebName);
+                textWriter.Flush();
 
-                        stream.Seek(0, SeekOrigin.Begin);
-                        using (StreamReader streamReader = new StreamReader(stream))
-                            return streamReader.ReadToEnd();
-                    }
-                }
+                stream.Seek(0, SeekOrigin.Begin);
+                using var streamReader = new StreamReader(stream);
+                return streamReader.ReadToEnd();
             }
 
             /// <summary>Initializes Insert parameter list.</summary>
@@ -243,13 +236,13 @@ namespace iCloud.Dav.People.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("resourceName", new Parameter
+                RequestParameters.Add("resourceName", new Parameter
                 {
                     Name = "resourceName",
                     IsRequired = true,
                     ParameterType = "path",
                 });
-                this.RequestParameters.Add("uniqueId", new Parameter
+                RequestParameters.Add("uniqueId", new Parameter
                 {
                     Name = "uniqueId",
                     IsRequired = true,
@@ -264,11 +257,11 @@ namespace iCloud.Dav.People.Resources
             /// <summary>Constructs a new Update request.</summary>
             public UpdateRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
             {
-                this.Body = body.ThrowIfNull(nameof(body));
-                this.UniqueId = body.UniqueId.ThrowIfNullOrEmpty(nameof(ContactGroup.UniqueId));
-                this.ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-                this.ETagAction = ETagAction.IfMatch;
-                this.InitParameters();
+                Body = body.ThrowIfNull(nameof(body));
+                UniqueId = body.UniqueId.ThrowIfNullOrEmpty(nameof(ContactGroup.UniqueId));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+                ETagAction = ETagAction.IfMatch;
+                InitParameters();
             }
 
             /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -297,19 +290,15 @@ namespace iCloud.Dav.People.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    using (StreamWriter textWriter = new StreamWriter(stream))
-                    {
-                        CardStandardWriter writer = new CardStandardWriter();
-                        writer.Write(this.Body, textWriter, Encoding.UTF8.WebName);
-                        textWriter.Flush();
+                using var stream = new MemoryStream();
+                using var textWriter = new StreamWriter(stream);
+                var writer = new CardStandardWriter();
+                writer.Write(Body, textWriter, Encoding.UTF8.WebName);
+                textWriter.Flush();
 
-                        stream.Seek(0, SeekOrigin.Begin);
-                        using (StreamReader streamReader = new StreamReader(stream))
-                            return streamReader.ReadToEnd();
-                    }
-                }
+                stream.Seek(0, SeekOrigin.Begin);
+                using var streamReader = new StreamReader(stream);
+                return streamReader.ReadToEnd();
             }
 
             /// <summary>Initializes Update parameter list.</summary>
@@ -317,13 +306,13 @@ namespace iCloud.Dav.People.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("resourceName", new Parameter
+                RequestParameters.Add("resourceName", new Parameter
                 {
                     Name = "resourceName",
                     IsRequired = true,
                     ParameterType = "path",
                 });
-                this.RequestParameters.Add("uniqueId", new Parameter
+                RequestParameters.Add("uniqueId", new Parameter
                 {
                     Name = "uniqueId",
                     IsRequired = true,
@@ -338,9 +327,9 @@ namespace iCloud.Dav.People.Resources
             /// <summary>Constructs a new Delete request.</summary>
             public DeleteRequest(IClientService service, string uniqueId, string resourceName) : base(service)
             {
-                this.UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
-                this.ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(uniqueId));
-                this.InitParameters();
+                UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(uniqueId));
+                InitParameters();
             }
 
             /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -365,13 +354,13 @@ namespace iCloud.Dav.People.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("resourceName", new Parameter
+                RequestParameters.Add("resourceName", new Parameter
                 {
                     Name = "resourceName",
                     IsRequired = true,
                     ParameterType = "path",
                 });
-                this.RequestParameters.Add("uniqueId", new Parameter
+                RequestParameters.Add("uniqueId", new Parameter
                 {
                     Name = "uniqueId",
                     IsRequired = true,

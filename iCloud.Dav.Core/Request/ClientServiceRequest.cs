@@ -5,7 +5,6 @@ using iCloud.Dav.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -41,12 +40,12 @@ namespace iCloud.Dav.Core.Request
 
         public IDictionary<string, IParameter> RequestParameters { get; private set; }
 
-        public IClientService Service { get { return this._service; } }
+        public IClientService Service { get { return _service; } }
 
         /// <summary>Creates a new service request.</summary>
         protected ClientServiceRequest(IClientService service)
         {
-            this._service = service;
+            _service = service;
         }
 
         /// <summary>
@@ -55,23 +54,23 @@ namespace iCloud.Dav.Core.Request
         /// </summary>
         protected virtual void InitParameters()
         {
-            this.RequestParameters = new Dictionary<string, IParameter>();
+            RequestParameters = new Dictionary<string, IParameter>();
         }
 
         public TResponse Execute()
         {
             try
             {
-                using (HttpResponseMessage result = this.ExecuteUnparsedAsync(CancellationToken.None).Result)
-                    return this.ParseResponse(result).Result;
+                using var result = ExecuteUnparsedAsync(CancellationToken.None).Result;
+                return ParseResponse(result).Result;
             }
             catch (AggregateException ex)
             {
                 throw ex.InnerException;
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -79,51 +78,51 @@ namespace iCloud.Dav.Core.Request
         {
             try
             {
-                return this.ExecuteUnparsedAsync(CancellationToken.None).Result.Content.ReadAsStreamAsync().Result;
+                return ExecuteUnparsedAsync(CancellationToken.None).Result.Content.ReadAsStreamAsync().Result;
             }
             catch (AggregateException ex)
             {
                 throw ex.InnerException;
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 
         public async Task<TResponse> ExecuteAsync()
         {
-            return await this.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
+            return await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
         {
             TResponse response1;
-            using (HttpResponseMessage response2 = await this.ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false))
+            using (var response2 = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                response1 = await this.ParseResponse(response2).ConfigureAwait(false);
+                response1 = await ParseResponse(response2).ConfigureAwait(false);
             }
             return response1;
         }
 
         public async Task<Stream> ExecuteAsStreamAsync()
         {
-            return await this.ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
+            return await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
         {
-            HttpResponseMessage httpResponseMessage = await this.ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
+            var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
-            return await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return await httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>Sync executes the request without parsing the result. </summary>
         private async Task<HttpResponseMessage> ExecuteUnparsedAsync(CancellationToken cancellationToken)
         {
-            using (HttpRequestMessage request = this.CreateRequest())
-                return await this._service.HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            using var request = CreateRequest();
+            return await _service.HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>Parses the response and deserialize the content into the requested response object. </summary>
@@ -131,24 +130,24 @@ namespace iCloud.Dav.Core.Request
         {
             if (response.IsSuccessStatusCode)
             {
-                return await this._service.DeserializeResponse<TResponse>(response).ConfigureAwait(false);
+                return await _service.DeserializeResponse<TResponse>(response).ConfigureAwait(false);
             }
-            ErrorResponse errorResponse = new ErrorResponse();
-            string requestError = await this._service.DeserializeError(response).ConfigureAwait(false);
+            var errorResponse = new ErrorResponse();
+            var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
             errorResponse.ReasonPhrase = response.ReasonPhrase;
             errorResponse.HttpStatusCode = response.StatusCode;
             errorResponse.ErrorDescription = requestError;
             errorResponse.ErrorUri = response.RequestMessage.RequestUri.AbsoluteUri;
-            throw new ICloudApiException(this._service.Name, errorResponse.ToString());
+            throw new ICloudApiException(_service.Name, errorResponse.ToString());
         }
 
         public HttpRequestMessage CreateRequest()
         {
-            HttpRequestMessage request = this.CreateBuilder().CreateRequest();
-            object body = this.GetBody();
-            request.SetHttpRequestDepth(this.Depth);
-            request.SetRequestSerailizedContent(this._service, body, ContentType);
-            this.AddETag(request);
+            var request = CreateBuilder().CreateRequest();
+            var body = GetBody();
+            request.SetHttpRequestDepth(Depth);
+            request.SetRequestSerailizedContent(_service, body, ContentType);
+            AddETag(request);
             return request;
         }
 
@@ -160,21 +159,21 @@ namespace iCloud.Dav.Core.Request
         /// </returns>
         private RequestBuilder CreateBuilder()
         {
-            RequestBuilder requestBuilder = new RequestBuilder()
+            var requestBuilder = new RequestBuilder()
             {
-                BaseUri = new Uri(this.Service.BaseUri),
-                Path = this.RestPath,
-                Method = this.HttpMethod
+                BaseUri = new Uri(Service.BaseUri),
+                Path = RestPath,
+                Method = HttpMethod
             };
-            IDictionary<string, object> parameterDictionary = ParameterUtils.CreateParameterDictionary(this);
-            this.AddParameters(requestBuilder, ParameterCollection.FromDictionary(parameterDictionary));
+            var parameterDictionary = ParameterUtils.CreateParameterDictionary(this);
+            AddParameters(requestBuilder, ParameterCollection.FromDictionary(parameterDictionary));
             return requestBuilder;
         }
 
         /// <summary>Generates the right URL for this request.</summary>
         protected string GenerateRequestUri()
         {
-            return this.CreateBuilder().BuildUri().ToString();
+            return CreateBuilder().BuildUri().ToString();
         }
 
         protected virtual object GetBody()
@@ -187,11 +186,10 @@ namespace iCloud.Dav.Core.Request
         /// </summary>
         private void AddETag(HttpRequestMessage request)
         {
-            IDirectResponseSchema body = this.GetBody() as IDirectResponseSchema;
-            if (body == null || string.IsNullOrEmpty(body.ETag))
+            if (GetBody() is not IDirectResponseSchema body || string.IsNullOrEmpty(body.ETag))
                 return;
-            string etag = body.ETag;
-            ETagAction etagAction = this.ETagAction == ETagAction.Default ? GetDefaultETagAction(this.HttpMethod) : this.ETagAction;
+            var etag = body.ETag;
+            var etagAction = ETagAction == ETagAction.Default ? GetDefaultETagAction(HttpMethod) : ETagAction;
             try
             {
                 if (etagAction != ETagAction.IfMatch)
@@ -222,32 +220,31 @@ namespace iCloud.Dav.Core.Request
         {
             foreach (KeyValuePair<string, string> inputParameter in inputParameters)
             {
-                IParameter parameter;
-                if (!this.RequestParameters.TryGetValue(inputParameter.Key, out parameter))
-                    throw new ICloudApiException(this.Service.Name, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
-                string defaultValue = inputParameter.Value;
+                if (!RequestParameters.TryGetValue(inputParameter.Key, out var parameter))
+                    throw new ICloudApiException(Service.Name, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
+                var defaultValue = inputParameter.Value;
                 if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
-                    throw new ICloudApiException(this.Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
+                    throw new ICloudApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
                 if (defaultValue == null)
                     defaultValue = parameter.DefaultValue;
-                string parameterType = parameter.ParameterType;
+                var parameterType = parameter.ParameterType;
                 if (!(parameterType == "path"))
                 {
                     if (parameterType == "query")
                     {
-                        if (!object.Equals(defaultValue, parameter.DefaultValue) || parameter.IsRequired)
+                        if (!Equals(defaultValue, parameter.DefaultValue) || parameter.IsRequired)
                             requestBuilder.AddParameter(RequestParameterType.Query, inputParameter.Key, defaultValue);
                     }
                     else
-                        throw new ICloudApiException(this._service.Name, string.Format("Unsupported parameter type \"{0}\" for \"{1}\"", parameter.ParameterType, parameter.Name));
+                        throw new ICloudApiException(_service.Name, string.Format("Unsupported parameter type \"{0}\" for \"{1}\"", parameter.ParameterType, parameter.Name));
                 }
                 else
                     requestBuilder.AddParameter(RequestParameterType.Path, inputParameter.Key, defaultValue);
             }
-            foreach (IParameter parameter in RequestParameters.Values)
+            foreach (var parameter in RequestParameters.Values)
             {
                 if (parameter.IsRequired && !inputParameters.ContainsKey(parameter.Name))
-                    throw new ICloudApiException(this._service.Name, string.Format("Parameter \"{0}\" is missing", parameter.Name));
+                    throw new ICloudApiException(_service.Name, string.Format("Parameter \"{0}\" is missing", parameter.Name));
             }
         }
     }

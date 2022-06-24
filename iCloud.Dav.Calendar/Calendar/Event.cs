@@ -1,9 +1,8 @@
-﻿using Ical.Net;
-using Ical.Net.CalendarComponents;
+﻿using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
+using iCloud.Dav.Calendar.Converters;
+using iCloud.Dav.Calendar.Utils;
 using iCloud.Dav.Core.Services;
-using iCloud.Dav.ICalendar.Converters;
-using iCloud.Dav.ICalendar.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,8 +10,9 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using IcalCalendar = Ical.Net.Calendar;
 
-namespace iCloud.Dav.ICalendar
+namespace iCloud.Dav.Calendar
 {
     [TypeConverter(typeof(EventConverter))]
     public class Event : CalendarEvent, IDirectResponseSchema, ICloneable
@@ -34,15 +34,10 @@ namespace iCloud.Dav.ICalendar
 
         public virtual string ETag { get; set; }
 
-        public static IList<Calendar> LoadFromStream(Stream stream)
+        public static IList<IcalCalendar> LoadFromStream(Stream stream)
         {
-            return CalendarDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).OfType<Calendar>().ToList();
+            return CalendarDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).OfType<IcalCalendar>().ToList();
         }
-
-        //public static new IICalendarCollection LoadFromStream(Stream s, Encoding e, ISerializer serializer)
-        //{
-        //    return serializer.Deserialize(s, e) as IICalendarCollection;
-        //}
 
         public object Clone()
         {

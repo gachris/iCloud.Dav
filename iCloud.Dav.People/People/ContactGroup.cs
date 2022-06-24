@@ -50,9 +50,9 @@ namespace iCloud.Dav.People
 
         public virtual bool AddMemberResource(string uniqueId)
         {
-            if (!this.MemberResourceNames.Contains(uniqueId))
+            if (!MemberResourceNames.Contains(uniqueId))
             {
-                this.MemberResourceNames.Add(uniqueId);
+                MemberResourceNames.Add(uniqueId);
                 return true;
             }
             return false;
@@ -60,9 +60,9 @@ namespace iCloud.Dav.People
 
         public virtual bool RemoveMemberResource(string uniqueId)
         {
-            if (this.MemberResourceNames.Contains(uniqueId))
+            if (MemberResourceNames.Contains(uniqueId))
             {
-                this.MemberResourceNames.Remove(uniqueId);
+                MemberResourceNames.Remove(uniqueId);
                 return true;
             }
             return false;

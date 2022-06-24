@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Types
+namespace iCloud.Dav.Calendar.Types
 {
     [XmlRoot(ElementName = "comp-filter", Namespace = "urn:ietf:params:xml:ns:caldav")]
     public class Compfilter

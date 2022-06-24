@@ -1,5 +1,5 @@
-﻿using iCloud.Dav.ICalendar;
-using iCloud.Dav.ICalendar.Resources;
+﻿using iCloud.Dav.Calendar;
+using iCloud.Dav.Calendar.Resources;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.People;
 using iCloud.Dav.People.Resources;

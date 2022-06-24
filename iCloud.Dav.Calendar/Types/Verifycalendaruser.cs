@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.ICalendar.Types
+namespace iCloud.Dav.Calendar.Types
 {
     [XmlRoot(ElementName = "verify-calendar-user", Namespace = "http://me.com/_namespace/")]
     public class Verifycalendaruser
