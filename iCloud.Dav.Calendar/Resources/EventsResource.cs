@@ -1,6 +1,7 @@
-﻿using iCloud.Dav.Calendar.Request;
-using iCloud.Dav.Calendar.Types;
-using iCloud.Dav.Calendar.Utils;
+﻿using Ical.Net.Serialization;
+using iCloud.Dav.ICalendar.Request;
+using iCloud.Dav.ICalendar.Types;
+using iCloud.Dav.ICalendar.Utils;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
@@ -8,7 +9,7 @@ using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
 using System;
 
-namespace iCloud.Dav.Calendar.Resources
+namespace iCloud.Dav.ICalendar.Resources
 {
     /// <summary>The "events" collection of methods.</summary>
     public class EventsResource
@@ -21,14 +22,14 @@ namespace iCloud.Dav.Calendar.Resources
         /// <summary>Constructs a new resource.</summary>
         public EventsResource(IClientService service)
         {
-            this._service = service;
+            _service = service;
         }
 
         /// <summary>Returns events on the specified calendar.</summary>
         /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
         public virtual ListRequest List(string calendarId)
         {
-            return new ListRequest(this._service, calendarId);
+            return new ListRequest(_service, calendarId);
         }
 
         /// <summary>Returns an event.</summary>
@@ -36,7 +37,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// <param name="eventId">Event identifier.</param>
         public virtual GetRequest Get(string calendarId, string eventId)
         {
-            return new GetRequest(this._service, calendarId, eventId);
+            return new GetRequest(_service, calendarId, eventId);
         }
 
         /// <summary>Creates an event.</summary>
@@ -44,7 +45,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
         public virtual InsertRequest Insert(Event body, string calendarId)
         {
-            return new InsertRequest(this._service, body, calendarId);
+            return new InsertRequest(_service, body, calendarId);
         }
 
         /// <summary>Updates an event.</summary>
@@ -52,7 +53,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
         public virtual UpdateRequest Update(Event body, string calendarId)
         {
-            return new UpdateRequest(this._service, body, calendarId);
+            return new UpdateRequest(_service, body, calendarId);
         }
 
         /// <summary>Deletes an event.</summary>
@@ -60,7 +61,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// <param name="eventId">Event identifier.</param>
         public virtual DeleteRequest Delete(string calendarId, string eventId)
         {
-            return new DeleteRequest(this._service, calendarId, eventId);
+            return new DeleteRequest(_service, calendarId, eventId);
         }
 
         /// <summary>Returns events on the specified calendar.</summary>
@@ -69,8 +70,8 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new List request.</summary>
             public ListRequest(IClientService service, string calendarId) : base(service)
             {
-                this.CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                this.InitParameters();
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
@@ -104,16 +105,16 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                Calendarquery calendarquery = new Calendarquery()
+                var calendarquery = new Calendarquery()
                 {
                     Prop = new Prop() { Calendardata = Calendardata.Default, Getetag = Getetag.Default },
                     Filter = new Filter() { Compfilter = new Compfilter() { Name = "VCALENDAR", Child = new Compfilter() { Name = "VEVENT" } } }
                 };
 
-                var timeMin = this.TimeMin.ToFilterTime();
-                var timeMax = this.TimeMax.ToFilterTime();
+                var timeMin = TimeMin.ToFilterTime();
+                var timeMax = TimeMax.ToFilterTime();
 
-                if (!String.IsNullOrEmpty(timeMin) || !String.IsNullOrEmpty(timeMax))
+                if (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
                     calendarquery.Filter.Compfilter.Child.Timerange = new Timerange { Start = timeMin, End = timeMax };
 
                 return calendarquery;
@@ -124,7 +125,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter()
+                RequestParameters.Add("calendarId", new Parameter()
                 {
                     Name = "calendarId",
                     IsRequired = true,
@@ -139,9 +140,9 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Get request.</summary>
             public GetRequest(IClientService service, string calendarId, string eventId) : base(service)
             {
-                this.CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                this.EventId = eventId.ThrowIfNullOrEmpty(nameof(eventId));
-                this.InitParameters();
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                EventId = eventId.ThrowIfNullOrEmpty(nameof(eventId));
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
@@ -169,13 +170,13 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter()
+                RequestParameters.Add("calendarId", new Parameter()
                 {
                     Name = "calendarId",
                     IsRequired = true,
                     ParameterType = "path"
                 });
-                this.RequestParameters.Add("eventId", new Parameter()
+                RequestParameters.Add("eventId", new Parameter()
                 {
                     Name = "eventId",
                     IsRequired = true,
@@ -190,12 +191,12 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Insert request.</summary>
             public InsertRequest(IClientService service, Event body, string calendarId) : base(service)
             {
-                this.CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                this.Body = body.ThrowIfNull(nameof(body));
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                Body = body.ThrowIfNull(nameof(body));
                 if (String.IsNullOrEmpty(body.Uid))
                     body.Uid = Guid.NewGuid().ToString().ToUpper();
-                this.EventId = body.Uid;
-                this.InitParameters();
+                EventId = body.Uid;
+                InitParameters();
             }
 
             /// <summary>Event identifier.</summary>
@@ -224,9 +225,9 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                Ical.Net.Calendar calendar = new Ical.Net.Calendar();
-                Ical.Net.Serialization.iCalendar.Serializers.CalendarSerializer calendarSerializer = new Ical.Net.Serialization.iCalendar.Serializers.CalendarSerializer();
-                calendar.Events.Add(this.Body);
+                var calendar = new Ical.Net.Calendar();
+                var calendarSerializer = new CalendarSerializer();
+                calendar.Events.Add(Body);
                 return calendarSerializer.SerializeToString(calendar);
             }
 
@@ -235,7 +236,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter()
+                RequestParameters.Add("calendarId", new Parameter()
                 {
                     Name = "calendarId",
                     IsRequired = true,
@@ -243,7 +244,7 @@ namespace iCloud.Dav.Calendar.Resources
                     DefaultValue = null,
                     Pattern = null
                 });
-                this.RequestParameters.Add("eventId", new Parameter()
+                RequestParameters.Add("eventId", new Parameter()
                 {
                     Name = "eventId",
                     IsRequired = true,
@@ -258,10 +259,10 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Update request.</summary>
             public UpdateRequest(IClientService service, Event body, string calendarId) : base(service)
             {
-                this.CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                this.Body = body.ThrowIfNull(nameof(body));
-                this.EventId = this.Body.Uid.ThrowIfNullOrEmpty(nameof(Event.Uid));
-                this.InitParameters();
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                Body = body.ThrowIfNull(nameof(body));
+                EventId = Body.Uid.ThrowIfNullOrEmpty(nameof(Event.Uid));
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
@@ -290,9 +291,9 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                Ical.Net.Calendar calendar = new Ical.Net.Calendar();
-                Ical.Net.Serialization.iCalendar.Serializers.CalendarSerializer calendarSerializer = new Ical.Net.Serialization.iCalendar.Serializers.CalendarSerializer();
-                calendar.Events.Add(this.Body);
+                var calendar = new Ical.Net.Calendar();
+                var calendarSerializer = new CalendarSerializer();
+                calendar.Events.Add(Body);
                 return calendarSerializer.SerializeToString(calendar);
             }
 
@@ -301,7 +302,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter()
+                RequestParameters.Add("calendarId", new Parameter()
                 {
                     Name = "calendarId",
                     IsRequired = true,
@@ -309,7 +310,7 @@ namespace iCloud.Dav.Calendar.Resources
                     DefaultValue = null,
                     Pattern = null
                 });
-                this.RequestParameters.Add("eventId", new Parameter()
+                RequestParameters.Add("eventId", new Parameter()
                 {
                     Name = "eventId",
                     IsRequired = true,
@@ -324,9 +325,9 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Delete request.</summary>
             public DeleteRequest(IClientService service, string calendarId, string eventId) : base(service)
             {
-                this.CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                this.EventId = eventId.ThrowIfNullOrEmpty(nameof(eventId));
-                this.InitParameters();
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                EventId = eventId.ThrowIfNullOrEmpty(nameof(eventId));
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
@@ -354,13 +355,13 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter()
+                RequestParameters.Add("calendarId", new Parameter()
                 {
                     Name = "calendarId",
                     IsRequired = true,
                     ParameterType = "path"
                 });
-                this.RequestParameters.Add("eventId", new Parameter()
+                RequestParameters.Add("eventId", new Parameter()
                 {
                     Name = "eventId",
                     IsRequired = true,

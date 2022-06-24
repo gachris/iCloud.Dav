@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Types
+namespace iCloud.Dav.ICalendar.Types
 {
     [XmlRoot(ElementName = "current-user-privilege-set", Namespace = "DAV:")]
     public class Currentuserprivilegeset

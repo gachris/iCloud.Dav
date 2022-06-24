@@ -1,6 +1,8 @@
-﻿namespace iCloud.Dav.Calendar
+﻿using Ical.Net.CalendarComponents;
+
+namespace iCloud.Dav.ICalendar
 {
-    public class Statndard : Ical.Net.CalendarComponent
+    public class Statndard : CalendarComponent
     {
         public Statndard() : base("STANDARD")
         {

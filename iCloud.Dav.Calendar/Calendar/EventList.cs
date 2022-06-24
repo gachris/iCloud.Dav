@@ -1,11 +1,11 @@
-﻿using iCloud.Dav.Calendar.Converters;
-using iCloud.Dav.Calendar.Types;
+﻿using iCloud.Dav.ICalendar.Converters;
+using iCloud.Dav.ICalendar.Types;
 using iCloud.Dav.Core.Attributes;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace iCloud.Dav.Calendar
+namespace iCloud.Dav.ICalendar
 {
     [TypeConverter(typeof(EventListConverter))]
     [XmlDeserializeType(typeof(Multistatus<Prop>))]

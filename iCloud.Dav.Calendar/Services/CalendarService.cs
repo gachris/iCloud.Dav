@@ -1,8 +1,8 @@
-﻿using iCloud.Dav.Calendar.Resources;
+﻿using iCloud.Dav.ICalendar.Resources;
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Services;
 
-namespace iCloud.Dav.Calendar.Services
+namespace iCloud.Dav.ICalendar.Services
 {
     public class CalendarService : BaseClientService
     {

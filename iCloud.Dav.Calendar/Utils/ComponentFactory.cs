@@ -1,43 +1,27 @@
 ﻿using Ical.Net;
-using Ical.Net.Interfaces.Components;
-using Ical.Net.Interfaces.Serialization.Factory;
+using Ical.Net.CalendarComponents;
+using Ical.Net.Serialization;
 
-namespace iCloud.Dav.Calendar.Utils
+namespace iCloud.Dav.ICalendar.Utils
 {
-    public class ComponentFactory : ICalendarComponentFactory
+    public class ComponentFactory : CalendarComponentFactory
     {
-        public virtual ICalendarComponent Build(string objectName)
+        public override ICalendarComponent Build(string objectName)
         {
-            string upper = objectName.ToUpper();
-            ICalendarComponent calendarComponent;
-            switch (upper)
+            var text = objectName.ToUpper();
+            var calendarComponent = text switch
             {
-                case "VALARM":
-                    calendarComponent = new Alarm();
-                    break;
-                case "VCALENDAR":
-                    calendarComponent = new Ical.Net.Calendar();
-                    break;
-                case "VEVENT":
-                    calendarComponent = new Event();
-                    break;
-                case "VFREEBUSY":
-                    calendarComponent = new FreeBusy();
-                    break;
-                case "VJOURNAL":
-                    calendarComponent = new Journal();
-                    break;
-                case "VTIMEZONE":
-                    calendarComponent = new VTimeZone();
-                    break;
-                case "VTODO":
-                    calendarComponent = new Reminder();
-                    break;
-                default:
-                    calendarComponent = new CalendarComponent();
-                    break;
-            }
-            calendarComponent.Name = upper;
+                "VALARM" => new Alarm(),
+                "VEVENT" => new Event(),
+                "VFREEBUSY" => new FreeBusy(),
+                "VJOURNAL" => new Journal(),
+                "VTIMEZONE" => new VTimeZone(),
+                "VTODO" => new Reminder(),
+                "VCALENDAR" => new Calendar(),
+                "DAYLIGHT" or "STANDARD" => new VTimeZoneInfo(),
+                _ => new CalendarComponent(),
+            };
+            calendarComponent.Name = text;
             return calendarComponent;
         }
     }

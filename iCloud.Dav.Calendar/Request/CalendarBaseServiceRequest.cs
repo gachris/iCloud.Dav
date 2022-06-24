@@ -1,7 +1,7 @@
 ﻿using iCloud.Dav.Core.Request;
 using iCloud.Dav.Core.Services;
 
-namespace iCloud.Dav.Calendar.Request
+namespace iCloud.Dav.ICalendar.Request
 {
     public abstract class CalendarBaseServiceRequest<TResponse> : ClientServiceRequest<TResponse>
     {

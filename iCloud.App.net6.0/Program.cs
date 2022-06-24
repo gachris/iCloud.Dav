@@ -1,6 +1,6 @@
 ﻿using Ical.Net.DataTypes;
-using iCloud.Dav.Calendar;
-using iCloud.Dav.Calendar.Services;
+using iCloud.Dav.ICalendar;
+using iCloud.Dav.ICalendar.Services;
 using iCloud.Dav.People;
 using iCloud.Dav.People.Services;
 using System;

@@ -1,11 +1,11 @@
-﻿using iCloud.Dav.Calendar.Types;
-using iCloud.Dav.Calendar.Utils;
+﻿using iCloud.Dav.ICalendar.Types;
+using iCloud.Dav.ICalendar.Utils;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace iCloud.Dav.Calendar.Converters
+namespace iCloud.Dav.ICalendar.Converters
 {
     internal class CalendarConverter : TypeConverter
     {

@@ -1,6 +1,7 @@
-﻿using iCloud.Dav.Calendar.Request;
-using iCloud.Dav.Calendar.Types;
-using iCloud.Dav.Calendar.Utils;
+﻿using Ical.Net.Serialization;
+using iCloud.Dav.ICalendar.Request;
+using iCloud.Dav.ICalendar.Types;
+using iCloud.Dav.ICalendar.Utils;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
@@ -8,7 +9,7 @@ using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
 using System;
 
-namespace iCloud.Dav.Calendar.Resources
+namespace iCloud.Dav.ICalendar.Resources
 {
     /// <summary>The "calendars" collection of methods.</summary>
     public class CalendarsResource
@@ -21,41 +22,41 @@ namespace iCloud.Dav.Calendar.Resources
         /// <summary>Constructs a new resource.</summary>
         public CalendarsResource(IClientService service)
         {
-            this._service = service;
+            _service = service;
         }
 
         /// <summary>Returns the calendars on the user's calendar list.</summary>
         public virtual ListRequest List()
         {
-            return new ListRequest(this._service);
+            return new ListRequest(_service);
         }
 
         /// <summary>Returns a calendar from the user's calendar list.</summary>
         /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendars.list method.</param>
         public virtual GetRequest Get(string calendarId)
         {
-            return new GetRequest(this._service, calendarId);
+            return new GetRequest(_service, calendarId);
         }
 
         /// <summary>Inserts an existing calendar into the user's calendar list.</summary>
         /// <param name="body">The body of the request.</param>
         public virtual InsertRequest Insert(CalendarEntry body)
         {
-            return new InsertRequest(this._service, body);
+            return new InsertRequest(_service, body);
         }
 
         /// <summary>Updates an existing calendar on the user's calendar list.</summary>
         /// <param name="body">The body of the request.</param>
         public virtual UpdateRequest Update(CalendarEntry body)
         {
-            return new UpdateRequest(this._service, body);
+            return new UpdateRequest(_service, body);
         }
 
         /// <summary>Removes a calendar from the user's calendar list.</summary>
         /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendars.list method.</param>
         public virtual DeleteRequest Delete(string calendarId)
         {
-            return new DeleteRequest(this._service, calendarId);
+            return new DeleteRequest(_service, calendarId);
         }
 
         /// <summary>Returns the calendars on the user's calendar list.</summary>
@@ -64,7 +65,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new List request.</summary>
             public ListRequest(IClientService service) : base(service)
             {
-                this.InitParameters();
+                InitParameters();
             }
 
             ///<summary>Gets the method name.</summary>
@@ -106,8 +107,8 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Get request.</summary>
             public GetRequest(IClientService service, string calendarId) : base(service)
             {
-                this.CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                this.InitParameters();
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
@@ -150,7 +151,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter
+                RequestParameters.Add("calendarId", new Parameter
                 {
                     Name = "calendarId",
                     IsRequired = true,
@@ -165,11 +166,11 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Insert request.</summary>
             public InsertRequest(IClientService service, CalendarEntry body) : base(service)
             {
-                this.Body = body.ThrowIfNull(nameof(body));
-                if (string.IsNullOrEmpty(this.Body.Id))
-                    this.Body.Id = Guid.NewGuid().ToString().ToUpper();
-                this.CalendarId = this.Body.Id;
-                this.InitParameters();
+                Body = body.ThrowIfNull(nameof(body));
+                if (string.IsNullOrEmpty(Body.Id))
+                    Body.Id = Guid.NewGuid().ToString().ToUpper();
+                CalendarId = Body.Id;
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
@@ -194,26 +195,32 @@ namespace iCloud.Dav.Calendar.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                MkCalendar mkCalendar = new MkCalendar();
-                Set set = new Set();
-                Prop prop = new Prop();
-                prop.Displayname = new Displayname() { Value = this.Body.Summary };
-                prop.CalendarColor = new CalendarColor() { Value = this.Body.Color };
-                prop.SupportedCalendarComponentSet = new SupportedCalendarComponentSet();
-                prop.SupportedCalendarComponentSet.Comps = new System.Collections.Generic.List<Comp>();
-
-                if (this.Body.TimeZone != null)
+                var mkCalendar = new MkCalendar();
+                var set = new Set();
+                var prop = new Prop
                 {
-                    Ical.Net.Calendar calendar = new Ical.Net.Calendar();
-                    CalendarSerializer calendarSerializer = new CalendarSerializer();
-                    calendar.TimeZones.Add(this.Body.TimeZone);
-                    prop.CalendarTimeZone = new CalendarTimeZone();
-                    prop.CalendarTimeZone.Value = calendarSerializer.SerializeToString(calendar);
+                    Displayname = new Displayname() { Value = Body.Summary },
+                    CalendarColor = new CalendarColor() { Value = Body.Color },
+                    SupportedCalendarComponentSet = new SupportedCalendarComponentSet
+                    {
+                        Comps = new System.Collections.Generic.List<Comp>()
+                    }
+                };
+
+                if (Body.TimeZone != null)
+                {
+                    var calendar = new Ical.Net.Calendar();
+                    var calendarSerializer = new CalendarSerializer();
+                    calendar.TimeZones.Add(Body.TimeZone);
+                    prop.CalendarTimeZone = new CalendarTimeZone
+                    {
+                        Value = calendarSerializer.SerializeToString(calendar)
+                    };
                 }
 
-                this.Body.SupportedCalendarComponents.ForEach(calendarComponent =>
+                Body.SupportedCalendarComponents.ForEach(calendarComponent =>
                 {
-                    Comp comp = new Comp() { Name = calendarComponent };
+                    var comp = new Comp() { Name = calendarComponent };
                     prop.SupportedCalendarComponentSet.Comps.Add(comp);
                 });
                 set.Prop = prop;
@@ -226,7 +233,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter
+                RequestParameters.Add("calendarId", new Parameter
                 {
                     Name = "calendarId",
                     IsRequired = true,
@@ -241,9 +248,9 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Update request.</summary>
             public UpdateRequest(IClientService service, CalendarEntry body) : base(service)
             {
-                this.Body = body.ThrowIfNull(nameof(body));
-                this.CalendarId = body.Id.ThrowIfNullOrEmpty(nameof(CalendarEntry.Id));
-                this.InitParameters();
+                Body = body.ThrowIfNull(nameof(body));
+                CalendarId = body.Id.ThrowIfNullOrEmpty(nameof(CalendarEntry.Id));
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
@@ -283,7 +290,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter
+                RequestParameters.Add("calendarId", new Parameter
                 {
                     Name = "calendarId",
                     IsRequired = true,
@@ -298,8 +305,8 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Constructs a new Delete request.</summary>
             public DeleteRequest(IClientService service, string calendarId) : base(service)
             {
-                this.CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                this.InitParameters();
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                InitParameters();
             }
 
             /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
@@ -323,7 +330,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 base.InitParameters();
 
-                this.RequestParameters.Add("calendarId", new Parameter
+                RequestParameters.Add("calendarId", new Parameter
                 {
                     Name = "calendarId",
                     IsRequired = true,

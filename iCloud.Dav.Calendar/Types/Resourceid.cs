@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Types
+namespace iCloud.Dav.ICalendar.Types
 {
     [XmlRoot(ElementName = "resource-id", Namespace = "DAV:")]
     public class ResourceId

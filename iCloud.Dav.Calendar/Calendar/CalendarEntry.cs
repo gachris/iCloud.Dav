@@ -1,5 +1,6 @@
-﻿using iCloud.Dav.Calendar.Converters;
-using iCloud.Dav.Calendar.Types;
+﻿using Ical.Net.CalendarComponents;
+using iCloud.Dav.ICalendar.Converters;
+using iCloud.Dav.ICalendar.Types;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Services;
 using System;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace iCloud.Dav.Calendar
+namespace iCloud.Dav.ICalendar
 {
     [XmlDeserializeType(typeof(Multistatus<Prop>))]
     [TypeConverter(typeof(CalendarConverter))]
@@ -41,7 +42,7 @@ namespace iCloud.Dav.Calendar
 
         public virtual SupportedCalendarComponentCollection SupportedCalendarComponents { get; }
 
-        public virtual Ical.Net.VTimeZone TimeZone { get; set; }
+        public virtual VTimeZone TimeZone { get; set; }
 
         public object Clone()
         {

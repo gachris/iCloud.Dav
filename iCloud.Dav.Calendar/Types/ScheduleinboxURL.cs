@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Types
+namespace iCloud.Dav.ICalendar.Types
 {
     [XmlRoot(ElementName = "schedule-inbox-URL", Namespace = "urn:ietf:params:xml:ns:caldav")]
     public class ScheduleinboxURL

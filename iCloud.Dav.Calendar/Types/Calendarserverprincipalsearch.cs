@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Types
+namespace iCloud.Dav.ICalendar.Types
 {
     [XmlRoot(ElementName = "calendarserver-principal-search", Namespace = "http://calendarserver.org/ns/")]
     public class Calendarserverprincipalsearch

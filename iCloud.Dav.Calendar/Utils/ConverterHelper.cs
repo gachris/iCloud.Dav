@@ -1,11 +1,11 @@
-﻿using iCloud.Dav.Calendar.Types;
+﻿using iCloud.Dav.ICalendar.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace iCloud.Dav.Calendar.Utils
+namespace iCloud.Dav.ICalendar.Utils
 {
     internal static class ConverterHelper
     {
@@ -13,10 +13,10 @@ namespace iCloud.Dav.Calendar.Utils
         {
             if (responses != null && responses.Any())
             {
-                CalendarEntryList calendarList = new CalendarEntryList();
+                var calendarList = new CalendarEntryList();
                 foreach (var response in responses)
                 {
-                    CalendarEntry calendarListEntry = response.ToCalendar();
+                    var calendarListEntry = response.ToCalendar();
                     if (calendarListEntry != null)
                     {
                         calendarList.Add(calendarListEntry);
@@ -32,17 +32,17 @@ namespace iCloud.Dav.Calendar.Utils
             if (response != null)
             {
                 var CalendarUrl = response.Url.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                if (CalendarUrl.Count() == 3)
+                if (CalendarUrl.Length == 3)
                 {
-                    CalendarEntry calendarListEntry = new CalendarEntry();
+                    var calendarListEntry = new CalendarEntry();
 
-                    string id = CalendarUrl.Last();
-                    string summary = response.Propstat.Prop.Displayname?.Value ?? id;
-                    IEnumerable<string> privileges = response.Propstat.Prop.Currentuserprivilegeset?.Privilege?
+                    var id = CalendarUrl.Last();
+                    var summary = response.Propstat.Prop.Displayname?.Value ?? id;
+                    var privileges = response.Propstat.Prop.Currentuserprivilegeset?.Privilege?
                         .Select(privilege => (string)privilege.Value) ?? new List<string>();
-                    IEnumerable<string> supportedReports = response.Propstat.Prop.Supportedreportset?.Supportedreport?
+                    var supportedReports = response.Propstat.Prop.Supportedreportset?.Supportedreport?
                         .Select(supportedReport => (string)supportedReport.Report?.Value) ?? new List<string>();
-                    IEnumerable<string> supportedCalendarComponents = response.Propstat.Prop.SupportedCalendarComponentSet?.Comps?
+                    var supportedCalendarComponents = response.Propstat.Prop.SupportedCalendarComponentSet?.Comps?
                         .Select(comp => comp.Name) ?? new List<string>();
 
                     calendarListEntry.Id = id;
@@ -60,16 +60,16 @@ namespace iCloud.Dav.Calendar.Utils
             return default;
         }
 
-        public static EventList ToEventList(this List<Response<Prop>> responses)
+        public static EventList ToEventList(this IEnumerable<Response<Prop>> responses)
         {
-            List<Event> events = new List<Event>();
+            var events = new List<Event>();
             foreach (var multistatusItem in responses)
             {
                 if (multistatusItem.Propstat != null
                     && multistatusItem.Propstat.Prop != null
                     && multistatusItem.Propstat.Prop.Calendardata != null)
                 {
-                    Event @event = multistatusItem.Propstat.Prop.Calendardata.Value.ToEvent();
+                    var @event = multistatusItem.Propstat.Prop.Calendardata.Value.ToEvent();
                     @event.ETag = multistatusItem.Propstat.Prop.Getetag.Value;
                     events.Add(@event);
                 }
@@ -79,18 +79,16 @@ namespace iCloud.Dav.Calendar.Utils
 
         public static Event ToEvent(this string input)
         {
-            if (!String.IsNullOrEmpty(input))
+            if (!string.IsNullOrEmpty(input))
             {
-                byte[] byteArray = Encoding.UTF8.GetBytes(input);
-                using (MemoryStream stream = new MemoryStream(byteArray))
+                var byteArray = Encoding.UTF8.GetBytes(input);
+                using var stream = new MemoryStream(byteArray);
+                var calendars = Event.LoadFromStream(stream);
+                if (calendars != null)
                 {
-                    var calendars = Event.LoadFromStream(stream);
-                    if (calendars != null)
-                    {
-                        var currentCalendar = calendars.FirstOrDefault();
-                        var currentEvent = (Event)currentCalendar.Events[0];
-                        return currentEvent;
-                    }
+                    var currentCalendar = calendars.FirstOrDefault().Events.FirstOrDefault();
+                    var currentEvent = currentCalendar;
+                    return currentEvent as Event;
                 }
             }
             return default;
@@ -98,14 +96,14 @@ namespace iCloud.Dav.Calendar.Utils
 
         public static ReminderList ToReminderList(this List<Response<Prop>> responses)
         {
-            List<Reminder> events = new List<Reminder>();
+            var events = new List<Reminder>();
             foreach (var multistatusItem in responses)
             {
                 if (multistatusItem.Propstat != null
                     && multistatusItem.Propstat.Prop != null
                     && multistatusItem.Propstat.Prop.Calendardata != null)
                 {
-                    Reminder @event = multistatusItem.Propstat.Prop.Calendardata.Value.ToReminder();
+                    var @event = multistatusItem.Propstat.Prop.Calendardata.Value.ToReminder();
                     @event.ETag = multistatusItem.Propstat.Prop.Getetag.Value;
                     events.Add(@event);
                 }
@@ -115,18 +113,16 @@ namespace iCloud.Dav.Calendar.Utils
 
         public static Reminder ToReminder(this string input)
         {
-            if (!String.IsNullOrEmpty(input))
+            if (!string.IsNullOrEmpty(input))
             {
-                byte[] byteArray = Encoding.UTF8.GetBytes(input);
-                using (MemoryStream stream = new MemoryStream(byteArray))
+                var byteArray = Encoding.UTF8.GetBytes(input);
+                using var stream = new MemoryStream(byteArray);
+                var calendars = Reminder.LoadFromStream(stream);
+                if (calendars != null)
                 {
-                    var calendars = Reminder.LoadFromStream(stream);
-                    if (calendars != null)
-                    {
-                        var currentCalendar = calendars.FirstOrDefault();
-                        var currentEvent = (Reminder)currentCalendar.Todos[0];
-                        return currentEvent;
-                    }
+                    var currentCalendar = calendars.FirstOrDefault().Todos.FirstOrDefault();
+                    var currentEvent = currentCalendar;
+                    return currentEvent as Reminder;
                 }
             }
             return default;

@@ -1,19 +1,21 @@
-﻿using Ical.Net.Interfaces;
-using Ical.Net.Interfaces.DataTypes;
-using Ical.Net.Interfaces.Serialization;
-using iCloud.Dav.Calendar.Converters;
-using iCloud.Dav.Calendar.Utils;
+﻿using Ical.Net;
+using Ical.Net.CalendarComponents;
+using Ical.Net.DataTypes;
 using iCloud.Dav.Core.Services;
+using iCloud.Dav.ICalendar.Converters;
+using iCloud.Dav.ICalendar.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Text;
 
-namespace iCloud.Dav.Calendar
+namespace iCloud.Dav.ICalendar
 {
     [TypeConverter(typeof(EventConverter))]
-    public class Event : Ical.Net.Event, Ical.Net.Interfaces.Components.IEvent, IDirectResponseSchema, ICloneable
+    public class Event : CalendarEvent, IDirectResponseSchema, ICloneable
     {
         [Required]
         public override string Uid { get => base.Uid; set => base.Uid = value; }
@@ -32,19 +34,19 @@ namespace iCloud.Dav.Calendar
 
         public virtual string ETag { get; set; }
 
-        public static new IICalendarCollection LoadFromStream(Stream s)
+        public static IList<Calendar> LoadFromStream(Stream stream)
         {
-            return Event.LoadFromStream(s, Encoding.UTF8, new CalendarSerializer());
+            return CalendarDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).OfType<Calendar>().ToList();
         }
 
-        public static new IICalendarCollection LoadFromStream(Stream s, Encoding e, ISerializer serializer)
-        {
-            return serializer.Deserialize(s, e) as IICalendarCollection;
-        }
+        //public static new IICalendarCollection LoadFromStream(Stream s, Encoding e, ISerializer serializer)
+        //{
+        //    return serializer.Deserialize(s, e) as IICalendarCollection;
+        //}
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 }
