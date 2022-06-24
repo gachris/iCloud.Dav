@@ -7,23 +7,23 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj" />
-	  <ProjectReference Include="..\iCloud.Dav.People\iCloud.Dav.People.csproj" />
 		<Reference Include="antlr.runtime">
-			<HintPath>..\Reference\Ical.Net.2.3.0\antlr.runtime.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\antlr.runtime.dll</HintPath>
 		</Reference>
 		<Reference Include="Ical.Net">
-			<HintPath>..\Reference\Ical.Net.2.3.0\Ical.Net.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\Ical.Net.dll</HintPath>
 		</Reference>
 		<Reference Include="Ical.Net.Collections">
-			<HintPath>..\Reference\Ical.Net.2.3.0\Ical.Net.Collections.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\Ical.Net.Collections.dll</HintPath>
 		</Reference>
 		<Reference Include="NodaTime">
-			<HintPath>..\Reference\Ical.Net.2.3.0\NodaTime.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\NodaTime.dll</HintPath>
 		</Reference>
 		<Reference Include="ICalVCard">
-			<HintPath>..\Reference\ICalVCard.1.0.0\ICalVCard.dll</HintPath>
+			<HintPath>..\ICalVCard.1.0.0\ICalVCard.dll</HintPath>
 		</Reference>
+	  <ProjectReference Include="..\iCloud.Dav.People\iCloud.Dav.People.csproj" />
+	  <ProjectReference Include="..\iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj" />
 	</ItemGroup>
 
 	<!--<ItemGroup>

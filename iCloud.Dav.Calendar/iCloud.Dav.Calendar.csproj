@@ -18,30 +18,30 @@
 
 	<ItemGroup>
 		<Reference Include="antlr.runtime">
-			<HintPath>..\Reference\Ical.Net.2.3.0\antlr.runtime.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\antlr.runtime.dll</HintPath>
 		</Reference>
 		<Reference Include="Ical.Net">
-			<HintPath>..\Reference\Ical.Net.2.3.0\Ical.Net.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\Ical.Net.dll</HintPath>
 		</Reference>
 		<Reference Include="Ical.Net.Collections">
-			<HintPath>..\Reference\Ical.Net.2.3.0\Ical.Net.Collections.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\Ical.Net.Collections.dll</HintPath>
 		</Reference>
 		<Reference Include="NodaTime">
-			<HintPath>..\Reference\Ical.Net.2.3.0\NodaTime.dll</HintPath>
+			<HintPath>..\Ical.Net.2.3.0\NodaTime.dll</HintPath>
 		</Reference>
-		<Content Include="..\Reference\Ical.Net.2.3.0\antlr.runtime.dll">
+		<Content Include="..\Ical.Net.2.3.0\antlr.runtime.dll">
 			<Pack>true</Pack>
 			<PackagePath>lib\net6.0</PackagePath>
 		</Content>
-		<Content Include="..\Reference\Ical.Net.2.3.0\Ical.Net.dll">
+		<Content Include="..\Ical.Net.2.3.0\Ical.Net.dll">
 			<Pack>true</Pack>
 			<PackagePath>lib\net6.0</PackagePath>
 		</Content>
-		<Content Include="..\Reference\Ical.Net.2.3.0\Ical.Net.Collections.dll">
+		<Content Include="..\Ical.Net.2.3.0\Ical.Net.Collections.dll">
 			<Pack>true</Pack>
 			<PackagePath>lib\net6.0</PackagePath>
 		</Content>
-		<Content Include="..\Reference\Ical.Net.2.3.0\NodaTime.dll">
+		<Content Include="..\Ical.Net.2.3.0\NodaTime.dll">
 			<Pack>true</Pack>
 			<PackagePath>lib\net6.0</PackagePath>
 		</Content>
