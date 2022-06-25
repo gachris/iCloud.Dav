@@ -202,7 +202,7 @@ namespace iCloud.Sync.App
             _ = ContactGroupMethods.Update(service.ContactGroups, contactGroup, resourceName);
 
             // get persons 
-            _ = PeopleMethods.GetList(service.People, resourceName);
+            var people = PeopleMethods.GetList(service.People, resourceName);
 
             // get person
             person = PeopleMethods.Get(service.People, personId, resourceName);
@@ -210,9 +210,15 @@ namespace iCloud.Sync.App
             // update person fields
             person.FormattedName = "Updated Contact Description";
             person.FamilyName = "Updated Contact Description";
-
+            person.Notes.Add(new Note() { Text = "Alli mia wraia mera!" });
+            person.Addresses.Add(new Address() { AddressType = AddressTypes.Home, City = "Athens", Country = "Greece", Street = "Arkesilaou 4", PostalCode = "11473" });
+            person.Labels.Add(new Label() { Text = "new label here!" });
+            person.Websites.Add(new Website() { Url = "www.index.com", WebsiteType = WebsiteTypes.Work });
             // update person
             _ = PeopleMethods.Update(service.People, person, resourceName);
+
+            // get person
+            person = PeopleMethods.Get(service.People, personId, resourceName);
 
             // delete person
             _ = PeopleMethods.Delete(service.People, personId, resourceName);

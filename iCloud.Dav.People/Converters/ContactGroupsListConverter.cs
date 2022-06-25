@@ -1,8 +1,10 @@
-﻿using iCloud.Dav.People.Types;
-using iCloud.Dav.People.Utils;
+﻿using iCloud.Dav.Core.Utils;
+using iCloud.Dav.People.Types;
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace iCloud.Dav.People.Converters
 {
@@ -30,12 +32,28 @@ namespace iCloud.Dav.People.Converters
         /// <returns>value that is result of conversion</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (value != null)
+            switch (value)
             {
-                var responses = ((Multistatus<Prop>)value).Responses;
-                return responses.ToContactGroupsList();
+                case Multistatus<Prop> multistatusProp:
+                    var responses = multistatusProp.Responses.ThrowIfNull(nameof(multistatusProp.Responses));
+
+                    return new ContactGroupsList(responses.Select(response =>
+                    {
+                        var propstat = response.Propstat.ThrowIfNull(nameof(response.Propstat));
+                        var prop = propstat.Prop.ThrowIfNull(nameof(propstat.Prop));
+                        var addressdata = prop.Addressdata.ThrowIfNull(nameof(prop.Addressdata));
+                        var addressdataValue = addressdata.Value.ThrowIfNull(nameof(prop.Addressdata));
+                        var etag = prop.Getetag.ThrowIfNull(nameof(prop.Getetag));
+                        var bytes = Encoding.UTF8.GetBytes(addressdataValue);
+                        return new ContactGroup(bytes)
+                        {
+                            Url = response.Url.ThrowIfNull(nameof(response.Url)),
+                            ETag = etag.Value.ThrowIfNull(nameof(etag.Value))
+                        };
+                    }));
+                default:
+                    throw GetConvertFromException(value);
             }
-            throw GetConvertFromException(value);
         }
     }
 }

@@ -1,8 +1,12 @@
-﻿using iCloud.Dav.People.Types;
-using iCloud.Dav.People.Utils;
+﻿using iCloud.Dav.Core.Utils;
+using iCloud.Dav.People.Types;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace iCloud.Dav.People.Converters
 {
@@ -30,12 +34,58 @@ namespace iCloud.Dav.People.Converters
         /// <returns>value that is result of conversion</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (value != null)
+            switch (value)
             {
-                var responses = ((Multistatus<Prop>)value).Responses;
-                return responses.ToPersonList();
+                case Multistatus<Prop> multistatusProp:
+                    var responses = multistatusProp.Responses.ThrowIfNull(nameof(multistatusProp.Responses));
+
+                    if (!responses.Any()) return default;
+
+                    var personList = new PersonList();
+                    var contactGroupList = new ContactGroupsList();
+
+                    foreach (var multistatusItem in responses)
+                    {
+                        if (multistatusItem.Propstat.Prop.Addressdata.Value.Contains("X-ADDRESSBOOKSERVER-KIND:group"))
+                        {
+                            var bytes = Encoding.UTF8.GetBytes(multistatusItem.Propstat.Prop.Addressdata.Value);
+                            var contactGroup = new ContactGroup(bytes)
+                            {
+                                ETag = multistatusItem.Propstat.Prop.Getetag.Value
+                            };
+                            contactGroupList.Add(contactGroup);
+                        }
+                        else
+                        {
+                            var bytes = Encoding.UTF8.GetBytes(multistatusItem.Propstat.Prop.Addressdata.Value);
+                            var person = new Person(bytes)
+                            {
+                                ETag = multistatusItem.Propstat.Prop.Getetag.Value
+                            };
+                            personList.Add(person);
+                        }
+                    }
+
+                    foreach (var person in personList)
+                    {
+                        var memberships = new List<Membership>();
+                        var contactGroups = contactGroupList.Where(contactGoup => contactGoup.MemberResourceNames.Contains(person.UniqueId));
+                        foreach (var contactGroup in contactGroups)
+                        {
+                            var membership = new Membership()
+                            {
+                                ETag = contactGroup.ETag,
+                                ContactGroupId = contactGroup.UniqueId
+                            };
+                            memberships.Add(membership);
+                        }
+                        person.Memberships = new ReadOnlyCollection<Membership>(memberships);
+                    }
+
+                    return personList;
+                default:
+                    throw GetConvertFromException(value);
             }
-            throw GetConvertFromException(value);
         }
     }
 }

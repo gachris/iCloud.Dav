@@ -43,7 +43,7 @@ namespace iCloud.Dav.Core.Utils
         internal static bool IsNullOrEmpty<T>(this IEnumerable<T> coll)
         {
             if (coll != null)
-                return coll.Count<T>() == 0;
+                return !coll.Any();
             return true;
         }
 
@@ -55,7 +55,7 @@ namespace iCloud.Dav.Core.Utils
             object[] customAttributes = info.GetCustomAttributes(typeof(T), false);
             if (customAttributes.Length != 0)
                 return (T)customAttributes[0];
-            return default(T);
+            return default;
         }
 
         /// <summary>Returns the defined string value of an Enum.</summary>
@@ -92,8 +92,8 @@ namespace iCloud.Dav.Core.Utils
                     return o.ToString();
                 return customAttribute.Text;
             }
-            if (o is DateTime)
-                return Utilities.ConvertToRFC3339((DateTime)o);
+            if (o is DateTime time)
+                return Utilities.ConvertToRFC3339(time);
             return o.ToString();
         }
 
@@ -111,8 +111,7 @@ namespace iCloud.Dav.Core.Utils
         /// </summary>
         public static DateTime? GetDateTimeFromString(string raw)
         {
-            DateTime result;
-            if (!DateTime.TryParse(raw, out result))
+            if (!DateTime.TryParse(raw, out DateTime result))
                 return new DateTime?();
             return new DateTime?(result);
         }

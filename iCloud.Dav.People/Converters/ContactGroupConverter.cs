@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text;
 
 namespace iCloud.Dav.People.Converters
 {
@@ -29,9 +30,10 @@ namespace iCloud.Dav.People.Converters
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             var input = (string)value;
-            if (!String.IsNullOrEmpty(input))
+            if (!string.IsNullOrEmpty(input))
             {
-                return new ContactGroup(input);
+                var bytes = Encoding.UTF8.GetBytes(input);
+                return new ContactGroup(bytes);
             }
             throw GetConvertFromException(value);
         }

@@ -15,23 +15,9 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>2.0.0</Version>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Reference Include="ICalVCard">
-			<HintPath>..\ICalVCard.1.0.0\ICalVCard.dll</HintPath>
-		</Reference>
-	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Ical.Net" Version="4.2.0" />
 		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="..\ICalVCard.1.0.0\ICalVCard.dll">
-			<Pack>true</Pack>
-			<PackagePath>lib\net6.0</PackagePath>
-		</Content>
 	</ItemGroup>
 
 </Project>
