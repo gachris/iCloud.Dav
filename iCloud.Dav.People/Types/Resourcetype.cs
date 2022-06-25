@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "resourcetype", Namespace = "DAV:")]
-    public class Resourcetype
+    public sealed class Resourcetype
     {
         [XmlElement(ElementName = "collection", Namespace = "DAV:")]
         public string Collection { get; set; }

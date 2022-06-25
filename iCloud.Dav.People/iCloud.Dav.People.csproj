@@ -15,7 +15,7 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>2.0.0</Version>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
 	</ItemGroup>

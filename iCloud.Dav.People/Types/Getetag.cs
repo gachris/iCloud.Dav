@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "getetag", Namespace = "DAV:")]
-    public class Getetag
+    public sealed class Getetag
     {
         internal static Getetag Default = new Getetag();
 

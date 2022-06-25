@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "text-match", Namespace = "urn:ietf:params:xml:ns:carddav")]
-    public class TextMatch
+    public sealed class TextMatch
     {
         [XmlAttribute(AttributeName = "collation")]
         public string Collation { get; set; }

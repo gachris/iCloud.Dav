@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "response", Namespace = "DAV:")]
-    public class Response<TProp>
+    public sealed class Response<TProp>
     {
         [XmlElement(ElementName = "href", Namespace = "DAV:")]
         public string Url { get; set; }

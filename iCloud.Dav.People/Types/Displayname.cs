@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "displayname", Namespace = "DAV:")]
-    public class Displayname
+    public sealed class Displayname
     {
         public static readonly Displayname Default = new Displayname();
 

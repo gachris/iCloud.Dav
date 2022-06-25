@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "current-user-principal", Namespace = "DAV:")]
-    public class Currentuserprincipal
+    public sealed class Currentuserprincipal
     {
         public static Currentuserprincipal Default = new Currentuserprincipal();
 

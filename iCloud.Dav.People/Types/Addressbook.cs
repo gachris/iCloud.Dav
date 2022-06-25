@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "addressbook", Namespace = "urn:ietf:params:xml:ns:carddav")]
-    public class Addressbook
+    public sealed class Addressbook
     {
         [XmlAttribute(AttributeName = "xmlns")]
         public string Xmlns { get; set; }

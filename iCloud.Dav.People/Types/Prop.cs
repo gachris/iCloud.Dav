@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "prop", Namespace = "DAV:")]
-    public class Prop
+    public sealed class Prop
     {
         [XmlElement(ElementName = "current-user-principal", Namespace = "DAV:")]
         public Currentuserprincipal Currentuserprincipal { get; set; }

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "prop-filter", Namespace = "urn:ietf:params:xml:ns:carddav")]
-    public class Propfilter
+    public sealed class Propfilter
     {
         [XmlElement(ElementName = "text-match", Namespace = "urn:ietf:params:xml:ns:carddav")]
         public List<TextMatch> Textmatch { get; set; }

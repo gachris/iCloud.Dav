@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "propstat", Namespace = "DAV:")]
-    public class Propstat<TProp>
+    public sealed class Propstat<TProp>
     {
         [XmlElement(ElementName = "prop", Namespace = "DAV:")]
         public TProp Prop { get; set; }

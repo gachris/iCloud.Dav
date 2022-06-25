@@ -4,9 +4,9 @@ using System.Xml.Serialization;
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
-    public class Multistatus<TProp>
+    public sealed class Multistatus<TProp>
     {
         [XmlElement(ElementName = "response", Namespace = "DAV:")]
-        public virtual List<Response<TProp>> Responses { get; set; }
+        public List<Response<TProp>> Responses { get; set; }
     }
 }

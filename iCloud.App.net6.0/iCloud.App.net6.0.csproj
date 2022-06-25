@@ -7,13 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\iCloud.Dav.People\iCloud.Dav.People.csproj" />
-	  <ProjectReference Include="..\iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj" />
+		<ProjectReference Include="..\iCloud.Dav.People\iCloud.Dav.People.csproj" />
+		<ProjectReference Include="..\iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj" />
 	</ItemGroup>
 
-	<!--<ItemGroup>
-		<PackageReference Include="iCloud.Dav.Calendar" Version="1.0.1" />
-		<PackageReference Include="iCloud.Dav.People" Version="1.0.1" />
-	</ItemGroup>-->
-	
 </Project>

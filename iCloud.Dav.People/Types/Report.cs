@@ -3,7 +3,7 @@
 namespace iCloud.Dav.People.Types
 {
     [XmlRoot(ElementName = "report", Namespace = "DAV:")]
-    public class Report
+    public sealed class Report
     {
         [XmlElement(ElementName = "sync-collection", Namespace = "DAV:")]
         public string Synccollection { get; set; }
