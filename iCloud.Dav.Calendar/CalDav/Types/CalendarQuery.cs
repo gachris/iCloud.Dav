@@ -51,14 +51,14 @@ namespace iCloud.Dav.Calendar.CalDav.Types
         }
     }
 
-    internal class CompFilter
+    internal sealed class CompFilter
     {
         public TimeRange TimeRange { get; set; }
         public string Name { get; set; }
         public CompFilter Child { get; set; }
     }
 
-    internal class TimeRange
+    internal sealed class TimeRange
     {
         public string Start { get; set; }
         public string End { get; set; }

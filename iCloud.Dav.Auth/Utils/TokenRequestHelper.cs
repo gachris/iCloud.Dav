@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Auth.Types;
+﻿using iCloud.Dav.Auth.CardDav.Types;
 using iCloud.Dav.Core.Serializer;
 using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
@@ -45,26 +45,8 @@ namespace iCloud.Dav.Auth.Utils
 
         private static async Task<DavServer> GetServer(this ConfigurableHttpClient httpClient, string serverUri, string requestUri, CancellationToken cancellationToken)
         {
-            var userPrincipalRequest = new CurrentUserPrincipalPropFind();
-            var content = XmlObjectSerializer.Instance.Serialize(userPrincipalRequest);
-            var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.PROPFIND), requestUri)
-            {
-                Content = new StringContent(content),
-            }, cancellationToken).ConfigureAwait(false);
-
-            var input = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new TokenException(new ErrorResponse()
-                {
-                    ReasonPhrase = response.ReasonPhrase,
-                    HttpStatusCode = response.StatusCode,
-                    ErrorUri = requestUri,
-                    ErrorDescription = input
-                });
-            }
-
-            var multistatus = XmlObjectSerializer.Instance.Deserialize<Multistatus>(input);
+            var userPrincipalRequest = new PropFind() { CurrentUserPrincipal = true };
+            var multistatus = await httpClient.SendPropFindRequest(requestUri, userPrincipalRequest, cancellationToken);
             var multistatusResponse = multistatus.Responses.FirstOrDefault();
             var id = multistatusResponse.CurrentUserPrincipal.Split(new char[] { '/' })[1];
             var url = string.Concat(serverUri, multistatusResponse.CurrentUserPrincipal);
@@ -73,8 +55,8 @@ namespace iCloud.Dav.Auth.Utils
 
         private static async Task<CalendarPrincipal> GetCalendarPrincipal(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
         {
-            var principalRequest = new CalendarPrincipalPropFind();
-            var multistatus = await httpClient.GetPrincipal(requestUri, principalRequest, cancellationToken);
+            var principalRequest = new PropFind() { CurrentUserPrincipal = true, CalendarHomeSet = true, CalendarUserAddressSet = true, DisplayName = true };
+            var multistatus = await httpClient.SendPropFindRequest(requestUri, principalRequest, cancellationToken);
             var multistatusResponse = multistatus.Responses.FirstOrDefault();
 
             var calendarUserAddressSets = multistatusResponse.CalendarUserAddressSet.
@@ -91,8 +73,8 @@ namespace iCloud.Dav.Auth.Utils
 
         private async static Task<PeoplePrincipal> GetPeoplePrincipal(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
         {
-            var principalRequest = new PeoplePrincipalPropFind();
-            var multistatus = await httpClient.GetPrincipal(requestUri, principalRequest, cancellationToken);
+            var principalRequest = new PropFind() { CurrentUserPrincipal = true, AddressBookHomeSet = true, DisplayName = true };
+            var multistatus = await httpClient.SendPropFindRequest(requestUri, principalRequest, cancellationToken);
             var multistatusResponse = multistatus.Responses.FirstOrDefault();
 
             return new PeoplePrincipal
@@ -103,7 +85,7 @@ namespace iCloud.Dav.Auth.Utils
             };
         }
 
-        private async static Task<Multistatus> GetPrincipal(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)
+        private async static Task<Multistatus> SendPropFindRequest(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)
         {
             var content = XmlObjectSerializer.Instance.Serialize(request);
             var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.PROPFIND), requestUri)

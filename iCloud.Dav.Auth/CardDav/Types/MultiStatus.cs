@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Auth.Types
+namespace iCloud.Dav.Auth.CardDav.Types
 {
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
     internal sealed class Multistatus : IXmlSerializable
@@ -89,7 +89,7 @@ namespace iCloud.Dav.Auth.Types
 
         public string DisplayName { get; }
 
-        public List<CalendarUserAddress> CalendarUserAddressSet { get; }
+        public IReadOnlyCollection<CalendarUserAddress> CalendarUserAddressSet { get; }
 
         public Response(string href, string currentUserPrincipal, string calendarHomeSet, string addressBookHomeSet, string displayName, List<CalendarUserAddress> calendarUserAddressSet)
         {
@@ -102,7 +102,7 @@ namespace iCloud.Dav.Auth.Types
         }
     }
 
-    internal class CalendarUserAddress
+    internal sealed class CalendarUserAddress
     {
         public string Preferred { get; }
 

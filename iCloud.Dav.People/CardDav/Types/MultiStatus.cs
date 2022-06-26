@@ -117,7 +117,7 @@ namespace iCloud.Dav.People.CardDav.Types
         }
     }
 
-    internal class Response
+    internal sealed class Response
     {
         public string Href { get; }
 
@@ -168,7 +168,7 @@ namespace iCloud.Dav.People.CardDav.Types
         }
     }
 
-    internal class Attribute
+    internal sealed class Attribute
     {
         public string Name { get; }
 

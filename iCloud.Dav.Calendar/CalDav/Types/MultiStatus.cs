@@ -107,7 +107,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
         }
     }
 
-    internal class Response
+    internal sealed class Response
     {
         public Response(
             string href,
@@ -155,7 +155,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
         public IReadOnlyList<CalendarComponent> SupportedCalendarComponentSet { get; }
     }
 
-    internal class Privilege
+    internal sealed class Privilege
     {
         public string Name { get; }
 
@@ -168,7 +168,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
         }
     }
 
-    internal class SupportedReport
+    internal sealed class SupportedReport
     {
         public string Name { get; }
 
@@ -181,7 +181,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
         }
     }
 
-    internal class CalendarComponent
+    internal sealed class CalendarComponent
     {
         public string Name { get; }
 
@@ -194,7 +194,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
         }
     }
 
-    internal class Attribute
+    internal sealed class Attribute
     {
         public string Name { get; }
 
