@@ -6,10 +6,10 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Cal.Types
+namespace iCloud.Dav.Calendar.CalDav.Types
 {
     [XmlRoot(ElementName = "mkcalendar", Namespace = "urn:ietf:params:xml:ns:caldav")]
-    internal class MkCalendar : IXmlSerializable
+    internal sealed class MkCalendar : IXmlSerializable
     {
         public string DisplayName { get; set; }
 

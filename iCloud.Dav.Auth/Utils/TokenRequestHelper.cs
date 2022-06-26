@@ -12,8 +12,8 @@ namespace iCloud.Dav.Auth.Utils
 {
     internal static class TokenRequestHelper
     {
-        private const string _peopleUrl = "https://contacts.icloud.com";
-        private const string _calendarUrl = "https://caldav.icloud.com";
+        private const string Contacts_icloud = "https://contacts.icloud.com";
+        private const string Caldav_icloud = "https://caldav.icloud.com";
 
         /// <summary>
         /// Executes the token request in order to receive a
@@ -35,19 +35,18 @@ namespace iCloud.Dav.Auth.Utils
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {code}");
             httpClient.DefaultRequestHeaders.Add("Depth", "0");
 
-            token.PeopleServer = await httpClient.GetPeopleServer(_peopleUrl, cancellationToken);
+            token.PeopleServer = await httpClient.GetServer(Contacts_icloud, Contacts_icloud, cancellationToken);
+            token.CalendarServer = await httpClient.GetServer(Caldav_icloud, Caldav_icloud, cancellationToken);
             token.PeoplePrincipal = await httpClient.GetPeoplePrincipal(token.PeopleServer.Url, cancellationToken);
-            token.CalendarServer = await httpClient.GetCalendarServer(_calendarUrl, cancellationToken);
             token.CalendarPrincipal = await httpClient.GetCalendarPrincipal(token.CalendarServer.Url, cancellationToken);
 
             return token;
         }
 
-        private static async Task<DavServer> GetCalendarServer(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
+        private static async Task<DavServer> GetServer(this ConfigurableHttpClient httpClient, string serverUri, string requestUri, CancellationToken cancellationToken)
         {
-            var propfind = new Propfind() { Prop = new Prop() { CurrentUserPrincipal = CurrentUserPrincipal.Default } };
-            var content = XmlSerializer.Instance.Serialize(propfind);
-
+            var userPrincipalRequest = new CurrentUserPrincipalPropFind();
+            var content = XmlObjectSerializer.Instance.Serialize(userPrincipalRequest);
             var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.PROPFIND), requestUri)
             {
                 Content = new StringContent(content),
@@ -65,106 +64,48 @@ namespace iCloud.Dav.Auth.Utils
                 });
             }
 
-            var multistatus = XmlSerializer.Instance.Deserialize<Multistatus>(input);
-
-            var id = multistatus.Responses.FirstOrDefault().Propstat.Prop.CurrentUserPrincipal.Url.Value.Split(new char[] { '/' })[1];
-            var url = _calendarUrl + multistatus.Responses.FirstOrDefault().Propstat.Prop.CurrentUserPrincipal.Url.Value;
-
-            var server = new DavServer(id, url);
-            return server;
-        }
-
-        private static async Task<DavServer> GetPeopleServer(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
-        {
-            var propfind = new Propfind() { Prop = new Prop() { CurrentUserPrincipal = CurrentUserPrincipal.Default } };
-            var content = XmlSerializer.Instance.Serialize(propfind);
-
-            var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.PROPFIND), requestUri)
-            {
-                Content = new StringContent(content),
-            }, cancellationToken).ConfigureAwait(false);
-
-            var input = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new TokenException(new ErrorResponse()
-                {
-                    ReasonPhrase = response.ReasonPhrase,
-                    HttpStatusCode = response.StatusCode,
-                    ErrorUri = requestUri,
-                    ErrorDescription = input
-                });
-            }
-
-            var multistatus = XmlSerializer.Instance.Deserialize<Multistatus>(input);
-
-            var id = multistatus.Responses.FirstOrDefault().Propstat.Prop.CurrentUserPrincipal.Url.Value.Split(new char[] { '/' })[1];
-            var url = _peopleUrl + multistatus.Responses.FirstOrDefault().Propstat.Prop.CurrentUserPrincipal.Url.Value;
-
-            var server = new DavServer(id, url);
-            return server;
+            var multistatus = XmlObjectSerializer.Instance.Deserialize<Multistatus>(input);
+            var multistatusResponse = multistatus.Responses.FirstOrDefault();
+            var id = multistatusResponse.CurrentUserPrincipal.Split(new char[] { '/' })[1];
+            var url = string.Concat(serverUri, multistatusResponse.CurrentUserPrincipal);
+            return new DavServer(id, url);
         }
 
         private static async Task<CalendarPrincipal> GetCalendarPrincipal(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
         {
-            var principalRequest = new Propfind()
-            {
-                Prop = new Prop()
-                {
-                    CalendarUserAddressSet = Types.CalendarUserAddressSet.Default,
-                    CalendarHomeSet = CalendarHomeSet.Default,
-                    CurrentUserPrincipal = CurrentUserPrincipal.Default,
-                    DisplayName = DisplayName.Default
-                }
-            };
+            var principalRequest = new CalendarPrincipalPropFind();
+            var multistatus = await httpClient.GetPrincipal(requestUri, principalRequest, cancellationToken);
+            var multistatusResponse = multistatus.Responses.FirstOrDefault();
 
-            var content = XmlSerializer.Instance.Serialize(principalRequest);
-
-            var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.PROPFIND), requestUri)
-            {
-                Content = new StringContent(content),
-            }, cancellationToken).ConfigureAwait(false);
-
-            var input = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new TokenException(new ErrorResponse()
-                {
-                    ReasonPhrase = response.ReasonPhrase,
-                    HttpStatusCode = response.StatusCode,
-                    ErrorUri = requestUri,
-                    ErrorDescription = input
-                });
-            }
-
-            var multistatus = XmlSerializer.Instance.Deserialize<Multistatus>(input);
-
-            var calendarUserAddressSets = multistatus.Responses.FirstOrDefault().
-                Propstat.Prop.CalendarUserAddressSet.Href.
+            var calendarUserAddressSets = multistatusResponse.CalendarUserAddressSet.
                 Select(url => new CalendarUserAddressSet { Url = url.Value, Preferred = url.Preferred });
 
             return new CalendarPrincipal
             {
                 CalendarUserAddressSet = new List<CalendarUserAddressSet>(calendarUserAddressSets),
-                CalendarHomeSet = multistatus.Responses.FirstOrDefault().Propstat.Prop.CalendarHomeSet.Url.Value,
-                DisplayName = multistatus.Responses.FirstOrDefault().Propstat.Prop.DisplayName.Value,
-                CurrentUserPrincipal = multistatus.Responses.FirstOrDefault().Propstat.Prop.CurrentUserPrincipal.Url.Value
+                CalendarHomeSet = multistatusResponse.CalendarHomeSet,
+                DisplayName = multistatusResponse.DisplayName,
+                CurrentUserPrincipal = multistatusResponse.CurrentUserPrincipal
             };
         }
 
         private async static Task<PeoplePrincipal> GetPeoplePrincipal(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
         {
-            var principalRequest = new Propfind()
-            {
-                Prop = new Prop()
-                {
-                    AddressBookHomeSet = AddressBookHomeSet.Default,
-                    CurrentUserPrincipal = CurrentUserPrincipal.Default,
-                    DisplayName = DisplayName.Default
-                }
-            };
-            var content = XmlSerializer.Instance.Serialize(principalRequest);
+            var principalRequest = new PeoplePrincipalPropFind();
+            var multistatus = await httpClient.GetPrincipal(requestUri, principalRequest, cancellationToken);
+            var multistatusResponse = multistatus.Responses.FirstOrDefault();
 
+            return new PeoplePrincipal
+            {
+                AddressBookHomeSet = multistatusResponse.AddressBookHomeSet,
+                DisplayName = multistatusResponse.DisplayName,
+                CurrentUserPrincipal = multistatusResponse.CurrentUserPrincipal
+            };
+        }
+
+        private async static Task<Multistatus> GetPrincipal(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)
+        {
+            var content = XmlObjectSerializer.Instance.Serialize(request);
             var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.PROPFIND), requestUri)
             {
                 Content = new StringContent(content),
@@ -182,13 +123,7 @@ namespace iCloud.Dav.Auth.Utils
                 });
             }
 
-            var multistatus = XmlSerializer.Instance.Deserialize<Multistatus>(input);
-            return new PeoplePrincipal
-            {
-                AddressBookHomeSet = multistatus.Responses.FirstOrDefault().Propstat.Prop.AddressBookHomeSet.Url.Value,
-                DisplayName = multistatus.Responses.FirstOrDefault().Propstat.Prop.DisplayName.Value,
-                CurrentUserPrincipal = multistatus.Responses.FirstOrDefault().Propstat.Prop.CurrentUserPrincipal.Url.Value
-            };
+            return XmlObjectSerializer.Instance.Deserialize<Multistatus>(input);
         }
     }
 }

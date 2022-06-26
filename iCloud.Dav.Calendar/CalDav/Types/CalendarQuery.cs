@@ -3,10 +3,10 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Cal.Types
+namespace iCloud.Dav.Calendar.CalDav.Types
 {
     [XmlRoot(ElementName = "calendar-query", Namespace = "urn:ietf:params:xml:ns:caldav")]
-    internal class CalendarQuery : IXmlSerializable
+    internal sealed class CalendarQuery : IXmlSerializable
     {
         public CompFilter CompFilter { get; set; }
 

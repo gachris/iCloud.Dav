@@ -1,5 +1,5 @@
 ﻿using iCloud.Dav.Core.Utils;
-using iCloud.Dav.People.Types;
+using iCloud.Dav.People.CardDav.Types;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -8,7 +8,7 @@ using System.Text;
 
 namespace iCloud.Dav.People.Converters
 {
-    internal class ContactGroupsListConverter : TypeConverter
+    internal sealed class ContactGroupsListConverter : TypeConverter
     {
         /// <summary>
         /// TypeConverter method override.
@@ -18,7 +18,7 @@ namespace iCloud.Dav.People.Converters
         /// <returns>true if conversion is possible</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if (sourceType == typeof(Multistatus))
+            if (sourceType == typeof(MultiStatus))
                 return true;
             return false;
         }
@@ -34,7 +34,7 @@ namespace iCloud.Dav.People.Converters
         {
             switch (value)
             {
-                case Multistatus multistatus:
+                case MultiStatus multistatus:
                     var responses = multistatus.Responses.ThrowIfNull(nameof(multistatus.Responses));
 
                     return new ContactGroupsList(responses.Select(response =>

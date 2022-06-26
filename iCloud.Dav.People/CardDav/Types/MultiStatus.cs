@@ -8,14 +8,14 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.People.Types
+namespace iCloud.Dav.People.CardDav.Types
 {
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
-    internal sealed class Multistatus : IXmlSerializable
+    internal sealed class MultiStatus : IXmlSerializable
     {
         public List<Response> Responses { get; }
 
-        public Multistatus()
+        public MultiStatus()
         {
             Responses = new List<Response>();
         }

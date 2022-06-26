@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Calendar.Cal.Types;
+﻿using iCloud.Dav.Calendar.CalDav.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;

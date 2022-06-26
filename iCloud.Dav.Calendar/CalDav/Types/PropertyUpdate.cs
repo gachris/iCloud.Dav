@@ -3,10 +3,10 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Cal.Types
+namespace iCloud.Dav.Calendar.CalDav.Types
 {
     [XmlRoot(ElementName = "propertyupdate", Namespace = "DAV:")]
-    internal class PropertyUpdate : IXmlSerializable
+    internal sealed class PropertyUpdate : IXmlSerializable
     {
         public string DisplayName { get; set; }
 

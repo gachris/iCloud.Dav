@@ -3,8 +3,8 @@ using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
+using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Request;
-using iCloud.Dav.People.Types;
 using iCloud.Dav.People.Utils;
 using System;
 using System.IO;
@@ -90,10 +90,7 @@ namespace iCloud.Dav.People.Resources
             public override string Depth => "1";
 
             ///<summary>Returns the body of the request.</summary>
-            protected override object GetBody()
-            {
-                return new AddressBookQuery();
-            }
+            protected override object GetBody() => new AddressBookQuery();
 
             /// <summary>Initializes List parameter list.</summary>
             protected override void InitParameters()

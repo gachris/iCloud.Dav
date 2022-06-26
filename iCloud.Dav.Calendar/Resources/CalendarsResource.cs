@@ -1,5 +1,5 @@
 ﻿using Ical.Net.Serialization;
-using iCloud.Dav.Calendar.Cal.Types;
+using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.Request;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;

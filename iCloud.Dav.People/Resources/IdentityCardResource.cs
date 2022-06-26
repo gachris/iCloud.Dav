@@ -1,7 +1,7 @@
 ﻿using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
+using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Request;
-using iCloud.Dav.People.Types;
 
 namespace iCloud.Dav.People.Resources
 {
@@ -45,10 +45,7 @@ namespace iCloud.Dav.People.Resources
             public override string Depth => "1";
 
             ///<summary>Returns the body of the request.</summary>
-            protected override object GetBody()
-            {
-                return new PropFind();
-            }
+            protected override object GetBody() => new PropFind();
         }
     }
 }

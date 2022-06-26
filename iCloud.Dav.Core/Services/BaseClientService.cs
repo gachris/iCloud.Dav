@@ -192,7 +192,7 @@ namespace iCloud.Dav.Core.Services
             /// <summary>Constructs a new initializer with default values.</summary>
             public Initializer()
             {
-                this.Serializer = new DataContractSerializerEx();
+                this.Serializer = new XmlObjectSerializer();
                 this.DefaultExponentialBackOffPolicy = ExponentialBackOffPolicy.UnsuccessfulResponse503;
                 this.MaxUrlLength = 2048U;
             }

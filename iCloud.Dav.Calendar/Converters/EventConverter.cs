@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace iCloud.Dav.Calendar.Converters
 {
-    internal class EventConverter : TypeConverter
+    internal sealed class EventConverter : TypeConverter
     {
         /// <summary>
         /// TypeConverter method override.

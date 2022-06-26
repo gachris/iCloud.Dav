@@ -5,7 +5,7 @@ using System.Text;
 
 namespace iCloud.Dav.People.Converters
 {
-    internal class PersonConverter : TypeConverter
+    internal sealed class PersonConverter : TypeConverter
     {
         /// <summary>
         /// TypeConverter method override.

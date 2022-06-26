@@ -1,12 +1,12 @@
 ﻿using iCloud.Dav.Core.Utils;
-using iCloud.Dav.People.Types;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.People.Request
+namespace iCloud.Dav.People.CardDav.Types
 {
     [XmlRoot(ElementName = "addressbook-query", Namespace = "urn:ietf:params:xml:ns:carddav")]
     internal sealed class AddressBookQuery : IXmlSerializable
@@ -54,5 +54,27 @@ namespace iCloud.Dav.People.Request
                 writer.WriteEndElement();
             }
         }
+    }
+
+    internal sealed class Filters
+    {
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public IList<TextMatch> TextMatches { get; }
+
+        public Filters()
+        {
+            TextMatches = new List<TextMatch>();
+        }
+    }
+
+    internal sealed class TextMatch
+    {
+        public string Collation { get; set; }
+        public string MatchType { get; set; }
+        public string SearchText { get; set; }
+        public string NegateCondition { get; set; }
     }
 }

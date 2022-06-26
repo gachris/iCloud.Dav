@@ -1,5 +1,5 @@
 ﻿using Ical.Net.CalendarComponents;
-using iCloud.Dav.Calendar.Cal.Types;
+using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.Converters;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Services;

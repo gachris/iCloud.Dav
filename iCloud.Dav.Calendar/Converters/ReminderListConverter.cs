@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Calendar.Cal.Types;
+﻿using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.Utils;
 using System;
 using System.ComponentModel;
@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace iCloud.Dav.Calendar.Converters
 {
-    internal class ReminderListConverter : TypeConverter
+    internal sealed class ReminderListConverter : TypeConverter
     {
         /// <summary>
         /// TypeConverter method override.

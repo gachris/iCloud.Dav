@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace iCloud.Dav.Calendar.Converters
 {
-    internal class ReminderConverter : TypeConverter
+    internal sealed class ReminderConverter : TypeConverter
     {
         /// <summary>
         /// TypeConverter method override.

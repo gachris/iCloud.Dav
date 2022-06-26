@@ -3,11 +3,10 @@ using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
+using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Request;
-using iCloud.Dav.People.Types;
 using iCloud.Dav.People.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 

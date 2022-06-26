@@ -7,10 +7,10 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Calendar.Cal.Types
+namespace iCloud.Dav.Calendar.CalDav.Types
 {
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
-    internal class MultiStatus : IXmlSerializable
+    internal sealed class MultiStatus : IXmlSerializable
     {
         public List<Response> Responses { get; }
 

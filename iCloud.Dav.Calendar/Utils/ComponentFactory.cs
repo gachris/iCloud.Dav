@@ -4,7 +4,7 @@ using Ical.Net.Serialization;
 
 namespace iCloud.Dav.Calendar.Utils
 {
-    public class ComponentFactory : CalendarComponentFactory
+    internal class ComponentFactory : CalendarComponentFactory
     {
         public override ICalendarComponent Build(string objectName)
         {

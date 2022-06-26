@@ -3,10 +3,10 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.People.Types
+namespace iCloud.Dav.Auth.Types
 {
     [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-    internal sealed class PropFind : IXmlSerializable
+    internal sealed class CurrentUserPrincipalPropFind : IXmlSerializable
     {
         public XmlSchema GetSchema()
         {
@@ -21,11 +21,8 @@ namespace iCloud.Dav.People.Types
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("prop", "DAV:");
-
-            writer.WriteStartElement("allprop", "DAV:");
-            writer.WriteEndElement();
-
-            writer.WriteEndElement();
+            writer.WriteElementString("current-user-principal", "DAV:", null);
+            writer.WriteFullEndElement();
         }
     }
 }

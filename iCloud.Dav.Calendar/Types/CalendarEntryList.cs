@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Calendar.Cal.Types;
+﻿using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.Converters;
 using iCloud.Dav.Core.Attributes;
 using System.Collections;
