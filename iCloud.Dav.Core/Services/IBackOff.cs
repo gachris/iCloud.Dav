@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.Services
     {
         /// <summary>
         /// Gets the a time span to wait before next retry. If the current retry reached the maximum number of retries,
-        /// the returned value is <see cref="F:System.TimeSpan.MinValue" />.
+        /// the returned value is <see cref="TimeSpan.MinValue" />.
         /// </summary>
         TimeSpan GetNextBackOff(int currentRetry);
 

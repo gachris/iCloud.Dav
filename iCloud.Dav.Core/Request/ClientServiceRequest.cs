@@ -50,7 +50,7 @@ namespace iCloud.Dav.Core.Request
 
         /// <summary>
         /// Initializes request's parameters. Inherited classes MUST override this method to add parameters to the
-        /// <see cref="P:ICloud.Api.Requests.ClientServiceRequest`1.RequestParameters" /> dictionary.
+        /// <see cref="RequestParameters" /> dictionary.
         /// </summary>
         protected virtual void InitParameters()
         {
@@ -152,7 +152,7 @@ namespace iCloud.Dav.Core.Request
         }
 
         /// <summary>
-        /// Creates the <see cref="T:ICloud.Api.Requests.RequestBuilder" /> which is used to generate a request.
+        /// Creates the <see cref="RequestBuilder" /> which is used to generate a request.
         /// </summary>
         /// <returns>
         /// A new builder instance which contains the HTTP method and the right Uri with its path and query parameters.
@@ -171,15 +171,9 @@ namespace iCloud.Dav.Core.Request
         }
 
         /// <summary>Generates the right URL for this request.</summary>
-        protected string GenerateRequestUri()
-        {
-            return CreateBuilder().BuildUri().ToString();
-        }
+        protected string GenerateRequestUri() => CreateBuilder().BuildUri().ToString();
 
-        protected virtual object GetBody()
-        {
-            return null;
-        }
+        protected virtual object GetBody() => null;
 
         /// <summary>
         /// Adds the right ETag action (e.g. If-Match) header to the given HTTP request if the body contains ETag.

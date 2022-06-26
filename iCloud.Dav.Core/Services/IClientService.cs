@@ -12,8 +12,8 @@ namespace iCloud.Dav.Core.Services
 
         /// <summary>
         /// Gets a HTTP client initializer which is able to custom properties on
-        /// <see cref="T:ICloud.Api.Http.ConfigurableHttpClient" /> and
-        /// <see cref="T:ICloud.Api.Http.ConfigurableMessageHandler" />.
+        /// <see cref="ConfigurableHttpClient" /> and
+        /// <see cref="ConfigurableMessageHandler" />.
         /// </summary>
         IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; }
 

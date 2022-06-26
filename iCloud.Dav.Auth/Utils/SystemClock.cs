@@ -2,7 +2,7 @@
 
 namespace iCloud.Dav.Auth.Utils
 {
-    /// <summary>A default clock implementation that wraps the <see cref="P:System.DateTime.Now" /> property.</summary>
+    /// <summary>A default clock implementation that wraps the <see cref="DateTime.Now" /> property.</summary>
     public class SystemClock : IClock
     {
         /// <summary>The default instance.</summary>
@@ -14,13 +14,13 @@ namespace iCloud.Dav.Auth.Utils
         }
 
         /// <summary>
-        /// Gets a <see cref="T:System.DateTime" /> object that is set to the current date and time on this computer,
+        /// Gets a <see cref="DateTime" /> object that is set to the current date and time on this computer,
         /// expressed as the local time.
         /// </summary>
         public DateTime Now => DateTime.Now;
 
         /// <summary>
-        /// Gets a <see cref="T:System.DateTime" /> object that is set to the current date and time on this computer,
+        /// Gets a <see cref="DateTime" /> object that is set to the current date and time on this computer,
         /// expressed as UTC time.
         /// </summary>
         public DateTime UtcNow => DateTime.UtcNow;

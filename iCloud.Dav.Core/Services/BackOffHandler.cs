@@ -10,7 +10,7 @@ namespace iCloud.Dav.Core.Services
 {
     /// <summary>
     /// A thread-safe back-off handler which handles an abnormal HTTP response or an exception with
-    /// <see cref="T:ICloud.Api.Util.IBackOff" />.
+    /// <see cref="IBackOff" />.
     /// </summary>
     public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHandler
     {
@@ -27,13 +27,13 @@ namespace iCloud.Dav.Core.Services
 
         /// <summary>
         /// Gets a delegate function which indicates whether this back-off handler should handle an abnormal HTTP
-        /// response. The default is <see cref="F:ICloud.Api.Http.BackOffHandler.Initializer.DefaultHandleUnsuccessfulResponseFunc" />.
+        /// response. The default is <see cref="Initializer.DefaultHandleUnsuccessfulResponseFunc" />.
         /// </summary>
         public Func<HttpResponseMessage, bool> HandleUnsuccessfulResponseFunc { get; private set; }
 
         /// <summary>
         /// Gets a delegate function which indicates whether this back-off handler should handle an exception. The
-        /// default is <see cref="F:ICloud.Api.Http.BackOffHandler.Initializer.DefaultHandleExceptionFunc" />.
+        /// default is <see cref="Initializer.DefaultHandleExceptionFunc" />.
         /// </summary>
         public Func<Exception, bool> HandleExceptionFunc { get; private set; }
 
@@ -69,14 +69,14 @@ namespace iCloud.Dav.Core.Services
         /// <summary>
         /// Handles back-off. In case the request doesn't support retry or the back-off time span is greater than the
         /// maximum time span allowed for a request, the handler returns <c>false</c>. Otherwise the current thread
-        /// will block for x milliseconds (x is defined by the <see cref="P:ICloud.Api.Http.BackOffHandler.BackOff" /> instance), and this handler
+        /// will block for x milliseconds (x is defined by the <see cref="BackOff" /> instance), and this handler
         /// returns <c>true</c>.
         /// </summary>
         private async Task<bool> HandleAsync(bool supportsRetry, int currentFailedTry, CancellationToken cancellationToken)
         {
             if (!supportsRetry || BackOff.MaxNumOfRetries < currentFailedTry)
                 return false;
-            TimeSpan ts = BackOff.GetNextBackOff(currentFailedTry);
+            var ts = BackOff.GetNextBackOff(currentFailedTry);
             if (ts > MaxTimeSpan || ts < TimeSpan.Zero)
                 return false;
             await Wait(ts, cancellationToken).ConfigureAwait(false);
@@ -100,8 +100,8 @@ namespace iCloud.Dav.Core.Services
             public static readonly Func<HttpResponseMessage, bool> DefaultHandleUnsuccessfulResponseFunc = r => r.StatusCode == HttpStatusCode.ServiceUnavailable;
             /// <summary>
             /// Default function which handles exception which aren't
-            /// <see cref="T:System.Threading.Tasks.TaskCanceledException" /> or
-            /// <see cref="T:System.OperationCanceledException" />. Those exceptions represent a task or an operation
+            /// <see cref="TaskCanceledException" /> or
+            /// <see cref="OperationCanceledException" />. Those exceptions represent a task or an operation
             /// which was canceled and shouldn't be retried.
             /// </summary>
             public static readonly Func<Exception, bool> DefaultHandleExceptionFunc = ex =>
@@ -123,13 +123,13 @@ namespace iCloud.Dav.Core.Services
 
             /// <summary>
             /// Gets or sets a delegate function which indicates whether this back-off handler should handle an
-            /// abnormal HTTP response. The default is <see cref="F:ICloud.Api.Http.BackOffHandler.Initializer.DefaultHandleUnsuccessfulResponseFunc" />.
+            /// abnormal HTTP response. The default is <see cref="Initializer.DefaultHandleUnsuccessfulResponseFunc" />.
             /// </summary>
             public Func<HttpResponseMessage, bool> HandleUnsuccessfulResponseFunc { get; set; }
 
             /// <summary>
             /// Gets or sets a delegate function which indicates whether this back-off handler should handle an
-            /// exception. The default is <see cref="F:ICloud.Api.Http.BackOffHandler.Initializer.DefaultHandleExceptionFunc" />.
+            /// exception. The default is <see cref="Initializer.DefaultHandleExceptionFunc" />.
             /// </summary>
             public Func<Exception, bool> HandleExceptionFunc { get; set; }
 

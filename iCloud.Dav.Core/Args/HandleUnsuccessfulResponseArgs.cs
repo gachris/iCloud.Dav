@@ -1,9 +1,10 @@
-﻿using System.Net.Http;
+﻿using iCloud.Dav.Core.Services;
+using System.Net.Http;
 using System.Threading;
 
 namespace iCloud.Dav.Core.Args
 {
-    /// <summary>Argument class to <see cref="M:ICloud.Api.Http.IHttpUnsuccessfulResponseHandler.HandleResponseAsync(ICloud.Api.Http.HandleUnsuccessfulResponseArgs)" />.</summary>
+    /// <summary>Argument class to <see cref="IHttpUnsuccessfulResponseHandler.HandleResponseAsync(HandleUnsuccessfulResponseArgs)" />.</summary>
     public class HandleUnsuccessfulResponseArgs
     {
         /// <summary>Gets or sets the sent request.</summary>
@@ -19,13 +20,7 @@ namespace iCloud.Dav.Core.Args
         public int CurrentFailedTry { get; set; }
 
         /// <summary>Gets an indication whether a retry will occur if the handler returns <c>true</c>.</summary>
-        public bool SupportsRetry
-        {
-            get
-            {
-                return this.TotalTries - this.CurrentFailedTry > 0;
-            }
-        }
+        public bool SupportsRetry => TotalTries - CurrentFailedTry > 0;
 
         /// <summary>Gets or sets the request's cancellation token.</summary>
         public CancellationToken CancellationToken { get; set; }

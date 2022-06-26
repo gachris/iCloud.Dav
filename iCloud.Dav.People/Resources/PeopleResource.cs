@@ -81,7 +81,7 @@ namespace iCloud.Dav.People.Resources
             public override string MethodName => "list";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.REPORT;
+            public override string HttpMethod => ApiMethod.Report;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{resourceName}";
@@ -132,7 +132,7 @@ namespace iCloud.Dav.People.Resources
             public override string MethodName => "get";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.GET;
+            public override string HttpMethod => ApiMethod.Get;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{resourceName}/{uniqueId}.vcf";
@@ -187,7 +187,7 @@ namespace iCloud.Dav.People.Resources
             public override string MethodName => "insert";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.PUT;
+            public override string HttpMethod => ApiMethod.Put;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{resourceName}/{uniqueId}.vcf";
@@ -257,7 +257,7 @@ namespace iCloud.Dav.People.Resources
             public override string MethodName => "update";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.PUT;
+            public override string HttpMethod => ApiMethod.Put;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{resourceName}/{uniqueId}.vcf";
@@ -322,7 +322,7 @@ namespace iCloud.Dav.People.Resources
             public override string MethodName => "delete";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.DELETE;
+            public override string HttpMethod => ApiMethod.Delete;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{resourceName}/{uniqueId}.vcf";

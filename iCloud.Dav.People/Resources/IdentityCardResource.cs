@@ -36,7 +36,7 @@ namespace iCloud.Dav.People.Resources
             public override string MethodName => "list";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.PROPFIND;
+            public override string HttpMethod => ApiMethod.Propfind;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => string.Empty;

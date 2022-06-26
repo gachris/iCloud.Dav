@@ -69,7 +69,7 @@ namespace iCloud.Dav.Calendar.Resources
             public override string MethodName => "list";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.PROPFIND;
+            public override string HttpMethod => ApiMethod.Propfind;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath { get; }
@@ -99,10 +99,10 @@ namespace iCloud.Dav.Calendar.Resources
             public virtual string CalendarId { get; }
 
             ///<summary>Gets the method name.</summary>
-            public override string MethodName => ApiMethod.PROPFIND;
+            public override string MethodName => ApiMethod.Propfind;
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.PROPFIND;
+            public override string HttpMethod => ApiMethod.Propfind;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{calendarId}";
@@ -151,10 +151,10 @@ namespace iCloud.Dav.Calendar.Resources
             private CalendarEntry Body { get; }
 
             ///<summary>Gets the method name.</summary>
-            public override string MethodName => ApiMethod.MKCALENDAR;
+            public override string MethodName => ApiMethod.Mkcalendar;
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.MKCALENDAR;
+            public override string HttpMethod => ApiMethod.Mkcalendar;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{calendarId}";
@@ -220,7 +220,7 @@ namespace iCloud.Dav.Calendar.Resources
             public override string MethodName => "update";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.PROPPATCH;
+            public override string HttpMethod => ApiMethod.Proppatch;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{calendarId}";
@@ -267,7 +267,7 @@ namespace iCloud.Dav.Calendar.Resources
             public override string MethodName => "delete";
 
             ///<summary>Gets the HTTP method.</summary>
-            public override string HttpMethod => ApiMethod.DELETE;
+            public override string HttpMethod => ApiMethod.Delete;
 
             ///<summary>Gets the REST path.</summary>
             public override string RestPath => "{calendarId}";

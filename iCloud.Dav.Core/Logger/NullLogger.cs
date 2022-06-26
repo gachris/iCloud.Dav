@@ -4,23 +4,11 @@ namespace iCloud.Dav.Core.Logger
 {
     public class NullLogger : ILogger
     {
-        public bool IsDebugEnabled
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsDebugEnabled => false;
 
-        public ILogger ForType(Type type)
-        {
-            return new NullLogger();
-        }
+        public ILogger ForType(Type type) => new NullLogger();
 
-        public ILogger ForType<T>()
-        {
-            return new NullLogger();
-        }
+        public ILogger ForType<T>() => new NullLogger();
 
         public void Info(string message, params object[] formatArgs)
         {

@@ -7,21 +7,13 @@ namespace iCloud.Dav.Core.Attributes
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class StringValueAttribute : Attribute
     {
-        private readonly string text;
-
         /// <summary>The text which belongs to this member.</summary>
-        public string Text
-        {
-            get
-            {
-                return this.text;
-            }
-        }
+        public string Text { get; }
 
         /// <summary>Creates a new string value attribute with the specified text.</summary>
         public StringValueAttribute(string text)
         {
-            this.text = text.ThrowIfNullOrEmpty(nameof(text));
+            Text = text.ThrowIfNullOrEmpty(nameof(text));
         }
     }
 }

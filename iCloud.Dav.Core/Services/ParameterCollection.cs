@@ -21,15 +21,14 @@ namespace iCloud.Dav.Core.Services
         /// <summary>Adds a single parameter to this collection.</summary>
         public void Add(string key, string value)
         {
-            this.Add(new KeyValuePair<string, string>(key, value));
+            Add(new KeyValuePair<string, string>(key, value));
         }
 
         /// <summary>Returns <c>true</c> if this parameter is set within the collection.</summary>
         public bool ContainsKey(string key)
         {
             key.ThrowIfNullOrEmpty(nameof(key));
-            string str;
-            return this.TryGetValue(key, out str);
+            return TryGetValue(key, out string str);
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace iCloud.Dav.Core.Services
         public bool TryGetValue(string key, out string value)
         {
             key.ThrowIfNullOrEmpty(nameof(key));
-            foreach (KeyValuePair<string, string> keyValuePair in this)
+            foreach (var keyValuePair in this)
             {
                 if (keyValuePair.Key.Equals(key))
                 {
@@ -57,8 +56,7 @@ namespace iCloud.Dav.Core.Services
         /// </summary>
         public string GetFirstMatch(string key)
         {
-            string str;
-            if (!this.TryGetValue(key, out str))
+            if (!TryGetValue(key, out string str))
                 throw new KeyNotFoundException("Parameter with the name '" + key + "' was not found.");
             return str;
         }
@@ -79,13 +77,7 @@ namespace iCloud.Dav.Core.Services
         /// <summary>
         /// Returns all matches for the specified key. May return an empty enumeration if the key is not present.
         /// </summary>
-        public IEnumerable<string> this[string key]
-        {
-            get
-            {
-                return this.GetAllMatches(key);
-            }
-        }
+        public IEnumerable<string> this[string key] => GetAllMatches(key);
 
         /// <summary>
         /// Creates a parameter collection from the specified URL encoded query string.
@@ -95,12 +87,12 @@ namespace iCloud.Dav.Core.Services
         /// </summary>
         public static ParameterCollection FromQueryString(string qs)
         {
-            ParameterCollection parameterCollection = new ParameterCollection();
-            string str1 = qs;
-            char[] chArray = new char[1] { '&' };
-            foreach (string str2 in str1.Split(chArray))
+            var parameterCollection = new ParameterCollection();
+            var str1 = qs;
+            var chArray = new char[1] { '&' };
+            foreach (var str2 in str1.Split(chArray))
             {
-                string[] strArray = str2.Split('=');
+                var strArray = str2.Split('=');
                 if (strArray.Length == 2)
                     parameterCollection.Add(Uri.UnescapeDataString(strArray[0]), Uri.UnescapeDataString(strArray[1]));
                 else
@@ -116,10 +108,10 @@ namespace iCloud.Dav.Core.Services
         /// </summary>
         public static ParameterCollection FromDictionary(IDictionary<string, object> dictionary)
         {
-            ParameterCollection parameterCollection = new ParameterCollection();
-            foreach (KeyValuePair<string, object> keyValuePair in dictionary)
+            var parameterCollection = new ParameterCollection();
+            foreach (var keyValuePair in dictionary)
             {
-                if (!(keyValuePair.Value is string) && keyValuePair.Value is IEnumerable enumerable)
+                if (keyValuePair.Value is not string && keyValuePair.Value is IEnumerable enumerable)
                 {
                     foreach (object o in enumerable)
                         parameterCollection.Add(keyValuePair.Key, Utilities.ConvertToString(o));

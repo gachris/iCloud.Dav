@@ -10,15 +10,17 @@ using System.Text.RegularExpressions;
 
 namespace iCloud.Dav.Core.Services
 {
-    /// <summary>Utility class for building a URI using <see cref="M:ICloud.Api.Requests.RequestBuilder.BuildUri" /> or a HTTP request using
-    /// <see cref="M:ICloud.Api.Requests.RequestBuilder.CreateRequest" /> from the query and path parameters of a REST call.</summary>
+    /// <summary>Utility class for building a URI using <see cref="RequestBuilder.BuildUri" /> or a HTTP request using
+    /// <see cref="RequestBuilder.CreateRequest" /> from the query and path parameters of a REST call.</summary>
     public class RequestBuilder
     {
         private static readonly ILogger Logger = ApplicationContext.Logger.ForType<RequestBuilder>();
+
         /// <summary>Pattern to get the groups that are part of the path.</summary>
-        private static Regex PathParametersPattern = new Regex("{[^{}]*}*");
+        private static readonly Regex PathParametersPattern = new("{[^{}]*}*");
+
         /// <summary>Supported HTTP methods.</summary>
-        private static IEnumerable<string> SupportedMethods = new List<string>()
+        private static readonly IEnumerable<string> SupportedMethods = new List<string>()
         {
             "GET",
             "PUT",
@@ -28,8 +30,10 @@ namespace iCloud.Dav.Core.Services
             "REPORT",
             "MKCALENDAR"
         };
+
         /// <summary>The HTTP method used for this request.</summary>
-        private string method;
+        private string _method;
+
         /// <summary>Operator list that can appear in the path argument.</summary>
         private const string OPERATORS = "+#./;?&|!@=";
 
@@ -49,24 +53,21 @@ namespace iCloud.Dav.Core.Services
         public Uri BaseUri { get; set; }
 
         /// <summary>
-        /// The path portion of this request. It's appended to the <see cref="P:ICloud.Api.Requests.RequestBuilder.BaseUri" /> and the parameters are
-        /// substituted from the <see cref="P:ICloud.Api.Requests.RequestBuilder.PathParameters" /> dictionary.
+        /// The path portion of this request. It's appended to the <see cref="RequestBuilder.BaseUri" /> and the parameters are
+        /// substituted from the <see cref="RequestBuilder.PathParameters" /> dictionary.
         /// </summary>
         public string Path { get; set; }
 
         /// <summary>The HTTP method used for this request (such as GET, PUT, POST, etc...).</summary>
-        /// <remarks>The default Value is <see cref="F:ICloud.Api.Http.HttpConsts.Get" />.</remarks>
+        /// <remarks>The default Value is <see cref="ApiMethod.Get" />.</remarks>
         public string Method
         {
-            get
-            {
-                return this.method;
-            }
+            get => _method;
             set
             {
                 if (!RequestBuilder.SupportedMethods.Contains<string>(value))
                     throw new ArgumentOutOfRangeException(nameof(Method));
-                this.method = value;
+                _method = value;
             }
         }
 
@@ -75,68 +76,68 @@ namespace iCloud.Dav.Core.Services
         ///             TODO(peleyal): Consider using the Factory pattern here.
         public RequestBuilder()
         {
-            this.PathParameters = new Dictionary<string, IList<string>>();
-            this.QueryParameters = new List<KeyValuePair<string, string>>();
-            this.Method = "GET";
+            PathParameters = new Dictionary<string, IList<string>>();
+            QueryParameters = new List<KeyValuePair<string, string>>();
+            Method = "GET";
         }
 
         /// <summary>Constructs a Uri as defined by the parts of this request builder.</summary>
         public Uri BuildUri()
         {
-            StringBuilder stringBuilder = this.BuildRestPath();
-            if (this.QueryParameters.Count > 0)
+            var stringBuilder = BuildRestPath();
+            if (QueryParameters.Count > 0)
             {
-                stringBuilder.Append(stringBuilder.ToString().Contains("?") ? "&" : "?");
-                stringBuilder.Append(string.Join("&", this.QueryParameters.Select(x =>
+                stringBuilder.Append(stringBuilder.ToString().Contains('?') ? "&" : "?");
+                stringBuilder.Append(string.Join("&", QueryParameters.Select(x =>
                 {
                     if (string.IsNullOrEmpty(x.Value))
                         return Uri.EscapeDataString(x.Key);
                     return string.Format("{0}={1}", Uri.EscapeDataString(x.Key), Uri.EscapeDataString(x.Value));
-                }).ToArray<string>()));
+                }).ToArray()));
             }
-            return new Uri(this.BaseUri, stringBuilder.ToString());
+            return new Uri(BaseUri, stringBuilder.ToString());
         }
 
         /// <summary>
-        /// Builds the REST path string builder based on <see cref="P:ICloud.Api.Requests.RequestBuilder.PathParameters" /> and the URI template spec
+        /// Builds the REST path string builder based on <see cref="RequestBuilder.PathParameters" /> and the URI template spec
         /// http://tools.ietf.org/html/rfc6570.
         /// </summary>
         /// <returns></returns>
         private StringBuilder BuildRestPath()
         {
-            if (string.IsNullOrEmpty(this.Path))
+            if (string.IsNullOrEmpty(Path))
                 return new StringBuilder(string.Empty);
-            StringBuilder stringBuilder1 = new StringBuilder(this.Path);
-            foreach (object match in RequestBuilder.PathParametersPattern.Matches(stringBuilder1.ToString()))
+            var stringBuilder1 = new StringBuilder(Path);
+            foreach (var match in RequestBuilder.PathParametersPattern.Matches(stringBuilder1.ToString()))
             {
-                string oldValue = match.ToString();
-                string str1 = oldValue.Substring(1, oldValue.Length - 2);
-                string empty = string.Empty;
+                var oldValue = match.ToString();
+                var str1 = oldValue[1..^1];
+                var empty = string.Empty;
                 if ("+#./;?&|!@=".Contains(str1[0].ToString()))
                 {
                     empty = str1[0].ToString();
-                    str1 = str1.Substring(1);
+                    str1 = str1[1..];
                 }
-                StringBuilder stringBuilder2 = new StringBuilder();
-                string[] strArray = str1.Split(',');
-                for (int index = 0; index < strArray.Length; ++index)
+                var stringBuilder2 = new StringBuilder();
+                var strArray = str1.Split(',');
+                for (var index = 0; index < strArray.Length; ++index)
                 {
-                    string key = strArray[index];
-                    bool flag = false;
-                    int result = 0;
-                    if (key[key.Length - 1] == '*')
+                    var key = strArray[index];
+                    var flag = false;
+                    var result = 0;
+                    if (key[^1] == '*')
                     {
                         flag = true;
-                        key = key.Substring(0, key.Length - 1);
+                        key = key[..^1];
                     }
-                    if (key.Contains(":"))
+                    if (key.Contains(':'))
                     {
-                        if (!int.TryParse(key.Substring(key.IndexOf(":") + 1), out result))
-                            throw new ArgumentException(string.Format("Can't parse number after ':' in Path \"{0}\". Parameter is \"{1}\"", Path, key), this.Path);
-                        key = key.Substring(0, key.IndexOf(":"));
+                        if (!int.TryParse(key.AsSpan(key.IndexOf(":") + 1), out result))
+                            throw new ArgumentException(string.Format("Can't parse number after ':' in Path \"{0}\". Parameter is \"{1}\"", Path, key), Path);
+                        key = key[..key.IndexOf(":")];
                     }
-                    string separator = empty;
-                    string str2 = empty;
+                    var separator = empty;
+                    var str2 = empty;
                     switch (empty)
                     {
                         case "#":
@@ -186,22 +187,22 @@ namespace iCloud.Dav.Core.Services
                             separator = ",";
                             break;
                     }
-                    if (this.PathParameters.ContainsKey(key))
+                    if (PathParameters.ContainsKey(key))
                     {
-                        string stringToEscape = string.Join(separator, this.PathParameters[key]);
+                        var stringToEscape = string.Join(separator, PathParameters[key]);
                         if (result != 0 && result < stringToEscape.Length)
-                            stringToEscape = stringToEscape.Substring(0, result);
-                        if (empty != "+" && empty != "#" && this.PathParameters[key].Count == 1)
+                            stringToEscape = stringToEscape[..result];
+                        if (empty != "+" && empty != "#" && PathParameters[key].Count == 1)
                             stringToEscape = Uri.EscapeDataString(stringToEscape);
-                        string str3 = str2 + stringToEscape;
+                        var str3 = str2 + stringToEscape;
                         stringBuilder2.Append(str3);
                     }
                     else
-                        throw new ArgumentException(string.Format("Path \"{0}\" misses a \"{1}\" parameter", Path, key), this.Path);
+                        throw new ArgumentException(string.Format("Path \"{0}\" misses a \"{1}\" parameter", Path, key), Path);
                 }
                 if (empty == ";")
                 {
-                    if (stringBuilder2[stringBuilder2.Length - 1] == '=')
+                    if (stringBuilder2[^1] == '=')
                         stringBuilder2 = stringBuilder2.Remove(stringBuilder2.Length - 1, 1);
                     stringBuilder2 = stringBuilder2.Replace("=;", ";");
                 }
@@ -223,21 +224,18 @@ namespace iCloud.Dav.Core.Services
             {
                 if (type != RequestParameterType.Query)
                     throw new ArgumentOutOfRangeException(nameof(type));
-                this.QueryParameters.Add(new KeyValuePair<string, string>(name, value));
+                QueryParameters.Add(new KeyValuePair<string, string>(name, value));
             }
-            else if (!this.PathParameters.ContainsKey(name))
-                this.PathParameters[name] = new List<string>()
-        {
-          value
-        };
+            else if (!PathParameters.ContainsKey(name))
+                PathParameters[name] = new List<string>() { value };
             else
-                this.PathParameters[name].Add(value);
+                PathParameters[name].Add(value);
         }
 
         /// <summary>Creates a new HTTP request message.</summary>
         public HttpRequestMessage CreateRequest()
         {
-            return new HttpRequestMessage(new HttpMethod(this.Method), this.BuildUri().ToString());
+            return new HttpRequestMessage(new HttpMethod(Method), BuildUri().ToString());
         }
     }
 }

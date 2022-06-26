@@ -17,7 +17,7 @@ namespace iCloud.Dav.Core.Utils
         }
 
         /// <summary>
-        /// A ICloud.Api utility method for throwing an <see cref="T:System.ArgumentNullException" /> if the object is
+        /// A ICloud.Api utility method for throwing an <see cref="ArgumentNullException" /> if the object is
         /// <c>null</c>.
         /// </summary>
         public static T ThrowIfNull<T>(this T obj, string paramName)
@@ -28,7 +28,7 @@ namespace iCloud.Dav.Core.Utils
         }
 
         /// <summary>
-        /// A ICloud.Api utility method for throwing an <see cref="T:System.ArgumentNullException" /> if the string is
+        /// A ICloud.Api utility method for throwing an <see cref="ArgumentNullException" /> if the string is
         /// <c>null</c> or empty.
         /// </summary>
         /// <returns>The original string.</returns>
@@ -52,7 +52,7 @@ namespace iCloud.Dav.Core.Utils
         /// </summary>
         public static T GetCustomAttribute<T>(this MemberInfo info) where T : Attribute
         {
-            object[] customAttributes = info.GetCustomAttributes(typeof(T), false);
+            var customAttributes = info.GetCustomAttributes(typeof(T), false);
             if (customAttributes.Length != 0)
                 return (T)customAttributes[0];
             return default;
@@ -61,9 +61,9 @@ namespace iCloud.Dav.Core.Utils
         /// <summary>Returns the defined string value of an Enum.</summary>
         internal static string GetStringValue(this Enum value)
         {
-            FieldInfo field = value.GetType().GetField(value.ToString());
-            field.ThrowIfNull<FieldInfo>(nameof(value));
-            StringValueAttribute customAttribute = field.GetCustomAttribute<StringValueAttribute>();
+            var field = value.GetType().GetField(value.ToString());
+            field.ThrowIfNull(nameof(value));
+            var customAttribute = field.GetCustomAttribute<StringValueAttribute>();
             if (customAttribute != null)
                 return customAttribute.Text;
             throw new ArgumentException(string.Format("Enum value '{0}' does not contain a StringValue attribute", field), nameof(value));
@@ -87,7 +87,7 @@ namespace iCloud.Dav.Core.Utils
                 return null;
             if (o.GetType().IsEnum)
             {
-                StringValueAttribute customAttribute = o.GetType().GetField(o.ToString()).GetCustomAttribute<StringValueAttribute>();
+                var customAttribute = o.GetType().GetField(o.ToString()).GetCustomAttribute<StringValueAttribute>();
                 if (customAttribute == null)
                     return o.ToString();
                 return customAttribute.Text;
@@ -106,17 +106,15 @@ namespace iCloud.Dav.Core.Utils
         }
 
         /// <summary>
-        /// Parses the input string and returns <see cref="T:System.DateTime" /> if the input is a valid
+        /// Parses the input string and returns <see cref="DateTime" /> if the input is a valid
         /// representation of a date. Otherwise it returns <c>null</c>.
         /// </summary>
         public static DateTime? GetDateTimeFromString(string raw)
         {
-            if (!DateTime.TryParse(raw, out DateTime result))
-                return new DateTime?();
-            return new DateTime?(result);
+            return !DateTime.TryParse(raw, out DateTime result) ? new DateTime?() : new DateTime?(result);
         }
 
-        /// <summary>Returns a string (by RFC3339) form the input <see cref="T:System.DateTime" /> instance.</summary>
+        /// <summary>Returns a string (by RFC3339) form the input <see cref="DateTime" /> instance.</summary>
         public static string GetStringFromDateTime(DateTime? date)
         {
             if (!date.HasValue)

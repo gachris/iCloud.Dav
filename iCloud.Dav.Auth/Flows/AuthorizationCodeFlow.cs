@@ -48,7 +48,7 @@ namespace iCloud.Dav.Auth.Flows
 
         /// <summary>
         /// Asynchronously loads the user's token using the flow's
-        /// <see cref="T:iCloud.dav.Auth.Util.Store.IDataStore" />.
+        /// <see cref="IDataStore" />.
         /// </summary>
         /// <param name="userId">User identifier</param>
         /// <param name="taskCancellationToken">Cancellation token to cancel operation</param>
@@ -63,7 +63,7 @@ namespace iCloud.Dav.Auth.Flows
 
         /// <summary>
         /// Asynchronously deletes the user's token using the flow's
-        /// <see cref="T:iCloud.dav.Auth.Util.Store.IDataStore" />.
+        /// <see cref="IDataStore" />.
         /// </summary>
         /// <param name="userId">User identifier.</param>
         /// <param name="taskCancellationToken">Cancellation token to cancel operation.</param>
@@ -103,7 +103,7 @@ namespace iCloud.Dav.Auth.Flows
             await DeleteTokenAsync(userId, taskCancellationToken);
         }
 
-        /// <summary>Stores the token in the <see cref="P:iCloud.dav.Auth.AuthorizationCodeFlow.DataStore" />.</summary>
+        /// <summary>Stores the token in the <see cref="AuthorizationCodeFlow.DataStore" />.</summary>
         /// <param name="userId">User identifier.</param>
         /// <param name="token">Token to store.</param>
         /// <param name="cancellationToken">Cancellation token to cancel operation.</param>
@@ -151,7 +151,7 @@ namespace iCloud.Dav.Auth.Flows
             /// <summary>
             /// Gets or sets the method for presenting the access token to the resource server.
             /// The default value is
-            /// <see cref="T:iCloud.dav.Auth.BasicAuthentication.AuthorizationHeaderAccessMethod" />.
+            /// <see cref="BasicAuthentication.AuthorizationHeaderAccessMethod" />.
             /// </summary>
             public IAccessMethod AccessMethod { get; set; }
 
@@ -159,7 +159,7 @@ namespace iCloud.Dav.Auth.Flows
             public IDataStore DataStore { get; set; }
 
             /// <summary>
-            /// Gets or sets the factory for creating <see cref="T:System.Net.Http.HttpClient" /> instance.
+            /// Gets or sets the factory for creating <see cref="System.Net.Http.HttpClient" /> instance.
             /// </summary>
             public IHttpClientFactory HttpClientFactory { get; set; }
 
@@ -167,15 +167,15 @@ namespace iCloud.Dav.Auth.Flows
             /// Get or sets the exponential back-off policy. Default value is  <c>UnsuccessfulResponse503</c>, which
             /// means that exponential back-off is used on 503 abnormal HTTP responses.
             /// If the value is set to <c>None</c>, no exponential back-off policy is used, and it's up to user to
-            /// configure the <see cref="T:iCloud.dav.Core.ConfigurableMessageHandler" /> in an
-            /// <see cref="T:iCloud.dav.Core.IConfigurableHttpClientInitializer" /> to set a specific back-off
-            /// implementation (using <see cref="T:iCloud.dav.Core.BackOffHandler" />).
+            /// configure the <see cref="ConfigurableMessageHandler" /> in an
+            /// <see cref="IConfigurableHttpClientInitializer" /> to set a specific back-off
+            /// implementation (using <see cref="BackOffHandler" />).
             /// </summary>
             public ExponentialBackOffPolicy DefaultExponentialBackOffPolicy { get; set; }
 
             /// <summary>
             /// Gets or sets the clock. The clock is used to determine if the token has expired, if so we will try to
-            /// refresh it. The default value is <see cref="F:iCloud.dav.Auth.Util.SystemClock.Default" />.
+            /// refresh it. The default value is <see cref="SystemClock.Default" />.
             /// </summary>
             public IClock Clock { get; set; }
 

@@ -2,6 +2,7 @@
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Services;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -102,7 +103,7 @@ namespace iCloud.Dav.Auth
 
         /// <summary>
         /// Asynchronously revokes the token by calling
-        /// <see cref="M:iCloud.dav.Auth.IAuthorizationCodeFlow.RevokeTokenAsync(System.String,System.String, System.Threading.CancellationToken)" />.
+        /// <see cref="IAuthorizationCodeFlow.RevokeTokenAsync(String,String,CancellationToken)" />.
         /// </summary>
         /// <param name="cancellationToken">Cancellation token to cancel an operation.</param>
         /// <returns><c>true</c> if the token was revoked successfully.</returns>

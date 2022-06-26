@@ -5,21 +5,13 @@ namespace iCloud.Dav.Core.Utils
     /// <summary>Represents an exception thrown by an API Service.</summary>
     public class ICloudApiException : Exception
     {
-        private readonly string serviceName;
-
         /// <summary>Gets the service name which related to this exception.</summary>
-        public string ServiceName
-        {
-            get
-            {
-                return this.serviceName;
-            }
-        }
+        public string ServiceName { get; }
 
         /// <summary>Creates an API Service exception.</summary>
         public ICloudApiException(string serviceName, string message, Exception inner) : base(message, inner)
         {
-            this.serviceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
+            ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
         }
 
         /// <summary>Creates an API Service exception.</summary>
@@ -29,7 +21,7 @@ namespace iCloud.Dav.Core.Utils
 
         public override string ToString()
         {
-            return string.Format("The service {1} has thrown an exception: {0}", base.ToString(), serviceName);
+            return string.Format("The service {1} has thrown an exception: {0}", base.ToString(), ServiceName);
         }
     }
 }

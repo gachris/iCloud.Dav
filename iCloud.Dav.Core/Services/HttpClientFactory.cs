@@ -12,11 +12,11 @@ namespace iCloud.Dav.Core.Services
 
         public ConfigurableHttpClient CreateHttpClient(CreateHttpClientArgs args)
         {
-            ConfigurableHttpClient httpClient = new ConfigurableHttpClient(new ConfigurableMessageHandler(this.CreateHandler(args))
+            var httpClient = new ConfigurableHttpClient(new ConfigurableMessageHandler(CreateHandler(args))
             {
                 ApplicationName = args.ApplicationName
             });
-            foreach (IConfigurableHttpClientInitializer initializer in args.Initializers)
+            foreach (var initializer in args.Initializers)
                 initializer.Initialize(httpClient);
             return httpClient;
         }
@@ -24,7 +24,7 @@ namespace iCloud.Dav.Core.Services
         /// <summary>Creates a HTTP message handler. Override this method to mock a message handler.</summary>
         protected virtual HttpMessageHandler CreateHandler(CreateHttpClientArgs args)
         {
-            HttpClientHandler httpClientHandler = new HttpClientHandler();
+            var httpClientHandler = new HttpClientHandler();
             if (httpClientHandler.SupportsRedirectConfiguration)
                 httpClientHandler.AllowAutoRedirect = false;
             HttpClientFactory.Logger.Debug("Handler was created. SupportsRedirectConfiguration={0}, SupportsAutomaticDecompression={1}", httpClientHandler.SupportsRedirectConfiguration, httpClientHandler.SupportsAutomaticDecompression);

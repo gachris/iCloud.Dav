@@ -11,7 +11,7 @@ namespace iCloud.Dav.Auth
     /// </summary>
     public class AuthorizationBroker
     {
-        /// <summary>The folder which is used by the <see cref="T:iCloud.dav.Auth.Utils.Store.FileDataStore" />.</summary>
+        /// <summary>The folder which is used by the <see cref="FileDataStore" />.</summary>
         /// <remarks>
         /// The reason that this is not 'private const' is that a user can change it and store the credentials in a
         /// different location.

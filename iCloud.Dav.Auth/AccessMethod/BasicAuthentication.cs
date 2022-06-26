@@ -20,7 +20,7 @@ namespace iCloud.Dav.Auth
             }
 
             /// <summary>
-            /// Retrieves the original access token in the HTTP request, as provided in the <see cref="M:iCloud.dav.Auth.IAccessMethod.Intercept(System.Net.Http.HttpRequestMessage,System.String)" />
+            /// Retrieves the original access token in the HTTP request, as provided in the <see cref="IAccessMethod.Intercept(HttpRequestMessage,System.String)" />
             /// method.
             /// </summary>
             public string GetAccessToken(HttpRequestMessage request)

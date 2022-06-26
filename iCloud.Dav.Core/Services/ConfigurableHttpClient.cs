@@ -10,8 +10,8 @@ namespace iCloud.Dav.Core.Services
         /// <summary>Constructs a new HTTP client.</summary>
         public ConfigurableHttpClient(ConfigurableMessageHandler handler) : base((HttpMessageHandler)handler)
         {
-            this.MessageHandler = handler;
-            this.DefaultRequestHeaders.ExpectContinue = (new bool?(false));
+            MessageHandler = handler;
+            DefaultRequestHeaders.ExpectContinue = (new bool?(false));
         }
     }
 }

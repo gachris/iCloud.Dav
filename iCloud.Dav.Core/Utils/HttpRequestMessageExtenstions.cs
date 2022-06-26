@@ -19,11 +19,11 @@ namespace iCloud.Dav.Core.Utils
         {
             if (body == null)
                 return;
-            string mediaType = contentType;
-            if (String.IsNullOrEmpty(mediaType))
+            var mediaType = contentType;
+            if (string.IsNullOrEmpty(mediaType))
                 mediaType = "application/" + service.Serializer.Format;
-            string content = service.SerializeObject(body);
-            HttpContent httpContent = new StringContent(content, Encoding.UTF8, mediaType);
+            var content = service.SerializeObject(body);
+            var httpContent = new StringContent(content, Encoding.UTF8, mediaType);
             request.Content = httpContent;
         }
 

@@ -20,7 +20,7 @@ namespace iCloud.Dav.Auth
 
         /// <summary>
         /// Asynchronously loads the user's token using the flow's
-        /// <see cref="T:iCloud.dav.Auth.Util.Store.IDataStore" />.
+        /// <see cref="IDataStore" />.
         /// </summary>
         /// <param name="userId">User identifier</param>
         /// <param name="taskCancellationToken">Cancellation token to cancel operation</param>
@@ -29,7 +29,7 @@ namespace iCloud.Dav.Auth
 
         /// <summary>
         /// Asynchronously deletes the user's token using the flow's
-        /// <see cref="T:iCloud.dav.Auth.Util.Store.IDataStore" />.
+        /// <see cref="IDataStore" />.
         /// </summary>
         /// <param name="userId">User identifier.</param>
         /// <param name="taskCancellationToken">Cancellation token to cancel operation.</param>

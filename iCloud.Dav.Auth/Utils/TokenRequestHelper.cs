@@ -17,15 +17,15 @@ namespace iCloud.Dav.Auth.Utils
 
         /// <summary>
         /// Executes the token request in order to receive a
-        /// <see cref="T:iCloud.dav.Auth.Token" />. In case the token server returns an
-        /// error, a <see cref="T:iCloud.dav.Auth.Response.TokenResponseException" /> is thrown.
+        /// <see cref="Token" />. In case the token server returns an
+        /// error, a <see cref="TokenException" /> is thrown.
         /// </summary>
         /// <param name="httpClient">The HTTP client used to create an HTTP request.</param>
         /// <param name="code">Authorization Basic token</param>
         /// <param name="cancellationToken">Cancellation token to cancel operation.</param>
         /// <param name="clock">
         /// The clock which is used to set the
-        /// <see cref="P:iCloud.dav.Auth.Token.Issued" /> property.
+        /// <see cref="Token.Issued" /> property.
         /// </param>
         /// <returns>Token response.</returns>
         public static async Task<Token> ExecuteAsync(this ConfigurableHttpClient httpClient, string code, IClock clock, CancellationToken cancellationToken)
@@ -88,7 +88,7 @@ namespace iCloud.Dav.Auth.Utils
         private async static Task<Multistatus> SendPropFindRequest(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)
         {
             var content = XmlObjectSerializer.Instance.Serialize(request);
-            var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.PROPFIND), requestUri)
+            var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(ApiMethod.Propfind), requestUri)
             {
                 Content = new StringContent(content),
             }, cancellationToken).ConfigureAwait(false);

@@ -1,11 +1,12 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 
 namespace iCloud.Dav.Core.Utils
 {
     /// <summary>
-    /// Extension methods to <see cref="T:System.Net.Http.HttpRequestMessage" /> and
-    /// <see cref="T:System.Net.Http.HttpResponseMessage" />.
+    /// Extension methods to <see cref="HttpRequestMessage" /> and
+    /// <see cref="HttpResponseMessage" />.
     /// </summary>
     public static class HttpExtenstions
     {
@@ -27,8 +28,8 @@ namespace iCloud.Dav.Core.Utils
         /// <summary>A ICloud.Api utility method for setting an empty HTTP content.</summary>
         public static HttpContent SetEmptyContent(this HttpRequestMessage request)
         {
-            request.Content = new ByteArrayContent(new byte[0]);
-            request.Content.Headers.ContentLength = (new long?(0L));
+            request.Content = new ByteArrayContent(Array.Empty<byte>());
+            request.Content.Headers.ContentLength = new long?(0L);
             return request.Content;
         }
     }

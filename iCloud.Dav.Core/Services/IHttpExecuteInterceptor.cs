@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace iCloud.Dav.Core.Services
 {
     /// <summary>
-    /// HTTP request execute interceptor to intercept a <see cref="T:System.Net.Http.HttpRequestMessage" /> before it has
+    /// HTTP request execute interceptor to intercept a <see cref="HttpRequestMessage" /> before it has
     /// been sent. Sample usage is attaching "Authorization" header to a request.
     /// </summary>
     public interface IHttpExecuteInterceptor
