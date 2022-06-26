@@ -17,7 +17,7 @@ namespace iCloud.Dav.People.Converters
         /// <returns>true if conversion is possible</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if (sourceType == typeof(Multistatus<Prop>))
+            if (sourceType == typeof(Multistatus))
                 return true;
             return false;
         }
@@ -33,13 +33,13 @@ namespace iCloud.Dav.People.Converters
         {
             switch (value)
             {
-                case Multistatus<Prop> multistatusProp:
+                case Multistatus multistatusProp:
                     var responses = multistatusProp.Responses.ThrowIfNull(nameof(multistatusProp.Responses));
 
-                    return new IdentityCardList(responses.Where(response => Split(response.Url).Length == 3).Select(response =>
+                    return new IdentityCardList(responses.Where(response => Split(response.Href).Length == 3).Select(response =>
                     {
-                        var card = new IdentityCard { Url = response.Url.ThrowIfNull(nameof(response.Url)) };
-                        var strings = Split(response.Url);
+                        var card = new IdentityCard { Url = response.Href.ThrowIfNull(nameof(response.Href)) };
+                        var strings = Split(response.Href);
                         card.UniqueId = card.ResourceName = strings.Last().ThrowIfNull(nameof(card.ResourceName));
                         return card;
                     }));

@@ -18,7 +18,7 @@ namespace iCloud.Dav.People.Converters
         /// <returns>true if conversion is possible</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if (sourceType == typeof(Multistatus<Prop>))
+            if (sourceType == typeof(Multistatus))
                 return true;
             return false;
         }
@@ -34,22 +34,20 @@ namespace iCloud.Dav.People.Converters
         {
             switch (value)
             {
-                case Multistatus<Prop> multistatusProp:
-                    var responses = multistatusProp.Responses.ThrowIfNull(nameof(multistatusProp.Responses));
+                case Multistatus multistatus:
+                    var responses = multistatus.Responses.ThrowIfNull(nameof(multistatus.Responses));
 
                     return new ContactGroupsList(responses.Select(response =>
                     {
-                        var propstat = response.Propstat.ThrowIfNull(nameof(response.Propstat));
-                        var prop = propstat.Prop.ThrowIfNull(nameof(propstat.Prop));
-                        var addressdata = prop.Addressdata.ThrowIfNull(nameof(prop.Addressdata));
-                        var addressdataValue = addressdata.Value.ThrowIfNull(nameof(prop.Addressdata));
-                        var etag = prop.Getetag.ThrowIfNull(nameof(prop.Getetag));
+                        var addressData = response.AddressData.ThrowIfNull(nameof(response.AddressData));
+                        var addressdataValue = addressData.Value.ThrowIfNull(nameof(addressData.Value));
                         var bytes = Encoding.UTF8.GetBytes(addressdataValue);
-                        return new ContactGroup(bytes)
+                        var d= new ContactGroup(bytes)
                         {
-                            Url = response.Url.ThrowIfNull(nameof(response.Url)),
-                            ETag = etag.Value.ThrowIfNull(nameof(etag.Value))
+                            Url = response.Href.ThrowIfNull(nameof(response.Href)),
+                            ETag = response.Etag.ThrowIfNull(nameof(response.Etag))
                         };
+                        return d;
                     }));
                 default:
                     throw GetConvertFromException(value);

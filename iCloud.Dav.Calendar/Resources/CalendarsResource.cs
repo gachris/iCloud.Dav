@@ -1,6 +1,6 @@
 ﻿using Ical.Net.Serialization;
+using iCloud.Dav.Calendar.Cal.Types;
 using iCloud.Dav.Calendar.Request;
-using iCloud.Dav.Calendar.Types;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Response;
@@ -80,21 +80,7 @@ namespace iCloud.Dav.Calendar.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                var calendar = new Propfind<Prop>()
-                {
-                    Prop = new Prop
-                    {
-                        Displayname = Displayname.Default,
-                        Getctag = Getctag.Default,
-                        Getetag = Getetag.Default,
-                        Supportedreportset = Supportedreportset.Default,
-                        SupportedCalendarComponentSet = SupportedCalendarComponentSet.Default,
-                        Currentuserprivilegeset = Currentuserprivilegeset.Default,
-                        CalendarColor = CalendarColor.Default,
-                        Value = PropValue.Calendardata
-                    }
-                };
-                return calendar;
+                return new PropFind();
             }
         }
 
@@ -124,20 +110,7 @@ namespace iCloud.Dav.Calendar.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                return new Propfind<Prop>()
-                {
-                    Prop = new Prop
-                    {
-                        Displayname = Displayname.Default,
-                        Getctag = Getctag.Default,
-                        Getetag = Getetag.Default,
-                        Supportedreportset = Supportedreportset.Default,
-                        SupportedCalendarComponentSet = SupportedCalendarComponentSet.Default,
-                        Currentuserprivilegeset = Currentuserprivilegeset.Default,
-                        CalendarColor = CalendarColor.Default,
-                        Value = PropValue.Calendardata
-                    }
-                };
+                return new PropFind();
             }
 
             ///<summary>Gets the depth.</summary>
@@ -192,16 +165,10 @@ namespace iCloud.Dav.Calendar.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                var mkCalendar = new MkCalendar();
-                var set = new Set();
-                var prop = new Prop
+                var mkCalendar = new MkCalendar
                 {
-                    Displayname = new Displayname() { Value = Body.Summary },
-                    CalendarColor = new CalendarColor() { Value = Body.Color },
-                    SupportedCalendarComponentSet = new SupportedCalendarComponentSet
-                    {
-                        Comps = new System.Collections.Generic.List<Comp>()
-                    }
+                    DisplayName = Body.Summary,
+                    CalendarColor = Body.Color
                 };
 
                 if (Body.TimeZone != null)
@@ -209,19 +176,11 @@ namespace iCloud.Dav.Calendar.Resources
                     var calendar = new Ical.Net.Calendar();
                     var calendarSerializer = new CalendarSerializer();
                     calendar.TimeZones.Add(Body.TimeZone);
-                    prop.CalendarTimeZone = new CalendarTimeZone
-                    {
-                        Value = calendarSerializer.SerializeToString(calendar)
-                    };
+                    mkCalendar.CalendarTimeZoneSerializedString = calendarSerializer.SerializeToString(calendar);
                 }
 
-                Body.SupportedCalendarComponents.ForEach(calendarComponent =>
-                {
-                    var comp = new Comp() { Name = calendarComponent };
-                    prop.SupportedCalendarComponentSet.Comps.Add(comp);
-                });
-                set.Prop = prop;
-                mkCalendar.Set = set;
+                mkCalendar.SupportedCalendarComponents.AddRange(Body.SupportedCalendarComponents);
+
                 return mkCalendar;
             }
 
@@ -271,14 +230,8 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 return new PropertyUpdate()
                 {
-                    Set = new Set()
-                    {
-                        Prop = new Prop()
-                        {
-                            Displayname = new Displayname() { Value = Body.Summary },
-                            CalendarColor = new CalendarColor() { Value = Body.Color }
-                        }
-                    }
+                    DisplayName = Body.Summary,
+                    CalendarColor = Body.Color
                 };
             }
 

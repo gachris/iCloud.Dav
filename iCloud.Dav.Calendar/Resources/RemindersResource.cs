@@ -1,6 +1,6 @@
 ﻿using Ical.Net.Serialization;
+using iCloud.Dav.Calendar.Cal.Types;
 using iCloud.Dav.Calendar.Request;
-using iCloud.Dav.Calendar.Types;
 using iCloud.Dav.Calendar.Utils;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Enums;
@@ -103,17 +103,14 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                var calendarquery = new Calendarquery()
-                {
-                    Prop = new Prop() { Calendardata = Calendardata.Default, Getetag = Getetag.Default },
-                    Filter = new Filter() { Compfilter = new Compfilter() { Name = "VCALENDAR", Child = new Compfilter() { Name = "VTODO" } } }
-                };
+                var calendarquery = new CalendarQuery() { CompFilter = new CompFilter() { Name = "VCALENDAR" } };
+                calendarquery.CompFilter.Child = new CompFilter() { Name = "VTODO" };
 
                 var timeMin = TimeMin.ToFilterTime();
                 var timeMax = TimeMax.ToFilterTime();
 
                 if (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
-                    calendarquery.Filter.Compfilter.Child.Timerange = new Timerange { Start = timeMin, End = timeMax };
+                    calendarquery.CompFilter.Child.TimeRange = new TimeRange { Start = timeMin, End = timeMax };
 
                 return calendarquery;
             }

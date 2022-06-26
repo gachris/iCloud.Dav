@@ -93,27 +93,23 @@ namespace iCloud.Dav.People.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                var addressBookQuery = new Addressbookquery
+                var addressBookQuery = new AddressBookQuery
                 {
-                    Filter = new Filters { Type = "anyof" },
-                    Prop = new Prop()
+                    Filter = new Filters
                     {
-                        Getetag = new Getetag(),
-                        Addressdata = new Addressdata()
+                        Type = "anyof",
+                        Name = "X-ADDRESSBOOKSERVER-KIND"
                     }
                 };
 
-                var propfilter = new Propfilter { Name = "X-ADDRESSBOOKSERVER-KIND", };
-                var textmatch = new TextMatch
+                addressBookQuery.Filter.TextMatches.Add(new TextMatch
                 {
                     Collation = "i;unicode-casemap",
-                    Negatecondition = "no",
-                    Matchtype = "contains",
-                    Text = "group"
-                };
+                    NegateCondition = "no",
+                    MatchType = "contains",
+                    SearchText = "group"
+                });
 
-                propfilter.Textmatch = new List<TextMatch> { textmatch };
-                addressBookQuery.Filter.Propfilter = new List<Propfilter> { propfilter };
                 return addressBookQuery;
             }
 

@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Calendar.Types;
+﻿using iCloud.Dav.Calendar.Cal.Types;
 using iCloud.Dav.Calendar.Utils;
 using System;
 using System.ComponentModel;
@@ -16,7 +16,7 @@ namespace iCloud.Dav.Calendar.Converters
         /// <returns>true if conversion is possible</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if (sourceType == typeof(Multistatus<Prop>))
+            if (sourceType == typeof(MultiStatus))
                 return true;
             return false;
         }
@@ -32,7 +32,7 @@ namespace iCloud.Dav.Calendar.Converters
         {
             if (value != null)
             {
-                var responses = ((Multistatus<Prop>)value).Responses;
+                var responses = ((MultiStatus)value).Responses;
                 return responses.ToCalendarList();
             }
             throw GetConvertFromException(value);

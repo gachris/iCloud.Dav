@@ -12,7 +12,7 @@ namespace iCloud.Dav.People
     /// methods to search, sort, and manipulate lists.
     /// </summary>   
     [TypeConverter(typeof(ContactGroupsListConverter))]
-    [XmlDeserializeType(typeof(Multistatus<Prop>))]
+    [XmlDeserializeType(typeof(Multistatus))]
     public class ContactGroupsList : List<ContactGroup>, IList<ContactGroup>, IEnumerable<ContactGroup>, IList, IEnumerable
     {
         /// <summary>

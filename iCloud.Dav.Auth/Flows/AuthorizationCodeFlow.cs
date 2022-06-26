@@ -5,6 +5,7 @@ using iCloud.Dav.Core.Enums;
 using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Services;
 using iCloud.Dav.Core.Utils;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,47 +15,35 @@ namespace iCloud.Dav.Auth.Flows
     public class AuthorizationCodeFlow : IAuthorizationCodeFlow
     {
         private static readonly ILogger Logger = ApplicationContext.Logger.ForType<AuthorizationCodeFlow>();
-        private readonly IAccessMethod accessMethod;
-        private readonly IDataStore dataStore;
-        private readonly ConfigurableHttpClient httpClient;
-        private readonly IClock clock;
+        private readonly IAccessMethod _accessMethod;
+        private readonly IDataStore _dataStore;
+        private readonly ConfigurableHttpClient _httpClient;
+        private readonly IClock _clock;
 
         /// <summary>Gets the data store used to store the credentials.</summary>
-        public IDataStore DataStore
-        {
-            get { return this.dataStore; }
-        }
+        public IDataStore DataStore => _dataStore;
 
         /// <summary>Gets the HTTP client used to make authentication requests to the server.</summary>
-        public ConfigurableHttpClient HttpClient
-        {
-            get { return this.httpClient; }
-        }
+        public ConfigurableHttpClient HttpClient => _httpClient;
 
         /// <summary>Gets the method for presenting the access token to the resource server.</summary>
-        public IAccessMethod AccessMethod
-        {
-            get { return this.accessMethod; }
-        }
+        public IAccessMethod AccessMethod => _accessMethod;
 
         /// <summary>Gets the clock.</summary>
-        public IClock Clock
-        {
-            get { return this.clock; }
-        }
+        public IClock Clock => _clock;
 
         /// <summary>Constructs a new ICloud authorization code flow.</summary>
         public AuthorizationCodeFlow(AuthorizationCodeFlow.Initializer initializer)
         {
-            this.accessMethod = initializer.AccessMethod.ThrowIfNull("Initializer.AccessMethod");
-            this.clock = initializer.Clock.ThrowIfNull("Initializer.Clock");
-            this.dataStore = initializer.DataStore;
-            if (this.dataStore == null)
+            _accessMethod = initializer.AccessMethod.ThrowIfNull("Initializer.AccessMethod");
+            _clock = initializer.Clock.ThrowIfNull("Initializer.Clock");
+            _dataStore = initializer.DataStore;
+            if (_dataStore == null)
                 AuthorizationCodeFlow.Logger.Warning("Datastore is null, as a result the user's credential will not be stored");
-            CreateHttpClientArgs args = new CreateHttpClientArgs();
+            var args = new CreateHttpClientArgs();
             if (initializer.DefaultExponentialBackOffPolicy != ExponentialBackOffPolicy.None)
                 args.Initializers.Add(new ExponentialBackOffInitializer(initializer.DefaultExponentialBackOffPolicy, () => new BackOffHandler(new ExponentialBackOff())));
-            this.httpClient = (initializer.HttpClientFactory ?? new HttpClientFactory()).CreateHttpClient(args);
+            _httpClient = (initializer.HttpClientFactory ?? new HttpClientFactory()).CreateHttpClient(args);
         }
 
         /// <summary>
@@ -67,9 +56,9 @@ namespace iCloud.Dav.Auth.Flows
         public async Task<Token> LoadTokenAsync(string userId, CancellationToken taskCancellationToken)
         {
             taskCancellationToken.ThrowIfCancellationRequested();
-            if (this.DataStore == null)
+            if (DataStore == null)
                 return null;
-            return await this.DataStore.GetAsync<Token>(userId).ConfigureAwait(false);
+            return await DataStore.GetAsync<Token>(userId).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -81,9 +70,9 @@ namespace iCloud.Dav.Auth.Flows
         public async Task DeleteTokenAsync(string userId, CancellationToken taskCancellationToken)
         {
             taskCancellationToken.ThrowIfCancellationRequested();
-            if (this.DataStore == null)
+            if (DataStore == null)
                 return;
-            await this.DataStore.DeleteAsync<Token>(userId).ConfigureAwait(false);
+            await DataStore.DeleteAsync<Token>(userId).ConfigureAwait(false);
         }
 
         /// <summary>Asynchronously exchanges code with a token.</summary>
@@ -93,8 +82,8 @@ namespace iCloud.Dav.Auth.Flows
         /// <returns>Token response which contains the access token.</returns>
         public async Task<Token> ExchangeCodeForTokenAsync(string userId, string code, CancellationToken taskCancellationToken)
         {
-            Token token = await this.FetchTokenAsync(userId, code, taskCancellationToken).ConfigureAwait(false);
-            await this.StoreTokenAsync(userId, token, taskCancellationToken).ConfigureAwait(false);
+            var token = await FetchTokenAsync(userId, code, taskCancellationToken).ConfigureAwait(false);
+            await StoreTokenAsync(userId, token, taskCancellationToken).ConfigureAwait(false);
             return token;
         }
 
@@ -111,7 +100,7 @@ namespace iCloud.Dav.Auth.Flows
         /// <returns><c>true</c> if the token was revoked successfully.</returns>
         public async Task RevokeTokenAsync(string userId, string token, CancellationToken taskCancellationToken)
         {
-            await this.DeleteTokenAsync(userId, taskCancellationToken);
+            await DeleteTokenAsync(userId, taskCancellationToken);
         }
 
         /// <summary>Stores the token in the <see cref="P:iCloud.dav.Auth.AuthorizationCodeFlow.DataStore" />.</summary>
@@ -121,9 +110,9 @@ namespace iCloud.Dav.Auth.Flows
         private async Task StoreTokenAsync(string userId, Token token, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (this.DataStore == null)
+            if (DataStore == null)
                 return;
-            await this.DataStore.StoreAsync(userId, token).ConfigureAwait(false);
+            await DataStore.StoreAsync(userId, token).ConfigureAwait(false);
         }
 
         /// <summary>Retrieve a new token from the server using the specified request.</summary>
@@ -136,22 +125,24 @@ namespace iCloud.Dav.Auth.Flows
             TokenException tokenException;
             try
             {
-                return await this.httpClient.ExecuteAsync(code, cancellationToken, this.Clock).ConfigureAwait(false);
+                return await _httpClient.ExecuteAsync(code, Clock, cancellationToken).ConfigureAwait(false);
             }
             catch (TokenException ex)
             {
                 tokenException = ex;
             }
-            await this.DeleteTokenAsync(userId, cancellationToken).ConfigureAwait(false);
+            await DeleteTokenAsync(userId, cancellationToken).ConfigureAwait(false);
             throw tokenException;
         }
 
         /// <summary>Despose.</summary>
         public void Dispose()
         {
-            if (this.HttpClient == null)
+            GC.SuppressFinalize(this);
+
+            if (HttpClient == null)
                 return;
-            this.HttpClient.Dispose();
+            HttpClient.Dispose();
         }
 
         /// <summary>An initializer class for the authorization code flow. </summary>
@@ -191,9 +182,9 @@ namespace iCloud.Dav.Auth.Flows
             /// <summary>Constructs a new initializer.</summary>
             public Initializer()
             {
-                this.AccessMethod = new BasicAuthentication.AuthorizationHeaderAccessMethod();
-                this.DefaultExponentialBackOffPolicy = ExponentialBackOffPolicy.UnsuccessfulResponse503;
-                this.Clock = SystemClock.Default;
+                AccessMethod = new BasicAuthentication.AuthorizationHeaderAccessMethod();
+                DefaultExponentialBackOffPolicy = ExponentialBackOffPolicy.UnsuccessfulResponse503;
+                Clock = SystemClock.Default;
             }
         }
     }

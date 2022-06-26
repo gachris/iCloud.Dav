@@ -20,7 +20,7 @@ namespace iCloud.Dav.Auth.Utils
         /// <summary>Constructs a new token exception from the given error.</summary>
         public TokenException(ErrorResponse error) : base(error.ToString())
         {
-            this.Error = error;
+            Error = error;
         }
     }
 }

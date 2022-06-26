@@ -38,10 +38,7 @@ namespace iCloud.Dav.Auth
         }
 
         /// <summary>Gets the user identity.</summary>
-        public string UserId
-        {
-            get { return _userId; }
-        }
+        public string UserId => _userId;
 
         /// <summary>Constructs a new credential instance.</summary>
         /// <param name="flow">Authorization code flow.</param>
@@ -79,7 +76,7 @@ namespace iCloud.Dav.Auth
         {
             if (args.Response.StatusCode != HttpStatusCode.Unauthorized)
                 return false;
-            bool flag = !object.Equals(Token.AccessToken, _flow.AccessMethod.GetAccessToken(args.Request));
+            var flag = !object.Equals(Token.AccessToken, _flow.AccessMethod.GetAccessToken(args.Request));
             await Task.Delay(0);
             return flag;
         }

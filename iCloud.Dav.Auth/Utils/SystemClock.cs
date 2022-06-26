@@ -17,24 +17,12 @@ namespace iCloud.Dav.Auth.Utils
         /// Gets a <see cref="T:System.DateTime" /> object that is set to the current date and time on this computer,
         /// expressed as the local time.
         /// </summary>
-        public DateTime Now
-        {
-            get
-            {
-                return DateTime.Now;
-            }
-        }
+        public DateTime Now => DateTime.Now;
 
         /// <summary>
         /// Gets a <see cref="T:System.DateTime" /> object that is set to the current date and time on this computer,
         /// expressed as UTC time.
         /// </summary>
-        public DateTime UtcNow
-        {
-            get
-            {
-                return DateTime.UtcNow;
-            }
-        }
+        public DateTime UtcNow => DateTime.UtcNow;
     }
 }

@@ -28,11 +28,11 @@ namespace iCloud.Dav.Auth
         /// <returns>User credential</returns>
         public static async Task<UserCredential> AuthorizeAsync(string user, NetworkCredential networdCredentials, CancellationToken cancellationToken, IDataStore dataStore)
         {
-            AuthorizationCodeFlow.Initializer initializer = new AuthorizationCodeFlow.Initializer();
+            var initializer = new AuthorizationCodeFlow.Initializer();
             initializer.DataStore = dataStore ?? new FileDataStore(AuthorizationBroker.Folder, false);
-            AuthorizationCodeFlow authorizationCodeFlow = new AuthorizationCodeFlow(initializer);
-            CodeReceiver codeReceiver = new CodeReceiver();
-            AuthorizationCodeInstalledApp authorizationCodeInstalledApp = new AuthorizationCodeInstalledApp(authorizationCodeFlow, codeReceiver);
+            var authorizationCodeFlow = new AuthorizationCodeFlow(initializer);
+            var codeReceiver = new CodeReceiver();
+            var authorizationCodeInstalledApp = new AuthorizationCodeInstalledApp(authorizationCodeFlow, codeReceiver);
             return await authorizationCodeInstalledApp.AuthorizeAsync(user, networdCredentials, cancellationToken).ConfigureAwait(false);
         }
     }

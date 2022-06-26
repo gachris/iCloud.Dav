@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace iCloud.Dav.Auth
 {
@@ -29,6 +30,6 @@ namespace iCloud.Dav.Auth
         /// Gets or sets the calendar user address set.
         /// </summary>
         [JsonProperty("calendar_user_address_set")]
-        public CalendarUserAddressSetList CalendarUserAddressSet { get; set; }
+        public List<CalendarUserAddressSet> CalendarUserAddressSet { get; set; }
     }
 }

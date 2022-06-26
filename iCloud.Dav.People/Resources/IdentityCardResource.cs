@@ -47,14 +47,7 @@ namespace iCloud.Dav.People.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                var contactsListPropfind = new Propfind<Prop>()
-                {
-                    Prop = new Prop
-                    {
-                        Resourcetype = new Resourcetype()
-                    }
-                };
-                return contactsListPropfind;
+                return new PropFind();
             }
         }
     }

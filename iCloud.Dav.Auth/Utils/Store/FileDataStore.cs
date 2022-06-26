@@ -33,22 +33,22 @@ namespace iCloud.Dav.Auth.Utils.Store
                 Directory.CreateDirectory(folderPath);
         }
 
-        private string GetHomeDirectory()
+        private static string GetHomeDirectory()
         {
-            string appData = Environment.GetEnvironmentVariable("APPDATA");
+            var appData = Environment.GetEnvironmentVariable("APPDATA");
             if (!string.IsNullOrEmpty(appData))
             {
                 // This is almost certainly windows.
                 // This path must be the same between the desktop FileDataStore and this netstandard FileDataStore.
                 return appData;
             }
-            string home = Environment.GetEnvironmentVariable("HOME");
+            var home = Environment.GetEnvironmentVariable("HOME");
             if (!string.IsNullOrEmpty(home))
             {
                 // This is almost certainly Linux or MacOS.
                 // Follow the XDG Base Directory Specification: https://specifications.freedesktop.org/basedir-spec/latest/index.html
                 // Store data in subdirectory of $XDG_DATA_HOME if it exists, defaulting to $HOME/.local/share if not set.
-                string xdgDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME");
+                var xdgDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME");
                 if (string.IsNullOrEmpty(xdgDataHome))
                 {
                     xdgDataHome = Path.Combine(home, ".local", "share");
@@ -116,7 +116,7 @@ namespace iCloud.Dav.Auth.Utils.Store
                 throw new ArgumentException("Key MUST have a value");
             }
 
-            TaskCompletionSource<T> tcs = new TaskCompletionSource<T>();
+            var tcs = new TaskCompletionSource<T>();
             var filePath = Path.Combine(folderPath, GenerateStoredKey(key, typeof(T)));
             if (File.Exists(filePath))
             {

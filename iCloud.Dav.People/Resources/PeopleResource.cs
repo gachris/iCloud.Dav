@@ -92,15 +92,7 @@ namespace iCloud.Dav.People.Resources
             ///<summary>Returns the body of the request.</summary>
             protected override object GetBody()
             {
-                var addressBookQuery = new Addressbookquery
-                {
-                    Prop = new Prop()
-                    {
-                        Getetag = Getetag.Default,
-                        Addressdata = new Addressdata()
-                    }
-                };
-                return addressBookQuery;
+                return new AddressBookQuery();
             }
 
             /// <summary>Initializes List parameter list.</summary>

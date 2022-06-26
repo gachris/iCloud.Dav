@@ -12,7 +12,7 @@ namespace iCloud.Dav.People
     /// methods to search, sort, and manipulate lists.
     /// </summary>   
     [TypeConverter(typeof(PersonListConverter))]
-    [XmlDeserializeType(typeof(Multistatus<Prop>))]
+    [XmlDeserializeType(typeof(Multistatus))]
     public class PersonList : List<Person>, IList<Person>, IEnumerable<Person>, IList, IEnumerable
     {
         /// <summary>

@@ -3,9 +3,9 @@
 namespace iCloud.Dav.Auth.Types
 {
     [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-    public class Propfind<TProp>
+    public class Propfind
     {
         [XmlElement(ElementName = "prop", Namespace = "DAV:")]
-        public TProp Prop { get; set; }
+        public Prop Prop { get; set; }
     }
 }

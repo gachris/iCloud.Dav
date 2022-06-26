@@ -21,8 +21,8 @@ namespace iCloud.Dav.Auth
         /// <param name="url"></param>
         public DavServer(string id, string url)
         {
-            this.Id = id;
-            this.Url = url;
+            Id = id;
+            Url = url;
         }
 
         /// <summary>

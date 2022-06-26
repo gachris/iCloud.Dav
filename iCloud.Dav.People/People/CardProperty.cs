@@ -113,5 +113,7 @@ namespace iCloud.Dav.People
             Name = name.ThrowIfNullOrEmpty(nameof(name));
             Value = values.ThrowIfNull(nameof(values));
         }
+
+        public override string ToString() => Value.ToString();
     }
 }

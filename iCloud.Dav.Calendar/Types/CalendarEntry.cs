@@ -1,23 +1,24 @@
 ﻿using Ical.Net.CalendarComponents;
+using iCloud.Dav.Calendar.Cal.Types;
 using iCloud.Dav.Calendar.Converters;
-using iCloud.Dav.Calendar.Types;
 using iCloud.Dav.Core.Attributes;
 using iCloud.Dav.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace iCloud.Dav.Calendar
 {
-    [XmlDeserializeType(typeof(Multistatus<Prop>))]
+    [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(CalendarConverter))]
     public class CalendarEntry : IDirectResponseSchema, ICloneable
     {
         public CalendarEntry()
         {
-            Privileges = new PrivilegeCollection();
-            SupportedReports = new SupportedReportCollection();
-            SupportedCalendarComponents = new SupportedCalendarComponentCollection();
+            Privileges = new List<string>();
+            SupportedReports = new List<string>();
+            SupportedCalendarComponents = new List<string>();
         }
 
         [Required]
@@ -34,11 +35,11 @@ namespace iCloud.Dav.Calendar
 
         public virtual string CTag { get; set; }
 
-        public virtual PrivilegeCollection Privileges { get; }
+        public virtual List<string> Privileges { get; }
 
-        public virtual SupportedReportCollection SupportedReports { get; }
+        public virtual List<string> SupportedReports { get; }
 
-        public virtual SupportedCalendarComponentCollection SupportedCalendarComponents { get; }
+        public virtual List<string> SupportedCalendarComponents { get; }
 
         public virtual VTimeZone TimeZone { get; set; }
 

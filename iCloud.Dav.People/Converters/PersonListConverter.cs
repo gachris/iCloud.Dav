@@ -20,7 +20,7 @@ namespace iCloud.Dav.People.Converters
         /// <returns>true if conversion is possible</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if (sourceType == typeof(Multistatus<Prop>))
+            if (sourceType == typeof(Multistatus))
                 return true;
             return false;
         }
@@ -36,7 +36,7 @@ namespace iCloud.Dav.People.Converters
         {
             switch (value)
             {
-                case Multistatus<Prop> multistatusProp:
+                case Multistatus multistatusProp:
                     var responses = multistatusProp.Responses.ThrowIfNull(nameof(multistatusProp.Responses));
 
                     if (!responses.Any()) return default;
@@ -46,21 +46,21 @@ namespace iCloud.Dav.People.Converters
 
                     foreach (var multistatusItem in responses)
                     {
-                        if (multistatusItem.Propstat.Prop.Addressdata.Value.Contains("X-ADDRESSBOOKSERVER-KIND:group"))
+                        if (multistatusItem.AddressData.Value.Contains("X-ADDRESSBOOKSERVER-KIND:group"))
                         {
-                            var bytes = Encoding.UTF8.GetBytes(multistatusItem.Propstat.Prop.Addressdata.Value);
+                            var bytes = Encoding.UTF8.GetBytes(multistatusItem.AddressData.Value);
                             var contactGroup = new ContactGroup(bytes)
                             {
-                                ETag = multistatusItem.Propstat.Prop.Getetag.Value
+                                ETag = multistatusItem.Etag
                             };
                             contactGroupList.Add(contactGroup);
                         }
                         else
                         {
-                            var bytes = Encoding.UTF8.GetBytes(multistatusItem.Propstat.Prop.Addressdata.Value);
+                            var bytes = Encoding.UTF8.GetBytes(multistatusItem.AddressData.Value);
                             var person = new Person(bytes)
                             {
-                                ETag = multistatusItem.Propstat.Prop.Getetag.Value
+                                ETag = multistatusItem.Etag
                             };
                             personList.Add(person);
                         }

@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Calendar.Types;
+﻿using iCloud.Dav.Calendar.Cal.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ namespace iCloud.Dav.Calendar.Utils
 {
     internal static class ConverterHelper
     {
-        public static CalendarEntryList ToCalendarList(this List<Response<Prop>> responses)
+        public static CalendarEntryList ToCalendarList(this List<Response> responses)
         {
             if (responses != null && responses.Any())
             {
@@ -27,50 +27,45 @@ namespace iCloud.Dav.Calendar.Utils
             return default;
         }
 
-        public static CalendarEntry ToCalendar(this Response<Prop> response)
+        public static CalendarEntry ToCalendar(this Response response)
         {
-            if (response != null)
+            if (response is null) return null;
+
+            var CalendarUrl = response.Href.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (CalendarUrl.Length != 3) return null;
+
+            var id = CalendarUrl.Last();
+            var calendarListEntry = new CalendarEntry
             {
-                var CalendarUrl = response.Url.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                if (CalendarUrl.Length == 3)
-                {
-                    var calendarListEntry = new CalendarEntry();
+                Id = id,
+                Url = response.Href,
+                ETag = response.Etag,
+                CTag = response.Ctag?.Value,
+                Color = response.CalendarColor,
+                Summary = response.DisplayName ?? id
+            };
 
-                    var id = CalendarUrl.Last();
-                    var summary = response.Propstat.Prop.Displayname?.Value ?? id;
-                    var privileges = response.Propstat.Prop.Currentuserprivilegeset?.Privilege?
-                        .Select(privilege => (string)privilege.Value) ?? new List<string>();
-                    var supportedReports = response.Propstat.Prop.Supportedreportset?.Supportedreport?
-                        .Select(supportedReport => (string)supportedReport.Report?.Value) ?? new List<string>();
-                    var supportedCalendarComponents = response.Propstat.Prop.SupportedCalendarComponentSet?.Comps?
-                        .Select(comp => comp.Name) ?? new List<string>();
+            var privileges = response.CurrentUserPrivilegeSet.Select(privilege => privilege.Name);
+            var supportedReports = response.SupportedReportSet.Select(supportedReport => supportedReport.Name);
+            var supportedCalendarComponents = response.SupportedCalendarComponentSet.Select(comp => comp.Name);
 
-                    calendarListEntry.Id = id;
-                    calendarListEntry.Summary = summary;
-                    calendarListEntry.Url = response.Url;
-                    calendarListEntry.ETag = response.Propstat.Prop.Getetag?.Value;
-                    calendarListEntry.CTag = response.Propstat.Prop.Getctag?.Value;
-                    calendarListEntry.Privileges.AddRange(privileges);
-                    calendarListEntry.SupportedReports.AddRange(supportedReports);
-                    calendarListEntry.SupportedCalendarComponents.AddRange(supportedCalendarComponents);
-                    calendarListEntry.Color = response.Propstat.Prop.CalendarColor?.Value;
-                    return calendarListEntry;
-                }
-            }
-            return default;
+            calendarListEntry.Privileges.AddRange(privileges);
+            calendarListEntry.SupportedReports.AddRange(supportedReports);
+            calendarListEntry.SupportedCalendarComponents.AddRange(supportedCalendarComponents);
+
+            return calendarListEntry;
         }
 
-        public static EventList ToEventList(this IEnumerable<Response<Prop>> responses)
+        public static EventList ToEventList(this IEnumerable<Response> responses)
         {
             var events = new List<Event>();
             foreach (var multistatusItem in responses)
             {
-                if (multistatusItem.Propstat != null
-                    && multistatusItem.Propstat.Prop != null
-                    && multistatusItem.Propstat.Prop.Calendardata != null)
+                if (multistatusItem.CalendarData != null)
                 {
-                    var @event = multistatusItem.Propstat.Prop.Calendardata.Value.ToEvent();
-                    @event.ETag = multistatusItem.Propstat.Prop.Getetag.Value;
+                    var @event = multistatusItem.CalendarData.Value.ToEvent();
+                    @event.ETag = multistatusItem.Etag;
                     events.Add(@event);
                 }
             }
@@ -94,17 +89,15 @@ namespace iCloud.Dav.Calendar.Utils
             return default;
         }
 
-        public static ReminderList ToReminderList(this List<Response<Prop>> responses)
+        public static ReminderList ToReminderList(this List<Response> responses)
         {
             var events = new List<Reminder>();
             foreach (var multistatusItem in responses)
             {
-                if (multistatusItem.Propstat != null
-                    && multistatusItem.Propstat.Prop != null
-                    && multistatusItem.Propstat.Prop.Calendardata != null)
+                if (multistatusItem.CalendarData != null)
                 {
-                    var @event = multistatusItem.Propstat.Prop.Calendardata.Value.ToReminder();
-                    @event.ETag = multistatusItem.Propstat.Prop.Getetag.Value;
+                    var @event = multistatusItem.CalendarData.Value.ToReminder();
+                    @event.ETag = multistatusItem.Etag;
                     events.Add(@event);
                 }
             }

@@ -10,7 +10,7 @@ namespace iCloud.Sync.App
     {
         private static void Main()
         {
-            People();
+            //People();
             EventsCalendar();
             RemindersCalendar();
         }

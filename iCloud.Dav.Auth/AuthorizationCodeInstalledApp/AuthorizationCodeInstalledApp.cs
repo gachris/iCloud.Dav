@@ -20,21 +20,15 @@ namespace iCloud.Dav.Auth
         /// </summary>
         public AuthorizationCodeInstalledApp(IAuthorizationCodeFlow flow, ICodeReceiver codeReceiver)
         {
-            this._flow = flow;
-            this._codeReceiver = codeReceiver;
+            _flow = flow;
+            _codeReceiver = codeReceiver;
         }
 
         /// <summary>Gets the authorization code flow.</summary>
-        public IAuthorizationCodeFlow Flow
-        {
-            get { return this._flow; }
-        }
+        public IAuthorizationCodeFlow Flow => _flow;
 
         /// <summary>Gets the code receiver which is responsible for receiving the authorization code.</summary>
-        public ICodeReceiver CodeReceiver
-        {
-            get { return this._codeReceiver; }
-        }
+        public ICodeReceiver CodeReceiver => _codeReceiver;
 
         /// <summary>Asynchronously authorizes the installed application to access user's protected data.</summary>
         /// <param name="userId">User identifier</param>
@@ -43,14 +37,14 @@ namespace iCloud.Dav.Auth
         /// <returns>The user's credential</returns>
         public async Task<UserCredential> AuthorizeAsync(string userId, NetworkCredential networkCredential, CancellationToken taskCancellationToken)
         {
-            Token token = await this.Flow.LoadTokenAsync(userId, taskCancellationToken).ConfigureAwait(false);
+            var token = await Flow.LoadTokenAsync(userId, taskCancellationToken).ConfigureAwait(false);
             if (token == null)
             {
-                string authorizationCode = this.CodeReceiver.ReceiveCode(networkCredential);
+                var authorizationCode = CodeReceiver.ReceiveCode(networkCredential);
                 AuthorizationCodeInstalledApp.Logger.Debug("Received \"{0}\" code", (object)authorizationCode);
-                token = await this.Flow.ExchangeCodeForTokenAsync(userId, authorizationCode, taskCancellationToken).ConfigureAwait(false);
+                token = await Flow.ExchangeCodeForTokenAsync(userId, authorizationCode, taskCancellationToken).ConfigureAwait(false);
             }
-            return new UserCredential(this._flow, userId, token);
+            return new UserCredential(_flow, userId, token);
         }
     }
 }

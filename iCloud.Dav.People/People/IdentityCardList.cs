@@ -12,7 +12,7 @@ namespace iCloud.Dav.People
     /// methods to search, sort, and manipulate lists.
     /// </summary>   
     [TypeConverter(typeof(IdentityCardListConverter))]
-    [XmlDeserializeType(typeof(Multistatus<Prop>))]
+    [XmlDeserializeType(typeof(Multistatus))]
     public class IdentityCardList : List<IdentityCard>, IList<IdentityCard>, IEnumerable<IdentityCard>, IList, IEnumerable
     {
         /// <summary>
