@@ -1,11 +1,10 @@
 ﻿using Ical.Net.CalendarComponents;
 
-namespace iCloud.Dav.Calendar
+namespace iCloud.Dav.Calendar.Types;
+
+public class Daylight : CalendarComponent
 {
-    public class Daylight : CalendarComponent
+    public Daylight() : base("DAYLIGHT")
     {
-        public Daylight() : base("DAYLIGHT")
-        {
-        }
     }
 }

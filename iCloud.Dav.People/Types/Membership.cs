@@ -1,28 +1,30 @@
-﻿using iCloud.Dav.Core.Services;
+﻿using iCloud.Dav.Core;
+using System;
 
-namespace iCloud.Dav.People
+namespace iCloud.Dav.People.Types;
+
+public class Membership : IDirectResponseSchema, ICloneable
 {
-    public class Membership : IDirectResponseSchema
-    {
-        #region Properties
+    #region Properties
 
-        /// <summary>
-        /// The unique id of Membership.
-        /// </summary>
-        public virtual string ContactGroupId { get; set; }
+    /// <summary>
+    /// The unique id of Membership.
+    /// </summary>
+    public virtual string ContactGroupId { get; set; }
 
-        /// <summary>
-        /// The resource name of Membership.
-        /// </summary>
-        public virtual string ContactGroupResourceName { get; set; }
+    /// <summary>
+    /// The resource name of Membership.
+    /// </summary>
+    public virtual string ContactGroupResourceName { get; set; }
 
-        /// <summary>The e-tag of this response.</summary>
-        /// <remarks>
-        /// Will be set by the service deserialization method,
-        /// or the by json response parser if implemented on service.
-        /// </remarks>
-        public virtual string ETag { get; set; }
+    /// <summary>The e-tag of this response.</summary>
+    /// <remarks>
+    /// Will be set by the service deserialization method,
+    /// or the by json response parser if implemented on service.
+    /// </remarks>
+    public virtual string ETag { get; set; }
 
-        #endregion
-    }
+    #endregion
+
+    public object Clone() => MemberwiseClone();
 }

@@ -1,11 +1,10 @@
-﻿namespace iCloud.Dav.Core.Response
-{
-    public class InsertResponseObject : SuccessfulResponseObject
-    {
-        public InsertResponseObject() : base()
-        {
-        }
+﻿namespace iCloud.Dav.Core.Response;
 
-        public override string Message => "Successful insert.";
+public class InsertResponseObject : SuccessfulResponseObject
+{
+    public InsertResponseObject() : base()
+    {
     }
+
+    public override string Message => "Successful insert.";
 }

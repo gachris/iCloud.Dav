@@ -1,11 +1,10 @@
-﻿namespace iCloud.Dav.Core.Response
-{
-    public class DeleteResponseObject : SuccessfulResponseObject
-    {
-        public DeleteResponseObject() : base()
-        {
-        }
+﻿namespace iCloud.Dav.Core.Response;
 
-        public override string Message => "Successful delete.";
+public class DeleteResponseObject : SuccessfulResponseObject
+{
+    public DeleteResponseObject() : base()
+    {
     }
+
+    public override string Message => "Successful delete.";
 }

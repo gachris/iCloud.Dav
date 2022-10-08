@@ -1,11 +1,10 @@
-﻿namespace iCloud.Dav.Core.Response
-{
-    public class SuccessfulResponseObject
-    {
-        public SuccessfulResponseObject()
-        {
-        }
+﻿namespace iCloud.Dav.Core.Response;
 
-        public virtual string Message => "Successful.";
+public class SuccessfulResponseObject
+{
+    public SuccessfulResponseObject()
+    {
     }
+
+    public virtual string Message => "Successful.";
 }

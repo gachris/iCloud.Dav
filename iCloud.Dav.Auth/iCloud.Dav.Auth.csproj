@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
@@ -17,6 +17,10 @@
 		<NoWarn>1701;1702;1591</NoWarn>
 		<Version>2.0.0</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="iCloud.dav.Auth_SignAssembly_Key.snk" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\iCloud.dav.Core\iCloud.Dav.Core.csproj" />
