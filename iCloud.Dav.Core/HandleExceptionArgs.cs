@@ -8,10 +8,10 @@ namespace iCloud.Dav.Core;
 public class HandleExceptionArgs
 {
     /// <summary>Gets or sets the sent request.</summary>
-    public HttpRequestMessage Request { get; set; }
+    public HttpRequestMessage Request { get; }
 
     /// <summary>Gets or sets the exception which occurred during sending the request.</summary>
-    public Exception Exception { get; set; }
+    public Exception Exception { get; }
 
     /// <summary>Gets or sets the total number of tries to send the request.</summary>
     public int TotalTries { get; set; }
@@ -24,4 +24,10 @@ public class HandleExceptionArgs
 
     /// <summary>Gets or sets the request's cancellation token.</summary>
     public CancellationToken CancellationToken { get; set; }
+
+    public HandleExceptionArgs(HttpRequestMessage request, Exception exception)
+    {
+        Request = request;
+        Exception = exception;
+    }
 }

@@ -120,11 +120,9 @@ public class CalendarsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -188,11 +186,9 @@ public class CalendarsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -239,11 +235,9 @@ public class CalendarsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -279,11 +273,9 @@ public class CalendarsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }

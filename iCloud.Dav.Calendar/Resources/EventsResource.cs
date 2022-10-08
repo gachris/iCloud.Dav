@@ -119,11 +119,9 @@ public class EventsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter()
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path"
             });
         }
     }
@@ -164,17 +162,13 @@ public class EventsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter()
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path"
             });
-            RequestParameters.Add("eventId", new Parameter()
+            RequestParameters.Add("eventId", new Parameter("eventId", "path")
             {
-                Name = "eventId",
                 IsRequired = true,
-                ParameterType = "path"
             });
         }
     }
@@ -230,19 +224,13 @@ public class EventsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter()
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path",
-                DefaultValue = null,
-                Pattern = null
             });
-            RequestParameters.Add("eventId", new Parameter()
+            RequestParameters.Add("eventId", new Parameter("eventId", "path")
             {
-                Name = "eventId",
                 IsRequired = true,
-                ParameterType = "path"
             });
         }
     }
@@ -296,19 +284,13 @@ public class EventsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter()
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path",
-                DefaultValue = null,
-                Pattern = null
             });
-            RequestParameters.Add("eventId", new Parameter()
+            RequestParameters.Add("eventId", new Parameter("eventId", "path")
             {
-                Name = "eventId",
                 IsRequired = true,
-                ParameterType = "path"
             });
         }
     }
@@ -349,17 +331,13 @@ public class EventsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter()
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
             {
-                Name = "calendarId",
                 IsRequired = true,
-                ParameterType = "path"
             });
-            RequestParameters.Add("eventId", new Parameter()
+            RequestParameters.Add("eventId", new Parameter("eventId", "path")
             {
-                Name = "eventId",
                 IsRequired = true,
-                ParameterType = "path"
             });
         }
     }

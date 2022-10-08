@@ -98,15 +98,10 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add(
-                "resourceName", new Parameter
-                {
-                    Name = "resourceName",
-                    IsRequired = true,
-                    ParameterType = "path",
-                    DefaultValue = null,
-                    Pattern = null,
-                });
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
+            {
+                IsRequired = true,
+            });
         }
     }
 
@@ -143,17 +138,13 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -221,17 +212,13 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -297,17 +284,13 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -345,17 +328,13 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }

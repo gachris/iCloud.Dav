@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Core;
+﻿using iCloud.Dav.Core.Serialization;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Serialization.Converters;
 using System.Collections;

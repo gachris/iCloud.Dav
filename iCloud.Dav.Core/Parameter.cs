@@ -3,13 +3,19 @@
 /// <summary>Represents a method's parameter.</summary>
 public class Parameter : IParameter
 {
-    public string Name { get; set; }
+    public string Name { get; }
 
-    public string Pattern { get; set; }
+    public string ParameterType { get; }
 
     public bool IsRequired { get; set; }
 
-    public string ParameterType { get; set; }
+    public string? Pattern { get; set; }
 
-    public string DefaultValue { get; set; }
+    public string? DefaultValue { get; set; }
+
+    public Parameter(string name, string parameterType)
+    {
+        Name = name;
+        ParameterType = parameterType;
+    }
 }

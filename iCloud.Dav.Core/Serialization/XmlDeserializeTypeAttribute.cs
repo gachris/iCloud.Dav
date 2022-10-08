@@ -1,7 +1,8 @@
 ﻿using System;
 
-namespace iCloud.Dav.Core;
+namespace iCloud.Dav.Core.Serialization;
 
+[AttributeUsage(AttributeTargets.All)]
 public class XmlDeserializeTypeAttribute : Attribute
 {
     public Type Type { get; }

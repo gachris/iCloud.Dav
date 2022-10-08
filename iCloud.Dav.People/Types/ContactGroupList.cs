@@ -1,7 +1,6 @@
-﻿using iCloud.Dav.Core;
+﻿using iCloud.Dav.Core.Serialization;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Serialization.Converters;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -13,7 +12,7 @@ namespace iCloud.Dav.People.Types;
 /// </summary>   
 [TypeConverter(typeof(ContactGroupsListConverter))]
 [XmlDeserializeType(typeof(MultiStatus))]
-public class ContactGroupsList : List<ContactGroup>, IList<ContactGroup>, IEnumerable<ContactGroup>, IList, IEnumerable
+public class ContactGroupsList : List<ContactGroup>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ContactGroupsList"/> class that

@@ -35,7 +35,7 @@ public class Address : ICloneable
 
     public virtual string? CountryCode { get; set; }
 
-    public object Clone() => MemberwiseClone();
-
     #endregion
+
+    public object Clone() => MemberwiseClone();
 }

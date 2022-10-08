@@ -9,6 +9,7 @@ using System.Text;
 
 namespace iCloud.Dav.People.Types;
 
+[Serializable]
 [TypeConverter(typeof(ContactGroupConverter))]
 public class ContactGroup : IDirectResponseSchema
 {

@@ -1,7 +1,6 @@
-﻿using iCloud.Dav.Core;
+﻿using iCloud.Dav.Core.Serialization;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Serialization.Converters;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -13,7 +12,7 @@ namespace iCloud.Dav.People.Types;
 /// </summary>   
 [TypeConverter(typeof(PersonListConverter))]
 [XmlDeserializeType(typeof(MultiStatus))]
-public class PersonList : List<Person>, IList<Person>, IEnumerable<Person>, IList, IEnumerable
+public class PersonList : List<Person>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PersonList"/> class that

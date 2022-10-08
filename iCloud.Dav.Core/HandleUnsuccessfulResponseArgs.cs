@@ -7,10 +7,10 @@ namespace iCloud.Dav.Core;
 public class HandleUnsuccessfulResponseArgs
 {
     /// <summary>Gets or sets the sent request.</summary>
-    public HttpRequestMessage Request { get; set; }
+    public HttpRequestMessage Request { get; }
 
     /// <summary>Gets or sets the abnormal response.</summary>
-    public HttpResponseMessage Response { get; set; }
+    public HttpResponseMessage Response { get; }
 
     /// <summary>Gets or sets the total number of tries to send the request.</summary>
     public int TotalTries { get; set; }
@@ -23,4 +23,10 @@ public class HandleUnsuccessfulResponseArgs
 
     /// <summary>Gets or sets the request's cancellation token.</summary>
     public CancellationToken CancellationToken { get; set; }
+
+    public HandleUnsuccessfulResponseArgs(HttpRequestMessage request, HttpResponseMessage response)
+    {
+        Request = request;
+        Response = response;
+    }
 }

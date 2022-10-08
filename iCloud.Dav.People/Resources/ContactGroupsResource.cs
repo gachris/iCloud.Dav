@@ -122,11 +122,9 @@ public class ContactGroupsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -164,17 +162,13 @@ public class ContactGroupsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -242,17 +236,13 @@ public class ContactGroupsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -318,17 +308,13 @@ public class ContactGroupsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }
@@ -366,17 +352,13 @@ public class ContactGroupsResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
             {
-                Name = "resourceName",
                 IsRequired = true,
-                ParameterType = "path",
             });
-            RequestParameters.Add("uniqueId", new Parameter
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
             {
-                Name = "uniqueId",
                 IsRequired = true,
-                ParameterType = "path",
             });
         }
     }

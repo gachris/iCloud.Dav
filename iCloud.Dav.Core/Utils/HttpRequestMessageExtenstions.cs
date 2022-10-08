@@ -13,7 +13,7 @@ internal static class HttpRequestMessageExtenstions
     /// <param name="service">The service.</param>
     /// <param name="body">The body of the future request. If <c>null</c> do nothing.</param>
     /// <param name="contentType">The content type of the future request. If <c>null</c> do nothing.</param>
-    internal static void SetRequestSerailizedContent(this HttpRequestMessage request, IClientService service, object body, string contentType = null)
+    internal static void SetRequestSerailizedContent(this HttpRequestMessage request, IClientService service, object body, string? contentType = null)
     {
         if (body == null)
             return;
@@ -25,11 +25,11 @@ internal static class HttpRequestMessageExtenstions
         request.Content = httpContent;
     }
 
-    internal static void SetHttpRequestDepth(this HttpRequestMessage request, string Depth)
+    internal static void SetHttpRequestDepth(this HttpRequestMessage request, string depth)
     {
-        if (!string.IsNullOrEmpty(Depth))
+        if (!string.IsNullOrEmpty(depth))
         {
-            request.Headers.Add(nameof(Depth), Depth);
+            request.Headers.Add(nameof(depth), depth);
         }
     }
 }

@@ -10,7 +10,7 @@ public class ICloudApiException : Exception
     public string ServiceName { get; }
 
     /// <summary>Creates an API Service exception.</summary>
-    public ICloudApiException(string serviceName, string message, Exception inner) : base(message, inner)
+    public ICloudApiException(string serviceName, string message, Exception? inner) : base(message, inner)
     {
         ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
     }
