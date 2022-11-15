@@ -1,5 +1,5 @@
 ﻿using iCloud.Dav.Core;
-using iCloud.Dav.Core.Log;
+using iCloud.Dav.Core.Logger;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;

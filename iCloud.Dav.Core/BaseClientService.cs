@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Core.Log;
+﻿using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Serialization;
 using iCloud.Dav.Core.Utils;

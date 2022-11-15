@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Core.Log;
+﻿using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Utils;
 using System;
 using System.Collections.Generic;
