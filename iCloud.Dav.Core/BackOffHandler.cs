@@ -13,7 +13,7 @@ namespace iCloud.Dav.Core;
 /// </summary>
 public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHandler
 {
-    private static readonly ILogger Logger = ApplicationContext.Logger.ForType<BackOffHandler>();
+    private static readonly ILogger _logger = ApplicationContext.Logger.ForType<BackOffHandler>();
 
     /// <summary>Gets the back-off policy used by this back-off handler.</summary>
     public IBackOff BackOff { get; private set; }
@@ -79,7 +79,7 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
         if (ts > MaxTimeSpan || ts < TimeSpan.Zero)
             return false;
         await Wait(ts, cancellationToken).ConfigureAwait(false);
-        Logger.Debug("Back-Off handled the error. Waited {0}ms before next retry...", ts.TotalMilliseconds);
+        _logger.Debug("Back-Off handled the error. Waited {0}ms before next retry...", ts.TotalMilliseconds);
         return true;
     }
 
@@ -87,10 +87,7 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
     /// <param name="ts">TimeSpan to wait (and block the current thread).</param>
     /// <param name="cancellationToken">The cancellation token in case the user wants to cancel the operation in
     /// the middle.</param>
-    protected virtual async Task Wait(TimeSpan ts, CancellationToken cancellationToken)
-    {
-        await Task.Delay(ts, cancellationToken);
-    }
+    protected virtual async Task Wait(TimeSpan ts, CancellationToken cancellationToken) => await Task.Delay(ts, cancellationToken);
 
     /// <summary>An initializer class to initialize a back-off handler.</summary>
     public class Initializer

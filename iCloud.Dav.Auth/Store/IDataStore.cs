@@ -22,7 +22,7 @@ public interface IDataStore
     /// <typeparam name="T">The type to retrieve.</typeparam>
     /// <param name="key">The key to retrieve from the data store.</param>
     /// <returns>The stored object.</returns>
-    Task<T> GetAsync<T>(string key);
+    Task<T?> GetAsync<T>(string key);
 
     /// <summary>
     /// Stores the given value for the given key.

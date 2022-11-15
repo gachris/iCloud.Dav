@@ -8,33 +8,13 @@ namespace iCloud.Dav.Calendar.Converters;
 
 internal sealed class EventListConverter : TypeConverter
 {
-    /// <summary>
-    /// TypeConverter method override.
-    /// </summary>
-    /// <param name="context">ITypeDescriptorContext</param>
-    /// <param name="sourceType">Type to convert from</param>
-    /// <returns>true if conversion is possible</returns>
-    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-    {
-        if (sourceType == typeof(MultiStatus))
-            return true;
-        return false;
-    }
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType == typeof(MultiStatus);
 
-    /// <summary>
-    /// TypeConverter method implementation.
-    /// </summary>
-    /// <param name="context">ITypeDescriptorContext</param>
-    /// <param name="culture">current culture (see CLR specs)</param>
-    /// <param name="value">value to convert from</param>
-    /// <returns>value that is result of conversion</returns>
-    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    /// <inheritdoc/>
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
-        if (value != null)
-        {
-            var responses = ((MultiStatus)value).Responses;
-            return responses.ToEventList();
-        }
-        throw GetConvertFromException(value);
+        if (value is not MultiStatus multiStatus) throw GetConvertFromException(value);
+        return multiStatus.Responses.ToEventList();
     }
 }

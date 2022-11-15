@@ -1,12 +1,4 @@
-﻿
-/* Unmerged change from project 'iCloud.Dav.Auth (net7.0)'
-Before:
-using iCloud.Dav.Auth.Utils;
-After:
-using iCloud;
-using iCloud.Dav.Auth.Utils;
-*/
-using iCloud.Dav.Auth.Store;
+﻿using iCloud.Dav.Auth.Store;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Log;
 using iCloud.Dav.Core.Utils;
@@ -19,7 +11,7 @@ namespace iCloud.Dav.Auth;
 /// <summary>ICloud specific authorization code flow.</summary>
 public class AuthorizationCodeFlow : IAuthorizationCodeFlow
 {
-    private static readonly ILogger Logger = ApplicationContext.Logger.ForType<AuthorizationCodeFlow>();
+    private static readonly ILogger _logger = ApplicationContext.Logger.ForType<AuthorizationCodeFlow>();
     private readonly IAccessMethod _accessMethod;
     private readonly IDataStore _dataStore;
     private readonly ConfigurableHttpClient _httpClient;
@@ -40,15 +32,16 @@ public class AuthorizationCodeFlow : IAuthorizationCodeFlow
     /// <summary>Constructs a new ICloud authorization code flow.</summary>
     public AuthorizationCodeFlow(Initializer initializer)
     {
-        _accessMethod = initializer.AccessMethod.ThrowIfNull("Initializer.AccessMethod");
-        _clock = initializer.Clock.ThrowIfNull("Initializer.Clock");
+        _accessMethod = initializer.AccessMethod.ThrowIfNull(nameof(initializer.AccessMethod));
+        _clock = initializer.Clock.ThrowIfNull(nameof(initializer.Clock));
         _dataStore = initializer.DataStore;
-        if (_dataStore == null)
-            Logger.Warning("Datastore is null, as a result the user's credential will not be stored");
         var args = new CreateHttpClientArgs();
         if (initializer.DefaultExponentialBackOffPolicy != ExponentialBackOffPolicy.None)
-            args.Initializers.Add(new ExponentialBackOffInitializer(initializer.DefaultExponentialBackOffPolicy, () => new BackOffHandler(new ExponentialBackOff())));
-        _httpClient = (initializer.HttpClientFactory ?? new HttpClientFactory()).CreateHttpClient(args);
+        {
+            var exponentialBackOffInitializer = new ExponentialBackOffInitializer(initializer.DefaultExponentialBackOffPolicy, () => new BackOffHandler(new ExponentialBackOff()));
+            args.Initializers.Add(exponentialBackOffInitializer);
+        }
+        _httpClient = initializer.HttpClientFactory.CreateHttpClient(args);
     }
 
     /// <summary>
@@ -58,7 +51,7 @@ public class AuthorizationCodeFlow : IAuthorizationCodeFlow
     /// <param name="userId">User identifier</param>
     /// <param name="taskCancellationToken">Cancellation token to cancel operation</param>
     /// <returns>Token response</returns>
-    public async Task<Token> LoadTokenAsync(string userId, CancellationToken taskCancellationToken)
+    public async Task<Token?> LoadTokenAsync(string userId, CancellationToken taskCancellationToken)
     {
         taskCancellationToken.ThrowIfCancellationRequested();
         if (DataStore == null)
@@ -103,10 +96,7 @@ public class AuthorizationCodeFlow : IAuthorizationCodeFlow
     /// <param name="token">Access token to be revoked.</param>
     /// <param name="taskCancellationToken">Cancellation token to cancel operation.</param>
     /// <returns><c>true</c> if the token was revoked successfully.</returns>
-    public async Task RevokeTokenAsync(string userId, string token, CancellationToken taskCancellationToken)
-    {
-        await DeleteTokenAsync(userId, taskCancellationToken);
-    }
+    public async Task RevokeTokenAsync(string userId, string token, CancellationToken taskCancellationToken) => await DeleteTokenAsync(userId, taskCancellationToken);
 
     /// <summary>Stores the token in the <see cref="DataStore" />.</summary>
     /// <param name="userId">User identifier.</param>
@@ -161,7 +151,7 @@ public class AuthorizationCodeFlow : IAuthorizationCodeFlow
         public IAccessMethod AccessMethod { get; set; }
 
         /// <summary>Gets or sets the data store used to store the token response.</summary>
-        public IDataStore DataStore { get; set; }
+        public IDataStore DataStore { get; }
 
         /// <summary>
         /// Gets or sets the factory for creating <see cref="System.Net.Http.HttpClient" /> instance.
@@ -185,8 +175,10 @@ public class AuthorizationCodeFlow : IAuthorizationCodeFlow
         public IClock Clock { get; set; }
 
         /// <summary>Constructs a new initializer.</summary>
-        public Initializer()
+        public Initializer(IDataStore dataStore)
         {
+            DataStore = dataStore;
+            HttpClientFactory = new HttpClientFactory();
             AccessMethod = new BasicAuthentication.AuthorizationHeaderAccessMethod();
             DefaultExponentialBackOffPolicy = ExponentialBackOffPolicy.UnsuccessfulResponse503;
             Clock = SystemClock.Default;

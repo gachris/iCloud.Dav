@@ -89,64 +89,52 @@ internal class ContactWriter : CardWriter<Person>
     }
 
     /// <summary>Builds EMAIL properties.</summary>
-    private static void Build_EMAIL(List<CardProperty> allProperties, Person card)
-    {
-        card.EmailAddresses.ForEach(emailAddress =>
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(Email));
-            if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
-            {
-                var properties = (IEnumerable<CardProperty>?)converter.ConvertTo(emailAddress, typeof(IEnumerable<CardProperty>));
+    private static void Build_EMAIL(List<CardProperty> allProperties, Person card) => card.EmailAddresses.ForEach(emailAddress =>
+                                                                                           {
+                                                                                               var converter = TypeDescriptor.GetConverter(typeof(Email));
+                                                                                               if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
+                                                                                               {
+                                                                                                   var properties = (IEnumerable<CardProperty>?)converter.ConvertTo(emailAddress, typeof(IEnumerable<CardProperty>));
 
-                if (properties is null) return;
-                allProperties.AddRange(properties);
-            }
-        });
-    }
+                                                                                                   if (properties is null) return;
+                                                                                                   allProperties.AddRange(properties);
+                                                                                               }
+                                                                                           });
 
     /// <summary>Builds TEL properties.</summary>
-    private static void Build_TEL(List<CardProperty> allProperties, Person card)
-    {
-        card.Phones.ForEach(phone =>
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(Phone));
-            if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
-            {
-                var properties = (IEnumerable<CardProperty>?)converter.ConvertTo(phone, typeof(IEnumerable<CardProperty>));
-                if (properties is null) return;
-                allProperties.AddRange(properties);
-            }
-        });
-    }
+    private static void Build_TEL(List<CardProperty> allProperties, Person card) => card.Phones.ForEach(phone =>
+                                                                                         {
+                                                                                             var converter = TypeDescriptor.GetConverter(typeof(Phone));
+                                                                                             if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
+                                                                                             {
+                                                                                                 var properties = (IEnumerable<CardProperty>?)converter.ConvertTo(phone, typeof(IEnumerable<CardProperty>));
+                                                                                                 if (properties is null) return;
+                                                                                                 allProperties.AddRange(properties);
+                                                                                             }
+                                                                                         });
 
     /// <summary>Builds ADR properties.</summary>
-    private static void Build_ADR(List<CardProperty> properties, Person card)
-    {
-        card.Addresses.ForEach(address =>
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(Address));
-            if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
-            {
-                var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(address, typeof(IEnumerable<CardProperty>));
-                if (propertiesToAdd is null) return;
-                properties.AddRange(propertiesToAdd);
-            }
-        });
-    }
+    private static void Build_ADR(List<CardProperty> properties, Person card) => card.Addresses.ForEach(address =>
+                                                                                      {
+                                                                                          var converter = TypeDescriptor.GetConverter(typeof(Address));
+                                                                                          if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
+                                                                                          {
+                                                                                              var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(address, typeof(IEnumerable<CardProperty>));
+                                                                                              if (propertiesToAdd is null) return;
+                                                                                              properties.AddRange(propertiesToAdd);
+                                                                                          }
+                                                                                      });
 
-    private static void Build_URL(List<CardProperty> properties, Person card)
-    {
-        card.Websites.ForEach(website =>
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(Website));
-            if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
-            {
-                var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(website, typeof(IEnumerable<CardProperty>));
-                if (propertiesToAdd is null) return;
-                properties.AddRange(propertiesToAdd);
-            }
-        });
-    }
+    private static void Build_URL(List<CardProperty> properties, Person card) => card.Websites.ForEach(website =>
+                                                                                      {
+                                                                                          var converter = TypeDescriptor.GetConverter(typeof(Website));
+                                                                                          if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
+                                                                                          {
+                                                                                              var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(website, typeof(IEnumerable<CardProperty>));
+                                                                                              if (propertiesToAdd is null) return;
+                                                                                              properties.AddRange(propertiesToAdd);
+                                                                                          }
+                                                                                      });
 
     private static void Build_FN(List<CardProperty> properties, Person card)
     {
@@ -212,47 +200,38 @@ internal class ContactWriter : CardWriter<Person>
         }
     }
 
-    private static void Build_X_ABRELATEDNAMES(List<CardProperty> properties, Person card)
-    {
-        card.RelatedPeople.ForEach(relatedPeople =>
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(RelatedPeople));
-            if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
-            {
-                var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(relatedPeople, typeof(IEnumerable<CardProperty>));
-                if (propertiesToAdd is null) return;
-                properties.AddRange(propertiesToAdd);
-            }
-        });
-    }
+    private static void Build_X_ABRELATEDNAMES(List<CardProperty> properties, Person card) => card.RelatedPeople.ForEach(relatedPeople =>
+                                                                                                   {
+                                                                                                       var converter = TypeDescriptor.GetConverter(typeof(RelatedPeople));
+                                                                                                       if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
+                                                                                                       {
+                                                                                                           var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(relatedPeople, typeof(IEnumerable<CardProperty>));
+                                                                                                           if (propertiesToAdd is null) return;
+                                                                                                           properties.AddRange(propertiesToAdd);
+                                                                                                       }
+                                                                                                   });
 
-    private static void Build_X_ABDATE(List<CardProperty> properties, Person card)
-    {
-        card.Dates.ForEach(date =>
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(Date));
-            if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
-            {
-                var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(date, typeof(IEnumerable<CardProperty>));
-                if (propertiesToAdd is null) return;
-                properties.AddRange(propertiesToAdd);
-            }
-        });
-    }
+    private static void Build_X_ABDATE(List<CardProperty> properties, Person card) => card.Dates.ForEach(date =>
+                                                                                           {
+                                                                                               var converter = TypeDescriptor.GetConverter(typeof(Date));
+                                                                                               if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
+                                                                                               {
+                                                                                                   var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(date, typeof(IEnumerable<CardProperty>));
+                                                                                                   if (propertiesToAdd is null) return;
+                                                                                                   properties.AddRange(propertiesToAdd);
+                                                                                               }
+                                                                                           });
 
-    private static void Build_X_SOCIALPROFILE(List<CardProperty> properties, Person card)
-    {
-        card.Profiles.ForEach(date =>
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(Profile));
-            if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
-            {
-                var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(date, typeof(IEnumerable<CardProperty>));
-                if (propertiesToAdd is null) return;
-                properties.AddRange(propertiesToAdd);
-            }
-        });
-    }
+    private static void Build_X_SOCIALPROFILE(List<CardProperty> properties, Person card) => card.Profiles.ForEach(date =>
+                                                                                                  {
+                                                                                                      var converter = TypeDescriptor.GetConverter(typeof(Profile));
+                                                                                                      if (converter.CanConvertTo(typeof(IEnumerable<CardProperty>)))
+                                                                                                      {
+                                                                                                          var propertiesToAdd = (IEnumerable<CardProperty>?)converter.ConvertTo(date, typeof(IEnumerable<CardProperty>));
+                                                                                                          if (propertiesToAdd is null) return;
+                                                                                                          properties.AddRange(propertiesToAdd);
+                                                                                                      }
+                                                                                                  });
 
     private static void Build_X_PHONETIC_ORG(List<CardProperty> properties, Person card)
     {

@@ -5,7 +5,7 @@ namespace iCloud.Dav.Core;
 
 public static class ApplicationContext
 {
-    private static ILogger _logger;
+    private static ILogger? _logger;
 
     /// <summary>Returns the logger used within this application context.</summary>
     /// <remarks>It creates a <see cref="NullLogger" /> if no logger was registered previously</remarks>

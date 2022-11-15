@@ -1,15 +1,9 @@
 ﻿using iCloud.Dav.Core;
 using iCloud.Dav.People.Serialization.Converters;
-using iCloud.Dav.People.Serialization.Read;
-using iCloud.Dav.People.Serialization.Write;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
 
 namespace iCloud.Dav.People.Types;
 
@@ -175,8 +169,6 @@ public class Person : IDirectResponseSchema, ICloneable
     /// <summary>The Memberships of the person.</summary>
     public virtual IReadOnlyCollection<Membership> Memberships { get; internal set; }
 
-    internal int ItemTemplatedCount { get; set; }
-
     #endregion
 
     /// <summary>
@@ -192,67 +184,6 @@ public class Person : IDirectResponseSchema, ICloneable
         RelatedPeople = new List<RelatedPeople>();
         Dates = new List<Date>();
         Memberships = new ReadOnlyCollection<Membership>(new List<Membership>());
-    }
-
-    /// <summary>
-    ///     Loads a new instance of the <see cref="Person" /> class
-    ///     from a text reader.
-    /// </summary>
-    /// <param name="input">An initialized text reader.</param>
-    public Person(TextReader input) : this()
-    {
-        new ContactReader().ReadInto(this, input);
-    }
-
-    /// <summary>
-    ///     Loads a new instance of the <see cref="Person" /> class
-    ///     from a byte array.
-    /// </summary>
-    /// <param name="bytes">An initialized byte array.</param>
-    public Person(byte[] bytes) : this()
-    {
-        var cardStandardReader = new ContactReader();
-        Stopwatch stopwatch = new();
-        stopwatch.Start();
-        cardStandardReader.ReadInto(this, new StringReader(Encoding.UTF8.GetString(bytes)));
-        stopwatch.Stop();
-    }
-
-    /// <summary>
-    ///     Loads a new instance of the <see cref="Person" /> class
-    ///     from a text file.
-    /// </summary>
-    /// <param name="path">
-    ///     The path to a text file containing Person data in
-    ///     any recognized Person format.
-    /// </param>
-    public Person(string path) : this()
-    {
-        using var streamReader = new StreamReader(path);
-        new ContactReader().ReadInto(this, streamReader);
-    }
-
-    public string ReadAsString()
-    {
-        return ReadAsStreamReader().ReadToEnd();
-    }
-
-    public StreamReader ReadAsStreamReader()
-    {
-        var stream = ReadAsStream();
-        var streamReader = new StreamReader(stream);
-        return streamReader;
-    }
-
-    public Stream ReadAsStream()
-    {
-        var stream = new MemoryStream();
-        var textWriter = new StreamWriter(stream);
-        var writer = new ContactWriter();
-        writer.Write(this, textWriter, Encoding.UTF8.WebName);
-        textWriter.Flush();
-        stream.Seek(0, SeekOrigin.Begin);
-        return stream;
     }
 
     public object Clone() => MemberwiseClone();

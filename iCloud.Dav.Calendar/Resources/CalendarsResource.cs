@@ -5,7 +5,6 @@ using iCloud.Dav.Calendar.Types;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Utils;
-using System;
 
 namespace iCloud.Dav.Calendar.Resources;
 
@@ -16,128 +15,99 @@ public class CalendarsResource
     private readonly IClientService _service;
 
     /// <summary>Constructs a new resource.</summary>
-    public CalendarsResource(IClientService service)
-    {
-        _service = service;
-    }
+    public CalendarsResource(IClientService service) => _service = service;
 
     /// <summary>Returns the calendars on the user's calendar list.</summary>
-    public virtual ListRequest List()
-    {
-        return new ListRequest(_service);
-    }
+    public virtual ListRequest List() => new(_service);
 
     /// <summary>Returns a calendar from the user's calendar list.</summary>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendars.list method.</param>
-    public virtual GetRequest Get(string calendarId)
-    {
-        return new GetRequest(_service, calendarId);
-    }
+    public virtual GetRequest Get(string calendarId) => new(_service, calendarId);
 
     /// <summary>Inserts an existing calendar into the user's calendar list.</summary>
     /// <param name="body">The body of the request.</param>
-    public virtual InsertRequest Insert(CalendarEntry body)
-    {
-        return new InsertRequest(_service, body);
-    }
+    public virtual InsertRequest Insert(CalendarEntry body) => new(_service, body);
 
     /// <summary>Updates an existing calendar on the user's calendar list.</summary>
     /// <param name="body">The body of the request.</param>
-    public virtual UpdateRequest Update(CalendarEntry body)
-    {
-        return new UpdateRequest(_service, body);
-    }
+    public virtual UpdateRequest Update(CalendarEntry body) => new(_service, body);
 
     /// <summary>Removes a calendar from the user's calendar list.</summary>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendars.list method.</param>
-    public virtual DeleteRequest Delete(string calendarId)
-    {
-        return new DeleteRequest(_service, calendarId);
-    }
+    public virtual DeleteRequest Delete(string calendarId) => new(_service, calendarId);
 
     /// <summary>Returns the calendars on the user's calendar list.</summary>
     public class ListRequest : CalendarBaseServiceRequest<CalendarEntryList>
     {
+        private object? _body;
+
         /// <summary>Constructs a new List request.</summary>
         public ListRequest(IClientService service) : base(service)
         {
-            InitParameters();
         }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "list";
 
-        ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Propfind;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Propfind;
 
-        ///<summary>Gets the REST path.</summary>
-        public override string RestPath { get; }
+        /// <inheritdoc/>
+        public override string RestPath => string.Empty;
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        ///<summary>Returns the body of the request.</summary>
-        protected override object GetBody()
-        {
-            return new PropFind();
-        }
+        /// <inheritdoc/>
+        protected override object GetBody() => _body ??= new PropFind();
     }
 
     /// <summary>Returns a calendar from the user's calendar list.</summary>
     public class GetRequest : CalendarBaseServiceRequest<CalendarEntry>
     {
+        private object? _body;
+
         /// <summary>Constructs a new Get request.</summary>
-        public GetRequest(IClientService service, string calendarId) : base(service)
-        {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-            InitParameters();
-        }
+        public GetRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
         [RequestParameter("calendarId", RequestParameterType.Path)]
         public virtual string CalendarId { get; }
 
-        ///<summary>Gets the method name.</summary>
-        public override string MethodName => ApiMethod.Propfind;
+        /// <inheritdoc/>
+        public override string MethodName => Constants.Propfind;
 
-        ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Propfind;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Propfind;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}";
 
-        ///<summary>Returns the body of the request.</summary>
-        protected override object GetBody()
-        {
-            return new PropFind();
-        }
+        /// <inheritdoc/>
+        protected override object GetBody() => _body ??= new PropFind();
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        /// <summary>Initializes Get parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
         }
     }
 
     /// <summary>Inserts an existing calendar into the user's calendar list.</summary>
-    public class InsertRequest : CalendarBaseServiceRequest<InsertResponseObject>
+    public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
     {
+        private object? _body;
+
         /// <summary>Constructs a new Insert request.</summary>
         public InsertRequest(IClientService service, CalendarEntry body) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
-            if (string.IsNullOrEmpty(Body.Id))
-                Body.Id = Guid.NewGuid().ToString().ToUpper();
-            CalendarId = Body.Id;
-            InitParameters();
+            CalendarId = Body.Uid.ThrowIfNull(nameof(Body.Uid));
         }
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
@@ -147,61 +117,63 @@ public class CalendarsResource
         /// <summary>Gets the body of this request.</summary>
         private CalendarEntry Body { get; }
 
-        ///<summary>Gets the method name.</summary>
-        public override string MethodName => ApiMethod.Mkcalendar;
+        /// <inheritdoc/>
+        public override string MethodName => Constants.Mkcalendar;
 
-        ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Mkcalendar;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Mkcalendar;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}";
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        ///<summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody()
         {
-            var mkCalendar = new MkCalendar
+            if (_body is null)
             {
-                DisplayName = Body.Summary,
-                CalendarColor = Body.Color
-            };
+                var mkCalendar = new MkCalendar(Body.Summary.ThrowIfNull(nameof(Body.Summary)))
+                {
+                    CalendarColor = Body.Color
+                };
 
-            if (Body.TimeZone != null)
-            {
-                var calendar = new Ical.Net.Calendar();
-                var calendarSerializer = new CalendarSerializer();
-                calendar.TimeZones.Add(Body.TimeZone);
-                mkCalendar.CalendarTimeZoneSerializedString = calendarSerializer.SerializeToString(calendar);
+                if (Body.TimeZone != null)
+                {
+                    var calendar = new Ical.Net.Calendar();
+                    var calendarSerializer = new CalendarSerializer();
+                    calendar.TimeZones.Add(Body.TimeZone);
+                    mkCalendar.CalendarTimeZoneSerializedString = calendarSerializer.SerializeToString(calendar);
+                }
+
+                mkCalendar.SupportedCalendarComponents.AddRange(Body.SupportedCalendarComponents);
+
+                _body = mkCalendar;
             }
 
-            mkCalendar.SupportedCalendarComponents.AddRange(Body.SupportedCalendarComponents);
-
-            return mkCalendar;
+            return _body;
         }
 
-        /// <summary>Initializes Insert parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
         }
     }
 
     /// <summary>Updates an existing calendar on the user's calendar list.</summary>
-    public class UpdateRequest : CalendarBaseServiceRequest<UpdateResponseObject>
+    public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
     {
+        private object? _body;
+
         /// <summary>Constructs a new Update request.</summary>
         public UpdateRequest(IClientService service, CalendarEntry body) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
-            CalendarId = body.Id.ThrowIfNullOrEmpty(nameof(CalendarEntry.Id));
-            InitParameters();
+            CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(CalendarEntry.Uid));
         }
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
@@ -211,72 +183,55 @@ public class CalendarsResource
         /// <summary>Gets the body of this request.</summary>
         private CalendarEntry Body { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "update";
 
-        ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Proppatch;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Proppatch;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}";
 
-        ///<summary>Returns the body of the request.</summary>
-        protected override object GetBody()
-        {
-            return new PropertyUpdate()
-            {
-                DisplayName = Body.Summary,
-                CalendarColor = Body.Color
-            };
-        }
+        /// <inheritdoc/>
+        protected override object GetBody() => _body ??= new PropertyUpdate(Body.Summary.ThrowIfNull(nameof(Body.Summary)), Body.Color);
 
-        /// <summary>Initializes Update parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
         }
     }
 
     /// <summary>Removes a calendar from the user's calendar list.</summary>
-    public class DeleteRequest : CalendarBaseServiceRequest<DeleteResponseObject>
+    public class DeleteRequest : CalendarBaseServiceRequest<VoidResponse>
     {
         /// <summary>Constructs a new Delete request.</summary>
-        public DeleteRequest(IClientService service, string calendarId) : base(service)
-        {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-            InitParameters();
-        }
+        public DeleteRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
         [RequestParameter("calendarId", RequestParameterType.Path)]
         public virtual string CalendarId { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "delete";
 
-        ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Delete;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Delete;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}";
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        /// <summary>Initializes Delete parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
         }
     }
 }

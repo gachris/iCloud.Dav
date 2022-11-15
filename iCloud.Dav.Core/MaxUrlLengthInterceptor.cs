@@ -21,20 +21,17 @@ public class MaxUrlLengthInterceptor : IHttpExecuteInterceptor
     private readonly uint _maxUrlLength;
 
     /// <summary>Constructs a new Max URL length interceptor with the given max length.</summary>
-    public MaxUrlLengthInterceptor(uint maxUrlLength)
-    {
-        _maxUrlLength = maxUrlLength;
-    }
+    public MaxUrlLengthInterceptor(uint maxUrlLength) => _maxUrlLength = maxUrlLength;
 
     public Task InterceptAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request.Method != HttpMethod.Get || request.RequestUri.AbsoluteUri.Length <= _maxUrlLength)
+        if (request.Method != HttpMethod.Get || request.RequestUri?.AbsoluteUri.Length <= _maxUrlLength)
         {
             return Task.Delay(0, cancellationToken);
         }
         request.Method = HttpMethod.Post;
-        var query = request.RequestUri.Query;
-        if (!string.IsNullOrEmpty(query))
+        var query = request.RequestUri?.Query;
+        if (request.RequestUri is not null && !string.IsNullOrEmpty(query))
         {
             request.Content = new StringContent(query[1..]);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");

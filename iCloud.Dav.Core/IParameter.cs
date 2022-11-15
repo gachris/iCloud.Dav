@@ -17,5 +17,4 @@ public interface IParameter
 
     /// <summary>Gets the default value of this parameter.</summary>
     string? DefaultValue { get; }
-
 }

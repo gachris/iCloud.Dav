@@ -89,13 +89,13 @@ internal class ContactGroupWriter : CardWriter<ContactGroup>
 
     private static void Build_X_ADDRESSBOOKSERVER_KIND(IList<CardProperty> properties, ContactGroup card)
     {
-        var cardProperty = new CardProperty(Constants.ContactGroup.Property.X_ADDRESSBOOKSERVER_KIND, Constants.ContactGroup.Member_Type);
+        var cardProperty = new CardProperty(Constants.ContactGroup.Property.X_ADDRESSBOOKSERVER_KIND, Constants.ContactGroup.AddressBookServer);
         properties.Add(cardProperty);
     }
 
     private static void Build_X_ADDRESSBOOKSERVER_MEMBER(IList<CardProperty> properties, ContactGroup card)
     {
-        foreach (var memberResourceName in card.MemberResourceNames)
+        foreach (var memberResourceName in card.Members)
         {
             if (string.IsNullOrEmpty(memberResourceName)) continue;
             var member_urn = string.Concat(Constants.ContactGroup.urn_Prefix, memberResourceName);
@@ -104,14 +104,11 @@ internal class ContactGroupWriter : CardWriter<ContactGroup>
         }
     }
 
-    private static void Build_BEGIN(IList<CardProperty> properties, ContactGroup card) =>
-        properties.Add(new CardProperty(Constants.ContactGroup.Property.BEGIN, Constants.ContactGroup.vCard_Type));
+    private static void Build_BEGIN(IList<CardProperty> properties, ContactGroup card) => properties.Add(new CardProperty(Constants.ContactGroup.Property.BEGIN, Constants.ContactGroup.vCard_Type));
 
-    private static void Build_END(IList<CardProperty> properties, ContactGroup card) =>
-        properties.Add(new CardProperty(Constants.ContactGroup.Property.END, Constants.ContactGroup.vCard_Type));
+    private static void Build_END(IList<CardProperty> properties, ContactGroup card) => properties.Add(new CardProperty(Constants.ContactGroup.Property.END, Constants.ContactGroup.vCard_Type));
 
-    private static void Build_VERSION(IList<CardProperty> properties, ContactGroup card) =>
-        properties.Add(new CardProperty(Constants.ContactGroup.Property.VERSION, Constants.ContactGroup.vCard_Version));
+    private static void Build_VERSION(IList<CardProperty> properties, ContactGroup card) => properties.Add(new CardProperty(Constants.ContactGroup.Property.VERSION, Constants.ContactGroup.vCard_Version));
 
     /// <summary>Writes a Person to an output text writer.</summary>
     public override void Write(ContactGroup card, TextWriter output, string charsetName)

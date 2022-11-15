@@ -7,15 +7,11 @@ public class Parameter : IParameter
 
     public string ParameterType { get; }
 
-    public bool IsRequired { get; set; }
+    public bool IsRequired { get; }
 
     public string? Pattern { get; set; }
 
     public string? DefaultValue { get; set; }
 
-    public Parameter(string name, string parameterType)
-    {
-        Name = name;
-        ParameterType = parameterType;
-    }
+    public Parameter(string name, string parameterType, bool isRequired) => (Name, ParameterType, IsRequired) = (name, parameterType, isRequired);
 }

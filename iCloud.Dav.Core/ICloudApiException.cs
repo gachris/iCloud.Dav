@@ -1,5 +1,5 @@
-﻿using System;
-using iCloud.Dav.Core.Utils;
+﻿using iCloud.Dav.Core.Utils;
+using System;
 
 namespace iCloud.Dav.Core;
 
@@ -10,18 +10,12 @@ public class ICloudApiException : Exception
     public string ServiceName { get; }
 
     /// <summary>Creates an API Service exception.</summary>
-    public ICloudApiException(string serviceName, string message, Exception? inner) : base(message, inner)
-    {
-        ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
-    }
+    public ICloudApiException(string serviceName, string message, Exception? inner) : base(message, inner) => ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
 
     /// <summary>Creates an API Service exception.</summary>
     public ICloudApiException(string serviceName, string message) : this(serviceName, message, null)
     {
     }
 
-    public override string ToString()
-    {
-        return string.Format("The service {1} has thrown an exception: {0}", base.ToString(), ServiceName);
-    }
+    public override string ToString() => string.Format("The service {1} has thrown an exception: {0}", base.ToString(), ServiceName);
 }

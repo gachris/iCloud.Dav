@@ -7,8 +7,5 @@ public class XmlDeserializeTypeAttribute : Attribute
 {
     public Type Type { get; }
 
-    public XmlDeserializeTypeAttribute(Type type) : base()
-    {
-        Type = type;
-    }
+    public XmlDeserializeTypeAttribute(Type type) : base() => Type = type;
 }

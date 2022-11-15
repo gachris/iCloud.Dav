@@ -8,17 +8,11 @@ namespace iCloud.Dav.Calendar.CalDav.Types;
 [XmlRoot(ElementName = "calendar-query", Namespace = "urn:ietf:params:xml:ns:caldav")]
 internal sealed class CalendarQuery : IXmlSerializable
 {
-    public CompFilter CompFilter { get; set; }
+    public CompFilter? CompFilter { get; set; }
 
-    public XmlSchema GetSchema()
-    {
-        return new XmlSchema();
-    }
+    public XmlSchema GetSchema() => new XmlSchema();
 
-    public void ReadXml(XmlReader reader)
-    {
-        throw new NotSupportedException();
-    }
+    public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
     public void WriteXml(XmlWriter writer)
     {
@@ -27,9 +21,12 @@ internal sealed class CalendarQuery : IXmlSerializable
         writer.WriteElementString("getetag", "DAV:", null);
         writer.WriteEndElement();
 
-        writer.WriteStartElement("filter", "urn:ietf:params:xml:ns:caldav");
-        WriteCompFilterXml(writer, CompFilter);
-        writer.WriteEndElement();
+        if (CompFilter is not null)
+        {
+            writer.WriteStartElement("filter", "urn:ietf:params:xml:ns:caldav");
+            WriteCompFilterXml(writer, CompFilter);
+            writer.WriteEndElement();
+        }
     }
 
     private static void WriteCompFilterXml(XmlWriter writer, CompFilter compFilter)
@@ -49,17 +46,4 @@ internal sealed class CalendarQuery : IXmlSerializable
 
         writer.WriteEndElement();
     }
-}
-
-internal sealed class CompFilter
-{
-    public TimeRange TimeRange { get; set; }
-    public string Name { get; set; }
-    public CompFilter Child { get; set; }
-}
-
-internal sealed class TimeRange
-{
-    public string Start { get; set; }
-    public string End { get; set; }
 }

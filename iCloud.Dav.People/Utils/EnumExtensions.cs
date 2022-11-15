@@ -1,5 +1,4 @@
-﻿using iCloud.Dav.People.Types;
-using System;
+﻿using System;
 
 namespace iCloud.Dav.People.Utils;
 

@@ -16,12 +16,12 @@ public class PeopleService : BaseClientService
         People = new PeopleResource(this);
         ContactGroups = new ContactGroupsResource(this);
         IdentityCard = new IdentityCardResource(this);
-        BasePath = initializer.HttpClientInitializer.GetUriHomeSet(PrincipalHomeSet.AddressBookHomeSet);
+        BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBookHomeSet);
     }
 
     public override string Name => "people";
 
-    public override string? BasePath { get; }
+    public override string BasePath { get; }
 
     /// <summary>Gets the People resource.</summary>
     public virtual PeopleResource People { get; }

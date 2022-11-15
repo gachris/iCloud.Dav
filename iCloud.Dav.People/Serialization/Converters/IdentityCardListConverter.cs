@@ -49,8 +49,5 @@ internal sealed class IdentityCardListConverter : TypeConverter
         }
     }
 
-    private static string[] Split(string url)
-    {
-        return url?.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
-    }
+    private static string[] Split(string url) => url?.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
 }

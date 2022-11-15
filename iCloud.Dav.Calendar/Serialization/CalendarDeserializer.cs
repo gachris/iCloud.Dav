@@ -39,9 +39,9 @@ public class CalendarDeserializer
 
     public IEnumerable<ICalendarComponent> Deserialize(TextReader reader)
     {
-        ICalendarComponent current = null;
+        ICalendarComponent? current = null;
         var context = new SerializationContext();
-        var stack = new Stack<ICalendarComponent>();
+        var stack = new Stack<ICalendarComponent?>();
         foreach (var contentLine in GetContentLines(reader))
         {
             var calendarProperty = ParseContentLine(context, contentLine);

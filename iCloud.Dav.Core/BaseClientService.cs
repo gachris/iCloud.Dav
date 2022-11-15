@@ -13,6 +13,7 @@ public abstract class BaseClientService : IClientService, IDisposable
 {
     /// <summary>The class logger.</summary>
     private static readonly ILogger Logger = ApplicationContext.Logger.ForType<BaseClientService>();
+
     /// <summary>The default maximum allowed length of a URL string for GET requests.</summary>
     public const uint DefaultMaxUrlLength = 2048;
 
@@ -20,7 +21,7 @@ public abstract class BaseClientService : IClientService, IDisposable
 
     public IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; private set; }
 
-    public string ApplicationName { get; private set; }
+    public string? ApplicationName { get; private set; }
 
     public ISerializer Serializer { get; private set; }
 
@@ -69,40 +70,38 @@ public abstract class BaseClientService : IClientService, IDisposable
 
     public virtual async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
     {
-        var input = await response.Content.ReadAsStringAsync().ConfigureAwait(false) as object;
-        if (typeof(T).BaseType == typeof(SuccessfulResponseObject))
-            return (T)Activator.CreateInstance(typeof(T));
-        if (Equals(typeof(T), typeof(string)))
-            return (T)input;
-        var obj2 = default(T);
+        var responseContentString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+        if (typeof(T).BaseType == typeof(VoidResponse) || typeof(T) == typeof(VoidResponse)) return (T)Activator.CreateInstance(typeof(VoidResponse)).ThrowIfNull(nameof(VoidResponse));
+        if (Equals(typeof(T), typeof(string))) return (T)(object)responseContentString;
+
+        var obj = default(object);
         try
         {
             var converter = TypeDescriptor.GetConverter(typeof(T));
-            var xmlDeserializeType = (XmlDeserializeTypeAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(XmlDeserializeTypeAttribute));
+            var xmlDeserializeType = (XmlDeserializeTypeAttribute?)Attribute.GetCustomAttribute(typeof(T), typeof(XmlDeserializeTypeAttribute));
             if (xmlDeserializeType != null)
             {
-                var result = Serializer.Deserialize((string)input, xmlDeserializeType.Type);
+                var result = Serializer.Deserialize(responseContentString, xmlDeserializeType.Type);
                 if (converter != null)
                 {
-                    bool canConvertFrom = converter.CanConvertFrom(result.GetType());
-                    if (canConvertFrom)
-                        obj2 = (T)converter.ConvertFrom(result);
+                    var canConvert = converter.CanConvertFrom(result.GetType());
+                    if (canConvert) obj = converter.ConvertFrom(result);
                 }
             }
             else if (converter != null)
             {
-                bool canConvertFrom = converter.CanConvertFrom(input.GetType());
-                if (canConvertFrom)
-                    obj2 = (T)converter.ConvertFrom(input);
+                var canConvert = converter.CanConvertFrom(responseContentString.GetType());
+                if (canConvert) obj = converter.ConvertFrom(responseContentString);
             }
             else
             {
-                obj2 = Serializer.Deserialize<T>((string)input);
+                obj = Serializer.Deserialize<T>(responseContentString);
             }
 
-            if (obj2 is null && typeof(T).Equals(typeof(byte[])))
+            if (obj is null && typeof(T).Equals(typeof(byte[])))
             {
-                return (T)(object)await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                obj = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
         }
         catch (InvalidCastException ex)
@@ -111,12 +110,12 @@ public abstract class BaseClientService : IClientService, IDisposable
         }
         catch (Exception ex)
         {
-            throw new ICloudApiException(Name, $"Failed to parse response from server [{input}]", ex);
+            throw new ICloudApiException(Name, $"Failed to parse response from server [{responseContentString}]", ex);
         }
-        var str = response.Headers.ETag?.Tag;
-        if (obj2 is IDirectResponseSchema && str != null)
-            (obj2 as IDirectResponseSchema).ETag = str;
-        return obj2;
+
+        if (obj is IDirectResponseSchema directResponseSchema) directResponseSchema.ETag = response.Headers.ETag?.Tag;
+
+        return (T)obj.ThrowIfNull(nameof(obj));
     }
 
     public virtual async Task<string> DeserializeError(HttpResponseMessage response) => await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -165,7 +164,7 @@ public abstract class BaseClientService : IClientService, IDisposable
         /// <summary>
         /// Gets or sets Application name to be used in the User-Agent header. Default value is <c>null</c>.
         /// </summary>
-        public string ApplicationName { get; set; }
+        public string? ApplicationName { get; set; }
 
         /// <summary>
         /// Maximum allowed length of a URL string for GET requests. Default value is <c>2048</c>. If the value is

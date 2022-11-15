@@ -15,7 +15,8 @@ namespace iCloud.Dav.Auth;
 public class UserCredential : ICredential, IConfigurableHttpClientCredentialInitializer, ITokenAccess, IHttpExecuteInterceptor, IHttpUnsuccessfulResponseHandler
 {
     /// <summary>Gets Logger.</summary>
-    protected static readonly ILogger Logger = ApplicationContext.Logger.ForType<UserCredential>();
+    private static readonly ILogger _logger = ApplicationContext.Logger.ForType<UserCredential>();
+
     private readonly object _lockObject = new();
     private readonly IAuthorizationCodeFlow _flow;
     private readonly string _userId;
@@ -75,7 +76,7 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     {
         if (args.Response.StatusCode != HttpStatusCode.Unauthorized)
             return false;
-        var flag = !object.Equals(Token.AccessToken, _flow.AccessMethod.GetAccessToken(args.Request));
+        var flag = !Token.AccessToken.Equals(_flow.AccessMethod.GetAccessToken(args.Request));
         await Task.Delay(0);
         return flag;
     }
@@ -92,12 +93,7 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     /// Gets an access token to authorize a request.
     /// </summary>
     /// <returns>The access token.</returns>
-    public virtual string GetAccessTokenForRequestAsync()
-    {
-        if (Token != null)
-            return Token.AccessToken;
-        else return null;
-    }
+    public virtual string GetAccessTokenForRequestAsync() => Token.AccessToken;
 
     /// <summary>
     /// Asynchronously revokes the token by calling
@@ -109,11 +105,11 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     {
         if (Token == null)
         {
-            UserCredential.Logger.Warning("Token is already null, no need to revoke it.");
+            _logger.Warning("Token is already null, no need to revoke it.");
             return false;
         }
         await _flow.RevokeTokenAsync(_userId, Token.AccessToken, cancellationToken).ConfigureAwait(false);
-        UserCredential.Logger.Info("Access token was revoked successfully");
+        _logger.Info("Access token was revoked successfully");
         return true;
     }
 
@@ -122,15 +118,10 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     /// </summary>
     /// <param name="principal"></param>
     /// <returns>Principal home set url.</returns>
-    public string GetUriHomeSet(PrincipalHomeSet principal)
+    public string GetUri(PrincipalHomeSet principal) => principal switch
     {
-        if (principal == PrincipalHomeSet.AddressBookHomeSet)
-        {
-            return Token?.PeoplePrincipal?.AddressBookHomeSet;
-        }
-        else
-        {
-            return Token?.CalendarPrincipal?.CalendarHomeSet;
-        }
-    }
+        PrincipalHomeSet.CalendarHomeSet => Token.CalendarPrincipal.CalendarHomeSet,
+        PrincipalHomeSet.AddressBookHomeSet => Token.PeoplePrincipal.AddressBookHomeSet,
+        _ => throw new ArgumentOutOfRangeException(nameof(PrincipalHomeSet)),
+    };
 }

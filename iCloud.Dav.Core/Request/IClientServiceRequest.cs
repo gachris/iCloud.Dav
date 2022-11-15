@@ -19,10 +19,10 @@ public interface IClientServiceRequest
     string HttpMethod { get; }
 
     /// <summary>Gets the Content-Type header of this request.</summary>
-    string ContentType { get; }
+    string? ContentType { get; }
 
-    /// <summary>Gets the headers of this request.</summary>
-    string Depth { get; }
+    /// <summary>Gets the depth headers of this request.</summary>
+    string? Depth { get; }
 
     /// <summary>Gets the parameters information for this specific request.</summary>
     IDictionary<string, IParameter> RequestParameters { get; }

@@ -13,15 +13,9 @@ internal sealed class AddressBookQuery : IXmlSerializable
 {
     public Filters? Filter { get; set; }
 
-    public XmlSchema GetSchema()
-    {
-        return new XmlSchema();
-    }
+    public XmlSchema GetSchema() => new XmlSchema();
 
-    public void ReadXml(XmlReader reader)
-    {
-        throw new NotSupportedException();
-    }
+    public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
     public void WriteXml(XmlWriter writer)
     {
@@ -64,18 +58,15 @@ internal sealed class Filters
 
     public IList<TextMatch> TextMatches { get; }
 
-    public Filters()
-    {
-        TextMatches = new List<TextMatch>();
-    }
+    public Filters() => TextMatches = new List<TextMatch>();
 }
 
 internal sealed class TextMatch
 {
     public string? Collation { get; set; }
-    
+
     public string? MatchType { get; set; }
-    
+
     public string? SearchText { get; set; }
 
     public string? NegateCondition { get; set; }

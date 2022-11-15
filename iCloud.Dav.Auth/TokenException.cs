@@ -10,7 +10,7 @@ namespace iCloud.Dav.Auth;
 public class TokenException : Exception
 {
     /// <summary>The error information.</summary>
-    public ErrorResponse Error { get; private set; }
+    public ErrorResponse? Error { get; private set; }
 
     /// <summary>Constructs a new token exception.</summary>
     public TokenException(string message) : base(message)
@@ -18,8 +18,5 @@ public class TokenException : Exception
     }
 
     /// <summary>Constructs a new token exception from the given error.</summary>
-    public TokenException(ErrorResponse error) : base(error.ToString())
-    {
-        Error = error;
-    }
+    public TokenException(ErrorResponse error) : base(error.ToString()) => Error = error;
 }

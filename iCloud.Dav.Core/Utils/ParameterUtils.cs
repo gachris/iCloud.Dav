@@ -28,7 +28,7 @@ internal static class ParameterUtils
     public static FormUrlEncodedContent CreateFormUrlEncodedContent(object request)
     {
         var list = new List<KeyValuePair<string, string>>();
-        ParameterUtils.IterateParameters(request, (type, name, value) => list.Add(new KeyValuePair<string, string>(name, value.ToString())));
+        IterateParameters(request, (type, name, value) => list.Add(new KeyValuePair<string, string>(name, value.ToString())));
         return new FormUrlEncodedContent(list);
     }
 
@@ -44,7 +44,7 @@ internal static class ParameterUtils
     public static IDictionary<string, object> CreateParameterDictionary(object request)
     {
         var dict = new Dictionary<string, object>();
-        ParameterUtils.IterateParameters(request, (type, name, value) => dict.Add(name, value));
+        IterateParameters(request, (type, name, value) => dict.Add(name, value));
         return dict;
     }
 
@@ -58,10 +58,7 @@ internal static class ParameterUtils
     /// <see cref="RequestParameterAttribute" /> attribute. Those properties will be set in the
     /// given request builder object
     /// </param>
-    public static void InitParameters(RequestBuilder builder, object request)
-    {
-        ParameterUtils.IterateParameters(request, (type, name, value) => builder.AddParameter(type, name, value.ToString()));
-    }
+    public static void InitParameters(RequestBuilder builder, object request) => IterateParameters(request, (type, name, value) => builder.AddParameter(type, name, value.ToString()));
 
     /// <summary>
     /// Iterates over all <see cref="RequestParameterAttribute" /> properties in the request
@@ -73,8 +70,7 @@ internal static class ParameterUtils
     {
         foreach (var property in request.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            var parameterAttribute = property.GetCustomAttributes(typeof(RequestParameterAttribute), false).FirstOrDefault() as RequestParameterAttribute;
-            if (parameterAttribute != null)
+            if (property.GetCustomAttributes(typeof(RequestParameterAttribute), false).FirstOrDefault() is RequestParameterAttribute parameterAttribute)
             {
                 var str = parameterAttribute.Name ?? property.Name.ToLower();
                 var propertyType = property.PropertyType;

@@ -6,6 +6,5 @@ public class Statndard : CalendarComponent
 {
     public Statndard() : base("STANDARD")
     {
-
     }
 }

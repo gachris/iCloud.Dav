@@ -5,7 +5,6 @@ using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.Serialization.Write;
 using iCloud.Dav.People.Types;
-using System;
 using System.IO;
 using System.Text;
 
@@ -18,49 +17,31 @@ public class PeopleResource
     private readonly IClientService _service;
 
     /// <summary>Constructs a new resource.</summary>
-    public PeopleResource(IClientService service)
-    {
-        _service = service;
-    }
+    public PeopleResource(IClientService service) => _service = service;
 
     /// <summary>Returns the peoples on the user's people list.</summary>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-    public virtual ListRequest List(string resourceName)
-    {
-        return new ListRequest(_service, resourceName);
-    }
+    public virtual ListRequest List(string resourceName) => new(_service, resourceName);
 
     /// <summary>Returns a people from the user's people list.</summary>
     /// <param name="uniqueId">People identifier. To retrieve people IDs call the people.list method.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-    public virtual GetRequest Get(string uniqueId, string resourceName)
-    {
-        return new GetRequest(_service, uniqueId, resourceName);
-    }
+    public virtual GetRequest Get(string uniqueId, string resourceName) => new(_service, uniqueId, resourceName);
 
     /// <summary>Inserts an existing people into the user's people list.</summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-    public virtual InsertRequest Insert(Person body, string resourceName)
-    {
-        return new InsertRequest(_service, body, resourceName);
-    }
+    public virtual InsertRequest Insert(Person body, string resourceName) => new(_service, body, resourceName);
 
     /// <summary>Updates an existing people on the user's people list.</summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-    public virtual UpdateRequest Update(Person body, string resourceName)
-    {
-        return new UpdateRequest(_service, body, resourceName);
-    }
+    public virtual UpdateRequest Update(Person body, string resourceName) => new(_service, body, resourceName);
 
     /// <summary>Removes a people from the user's people list.</summary>
     /// <param name="uniqueId">People identifier. To retrieve people IDs call the people.list method.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-    public virtual DeleteRequest Delete(string uniqueId, string resourceName)
-    {
-        return new DeleteRequest(_service, uniqueId, resourceName);
-    }
+    public virtual DeleteRequest Delete(string uniqueId, string resourceName) => new(_service, uniqueId, resourceName);
 
     /// <summary>Returns the peoples on the user's people list.</summary>
     public class ListRequest : PeopleBaseServiceRequest<PersonList>
@@ -68,11 +49,7 @@ public class PeopleResource
         private object? _body;
 
         /// <summary>Constructs a new List request.</summary>
-        public ListRequest(IClientService service, string resourceName) : base(service)
-        {
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-            InitParameters();
-        }
+        public ListRequest(IClientService service, string resourceName) : base(service) => ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
 
         /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
         [RequestParameter("resourceName", RequestParameterType.Path)]
@@ -82,7 +59,7 @@ public class PeopleResource
         public override string MethodName => "list";
 
         ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Report;
+        public override string HttpMethod => Constants.Report;
 
         ///<summary>Gets the REST path.</summary>
         public override string RestPath => "{resourceName}";
@@ -98,10 +75,7 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
         }
     }
 
@@ -113,7 +87,6 @@ public class PeopleResource
         {
             UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-            InitParameters();
         }
 
         /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -128,7 +101,7 @@ public class PeopleResource
         public override string MethodName => "get";
 
         ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Get;
+        public override string HttpMethod => Constants.Get;
 
         ///<summary>Gets the REST path.</summary>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
@@ -138,19 +111,13 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
         }
     }
 
     /// <summary>Inserts an existing people into the user's people list.</summary>
-    public class InsertRequest : PeopleBaseServiceRequest<InsertResponseObject>
+    public class InsertRequest : PeopleBaseServiceRequest<VoidResponse>
     {
         private object? _body;
 
@@ -158,12 +125,9 @@ public class PeopleResource
         public InsertRequest(IClientService service, Person body, string resourceName) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
-            if (string.IsNullOrEmpty(Body.UniqueId))
-                Body.UniqueId = Guid.NewGuid().ToString().ToUpper();
-            UniqueId = Body.UniqueId;
+            UniqueId = body.UniqueId.ThrowIfNull(nameof(body.UniqueId));
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             ETagAction = ETagAction.IfNoneMatch;
-            InitParameters();
         }
 
         /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -181,13 +145,13 @@ public class PeopleResource
         public override string MethodName => "insert";
 
         ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Put;
+        public override string HttpMethod => Constants.Put;
 
         ///<summary>Gets the REST path.</summary>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
 
         ///<summary>Gets the Content-Type.</summary>
-        public override string ContentType => ApiContentType.TEXT_VCARD;
+        public override string ContentType => Constants.TEXT_VCARD;
 
         ///<summary>Returns the body of the request.</summary>
         protected override object GetBody()
@@ -212,19 +176,13 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
         }
     }
 
     /// <summary>Updates an existing people on the user's people list.</summary>
-    public class UpdateRequest : PeopleBaseServiceRequest<UpdateResponseObject>
+    public class UpdateRequest : PeopleBaseServiceRequest<VoidResponse>
     {
         private object? _body;
 
@@ -233,9 +191,8 @@ public class PeopleResource
         {
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             Body = body.ThrowIfNull(nameof(body));
-            UniqueId = Body.UniqueId.ThrowIfNullOrEmpty(nameof(Person.UniqueId));
+            UniqueId = body.UniqueId.ThrowIfNullOrEmpty(nameof(body.UniqueId));
             ETagAction = ETagAction.IfMatch;
-            InitParameters();
         }
 
         /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -253,13 +210,13 @@ public class PeopleResource
         public override string MethodName => "update";
 
         ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Put;
+        public override string HttpMethod => Constants.Put;
 
         ///<summary>Gets the REST path.</summary>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
 
         ///<summary>Gets the Content-Type.</summary>
-        public override string ContentType => ApiContentType.TEXT_VCARD;
+        public override string ContentType => Constants.TEXT_VCARD;
 
         ///<summary>Returns the body of the request.</summary>
         protected override object GetBody()
@@ -284,26 +241,19 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
         }
     }
 
     /// <summary>Removes a people from the user's people list.</summary>
-    public class DeleteRequest : PeopleBaseServiceRequest<DeleteResponseObject>
+    public class DeleteRequest : PeopleBaseServiceRequest<VoidResponse>
     {
         /// <summary>Constructs a new Delete request.</summary>
         public DeleteRequest(IClientService service, string uniqueId, string resourceName) : base(service)
         {
             UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-            InitParameters();
         }
 
         /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
@@ -318,7 +268,7 @@ public class PeopleResource
         public override string MethodName => "delete";
 
         ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Delete;
+        public override string HttpMethod => Constants.Delete;
 
         ///<summary>Gets the REST path.</summary>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
@@ -328,14 +278,8 @@ public class PeopleResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("resourceName", new Parameter("resourceName", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
+            RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
         }
     }
 }

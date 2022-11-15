@@ -24,7 +24,7 @@ public interface IAuthorizationCodeFlow : IDisposable
     /// <param name="userId">User identifier</param>
     /// <param name="taskCancellationToken">Cancellation token to cancel operation</param>
     /// <returns>Token response</returns>
-    Task<Token> LoadTokenAsync(string userId, CancellationToken taskCancellationToken);
+    Task<Token?> LoadTokenAsync(string userId, CancellationToken taskCancellationToken);
 
     /// <summary>
     /// Asynchronously deletes the user's token using the flow's

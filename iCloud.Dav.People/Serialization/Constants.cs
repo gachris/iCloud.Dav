@@ -5,7 +5,7 @@ public static class Constants
     public class ContactGroup
     {
         public const string vCard_Type = "VCARD";
-        public const string Member_Type = "group";
+        public const string AddressBookServer = "group";
         public const string vCard_Version = "3.0";
         public const string urn_Prefix = "urn:uuid:";
 

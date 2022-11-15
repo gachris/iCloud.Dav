@@ -9,10 +9,10 @@ namespace iCloud.Dav.Auth.Store;
 public class FileDataStore : IDataStore
 {
     private const string XdgDataHomeSubdirectory = "icloud-filedatastore";
-
-    readonly string folderPath;
+    private readonly string _folderPath;
     /// <summary>Gets the full folder path.</summary>
-    public string FolderPath { get { return folderPath; } }
+    /// 
+    public string FolderPath => _folderPath;
 
     /// <summary>
     /// Constructs a new file data store. If <c>fullPath</c> is <c>false</c> the path will be used as relative to 
@@ -27,10 +27,9 @@ public class FileDataStore : IDataStore
     /// </param>
     public FileDataStore(string folder, bool fullPath = false)
     {
-        folderPath = fullPath ? folder : Path.Combine(GetHomeDirectory(), folder);
+        _folderPath = fullPath ? folder : Path.Combine(GetHomeDirectory(), folder);
 
-        if (!Directory.Exists(folderPath))
-            Directory.CreateDirectory(folderPath);
+        if (!Directory.Exists(_folderPath)) Directory.CreateDirectory(_folderPath);
     }
 
     private static string GetHomeDirectory()
@@ -65,42 +64,36 @@ public class FileDataStore : IDataStore
     /// <typeparam name="T">The type to store in the data store.</typeparam>
     /// <param name="key">The key.</param>
     /// <param name="value">The value to store in the data store.</param>
-    public Task StoreAsync<T>(string key, T value)
-    {
-        return Task.Factory.StartNew(() =>
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentException("Key MUST have a value");
-            }
+    public Task StoreAsync<T>(string key, T value) => Task.Factory.StartNew(() =>
+                                                           {
+                                                               if (string.IsNullOrEmpty(key))
+                                                               {
+                                                                   throw new ArgumentException("Key MUST have a value");
+                                                               }
 
-            var serialized = JsonConvert.SerializeObject(value);
-            var filePath = Path.Combine(folderPath, GenerateStoredKey(key, typeof(T)));
-            File.WriteAllText(filePath, serialized);
-        });
-    }
+                                                               var serialized = JsonConvert.SerializeObject(value);
+                                                               var filePath = Path.Combine(_folderPath, GenerateStoredKey(key, typeof(T)));
+                                                               File.WriteAllText(filePath, serialized);
+                                                           });
 
     /// <summary>
     /// Deletes the given key. It deletes the <see cref="GenerateStoredKey"/> named file in 
     /// <see cref="FolderPath"/>.
     /// </summary>
     /// <param name="key">The key to delete from the data store.</param>
-    public Task DeleteAsync<T>(string key)
-    {
-        return Task.Factory.StartNew(() =>
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentException("Key MUST have a value");
-            }
+    public Task DeleteAsync<T>(string key) => Task.Factory.StartNew(() =>
+                                                   {
+                                                       if (string.IsNullOrEmpty(key))
+                                                       {
+                                                           throw new ArgumentException("Key MUST have a value");
+                                                       }
 
-            var filePath = Path.Combine(folderPath, GenerateStoredKey(key, typeof(T)));
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-        });
-    }
+                                                       var filePath = Path.Combine(_folderPath, GenerateStoredKey(key, typeof(T)));
+                                                       if (File.Exists(filePath))
+                                                       {
+                                                           File.Delete(filePath);
+                                                       }
+                                                   });
 
     /// <summary>
     /// Returns the stored value for the given key or <c>null</c> if the matching file (<see cref="GenerateStoredKey"/>
@@ -109,21 +102,18 @@ public class FileDataStore : IDataStore
     /// <typeparam name="T">The type to retrieve.</typeparam>
     /// <param name="key">The key to retrieve from the data store.</param>
     /// <returns>The stored object.</returns>
-    public Task<T> GetAsync<T>(string key)
+    public Task<T?> GetAsync<T>(string key)
     {
-        if (string.IsNullOrEmpty(key))
-        {
-            throw new ArgumentException("Key MUST have a value");
-        }
+        if (string.IsNullOrEmpty(key)) throw new ArgumentException("Key MUST have a value");
 
-        var tcs = new TaskCompletionSource<T>();
-        var filePath = Path.Combine(folderPath, GenerateStoredKey(key, typeof(T)));
+        var tcs = new TaskCompletionSource<T?>();
+        var filePath = Path.Combine(_folderPath, GenerateStoredKey(key, typeof(T)));
         if (File.Exists(filePath))
         {
             try
             {
                 var obj = File.ReadAllText(filePath);
-                tcs.SetResult(JsonConvert.DeserializeObject<T>(obj));
+                tcs.SetResult(result: JsonConvert.DeserializeObject<T?>(obj));
             }
             catch (Exception ex)
             {
@@ -142,10 +132,10 @@ public class FileDataStore : IDataStore
     /// </summary>
     public Task ClearAsync()
     {
-        if (Directory.Exists(folderPath))
+        if (Directory.Exists(_folderPath))
         {
-            Directory.Delete(folderPath, true);
-            Directory.CreateDirectory(folderPath);
+            Directory.Delete(_folderPath, true);
+            Directory.CreateDirectory(_folderPath);
         }
 
         return new TaskCompletionSource<object>().Task;
@@ -154,9 +144,6 @@ public class FileDataStore : IDataStore
     /// <summary>Creates a unique stored key based on the key and the class type.</summary>
     /// <param name="key">The object key.</param>
     /// <param name="t">The type to store or retrieve.</param>
-    public static string GenerateStoredKey(string key, Type t)
-    {
-        return string.Format("{0}-{1}", t.FullName, key);
-    }
+    public static string GenerateStoredKey(string key, Type t) => string.Format("{0}-{1}", t.FullName, key);
 }
 

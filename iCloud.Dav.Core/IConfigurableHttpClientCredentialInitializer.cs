@@ -2,5 +2,5 @@
 
 public interface IConfigurableHttpClientCredentialInitializer : IConfigurableHttpClientInitializer
 {
-    string GetUriHomeSet(PrincipalHomeSet principal);
+    string GetUri(PrincipalHomeSet principal);
 }

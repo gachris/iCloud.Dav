@@ -10,7 +10,7 @@ namespace iCloud.Dav.Core;
 public class ExponentialBackOff : IBackOff
 {
     /// <summary>The random instance which generates a random number to add the to next back-off.</summary>
-    private Random _random = new();
+    private readonly Random _random = new();
     /// <summary>The maximum allowed number of retries.</summary>
     private const int MaxAllowedNumRetries = 20;
     private readonly TimeSpan _deltaBackOff;

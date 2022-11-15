@@ -24,7 +24,7 @@ public interface IClientService : IDisposable
     string BasePath { get; }
 
     /// <summary>Gets the application name to be used in the User-Agent header.</summary>
-    string ApplicationName { get; }
+    string? ApplicationName { get; }
 
     /// <summary>
     /// Sets the content of the request by the given body and the this service's configuration.

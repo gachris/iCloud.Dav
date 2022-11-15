@@ -14,7 +14,7 @@ public static class ParameterValidator
     }
 
     /// <summary>Validates if a parameter is valid.</summary>
-    public static bool ValidateParameter(IParameter parameter, string value)
+    public static bool ValidateParameter(IParameter parameter, string? value)
     {
         if (string.IsNullOrEmpty(value))
             return !parameter.IsRequired;

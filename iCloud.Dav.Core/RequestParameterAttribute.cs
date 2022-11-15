@@ -36,9 +36,5 @@ public class RequestParameterAttribute : Attribute
     /// added to the query string, in the format "name=value".
     /// </param>
     /// <param name="type">The type of the parameter, either Path or Query.</param>
-    public RequestParameterAttribute(string name, RequestParameterType type)
-    {
-        Name = name;
-        Type = type;
-    }
+    public RequestParameterAttribute(string name, RequestParameterType type) => (Name, Type) = (name, type);
 }

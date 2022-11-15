@@ -8,19 +8,19 @@ namespace iCloud.Dav.Calendar.CalDav.Types;
 [XmlRoot(ElementName = "propertyupdate", Namespace = "DAV:")]
 internal sealed class PropertyUpdate : IXmlSerializable
 {
-    public string DisplayName { get; set; }
+    public string DisplayName { get; }
 
-    public string CalendarColor { get; set; }
+    public string? CalendarColor { get; }
 
-    public XmlSchema GetSchema()
+    public PropertyUpdate(string displayName, string? calendarColor)
     {
-        return new XmlSchema();
+        DisplayName = displayName;
+        CalendarColor = calendarColor;
     }
 
-    public void ReadXml(XmlReader reader)
-    {
-        throw new NotSupportedException();
-    }
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
     public void WriteXml(XmlWriter writer)
     {
@@ -31,9 +31,12 @@ internal sealed class PropertyUpdate : IXmlSerializable
         writer.WriteString(DisplayName);
         writer.WriteEndElement();
 
-        writer.WriteStartElement("calendar-color", "http://apple.com/ns/ical/");
-        writer.WriteString(CalendarColor);
-        writer.WriteEndElement();
+        if (!string.IsNullOrEmpty(CalendarColor))
+        {
+            writer.WriteStartElement("calendar-color", "http://apple.com/ns/ical/");
+            writer.WriteString(CalendarColor);
+            writer.WriteEndElement();
+        }
 
         writer.WriteEndElement();
         writer.WriteEndElement();

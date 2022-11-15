@@ -1,9 +1,11 @@
 ﻿using iCloud.Dav.Core.Utils;
 using iCloud.Dav.People.CardDav.Types;
+using iCloud.Dav.People.Serialization.Read;
 using iCloud.Dav.People.Types;
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -43,12 +45,16 @@ internal sealed class ContactGroupsListConverter : TypeConverter
                     var addressData = response.AddressData.ThrowIfNull(nameof(response.AddressData));
                     var addressdataValue = addressData.Value.ThrowIfNull(nameof(addressData.Value));
                     var bytes = Encoding.UTF8.GetBytes(addressdataValue);
-                    var d = new ContactGroup(bytes)
+                    var contactGroup = new ContactGroup()
                     {
                         Url = response.Href.ThrowIfNull(nameof(response.Href)),
                         ETag = response.Etag.ThrowIfNull(nameof(response.Etag))
                     };
-                    return d;
+
+                    var contactGroupReader = new ContactGroupReader();
+                    contactGroupReader.ReadInto(contactGroup, new StringReader(Encoding.UTF8.GetString(bytes)));
+
+                    return contactGroup;
                 }));
             default:
                 throw GetConvertFromException(value);

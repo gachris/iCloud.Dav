@@ -5,7 +5,7 @@ namespace iCloud.Dav.People.Serialization.Mapping;
 
 internal class DateTypeMapping
 {
-    public static readonly TypeMapping<DateTypeInternal, DateType> Other = new(DateTypeInternal.Other , DateType.Other);
+    public static readonly TypeMapping<DateTypeInternal, DateType> Other = new(DateTypeInternal.Other, DateType.Other);
 
     private static readonly TypeMapping<DateTypeInternal, DateType>[] _typeMappings = new[]
     {

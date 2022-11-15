@@ -7,5 +7,5 @@ public interface IDirectResponseSchema
     /// Will be set by the service deserialization method,
     /// or the by json response parser if implemented on service.
     /// </remarks>
-    string ETag { get; set; }
+    string? ETag { get; set; }
 }

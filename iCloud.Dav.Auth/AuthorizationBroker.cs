@@ -25,9 +25,9 @@ public class AuthorizationBroker
     /// <param name="cancellationToken"></param>
     /// <param name="dataStore"></param>
     /// <returns>User credential</returns>
-    public static async Task<UserCredential> AuthorizeAsync(string user, NetworkCredential networdCredentials, IDataStore dataStore = null, CancellationToken cancellationToken = default)
+    public static async Task<UserCredential> AuthorizeAsync(string user, NetworkCredential networdCredentials, IDataStore? dataStore = null, CancellationToken cancellationToken = default)
     {
-        var initializer = new AuthorizationCodeFlow.Initializer { DataStore = dataStore ?? new FileDataStore(Folder, false) };
+        var initializer = new AuthorizationCodeFlow.Initializer(dataStore ?? new FileDataStore(Folder, false));
         var authorizationCodeFlow = new AuthorizationCodeFlow(initializer);
         var codeReceiver = new CodeReceiver();
         var authorizationCodeInstalledApp = new AuthorizationCodeInstalledApp(authorizationCodeFlow, codeReceiver);

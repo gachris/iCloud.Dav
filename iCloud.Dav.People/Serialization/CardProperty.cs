@@ -111,15 +111,9 @@ public class CardProperty
         Value = values.ThrowIfNull(nameof(values));
     }
 
-    public Subproperty? FindByName(string name)
-    {
-        return Subproperties?.FirstOrDefault(x => x.Name == name);
-    }
+    public Subproperty? FindByName(string name) => Subproperties?.FirstOrDefault(x => x.Name == name);
 
-    public static CardProperty Create(string name, ValueCollection values)
-    {
-        return new CardProperty(name, values);
-    }
+    public static CardProperty Create(string name, ValueCollection values) => new CardProperty(name, values);
 
     public override string ToString() => Value?.ToString() ?? string.Empty;
 }

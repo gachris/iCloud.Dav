@@ -11,10 +11,7 @@ public class CloudGatewayService : BaseClientService
     {
     }
 
-    public CloudGatewayService(Initializer initializer) : base(initializer)
-    {
-        CloudGateway = new CloudGatewayResource(this);
-    }
+    public CloudGatewayService(Initializer initializer) : base(initializer) => CloudGateway = new CloudGatewayResource(this);
 
     public override string Name => "cloud_gateway";
 

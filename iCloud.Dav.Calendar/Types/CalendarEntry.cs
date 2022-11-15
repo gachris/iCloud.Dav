@@ -22,18 +22,19 @@ public class CalendarEntry : IDirectResponseSchema, ICloneable
     }
 
     [Required]
-    public virtual string Id { get; set; }
+    public virtual string? Uid { get; set; }
 
     [Required]
-    public virtual string Summary { get; set; }
+    public virtual string? Summary { get; set; }
 
-    public virtual string Url { get; set; }
+    public virtual string? Url { get; set; }
 
-    public virtual string Color { get; set; }
+    public virtual string? Color { get; set; }
 
-    public virtual string ETag { get; set; }
+    /// <inheritdoc/>
+    public virtual string? ETag { get; set; }
 
-    public virtual string CTag { get; set; }
+    public virtual string? CTag { get; set; }
 
     public virtual List<string> Privileges { get; }
 
@@ -41,7 +42,8 @@ public class CalendarEntry : IDirectResponseSchema, ICloneable
 
     public virtual List<string> SupportedCalendarComponents { get; }
 
-    public virtual VTimeZone TimeZone { get; set; }
+    public virtual VTimeZone? TimeZone { get; set; }
 
+    /// <inheritdoc/>
     public object Clone() => MemberwiseClone();
 }

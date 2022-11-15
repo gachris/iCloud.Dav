@@ -18,15 +18,9 @@ internal sealed class PropFind : IXmlSerializable
 
     public bool DisplayName { get; set; }
 
-    public XmlSchema GetSchema()
-    {
-        return new XmlSchema();
-    }
+    public XmlSchema GetSchema() => new();
 
-    public void ReadXml(XmlReader reader)
-    {
-        throw new NotSupportedException();
-    }
+    public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
     public void WriteXml(XmlWriter writer)
     {

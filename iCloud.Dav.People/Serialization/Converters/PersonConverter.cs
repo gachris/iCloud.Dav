@@ -1,12 +1,15 @@
-﻿using iCloud.Dav.People.Types;
+﻿using iCloud.Dav.People.Serialization.Read;
+using iCloud.Dav.People.Serialization.Write;
+using iCloud.Dav.People.Types;
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace iCloud.Dav.People.Serialization.Converters;
 
-internal sealed class PersonConverter : TypeConverter
+public sealed class PersonConverter : TypeConverter
 {
     /// <summary>
     /// TypeConverter method override.
@@ -33,9 +36,45 @@ internal sealed class PersonConverter : TypeConverter
         var input = (string)value;
         if (!string.IsNullOrEmpty(input))
         {
-            var bytes = Encoding.UTF8.GetBytes(input);
-            return new Person(bytes);
+            var person = new Person();
+            var cardStandardReader = new ContactReader();
+            cardStandardReader.ReadInto(person, new StringReader(input));
+            return person;
         }
         throw GetConvertFromException(value);
     }
+
+    public object ConvertFromPath(string path)
+    {
+        using var streamReader = new StreamReader(path);
+        var person = new Person();
+        new ContactReader().ReadInto(person, streamReader);
+
+        person.UniqueId = Guid.NewGuid().ToString().ToUpper();
+
+        return person;
+    }
+
+    public object ConvertToStream(Person person)
+    {
+        var stream = new MemoryStream();
+        var textWriter = new StreamWriter(stream);
+        var writer = new ContactWriter();
+        writer.Write(person, textWriter, Encoding.UTF8.WebName);
+        textWriter.Flush();
+        stream.Seek(0, SeekOrigin.Begin);
+        return stream;
+    }
+
+    //public string ReadAsString()
+    //{
+    //    return ReadAsStreamReader().ReadToEnd();
+    //}
+
+    //public StreamReader ReadAsStreamReader()
+    //{
+    //    var stream = ReadAsStream();
+    //    var streamReader = new StreamReader(stream);
+    //    return streamReader;
+    //}
 }

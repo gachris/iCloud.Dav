@@ -77,7 +77,7 @@ internal class ContactGroupReader : CardReader<ContactGroup>
     private static void Read_X_ADDRESSBOOKSERVER_KIND(ContactGroup card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.ContactGroup.Property.X_ADDRESSBOOKSERVER_KIND).ThrowIfNull(Constants.ContactGroup.Property.X_ADDRESSBOOKSERVER_KIND);
-        card.GroupType = property.ToString();
+        card.AddressBookServer = property.ToString();
     }
 
     /// <summary>Reads the X-ADDRESSBOOKSERVER-MEMBER property.</summary>
@@ -85,7 +85,7 @@ internal class ContactGroupReader : CardReader<ContactGroup>
     {
         var property = properties.FindByName(Constants.ContactGroup.Property.X_ADDRESSBOOKSERVER_MEMBER).ThrowIfNull(Constants.ContactGroup.Property.X_ADDRESSBOOKSERVER_MEMBER);
         var memberResourceName = property.ToString().Replace(Constants.ContactGroup.urn_Prefix, null);
-        card.MemberResourceNames.Add(memberResourceName);
+        card.AddMember(memberResourceName);
     }
 
     /// <summary>Reads the PRODID property.</summary>

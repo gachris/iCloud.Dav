@@ -167,7 +167,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
     public bool IsLoggingEnabled { get; set; }
 
     /// <summary>Gets or sets the application name which will be used on the User-Agent header.</summary>
-    public string ApplicationName { get; set; }
+    public string? ApplicationName { get; set; }
 
     public static ILogger Logger => _logger;
 
@@ -185,8 +185,8 @@ public class ConfigurableMessageHandler : DelegatingHandler
     /// </summary>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        HttpResponseMessage response = null;
-        Exception lastException;
+        Exception? lastException;
+        var response = default(HttpResponseMessage);
         var loggable = IsLoggingEnabled && Logger.IsDebugEnabled;
         var triesRemaining = NumTries;
         var redirectRemaining = NumRedirects;
@@ -227,10 +227,8 @@ public class ConfigurableMessageHandler : DelegatingHandler
                 foreach (IHttpExceptionHandler exceptionHandler in list2)
                 {
                     flag = flag1;
-                    var num = await exceptionHandler.HandleExceptionAsync(new HandleExceptionArgs()
+                    var num = await exceptionHandler.HandleExceptionAsync(new HandleExceptionArgs(request, lastException)
                     {
-                        Request = request,
-                        Exception = lastException,
                         TotalTries = NumTries,
                         CurrentFailedTry = NumTries - triesRemaining,
                         CancellationToken = cancellationToken
@@ -243,7 +241,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
                     throw lastException;
                 }
                 if (loggable)
-                    Logger.Debug("Exception {0} was thrown, but it was handled by an exception handler", lastException.Message);
+                    Logger.Debug("Exception {0} was thrown, but it was handled by an exception handler", lastException?.Message);
             }
             else if (response.IsSuccessStatusCode)
             {
@@ -258,10 +256,8 @@ public class ConfigurableMessageHandler : DelegatingHandler
                 foreach (IHttpUnsuccessfulResponseHandler unsuccessfulResponseHandler in list2)
                 {
                     flag = flag1;
-                    int num = await unsuccessfulResponseHandler.HandleResponseAsync(new HandleUnsuccessfulResponseArgs()
+                    int num = await unsuccessfulResponseHandler.HandleResponseAsync(new HandleUnsuccessfulResponseArgs(request, response)
                     {
-                        Request = request,
-                        Response = response,
                         TotalTries = NumTries,
                         CurrentFailedTry = NumTries - triesRemaining,
                         CancellationToken = cancellationToken
@@ -311,7 +307,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         var location = message.Headers.Location;
         if (!message.IsRedirectStatusCode() || location == null)
             return false;
-        var requestMessage = message.RequestMessage;
+        var requestMessage = message.RequestMessage.ThrowIfNull(nameof(message.RequestMessage));
         requestMessage.RequestUri = new Uri(requestMessage.RequestUri, location);
         if (message.StatusCode == HttpStatusCode.RedirectMethod)
             requestMessage.Method = HttpMethod.Get;

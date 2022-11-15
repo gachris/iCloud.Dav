@@ -11,9 +11,9 @@ internal class DataTypeMapper
 {
     private class PropertyMapping
     {
-        public Type ObjectType { get; set; }
+        public Type? ObjectType { get; set; }
 
-        public TypeResolverDelegate Resolver { get; set; }
+        public TypeResolverDelegate? Resolver { get; set; }
 
         public bool AllowsMultipleValuesPerProperty { get; set; }
     }
@@ -61,7 +61,7 @@ internal class DataTypeMapper
         AddPropertyMapping("URL", typeof(Uri), allowsMultipleValues: false);
     }
 
-    protected Type ResolveStatusProperty(object context)
+    protected Type? ResolveStatusProperty(object context)
     {
         if (context is not ICalendarObject calendarObject)
         {
@@ -123,7 +123,7 @@ internal class DataTypeMapper
 
     public virtual bool GetPropertyAllowsMultipleValues(object obj)
     {
-        ICalendarProperty calendarProperty = obj as ICalendarProperty;
+        ICalendarProperty? calendarProperty = obj as ICalendarProperty;
         if (!string.IsNullOrWhiteSpace(calendarProperty?.Name) && _propertyMap.TryGetValue(calendarProperty.Name, out var value))
         {
             return value.AllowsMultipleValuesPerProperty;
@@ -132,7 +132,7 @@ internal class DataTypeMapper
         return false;
     }
 
-    public virtual Type GetPropertyMapping(object obj)
+    public virtual Type? GetPropertyMapping(object obj)
     {
         if (obj is not ICalendarProperty calendarProperty || calendarProperty.Name == null)
         {

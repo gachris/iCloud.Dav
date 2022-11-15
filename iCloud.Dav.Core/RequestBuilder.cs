@@ -31,7 +31,7 @@ public class RequestBuilder
     };
 
     /// <summary>The HTTP method used for this request.</summary>
-    private string _method;
+    private string _method = "GET";
 
     /// <summary>Operator list that can appear in the path argument.</summary>
     private const string OPERATORS = "+#./;?&|!@=";
@@ -49,20 +49,20 @@ public class RequestBuilder
     private List<KeyValuePair<string, string>> QueryParameters { get; set; }
 
     /// <summary>The base URI for this request (usually applies to the service itself).</summary>
-    public Uri BaseUri { get; set; }
+    public Uri BaseUri { get; }
 
     /// <summary>
     /// The path portion of this request. It's appended to the <see cref="BaseUri" /> and the parameters are
     /// substituted from the <see cref="PathParameters" /> dictionary.
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; }
 
     /// <summary>The HTTP method used for this request (such as GET, PUT, POST, etc...).</summary>
-    /// <remarks>The default Value is <see cref="ApiMethod.Get" />.</remarks>
+    /// <remarks>The default Value is <see cref="Constants.Get" />.</remarks>
     public string Method
     {
         get => _method;
-        set
+        private set
         {
             if (!SupportedMethods.Contains(value))
                 throw new ArgumentOutOfRangeException(nameof(Method));
@@ -73,11 +73,13 @@ public class RequestBuilder
     /// <summary>Construct a new request builder.</summary>
     ///  
     ///             TODO(peleyal): Consider using the Factory pattern here.
-    public RequestBuilder()
+    public RequestBuilder(Uri baseUri, string path, string method)
     {
+        BaseUri = baseUri;
+        Path = path;
+        Method = method;
         PathParameters = new Dictionary<string, IList<string>>();
         QueryParameters = new List<KeyValuePair<string, string>>();
-        Method = "GET";
     }
 
     /// <summary>Constructs a Uri as defined by the parts of this request builder.</summary>
@@ -186,9 +188,9 @@ public class RequestBuilder
                         separator = ",";
                         break;
                 }
-                if (PathParameters.ContainsKey(key))
+                if (PathParameters.TryGetValue(key, out var value))
                 {
-                    var stringToEscape = string.Join(separator, PathParameters[key]);
+                    var stringToEscape = string.Join(separator, value);
                     if (result != 0 && result < stringToEscape.Length)
                         stringToEscape = stringToEscape[..result];
                     if (empty != "+" && empty != "#" && PathParameters[key].Count == 1)
@@ -214,7 +216,7 @@ public class RequestBuilder
     /// <param name="type">Type of the parameter (must be 'Path' or 'Query').</param>
     /// <param name="name">Parameter name.</param>
     /// <param name="value">Parameter value.</param>
-    public void AddParameter(RequestParameterType type, string name, string value)
+    public void AddParameter(RequestParameterType type, string name, string? value)
     {
         name.ThrowIfNull(nameof(name));
         if (value == null)
@@ -232,8 +234,5 @@ public class RequestBuilder
     }
 
     /// <summary>Creates a new HTTP request message.</summary>
-    public HttpRequestMessage CreateRequest()
-    {
-        return new HttpRequestMessage(new HttpMethod(Method), BuildUri().ToString());
-    }
+    public HttpRequestMessage CreateRequest() => new HttpRequestMessage(new HttpMethod(Method), BuildUri().ToString());
 }

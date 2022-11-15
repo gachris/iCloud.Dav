@@ -14,5 +14,5 @@ public interface IAccessMethod
     /// Retrieves the original access token in the HTTP request, as provided in the <see cref="IAccessMethod.Intercept(HttpRequestMessage,System.String)" />
     /// method.
     /// </summary>
-    string GetAccessToken(HttpRequestMessage request);
+    string? GetAccessToken(HttpRequestMessage request);
 }

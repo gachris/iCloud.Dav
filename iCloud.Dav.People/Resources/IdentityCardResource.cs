@@ -1,5 +1,4 @@
 ﻿using iCloud.Dav.Core;
-using iCloud.Dav.Core.Utils;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.Types;
@@ -13,16 +12,10 @@ public class IdentityCardResource
     private readonly IClientService _service;
 
     /// <summary>Constructs a new resource.</summary>
-    public IdentityCardResource(IClientService service)
-    {
-        _service = service;
-    }
+    public IdentityCardResource(IClientService service) => _service = service;
 
     /// <summary>Returns the identity cards on the user's identity card list.</summary>
-    public virtual ListRequest List()
-    {
-        return new ListRequest(_service);
-    }
+    public virtual ListRequest List() => new(_service);
 
     /// <summary>Returns the identity cards on the user's identity card list.</summary>
     public class ListRequest : PeopleBaseServiceRequest<IdentityCardList>
@@ -32,14 +25,13 @@ public class IdentityCardResource
         /// <summary>Constructs a new Get request.</summary>
         public ListRequest(IClientService service) : base(service)
         {
-            InitParameters();
         }
 
         ///<summary>Gets the method name.</summary>
         public override string MethodName => "list";
 
         ///<summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Propfind;
+        public override string HttpMethod => Constants.Propfind;
 
         ///<summary>Gets the REST path.</summary>
         public override string RestPath => string.Empty;

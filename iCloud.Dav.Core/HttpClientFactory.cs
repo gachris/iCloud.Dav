@@ -1,4 +1,5 @@
 ﻿using iCloud.Dav.Core.Log;
+using iCloud.Dav.Core.Utils;
 using System.Net.Http;
 
 namespace iCloud.Dav.Core;
@@ -7,7 +8,7 @@ namespace iCloud.Dav.Core;
 public class HttpClientFactory : IHttpClientFactory
 {
     /// <summary>The class logger.</summary>
-    private static readonly ILogger Logger = ApplicationContext.Logger.ForType<HttpClientFactory>();
+    private static readonly ILogger _logger = ApplicationContext.Logger.ForType<HttpClientFactory>();
 
     public ConfigurableHttpClient CreateHttpClient(CreateHttpClientArgs args)
     {
@@ -15,8 +16,7 @@ public class HttpClientFactory : IHttpClientFactory
         {
             ApplicationName = args.ApplicationName
         });
-        foreach (var initializer in args.Initializers)
-            initializer.Initialize(httpClient);
+        args.Initializers.ForEach(initializer => initializer.Initialize(httpClient));
         return httpClient;
     }
 
@@ -26,7 +26,7 @@ public class HttpClientFactory : IHttpClientFactory
         var httpClientHandler = new HttpClientHandler();
         if (httpClientHandler.SupportsRedirectConfiguration)
             httpClientHandler.AllowAutoRedirect = false;
-        Logger.Debug("Handler was created. SupportsRedirectConfiguration={0}, SupportsAutomaticDecompression={1}", httpClientHandler.SupportsRedirectConfiguration, httpClientHandler.SupportsAutomaticDecompression);
+        _logger.Debug("Handler was created. SupportsRedirectConfiguration={0}, SupportsAutomaticDecompression={1}", httpClientHandler.SupportsRedirectConfiguration, httpClientHandler.SupportsAutomaticDecompression);
         return httpClientHandler;
     }
 }

@@ -17,59 +17,39 @@ public class RemindersResource
     private readonly IClientService _service;
 
     /// <summary>Constructs a new resource.</summary>
-    public RemindersResource(IClientService service)
-    {
-        _service = service;
-    }
+    public RemindersResource(IClientService service) => _service = service;
 
     /// <summary>Returns reminders on the specified calendar.</summary>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
-    public virtual ListRequest List(string calendarId)
-    {
-        return new ListRequest(_service, calendarId);
-    }
+    public virtual ListRequest List(string calendarId) => new(_service, calendarId);
 
     /// <summary>Returns an reminder.</summary>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
     /// <param name="reminderId">Reminder identifier.</param>
-    public virtual GetRequest Get(string calendarId, string reminderId)
-    {
-        return new GetRequest(_service, calendarId, reminderId);
-    }
+    public virtual GetRequest Get(string calendarId, string reminderId) => new(_service, calendarId, reminderId);
 
     /// <summary>Creates an reminder.</summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
-    public virtual InsertRequest Insert(Reminder body, string calendarId)
-    {
-        return new InsertRequest(_service, body, calendarId);
-    }
+    public virtual InsertRequest Insert(Reminder body, string calendarId) => new(_service, body, calendarId);
 
     /// <summary>Updates an reminder.</summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
-    public virtual UpdateRequest Update(Reminder body, string calendarId)
-    {
-        return new UpdateRequest(_service, body, calendarId);
-    }
+    public virtual UpdateRequest Update(Reminder body, string calendarId) => new(_service, body, calendarId);
 
     /// <summary>Deletes an reminder.</summary>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</param>
     /// <param name="reminderId">Reminder identifier.</param>
-    public virtual DeleteRequest Delete(string calendarId, string reminderId)
-    {
-        return new DeleteRequest(_service, calendarId, reminderId);
-    }
+    public virtual DeleteRequest Delete(string calendarId, string reminderId) => new(_service, calendarId, reminderId);
 
     /// <summary>Returns reminders on the specified calendar.</summary>
     public class ListRequest : CalendarBaseServiceRequest<ReminderList>
     {
+        private object? _body;
+
         /// <summary>Constructs a new List request.</summary>
-        public ListRequest(IClientService service, string calendarId) : base(service)
-        {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-            InitParameters();
-        }
+        public ListRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
         [RequestParameter("calendarId", RequestParameterType.Path)]
@@ -87,42 +67,43 @@ public class RemindersResource
         /// timeMax is set, timeMin must be smaller than timeMax.</summary>
         public virtual DateTime? TimeMin { get; set; }
 
-        /// <summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "list";
 
-        /// <summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Report;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Report;
 
-        /// <summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}";
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        /// <summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody()
         {
-            var calendarquery = new CalendarQuery() { CompFilter = new CompFilter() { Name = "VCALENDAR" } };
-            calendarquery.CompFilter.Child = new CompFilter() { Name = "VTODO" };
+            if (_body is null)
+            {
+                var calendarquery = new CalendarQuery() { CompFilter = new CompFilter("VCALENDAR") };
+                calendarquery.CompFilter.Child = new CompFilter("VTODO");
 
-            var timeMin = TimeMin.ToFilterTime();
-            var timeMax = TimeMax.ToFilterTime();
+                var timeMin = TimeMin.ToFilterTime();
+                var timeMax = TimeMax.ToFilterTime();
 
-            if (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
-                calendarquery.CompFilter.Child.TimeRange = new TimeRange { Start = timeMin, End = timeMax };
+                if (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
+                    calendarquery.CompFilter.Child.TimeRange = new TimeRange(timeMin, timeMax);
 
-            return calendarquery;
+                _body = calendarquery;
+            }
+            return _body;
         }
 
-        /// <summary>Initializes List parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
         }
     }
 
@@ -134,7 +115,6 @@ public class RemindersResource
         {
             CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(reminderId));
-            InitParameters();
         }
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
@@ -145,46 +125,39 @@ public class RemindersResource
         [RequestParameter("reminderId", RequestParameterType.Path)]
         public virtual string ReminderId { get; }
 
-        /// <summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "get";
 
-        /// <summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Get;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Get;
 
-        /// <summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}/{reminderId}.ics";
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        /// <summary>Initializes Get parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("reminderId", new Parameter("reminderId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("reminderId", new Parameter("reminderId", "path", true));
         }
     }
 
     /// <summary>Creates an reminder.</summary>
-    public class InsertRequest : CalendarBaseServiceRequest<InsertResponseObject>
+    public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
     {
+        private object? _body;
+
         /// <summary>Constructs a new Insert request.</summary>
         public InsertRequest(IClientService service, Reminder body, string calendarId) : base(service)
         {
             CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             Body = body.ThrowIfNull(nameof(body));
-            if (string.IsNullOrEmpty(body.Uid))
-                body.Uid = Guid.NewGuid().ToString().ToUpper();
-            ReminderId = body.Uid;
-            InitParameters();
+            ReminderId = body.Uid.ThrowIfNull(nameof(body));
         }
 
         /// <summary>Reminder identifier.</summary>
@@ -198,53 +171,52 @@ public class RemindersResource
         /// <summary>Gets the body of this request.</summary>
         private Reminder Body { get; }
 
-        /// <summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "insert";
 
-        /// <summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Put;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Put;
 
-        /// <summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}/{reminderId}.ics";
 
-        /// <summary>Gets the Content-Type header of this request.</summary>
-        public override string ContentType => ApiContentType.TEXT_CALENDAR;
+        /// <inheritdoc/>
+        public override string ContentType => Constants.TEXT_CALENDAR;
 
-        /// <summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody()
         {
-            var calendar = new Ical.Net.Calendar();
-            var calendarSerializer = new CalendarSerializer();
-            calendar.Todos.Add(Body);
-            return calendarSerializer.SerializeToString(calendar);
+            if (_body is null)
+            {
+                var calendar = new Ical.Net.Calendar();
+                var calendarSerializer = new CalendarSerializer();
+                calendar.Todos.Add(Body);
+                _body = calendarSerializer.SerializeToString(calendar);
+            }
+            return _body;
         }
 
-        /// <summary>Initializes Insert parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("reminderId", new Parameter("reminderId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("reminderId", new Parameter("reminderId", "path", true));
         }
     }
 
     /// <summary>Updates an reminder.</summary>
-    public class UpdateRequest : CalendarBaseServiceRequest<UpdateResponseObject>
+    public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
     {
+        private object? _body;
+
         /// <summary>Constructs a new Update request.</summary>
         public UpdateRequest(IClientService service, Reminder body, string calendarId) : base(service)
         {
             CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             Body = body.ThrowIfNull(nameof(body));
             ReminderId = Body.Uid.ThrowIfNullOrEmpty(nameof(Reminder.Uid));
-            InitParameters();
         }
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
@@ -258,52 +230,49 @@ public class RemindersResource
         /// <summary>Gets the body of this request.</summary>
         private Reminder Body { get; }
 
-        /// <summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "update";
 
-        /// <summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Put;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Put;
 
-        /// <summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}/{reminderId}.ics";
 
-        /// <summary>Gets the Content-Type header of this request.</summary>
-        public override string ContentType => ApiContentType.TEXT_CALENDAR;
+        /// <inheritdoc/>
+        public override string ContentType => Constants.TEXT_CALENDAR;
 
-        /// <summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody()
         {
-            var calendar = new Ical.Net.Calendar();
-            var calendarSerializer = new CalendarSerializer();
-            calendar.Todos.Add(Body);
-            return calendarSerializer.SerializeToString(calendar);
+            if (_body is null)
+            {
+                var calendar = new Ical.Net.Calendar();
+                var calendarSerializer = new CalendarSerializer();
+                calendar.Todos.Add(Body);
+                _body = calendarSerializer.SerializeToString(calendar);
+            }
+            return _body;
         }
 
-        /// <summary>Initializes Update parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("reminderId", new Parameter("reminderId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("reminderId", new Parameter("reminderId", "path", true));
         }
     }
 
     /// <summary>Deletes an reminder.</summary>
-    public class DeleteRequest : CalendarBaseServiceRequest<DeleteResponseObject>
+    public class DeleteRequest : CalendarBaseServiceRequest<VoidResponse>
     {
         /// <summary>Constructs a new Delete request.</summary>
         public DeleteRequest(IClientService service, string calendarId, string reminderId) : base(service)
         {
             CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(reminderId));
-            InitParameters();
         }
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendarList.list method.</summary>
@@ -314,31 +283,25 @@ public class RemindersResource
         [RequestParameter("reminderId", RequestParameterType.Path)]
         public virtual string ReminderId { get; }
 
-        /// <summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "delete";
 
-        /// <summary>Gets the HTTP method.</summary>
-        public override string HttpMethod => ApiMethod.Delete;
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Delete;
 
-        /// <summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{calendarId}/{reminderId}.ics";
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        /// <summary>Initializes Delete parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path")
-            {
-                IsRequired = true,
-            });
-            RequestParameters.Add("reminderId", new Parameter("reminderId", "path")
-            {
-                IsRequired = true,
-            });
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("reminderId", new Parameter("reminderId", "path", true));
         }
     }
 }

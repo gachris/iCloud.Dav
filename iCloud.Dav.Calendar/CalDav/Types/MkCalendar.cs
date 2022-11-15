@@ -11,28 +11,23 @@ namespace iCloud.Dav.Calendar.CalDav.Types;
 [XmlRoot(ElementName = "mkcalendar", Namespace = "urn:ietf:params:xml:ns:caldav")]
 internal sealed class MkCalendar : IXmlSerializable
 {
-    public string DisplayName { get; set; }
+    public string DisplayName { get; }
 
-    public string CalendarColor { get; set; }
+    public string? CalendarColor { get; set; }
 
     public List<string> SupportedCalendarComponents { get; }
 
-    public string CalendarTimeZoneSerializedString { get; set; }
+    public string? CalendarTimeZoneSerializedString { get; set; }
 
-    public MkCalendar()
+    public MkCalendar(string displayName)
     {
+        DisplayName = displayName;
         SupportedCalendarComponents = new List<string>();
     }
 
-    public XmlSchema GetSchema()
-    {
-        return new XmlSchema();
-    }
+    public XmlSchema GetSchema() => new XmlSchema();
 
-    public void ReadXml(XmlReader reader)
-    {
-        throw new NotSupportedException();
-    }
+    public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
     public void WriteXml(XmlWriter writer)
     {
@@ -43,9 +38,12 @@ internal sealed class MkCalendar : IXmlSerializable
         writer.WriteString(DisplayName);
         writer.WriteEndElement();
 
-        writer.WriteStartElement("calendar-color", "http://apple.com/ns/ical/");
-        writer.WriteString(CalendarColor);
-        writer.WriteEndElement();
+        if (!string.IsNullOrEmpty(CalendarColor))
+        {
+            writer.WriteStartElement("calendar-color", "http://apple.com/ns/ical/");
+            writer.WriteString(CalendarColor);
+            writer.WriteEndElement();
+        }
 
         if (SupportedCalendarComponents.Any())
         {

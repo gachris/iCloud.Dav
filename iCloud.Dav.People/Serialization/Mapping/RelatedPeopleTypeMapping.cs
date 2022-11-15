@@ -5,7 +5,7 @@ namespace iCloud.Dav.People.Serialization.Mapping;
 
 internal class RelatedPeopleTypeMapping
 {
-    public static readonly TypeMapping<RelatedPeopleTypeInternal, RelatedPeopleType> Other = new(RelatedPeopleTypeInternal.Other , RelatedPeopleType.Other);
+    public static readonly TypeMapping<RelatedPeopleTypeInternal, RelatedPeopleType> Other = new(RelatedPeopleTypeInternal.Other, RelatedPeopleType.Other);
 
     private static readonly TypeMapping<RelatedPeopleTypeInternal, RelatedPeopleType>[] _typeMappings = new[]
     {

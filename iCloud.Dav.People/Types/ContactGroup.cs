@@ -1,11 +1,9 @@
 ﻿using iCloud.Dav.Core;
 using iCloud.Dav.People.Serialization.Converters;
-using iCloud.Dav.People.Serialization.Read;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Text;
 
 namespace iCloud.Dav.People.Types;
 
@@ -13,6 +11,12 @@ namespace iCloud.Dav.People.Types;
 [TypeConverter(typeof(ContactGroupConverter))]
 public class ContactGroup : IDirectResponseSchema
 {
+    #region Fields/Consts
+
+    private readonly List<string> _members = new();
+
+    #endregion
+
     #region Properties
 
     /// <summary>A value that uniquely identifies the Person.</summary>
@@ -50,9 +54,9 @@ public class ContactGroup : IDirectResponseSchema
     public virtual DateTime? RevisionDate { get; set; }
 
     /// <summary>
-    /// The group type of the ContactGroup.
+    /// The member resource names of the ContactGroup.
     /// </summary>
-    public virtual string? GroupType { get; internal set; }
+    public virtual IReadOnlyCollection<string> Members { get; }
 
     /// <summary>The e-tag of the person.</summary>
     /// <remarks>
@@ -62,98 +66,49 @@ public class ContactGroup : IDirectResponseSchema
     public virtual string? ETag { get; set; }
 
     /// <summary>
-    /// The member resource names of the ContactGroup.
+    /// The address book server of the ContactGroup.
     /// </summary>
-    public virtual IList<string> MemberResourceNames { get; }
-
-    /// <summary>
-    /// The resource name of ContactGroup.
-    /// </summary>
-    public virtual string? ResourceName { get; set; }
+    public virtual string? AddressBookServer { get; internal set; }
 
     /// <summary>
     /// The Url of the ContactGroup.
     /// </summary>
     public virtual string? Url { get; internal set; }
 
-    /// <summary>
-    /// The count of members.
-    /// </summary>
-    public virtual int MemberCount => MemberResourceNames.Count;
-
     #endregion
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ContactGroup" /> class.
     /// </summary>
-    public ContactGroup() : base()
-    {
-        GroupType = "group";
-        MemberResourceNames = new List<string>();
-    }
-
-    /// <summary>
-    ///     Loads a new instance of the <see cref="ContactGroup" /> class
-    ///     from a text reader.
-    /// </summary>
-    /// <param name="input">An initialized text reader.</param>
-    public ContactGroup(TextReader input) : this()
-    {
-        new ContactGroupReader().ReadInto(this, input);
-    }
-
-    /// <summary>
-    ///     Loads a new instance of the <see cref="ContactGroup" /> class
-    ///     from a byte array.
-    /// </summary>
-    /// <param name="bytes">An initialized byte array.</param>
-    public ContactGroup(byte[] bytes) : this()
-    {
-        var standardReader = new ContactGroupReader();
-        standardReader.ReadInto(this, new StringReader(Encoding.UTF8.GetString(bytes)));
-    }
-
-    /// <summary>
-    ///     Loads a new instance of the <see cref="ContactGroup" /> class
-    ///     from a text file.
-    /// </summary>
-    /// <param name="path">
-    ///     The path to a text file containing ContactGroup data in
-    ///     any recognized ContactGroup format.
-    /// </param>
-    public ContactGroup(string path) : this()
-    {
-        using var streamReader = new StreamReader(path);
-        new ContactGroupReader().ReadInto(this, streamReader);
-    }
+    public ContactGroup() => Members = new ReadOnlyCollection<string>(_members);
 
     #region Methods
 
     /// <summary>
-    /// 
+    /// Adds member to the group.
     /// </summary>
     /// <param name="uniqueId"></param>
     /// <returns></returns>
-    public virtual bool AddMemberResource(string uniqueId)
+    public bool AddMember(string uniqueId)
     {
-        if (!MemberResourceNames.Contains(uniqueId))
+        if (!_members.Contains(uniqueId))
         {
-            MemberResourceNames.Add(uniqueId);
+            _members.Add(uniqueId);
             return true;
         }
         return false;
     }
 
     /// <summary>
-    /// 
+    /// Removes member from the group.
     /// </summary>
     /// <param name="uniqueId"></param>
     /// <returns></returns>
-    public virtual bool RemoveMemberResource(string uniqueId)
+    public bool RemoveMember(string uniqueId)
     {
-        if (MemberResourceNames.Contains(uniqueId))
+        if (_members.Contains(uniqueId))
         {
-            MemberResourceNames.Remove(uniqueId);
+            _members.Remove(uniqueId);
             return true;
         }
         return false;

@@ -13,12 +13,10 @@ namespace iCloud.Dav.People.Serialization.Converters;
 internal class DateConverter : TypeConverter
 {
     /// <inheritdoc/>
-    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) =>
-        sourceType.IsGenericType && sourceType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>));
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType.IsGenericType && sourceType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>));
 
     /// <inheritdoc/>
-    public override bool CanConvertTo(ITypeDescriptorContext? context, [NotNullWhen(true)] Type? destinationType) =>
-        (destinationType?.IsGenericType ?? false) && destinationType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>));
+    public override bool CanConvertTo(ITypeDescriptorContext? context, [NotNullWhen(true)] Type? destinationType) => (destinationType?.IsGenericType ?? false) && destinationType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>));
 
     /// <inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)

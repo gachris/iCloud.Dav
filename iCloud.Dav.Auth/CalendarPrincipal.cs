@@ -12,23 +12,31 @@ public class CalendarPrincipal
     /// Gets or sets the Current user principal.
     /// </summary>
     [JsonProperty("current_user_principal")]
-    public string CurrentUserPrincipal { get; set; }
+    public string CurrentUserPrincipal { get; }
 
     /// <summary>
     /// Gets or sets the current user principal.
     /// </summary>
     [JsonProperty("calendar_home_set")]
-    public string CalendarHomeSet { get; set; }
+    public string CalendarHomeSet { get; }
 
     /// <summary>
     /// Gets or sets the display name.
     /// </summary>
     [JsonProperty("display_name")]
-    public string DisplayName { get; set; }
+    public string DisplayName { get; }
 
     /// <summary>
     /// Gets or sets the calendar user address set.
     /// </summary>
     [JsonProperty("calendar_user_address_set")]
-    public List<CalendarUserAddressSet> CalendarUserAddressSet { get; set; }
+    public IEnumerable<CalendarUserAddressSet> CalendarUserAddressSet { get; }
+
+    public CalendarPrincipal(string currentUserPrincipal, string calendarHomeSet, string displayName, IEnumerable<CalendarUserAddressSet> calendarUserAddressSet)
+    {
+        CurrentUserPrincipal = currentUserPrincipal;
+        CalendarHomeSet = calendarHomeSet;
+        DisplayName = displayName;
+        CalendarUserAddressSet = calendarUserAddressSet;
+    }
 }
