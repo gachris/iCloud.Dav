@@ -111,7 +111,7 @@ public class RequestBuilder
         var stringBuilder1 = new StringBuilder(Path);
         foreach (var match in PathParametersPattern.Matches(stringBuilder1.ToString()))
         {
-            var oldValue = match.ToString();
+            var oldValue = match.ThrowIfNull(nameof(BuildRestPath)).ToString().ThrowIfNull(nameof(BuildRestPath));
             var str1 = oldValue[1..^1];
             var empty = string.Empty;
             if ("+#./;?&|!@=".Contains(str1[0].ToString()))

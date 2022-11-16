@@ -2,6 +2,6 @@
 
 public enum PrincipalHomeSet
 {
-    CalendarHomeSet = 0,
-    AddressBookHomeSet = 1
+    Calendar = 0,
+    AddressBook = 1
 }

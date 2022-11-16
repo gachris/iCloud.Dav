@@ -10,22 +10,21 @@ using System.Text;
 
 namespace iCloud.Dav.Calendar.Utils;
 
-internal static class CalendarExtensions
+internal static class MappingExtensions
 {
-    public static CalendarEntryList ToCalendarList(this IEnumerable<Response> responses)
+    public static CalendarList ToCalendarList(this IEnumerable<Response> responses)
     {
         if (responses is null) throw new ArgumentNullException(nameof(responses));
-        return new CalendarEntryList(responses.Select(ToCalendar));
+        return new CalendarList(responses.Select(ToCalendar));
     }
 
-    public static CalendarEntry ToCalendar(this Response response)
+    public static Types.Calendar ToCalendar(this Response response)
     {
         if (response is null) throw new ArgumentNullException(nameof(response));
         var id = response.Href.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
-        var calendarListEntry = new CalendarEntry()
+        var calendarListEntry = new Types.Calendar()
         {
             Uid = id,
-            Url = response.Href,
             ETag = response.Etag,
             CTag = response.Ctag?.Value,
             Color = response.CalendarColor,

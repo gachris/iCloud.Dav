@@ -4,11 +4,11 @@ using System.ComponentModel;
 
 namespace iCloud.Dav.People.Types;
 
-/// <summary>A web site defined in a <see cref="Person"/>.</summary>
+/// <summary>A web site defined in a <see cref="Contact"/>.</summary>
 /// <seealso cref="WebsiteType" />
 [Serializable]
 [TypeConverter(typeof(WebsiteConverter))]
-public class Website : ICloneable
+public class Website
 {
     #region Properties
 
@@ -24,6 +24,4 @@ public class Website : ICloneable
     public virtual bool IsPreferred { get; set; }
 
     #endregion
-
-    public object Clone() => MemberwiseClone();
 }

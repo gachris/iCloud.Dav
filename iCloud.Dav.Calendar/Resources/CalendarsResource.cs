@@ -26,18 +26,18 @@ public class CalendarsResource
 
     /// <summary>Inserts an existing calendar into the user's calendar list.</summary>
     /// <param name="body">The body of the request.</param>
-    public virtual InsertRequest Insert(CalendarEntry body) => new(_service, body);
+    public virtual InsertRequest Insert(Types.Calendar body) => new(_service, body);
 
     /// <summary>Updates an existing calendar on the user's calendar list.</summary>
     /// <param name="body">The body of the request.</param>
-    public virtual UpdateRequest Update(CalendarEntry body) => new(_service, body);
+    public virtual UpdateRequest Update(Types.Calendar body) => new(_service, body);
 
     /// <summary>Removes a calendar from the user's calendar list.</summary>
     /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the calendars.list method.</param>
     public virtual DeleteRequest Delete(string calendarId) => new(_service, calendarId);
 
     /// <summary>Returns the calendars on the user's calendar list.</summary>
-    public class ListRequest : CalendarBaseServiceRequest<CalendarEntryList>
+    public class ListRequest : CalendarBaseServiceRequest<CalendarList>
     {
         private object? _body;
 
@@ -63,7 +63,7 @@ public class CalendarsResource
     }
 
     /// <summary>Returns a calendar from the user's calendar list.</summary>
-    public class GetRequest : CalendarBaseServiceRequest<CalendarEntry>
+    public class GetRequest : CalendarBaseServiceRequest<Types.Calendar>
     {
         private object? _body;
 
@@ -104,7 +104,7 @@ public class CalendarsResource
         private object? _body;
 
         /// <summary>Constructs a new Insert request.</summary>
-        public InsertRequest(IClientService service, CalendarEntry body) : base(service)
+        public InsertRequest(IClientService service, Types.Calendar body) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
             CalendarId = Body.Uid.ThrowIfNull(nameof(Body.Uid));
@@ -115,7 +115,7 @@ public class CalendarsResource
         public virtual string CalendarId { get; }
 
         /// <summary>Gets the body of this request.</summary>
-        private CalendarEntry Body { get; }
+        private Types.Calendar Body { get; }
 
         /// <inheritdoc/>
         public override string MethodName => Constants.Mkcalendar;
@@ -170,10 +170,10 @@ public class CalendarsResource
         private object? _body;
 
         /// <summary>Constructs a new Update request.</summary>
-        public UpdateRequest(IClientService service, CalendarEntry body) : base(service)
+        public UpdateRequest(IClientService service, Types.Calendar body) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
-            CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(CalendarEntry.Uid));
+            CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(Types.Calendar.Uid));
         }
 
         /// <summary>Calendar identifier. To retrieve calendar IDs call the calendars.list method.</summary>
@@ -181,7 +181,7 @@ public class CalendarsResource
         public virtual string CalendarId { get; }
 
         /// <summary>Gets the body of this request.</summary>
-        private CalendarEntry Body { get; }
+        private Types.Calendar Body { get; }
 
         /// <inheritdoc/>
         public override string MethodName => "update";

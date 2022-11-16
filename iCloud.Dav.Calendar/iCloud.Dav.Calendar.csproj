@@ -18,7 +18,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="iCloud.dav.Calendar_SignAssembly_Key.snk" />
+		<None Remove="iCloud.dav.Calendar_SignAssembly_Key.snk" />
 	</ItemGroup>
 
 	<ItemGroup>

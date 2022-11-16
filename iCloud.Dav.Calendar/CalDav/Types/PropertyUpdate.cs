@@ -12,13 +12,9 @@ internal sealed class PropertyUpdate : IXmlSerializable
 
     public string? CalendarColor { get; }
 
-    public PropertyUpdate(string displayName, string? calendarColor)
-    {
-        DisplayName = displayName;
-        CalendarColor = calendarColor;
-    }
+    public PropertyUpdate(string displayName, string? calendarColor) => (DisplayName, CalendarColor) = (displayName, calendarColor);
 
-    public XmlSchema GetSchema() => new XmlSchema();
+    public XmlSchema GetSchema() => new();
 
     public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 

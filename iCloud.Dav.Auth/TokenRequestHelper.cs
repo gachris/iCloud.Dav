@@ -55,7 +55,7 @@ internal static class TokenRequestHelper
         var multistatus = await httpClient.SendPropFindRequest(requestUri, principalRequest, cancellationToken);
         var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(MultiStatus));
         var calendarUserAddressSets = multistatusResponse.CalendarUserAddressSet.Select(url => new CalendarUserAddressSet(url.Value, url.Preferred));
-        return new CalendarPrincipal(multistatusResponse.CurrentUserPrincipal, multistatusResponse.CalendarHomeSet, multistatusResponse.DisplayName, calendarUserAddressSets);
+        return new CalendarPrincipal(multistatusResponse.CurrentUserPrincipal, multistatusResponse.CalendarHomeSet!, multistatusResponse.DisplayName!, calendarUserAddressSets);
     }
 
     private static async Task<PeoplePrincipal> GetPeoplePrincipal(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ internal static class TokenRequestHelper
         var principalRequest = new PropFind() { CurrentUserPrincipal = true, AddressBookHomeSet = true, DisplayName = true };
         var multistatus = await httpClient.SendPropFindRequest(requestUri, principalRequest, cancellationToken);
         var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(MultiStatus));
-        return new PeoplePrincipal(multistatusResponse.CurrentUserPrincipal, multistatusResponse.AddressBookHomeSet, multistatusResponse.DisplayName);
+        return new PeoplePrincipal(multistatusResponse.CurrentUserPrincipal, multistatusResponse.AddressBookHomeSet!, multistatusResponse.DisplayName!);
     }
 
     private static async Task<MultiStatus> SendPropFindRequest(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)

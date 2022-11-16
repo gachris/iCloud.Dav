@@ -19,13 +19,9 @@ internal sealed class MkCalendar : IXmlSerializable
 
     public string? CalendarTimeZoneSerializedString { get; set; }
 
-    public MkCalendar(string displayName)
-    {
-        DisplayName = displayName;
-        SupportedCalendarComponents = new List<string>();
-    }
+    public MkCalendar(string displayName) => (DisplayName, SupportedCalendarComponents) = (displayName, new());
 
-    public XmlSchema GetSchema() => new XmlSchema();
+    public XmlSchema GetSchema() => new();
 
     public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 

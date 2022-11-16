@@ -5,12 +5,12 @@ using System.ComponentModel;
 namespace iCloud.Dav.People.Types;
 
 /// <summary>
-///     Phone information for a <see cref="Person" />.
+///     Phone information for a <see cref="Contact" />.
 /// </summary>
 /// <seealso cref="Types.PhoneType" />
 [Serializable]
 [TypeConverter(typeof(PhoneConverter))]
-public class Phone : ICloneable
+public class Phone
 {
     #region Properties
 
@@ -25,6 +25,4 @@ public class Phone : ICloneable
     public virtual bool IsPreferred { get; set; }
 
     #endregion
-
-    public object Clone() => MemberwiseClone();
 }

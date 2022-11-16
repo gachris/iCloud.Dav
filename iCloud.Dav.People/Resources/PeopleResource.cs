@@ -31,12 +31,12 @@ public class PeopleResource
     /// <summary>Inserts an existing people into the user's people list.</summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-    public virtual InsertRequest Insert(Person body, string resourceName) => new(_service, body, resourceName);
+    public virtual InsertRequest Insert(Contact body, string resourceName) => new(_service, body, resourceName);
 
     /// <summary>Updates an existing people on the user's people list.</summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-    public virtual UpdateRequest Update(Person body, string resourceName) => new(_service, body, resourceName);
+    public virtual UpdateRequest Update(Contact body, string resourceName) => new(_service, body, resourceName);
 
     /// <summary>Removes a people from the user's people list.</summary>
     /// <param name="uniqueId">People identifier. To retrieve people IDs call the people.list method.</param>
@@ -44,7 +44,7 @@ public class PeopleResource
     public virtual DeleteRequest Delete(string uniqueId, string resourceName) => new(_service, uniqueId, resourceName);
 
     /// <summary>Returns the peoples on the user's people list.</summary>
-    public class ListRequest : PeopleBaseServiceRequest<PersonList>
+    public class ListRequest : PeopleBaseServiceRequest<ContactList>
     {
         private object? _body;
 
@@ -80,7 +80,7 @@ public class PeopleResource
     }
 
     /// <summary>Returns a people from the user's people list.</summary>
-    public class GetRequest : PeopleBaseServiceRequest<Person>
+    public class GetRequest : PeopleBaseServiceRequest<Contact>
     {
         /// <summary>Constructs a new Get request.</summary>
         public GetRequest(IClientService service, string uniqueId, string resourceName) : base(service)
@@ -122,7 +122,7 @@ public class PeopleResource
         private object? _body;
 
         /// <summary>Constructs a new Insert request.</summary>
-        public InsertRequest(IClientService service, Person body, string resourceName) : base(service)
+        public InsertRequest(IClientService service, Contact body, string resourceName) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
             UniqueId = body.UniqueId.ThrowIfNull(nameof(body.UniqueId));
@@ -139,7 +139,7 @@ public class PeopleResource
         public virtual string UniqueId { get; }
 
         /// <summary>Gets the body of this request.</summary>
-        private Person Body { get; }
+        private Contact Body { get; }
 
         ///<summary>Gets the method name.</summary>
         public override string MethodName => "insert";
@@ -187,7 +187,7 @@ public class PeopleResource
         private object? _body;
 
         /// <summary>Constructs a new Update request.</summary>
-        public UpdateRequest(IClientService service, Person body, string resourceName) : base(service)
+        public UpdateRequest(IClientService service, Contact body, string resourceName) : base(service)
         {
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             Body = body.ThrowIfNull(nameof(body));
@@ -204,7 +204,7 @@ public class PeopleResource
         public virtual string UniqueId { get; }
 
         /// <summary>Gets the body of this request.</summary>
-        private Person Body { get; }
+        private Contact Body { get; }
 
         ///<summary>Gets the method name.</summary>
         public override string MethodName => "update";

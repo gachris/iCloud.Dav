@@ -6,9 +6,5 @@ internal sealed class CalendarComponent
 
     public string NameSpace { get; }
 
-    public CalendarComponent(string name, string nameSpace)
-    {
-        Name = name;
-        NameSpace = nameSpace;
-    }
+    public CalendarComponent(string name, string nameSpace) => (Name, NameSpace) = (name, nameSpace);
 }

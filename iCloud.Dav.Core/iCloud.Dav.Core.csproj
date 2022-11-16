@@ -18,11 +18,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="iCloud.dav.Core_SignAssembly_Key.snk" />
+		<None Remove="iCloud.dav.Core_SignAssembly_Key.snk" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="All" />
 	</ItemGroup>
 
 </Project>

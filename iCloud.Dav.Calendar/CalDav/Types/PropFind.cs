@@ -8,7 +8,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types;
 [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
 internal sealed class PropFind : IXmlSerializable
 {
-    public XmlSchema GetSchema() => new XmlSchema();
+    public XmlSchema GetSchema() => new();
 
     public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 

@@ -7,7 +7,7 @@ using System.Text;
 namespace iCloud.Dav.People.Serialization.Write;
 
 /// <summary>Base class for generators.</summary>
-internal abstract class CardWriter<T>
+public abstract class CardWriter<T>
 {
     /// <summary>
     ///     The characters that are escaped per the original

@@ -6,7 +6,7 @@ namespace iCloud.Dav.People.Types;
 
 /// <summary>A date defined in a <see cref="Date"/>.</summary>
 [TypeConverter(typeof(DateConverter))]
-public class Date : ICloneable
+public class Date
 {
     #region Properties
 
@@ -19,6 +19,4 @@ public class Date : ICloneable
     public virtual bool IsPreferred { get; set; }
 
     #endregion
-
-    public object Clone() => MemberwiseClone();
 }

@@ -8,10 +8,5 @@ internal sealed class Attribute
 
     public string Value { get; }
 
-    public Attribute(string name, string ns, string value)
-    {
-        Name = name;
-        Namespace = ns;
-        Value = value;
-    }
+    public Attribute(string name, string nameSpace, string value) => (Name, Namespace, Value) = (name, nameSpace, value);
 }

@@ -13,11 +13,11 @@ namespace iCloud.Dav.People.Serialization.Read;
 ///     This is the primary (standard) Person format used by most
 ///     applications.
 /// </summary>
-internal partial class ContactReader : CardReader<Person>
+public partial class ContactReader : CardReader<Contact>
 {
     #region Fields/Consts
 
-    private static readonly Dictionary<string, Action<Person, IEnumerable<CardProperty>>> _properties = new()
+    private static readonly Dictionary<string, Action<Contact, IEnumerable<CardProperty>>> _properties = new()
     {
         { Constants.Contact.Property.Address.Property.ADR, Read_ADR },
         { Constants.Contact.Property.BDAY, Read_BDAY },
@@ -63,7 +63,7 @@ internal partial class ContactReader : CardReader<Person>
     ///         be updated when new Person properties are implemented.
     ///     </para>
     /// </remarks>
-    protected override void ReadInto(Person card, IEnumerable<CardProperty> property)
+    protected override void ReadInto(Contact card, IEnumerable<CardProperty> property)
     {
         card.ThrowIfNull(nameof(card));
         property.ThrowIfNull(nameof(property));
@@ -73,7 +73,7 @@ internal partial class ContactReader : CardReader<Person>
     }
 
     /// <summary>Reads an ADR property.</summary>
-    private static void Read_ADR(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_ADR(Contact card, IEnumerable<CardProperty> properties)
     {
         var addressConverter = TypeDescriptor.GetConverter(typeof(Address));
         if (addressConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -85,7 +85,7 @@ internal partial class ContactReader : CardReader<Person>
     }
 
     /// <summary>Reads the N property.</summary>
-    private static void Read_N(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_N(Contact card, IEnumerable<CardProperty> properties)
     {
         var nproperty = properties.FindByName(Constants.Contact.Property.N).ThrowIfNull(Constants.Contact.Property.N);
 
@@ -112,14 +112,14 @@ internal partial class ContactReader : CardReader<Person>
     }
 
     /// <summary>Reads the BDAY property.</summary>
-    private static void Read_BDAY(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_BDAY(Contact card, IEnumerable<CardProperty> properties)
     {
         var bdayproperty = properties.FindByName(Constants.Contact.Property.BDAY).ThrowIfNull(Constants.Contact.Property.BDAY);
         card.BirthDate = DateTimeHelper.TryParseDate(bdayproperty.ToString());
     }
 
     /// <summary>Reads the URL property.</summary>
-    private static void Read_URL(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_URL(Contact card, IEnumerable<CardProperty> properties)
     {
         var websiteConverter = TypeDescriptor.GetConverter(typeof(Website));
         if (websiteConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -131,7 +131,7 @@ internal partial class ContactReader : CardReader<Person>
     }
 
     /// <summary>Reads an EMAIL property.</summary>
-    private static void Read_EMAIL(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_EMAIL(Contact card, IEnumerable<CardProperty> properties)
     {
         var emailConverter = TypeDescriptor.GetConverter(typeof(Email));
         if (emailConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -143,7 +143,7 @@ internal partial class ContactReader : CardReader<Person>
     }
 
     /// <summary>Reads the TEL property.</summary>
-    private static void Read_TEL(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_TEL(Contact card, IEnumerable<CardProperty> properties)
     {
         var phoneConverter = TypeDescriptor.GetConverter(typeof(Phone));
         if (phoneConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -154,7 +154,7 @@ internal partial class ContactReader : CardReader<Person>
         }
     }
 
-    private static void Read_X_ABDATE(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_X_ABDATE(Contact card, IEnumerable<CardProperty> properties)
     {
         var dateConverter = TypeDescriptor.GetConverter(typeof(Date));
         if (dateConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -165,7 +165,7 @@ internal partial class ContactReader : CardReader<Person>
         }
     }
 
-    private static void Read_X_SOCIALPROFILE(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_X_SOCIALPROFILE(Contact card, IEnumerable<CardProperty> properties)
     {
         var socialProfileConverter = TypeDescriptor.GetConverter(typeof(Profile));
         if (socialProfileConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -176,7 +176,7 @@ internal partial class ContactReader : CardReader<Person>
         }
     }
 
-    private static void Read_X_ABRELATEDNAMES(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_X_ABRELATEDNAMES(Contact card, IEnumerable<CardProperty> properties)
     {
         var relatedPersonConverter = TypeDescriptor.GetConverter(typeof(RelatedPeople));
         if (relatedPersonConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -188,7 +188,7 @@ internal partial class ContactReader : CardReader<Person>
     }
 
     /// <summary>Reads the ORG property.</summary>
-    private static void Read_ORG(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_ORG(Contact card, IEnumerable<CardProperty> properties)
     {
         var orgProperty = properties.FindByName(Constants.Contact.Property.ORG).ThrowIfNull(Constants.Contact.Property.ORG);
         var values = orgProperty.Value?.ToString()?.Split(';');
@@ -198,7 +198,7 @@ internal partial class ContactReader : CardReader<Person>
     }
 
     /// <summary>Reads the PHOTO property.</summary>
-    private static void Read_PHOTO(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_PHOTO(Contact card, IEnumerable<CardProperty> properties)
     {
         var photoConverter = TypeDescriptor.GetConverter(typeof(Photo));
         if (photoConverter.CanConvertFrom(typeof(IEnumerable<CardProperty>)))
@@ -209,72 +209,72 @@ internal partial class ContactReader : CardReader<Person>
         }
     }
 
-    private static void Read_X_PHONETIC_ORG(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_X_PHONETIC_ORG(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.X_PHONETIC_ORG).ThrowIfNull(Constants.Contact.Property.X_PHONETIC_ORG);
         card.PhoneticOrganization = property.ToString();
     }
 
     /// <summary>Reads the FN property.</summary>
-    private static void Read_FN(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_FN(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.FN).ThrowIfNull(Constants.Contact.Property.FN);
         card.FormattedName = property.ToString();
     }
 
     /// <summary>Reads the NICKNAME property.</summary>
-    private static void Read_NICKNAME(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_NICKNAME(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.NICKNAME).ThrowIfNull(Constants.Contact.Property.NICKNAME);
         card.Nickname = property.ToString();
     }
 
     /// <summary>Reads the NOTE property.</summary>
-    private static void Read_NOTE(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_NOTE(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.NOTE).ThrowIfNull(Constants.Contact.Property.NOTE);
         card.Notes = property.ToString();
     }
 
     /// <summary>Reads the PRODID property.</summary>
-    private static void Read_PRODID(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_PRODID(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.PRODID).ThrowIfNull(Constants.Contact.Property.PRODID);
         card.ProductId = property.ToString();
     }
 
     /// <summary>Reads the REV property.</summary>
-    private static void Read_REV(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_REV(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.REV).ThrowIfNull(Constants.Contact.Property.REV);
         card.RevisionDate = DateTimeHelper.ParseDate(property.ToString());
     }
 
     /// <summary>Reads the TITLE property.</summary>
-    private static void Read_TITLE(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_TITLE(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.TITLE).ThrowIfNull(Constants.Contact.Property.TITLE);
         card.Title = property.ToString();
     }
 
     /// <summary>Reads the UID property.</summary>
-    private static void Read_UID(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_UID(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.UID).ThrowIfNull(Constants.Contact.Property.UID);
         card.UniqueId = property.ToString();
     }
 
-    private static void Read_IMPP(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_IMPP(Contact card, IEnumerable<CardProperty> properties)
     {
     }
 
-    private static void Read_X_PHONETIC_FIRST_NAME(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_X_PHONETIC_FIRST_NAME(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.X_PHONETIC_FIRST_NAME).ThrowIfNull(Constants.Contact.Property.X_PHONETIC_FIRST_NAME);
         card.PhoneticFirstName = property.ToString();
     }
 
-    private static void Read_X_PHONETIC_LAST_NAME(Person card, IEnumerable<CardProperty> properties)
+    private static void Read_X_PHONETIC_LAST_NAME(Contact card, IEnumerable<CardProperty> properties)
     {
         var property = properties.FindByName(Constants.Contact.Property.X_PHONETIC_LAST_NAME).ThrowIfNull(Constants.Contact.Property.X_PHONETIC_LAST_NAME);
         card.PhoneticLastName = property.ToString();

@@ -136,14 +136,14 @@ public abstract class BaseClientService : IClientService, IDisposable
         /// Gets or sets the factory for creating <see cref="System.Net.Http.HttpClient" /> instance. If this
         /// property is not set the service uses a new <see cref="Core.HttpClientFactory" /> instance.
         /// </summary>
-        public IHttpClientFactory HttpClientFactory { get; set; }
+        public IHttpClientFactory? HttpClientFactory { get; set; }
 
         /// <summary>
         /// Gets or sets a HTTP client initializer which is able to customize properties on
         /// <see cref="ConfigurableHttpClient" /> and
         /// <see cref="ConfigurableMessageHandler" />.
         /// </summary>
-        public IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; set; }
+        public IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; }
 
         /// <summary>
         /// Get or sets the exponential back-off policy used by the service. Default value is
@@ -173,8 +173,9 @@ public abstract class BaseClientService : IClientService, IDisposable
         public uint MaxUrlLength { get; set; }
 
         /// <summary>Constructs a new initializer with default values.</summary>
-        public Initializer()
+        public Initializer(IConfigurableHttpClientCredentialInitializer httpClientInitializer)
         {
+            HttpClientInitializer = httpClientInitializer;
             Serializer = new XmlObjectSerializer();
             DefaultExponentialBackOffPolicy = ExponentialBackOffPolicy.UnsuccessfulResponse503;
             MaxUrlLength = 2048U;

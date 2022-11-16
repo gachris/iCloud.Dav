@@ -8,7 +8,7 @@ namespace iCloud.Dav.People.Serialization.Write;
 /// <summary>
 ///     Implements the standard Person 2.1 and 3.0 text formats.
 /// </summary>
-internal class ContactGroupWriter : CardWriter<ContactGroup>
+public class ContactGroupWriter : CardWriter<ContactGroup>
 {
     private static readonly List<Action<List<CardProperty>, ContactGroup>> WriteProperties = new()
     {

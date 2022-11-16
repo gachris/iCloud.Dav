@@ -102,14 +102,14 @@ public class ParameterCollection : List<KeyValuePair<string, string?>>
     /// If the value is an enumerable, a parameter pair will be added for each value.
     /// Otherwise the value will be converted into a string using the .ToString() method.
     /// </summary>
-    public static ParameterCollection FromDictionary(IDictionary<string, object> dictionary)
+    public static ParameterCollection FromDictionary(IDictionary<string, object?> dictionary)
     {
         var parameterCollection = new ParameterCollection();
         foreach (var keyValuePair in dictionary)
         {
-            if (keyValuePair.Value is not string && keyValuePair.Value is IEnumerable enumerable)
+            if (keyValuePair.Value is not string and IEnumerable enumerable)
             {
-                foreach (object o in enumerable)
+                foreach (var o in enumerable)
                     parameterCollection.Add(keyValuePair.Key, Utilities.ConvertToString(o));
             }
             else

@@ -6,7 +6,7 @@ namespace iCloud.Dav.People.Serialization.Write;
 ///     Extended options for the <see cref="ContactWriter" /> class.
 /// </summary>
 [Flags]
-internal enum CardStandardWriterOptions
+public enum CardStandardWriterOptions
 {
     /// <summary>No options.</summary>
     None = 0,

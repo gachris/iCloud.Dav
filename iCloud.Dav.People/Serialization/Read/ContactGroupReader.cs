@@ -12,7 +12,7 @@ namespace iCloud.Dav.People.Serialization.Read;
 ///     This is the primary (standard) group format used by most
 ///     applications.
 /// </summary>
-internal class ContactGroupReader : CardReader<ContactGroup>
+public class ContactGroupReader : CardReader<ContactGroup>
 {
     #region Fields/Consts
 

@@ -1,12 +1,12 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.Utils;
+﻿using iCloud.Dav.People.CardDav.Types;
+using iCloud.Dav.People.Utils;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace iCloud.Dav.Calendar.Converters;
+namespace iCloud.Dav.People.Serialization.Converters;
 
-internal sealed class ReminderListConverter : TypeConverter
+internal sealed class ContactGroupListConverter : TypeConverter
 {
     /// <inheritdoc/>
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType == typeof(MultiStatus);
@@ -14,7 +14,7 @@ internal sealed class ReminderListConverter : TypeConverter
     /// <inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
-        if (value is not MultiStatus multiStatus) throw GetConvertFromException(value);
-        return multiStatus.Responses.ToReminderList();
+        if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+        return ((MultiStatus)value).Responses.ToContactGroupList();
     }
 }

@@ -10,7 +10,7 @@ internal sealed class CalendarQuery : IXmlSerializable
 {
     public CompFilter? CompFilter { get; set; }
 
-    public XmlSchema GetSchema() => new XmlSchema();
+    public XmlSchema GetSchema() => new();
 
     public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 

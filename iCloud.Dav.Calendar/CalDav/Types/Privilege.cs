@@ -6,9 +6,5 @@ internal sealed class Privilege
 
     public string NameSpace { get; }
 
-    public Privilege(string name, string nameSpace)
-    {
-        Name = name;
-        NameSpace = nameSpace;
-    }
+    public Privilege(string name, string nameSpace) => (Name, NameSpace) = (name, nameSpace);
 }

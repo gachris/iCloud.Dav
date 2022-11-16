@@ -5,7 +5,7 @@ using System.ComponentModel;
 namespace iCloud.Dav.People.Types;
 
 /// <summary>
-///     An email address in a <see cref="Person" />.
+///     An email address in a <see cref="Contact" />.
 /// </summary>
 /// <remarks>
 ///     Most Person email addresses are Internet email addresses.  However,
@@ -16,7 +16,7 @@ namespace iCloud.Dav.People.Types;
 /// <seealso cref="Types.EmailType" />
 [Serializable]
 [TypeConverter(typeof(EmailConverter))]
-public class Email : ICloneable
+public class Email
 {
     #region Properties
 
@@ -34,6 +34,4 @@ public class Email : ICloneable
     public virtual string? Label { get; set; }
 
     #endregion
-
-    public object Clone() => MemberwiseClone();
 }

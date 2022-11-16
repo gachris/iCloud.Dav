@@ -7,7 +7,7 @@ namespace iCloud.Dav.People.Types;
 /// <summary>A postal address.</summary>
 [Serializable]
 [TypeConverter(typeof(AddressConverter))]
-public class Address : ICloneable
+public class Address
 {
     #region Properties
 
@@ -36,6 +36,4 @@ public class Address : ICloneable
     public virtual string? CountryCode { get; set; }
 
     #endregion
-
-    public object Clone() => MemberwiseClone();
 }

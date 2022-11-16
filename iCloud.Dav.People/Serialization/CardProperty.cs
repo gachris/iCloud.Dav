@@ -6,7 +6,7 @@ using System.Linq;
 namespace iCloud.Dav.People.Serialization;
 
 /// <summary>
-///     A property of a <see cref="Person"/>.
+///     A property of a <see cref="Contact"/>.
 /// </summary>
 public class CardProperty
 {

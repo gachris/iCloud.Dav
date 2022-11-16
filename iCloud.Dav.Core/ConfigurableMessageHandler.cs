@@ -136,7 +136,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         get => _numTries;
         set
         {
-            if (value > 20 || value < 1)
+            if (value is > 20 or < 1)
                 throw new ArgumentOutOfRangeException(nameof(NumTries));
             _numTries = value;
         }
@@ -151,7 +151,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         get => _numRedirects;
         set
         {
-            if (value > 20 || value < 1)
+            if (value is > 20 or < 1)
                 throw new ArgumentOutOfRangeException(nameof(NumRedirects));
             _numRedirects = value;
         }
@@ -227,7 +227,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
                 foreach (IHttpExceptionHandler exceptionHandler in list2)
                 {
                     flag = flag1;
-                    var num = await exceptionHandler.HandleExceptionAsync(new HandleExceptionArgs(request, lastException)
+                    var num = await exceptionHandler.HandleExceptionAsync(new HandleExceptionArgs(request, lastException ?? new())
                     {
                         TotalTries = NumTries,
                         CurrentFailedTry = NumTries - triesRemaining,
@@ -238,10 +238,20 @@ public class ConfigurableMessageHandler : DelegatingHandler
                 if (!flag1)
                 {
                     Logger.Error(lastException, "Exception was thrown while executing a HTTP request and it wasn't handled");
-                    throw lastException;
+                    throw lastException ?? new();
                 }
                 if (loggable)
-                    Logger.Debug("Exception {0} was thrown, but it was handled by an exception handler", lastException?.Message);
+                {
+                    if (lastException is null)
+                    {
+                        Logger.Debug("Exception {0} was thrown, but it was handled by an exception handler");
+
+                    }
+                    else
+                    {
+                        Logger.Debug("Exception {0} was thrown, but it was handled by an exception handler", lastException.Message);
+                    }
+                }
             }
             else if (response.IsSuccessStatusCode)
             {
@@ -271,7 +281,16 @@ public class ConfigurableMessageHandler : DelegatingHandler
                         if (redirectRemaining-- == 0)
                             triesRemaining = 0;
                         if (loggable)
-                            Logger.Debug("Redirect response was handled successfully. Redirect to {0}", response.Headers.Location);
+                        {
+                            if (response.Headers.Location is null)
+                            {
+                                Logger.Debug("Redirect response was handled successfully. Redirect to {0}");
+                            }
+                            else
+                            {
+                                Logger.Debug("Redirect response was handled successfully. Redirect to {0}", response.Headers.Location);
+                            }
+                        }
                     }
                     else
                     {
@@ -288,7 +307,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         if (response == null)
         {
             Logger.Error(lastException, "Exception was thrown while executing a HTTP request");
-            throw lastException;
+            throw lastException ?? new();
         }
         if (!response.IsSuccessStatusCode)
             Logger.Debug("Abnormal response is being returned. Status Code is {0}", response.StatusCode);
@@ -308,7 +327,8 @@ public class ConfigurableMessageHandler : DelegatingHandler
         if (!message.IsRedirectStatusCode() || location == null)
             return false;
         var requestMessage = message.RequestMessage.ThrowIfNull(nameof(message.RequestMessage));
-        requestMessage.RequestUri = new Uri(requestMessage.RequestUri, location);
+        var requestUri = requestMessage.RequestUri.ThrowIfNull(nameof(requestMessage.RequestUri));
+        requestMessage.RequestUri = new Uri(requestUri, location);
         if (message.StatusCode == HttpStatusCode.RedirectMethod)
             requestMessage.Method = HttpMethod.Get;
         requestMessage.Headers.Remove("Authorization");

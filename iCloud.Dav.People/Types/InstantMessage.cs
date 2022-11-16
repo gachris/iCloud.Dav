@@ -2,7 +2,7 @@
 
 namespace iCloud.Dav.People.Types;
 
-/// <summary>A instant message defined in a <see cref="Person"/>.</summary>
+/// <summary>A instant message defined in a <see cref="Contact"/>.</summary>
 /// <seealso cref="InstantMessageType" />
 [Serializable]
 public class InstantMessage : ICloneable

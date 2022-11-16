@@ -19,7 +19,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="iCloud.dav.People_SignAssembly_Key.snk" />
+		<None Remove="iCloud.dav.People_SignAssembly_Key.snk" />
 	</ItemGroup>
 
 	<ItemGroup>

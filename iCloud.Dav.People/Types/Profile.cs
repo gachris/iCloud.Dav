@@ -10,7 +10,7 @@ namespace iCloud.Dav.People.Types;
 /// <seealso cref="Types.ProfileType" />
 [Serializable]
 [TypeConverter(typeof(ProfileConverter))]
-public class Profile : ICloneable
+public class Profile
 {
     #region Properties
 
@@ -28,11 +28,4 @@ public class Profile : ICloneable
     public virtual ProfileType SocialProfileType { get; set; }
 
     #endregion
-
-    public Profile()
-    {
-
-    }
-
-    public object Clone() => MemberwiseClone();
 }

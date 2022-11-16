@@ -20,4 +20,11 @@ public class IdentityCard
     public virtual string Url { get; set; }
 
     #endregion
+
+    internal IdentityCard(string resourceName, string uniqueId, string url)
+    {
+        ResourceName = resourceName;
+        UniqueId = uniqueId;
+        Url = url;
+    }
 }

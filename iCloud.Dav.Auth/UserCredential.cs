@@ -120,8 +120,8 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     /// <returns>Principal home set url.</returns>
     public string GetUri(PrincipalHomeSet principal) => principal switch
     {
-        PrincipalHomeSet.CalendarHomeSet => Token.CalendarPrincipal.CalendarHomeSet,
-        PrincipalHomeSet.AddressBookHomeSet => Token.PeoplePrincipal.AddressBookHomeSet,
+        PrincipalHomeSet.Calendar => Token.CalendarPrincipal.CalendarHomeSet,
+        PrincipalHomeSet.AddressBook => Token.PeoplePrincipal.AddressBookHomeSet,
         _ => throw new ArgumentOutOfRangeException(nameof(PrincipalHomeSet)),
     };
 }

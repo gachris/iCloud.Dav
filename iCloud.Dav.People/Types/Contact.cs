@@ -2,7 +2,6 @@
 using iCloud.Dav.People.Serialization.Converters;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace iCloud.Dav.People.Types;
@@ -29,8 +28,8 @@ namespace iCloud.Dav.People.Types;
 ///     </para>
 /// </remarks>
 [Serializable]
-[TypeConverter(typeof(PersonConverter))]
-public class Person : IDirectResponseSchema, ICloneable
+[TypeConverter(typeof(ContactConverter))]
+public class Contact : IDirectResponseSchema
 {
     #region Properties
 
@@ -166,15 +165,12 @@ public class Person : IDirectResponseSchema, ICloneable
     /// <seealso cref="Email" />
     public virtual List<Email> EmailAddresses { get; }
 
-    /// <summary>The Memberships of the person.</summary>
-    public virtual IReadOnlyCollection<Membership> Memberships { get; internal set; }
-
     #endregion
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Person" /> class.
+    ///     Initializes a new instance of the <see cref="Contact" /> class.
     /// </summary>
-    public Person()
+    public Contact()
     {
         Addresses = new List<Address>();
         EmailAddresses = new List<Email>();
@@ -183,8 +179,5 @@ public class Person : IDirectResponseSchema, ICloneable
         Profiles = new List<Profile>();
         RelatedPeople = new List<RelatedPeople>();
         Dates = new List<Date>();
-        Memberships = new ReadOnlyCollection<Membership>(new List<Membership>());
     }
-
-    public object Clone() => MemberwiseClone();
 }

@@ -7,16 +7,12 @@ public class CalendarService : BaseClientService
 {
     public const string Version = "v1";
 
-    public CalendarService() : this(new Initializer())
-    {
-    }
-
     public CalendarService(Initializer initializer) : base(initializer)
     {
         Events = new EventsResource(this);
         Reminders = new RemindersResource(this);
         Calendars = new CalendarsResource(this);
-        BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.CalendarHomeSet);
+        BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar);
     }
 
     public override string Name => "calendar";

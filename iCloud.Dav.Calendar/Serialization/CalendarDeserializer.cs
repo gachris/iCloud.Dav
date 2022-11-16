@@ -161,7 +161,7 @@ public class CalendarDeserializer
                 continue;
             }
 
-            if (nextLine[0] == ' ' || nextLine[0] == '\t')
+            if (nextLine[0] is ' ' or '\t')
             {
                 currentLine.Append(nextLine, 1, nextLine.Length - 1);
                 continue;

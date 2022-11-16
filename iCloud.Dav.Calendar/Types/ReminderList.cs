@@ -1,5 +1,5 @@
 ﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.Converters;
+using iCloud.Dav.Calendar.Serialization.Converters;
 using iCloud.Dav.Core.Serialization;
 using System.Collections;
 using System.Collections.Generic;

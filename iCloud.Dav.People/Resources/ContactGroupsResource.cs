@@ -44,7 +44,7 @@ public class ContactGroupsResource
     public virtual DeleteRequest Delete(string uniqueId, string resourceName) => new(_service, uniqueId, resourceName);
 
     /// <summary>Returns the contact groups on the user's contact group list.</summary>
-    public class ListRequest : PeopleBaseServiceRequest<ContactGroupsList>
+    public class ListRequest : PeopleBaseServiceRequest<ContactGroupList>
     {
         private object? _body;
 

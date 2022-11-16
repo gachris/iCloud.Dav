@@ -11,7 +11,7 @@ namespace iCloud.Dav.Core.Utils;
 public static class Utilities
 {
     /// <summary>Returns the version of the core library.</summary>
-    public static string GetLibraryVersion() => Regex.Match(typeof(Utilities).Assembly.FullName, "Version=([\\d\\.]+)").Groups[1].ToString();
+    public static string GetLibraryVersion() => Regex.Match(input: typeof(Utilities).Assembly.FullName ?? string.Empty, "Version=([\\d\\.]+)").Groups[1].ToString();
 
     /// <summary>
     /// A ICloud.Api utility method for throwing an <see cref="ArgumentNullException" /> if the object is

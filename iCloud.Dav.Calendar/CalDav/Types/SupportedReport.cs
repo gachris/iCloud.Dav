@@ -6,9 +6,5 @@ internal sealed class SupportedReport
 
     public string NameSpace { get; }
 
-    public SupportedReport(string name, string nameSpace)
-    {
-        Name = name;
-        NameSpace = nameSpace;
-    }
+    public SupportedReport(string name, string nameSpace) => (Name, NameSpace) = (name, nameSpace);
 }

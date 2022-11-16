@@ -21,7 +21,7 @@ namespace iCloud.Dav.People.Serialization.Read;
 ///         populate this collection as the Person data is being parsed.
 ///     </para>
 /// </remarks>
-internal abstract partial class CardReader<T>
+public abstract partial class CardReader<T>
 {
     /// <summary>
     ///     Stores the warnings issued by the implementor
@@ -41,7 +41,7 @@ internal abstract partial class CardReader<T>
     ///     a Person in the format expected by the implementor.
     /// </param>
     /// <returns>
-    ///     An initialized <see cref="Person" /> object.
+    ///     An initialized <see cref="Contact" /> object.
     /// </returns>
     public T Read(TextReader reader)
     {

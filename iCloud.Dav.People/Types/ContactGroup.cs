@@ -70,11 +70,6 @@ public class ContactGroup : IDirectResponseSchema
     /// </summary>
     public virtual string? AddressBookServer { get; internal set; }
 
-    /// <summary>
-    /// The Url of the ContactGroup.
-    /// </summary>
-    public virtual string? Url { get; internal set; }
-
     #endregion
 
     /// <summary>

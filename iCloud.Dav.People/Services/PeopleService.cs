@@ -7,16 +7,12 @@ public class PeopleService : BaseClientService
 {
     public const string Version = "v1";
 
-    public PeopleService() : this(new Initializer())
-    {
-    }
-
     public PeopleService(Initializer initializer) : base(initializer)
     {
         People = new PeopleResource(this);
         ContactGroups = new ContactGroupsResource(this);
         IdentityCard = new IdentityCardResource(this);
-        BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBookHomeSet);
+        BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook);
     }
 
     public override string Name => "people";

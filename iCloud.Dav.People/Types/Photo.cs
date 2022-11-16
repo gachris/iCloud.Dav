@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace iCloud.Dav.People.Types;
 
-/// <summary>A photo embedded in a <see cref="Person"/>.</summary>
+/// <summary>A photo embedded in a <see cref="Contact"/>.</summary>
 /// <remarks>
 ///     <para>
 ///         You must specify the photo using a path, a byte array.
