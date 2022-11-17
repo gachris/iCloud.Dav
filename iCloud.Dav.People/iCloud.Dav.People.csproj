@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
+		<ProjectReference Include="..\iCloud.vCard.Net\iCloud.vCard.Net.csproj" />
 	</ItemGroup>
 
 </Project>

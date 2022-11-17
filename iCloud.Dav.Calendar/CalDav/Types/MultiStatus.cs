@@ -79,6 +79,8 @@ internal sealed class MultiStatus : IXmlSerializable
                                                                                calendar_data.Name.NamespaceName,
                                                                                calendar_data.Value) : null;
 
+        var syncToken = propElements?.FirstOrDefault(x => x.Name.LocalName == "sync-token")?.Value;
+
         return new(href,
                    displayname,
                    calendar_color,
@@ -87,6 +89,7 @@ internal sealed class MultiStatus : IXmlSerializable
                    calendar_dataAttribute,
                    privileges,
                    reports,
-                   calendar_components);
+                   calendar_components,
+                   syncToken);
     }
 }

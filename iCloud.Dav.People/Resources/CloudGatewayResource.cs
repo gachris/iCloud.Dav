@@ -4,32 +4,44 @@ using System;
 
 namespace iCloud.Dav.People.Resources;
 
-/// <summary>The "people" collection of methods.</summary>
+/// <summary>
+/// The "people" collection of methods.
+/// </summary>
 public class CloudGatewayResource
 {
-    /// <summary>The service which this resource belongs to.</summary>
+    /// <summary>
+    /// The service which this resource belongs to.
+    /// </summary>
     private readonly IClientService _service;
 
-    /// <summary>Constructs a new resource.</summary>
+    /// <summary>
+    /// Constructs a new resource.
+    /// </summary>
     public CloudGatewayResource(IClientService service) => _service = service;
 
-    /// <summary>Returns a people from the user's people list.</summary>
+    /// <summary>
+    /// Returns contact photo from gateway.
+    /// </summary>
     /// <param name="uri">Uri to retrieve contact photo.</param>
     public virtual GetContactPhotoRequest GetContactPhoto(Uri uri) => new(_service, uri);
 
-    /// <summary>Returns a people from the user's people list.</summary>
+    /// <summary>
+    /// Returns contact photo from gateway.
+    /// </summary>
     public class GetContactPhotoRequest : PeopleBaseServiceRequest<byte[]>
     {
-        /// <summary>Constructs a new Get request.</summary>
+        /// <summary>
+        /// Constructs a new Get request.
+        /// </summary>
         public GetContactPhotoRequest(IClientService service, Uri uri) : base(service) => RestPath = uri.AbsolutePath;
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "get";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => Constants.Get;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath { get; }
     }
 }

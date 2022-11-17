@@ -1,45 +1,57 @@
 ﻿using iCloud.Dav.Core;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Requests;
-using iCloud.Dav.People.Types;
+using iCloud.Dav.People.Responses;
 
 namespace iCloud.Dav.People.Resources;
 
-/// <summary>The "IdentityCard" collection of methods.</summary>
+/// <summary>
+/// The identity card collection of methods.
+/// </summary>
 public class IdentityCardResource
 {
-    /// <summary>The service which this resource belongs to.</summary>
+    /// <summary>
+    /// The service which this resource belongs to.
+    /// </summary>
     private readonly IClientService _service;
 
-    /// <summary>Constructs a new resource.</summary>
+    /// <summary>
+    /// Constructs a new resource.
+    /// </summary>
     public IdentityCardResource(IClientService service) => _service = service;
 
-    /// <summary>Returns the identity cards on the user's identity card list.</summary>
+    /// <summary>
+    /// Returns the identity cards on the user's identity card list.
+    /// </summary>
     public virtual ListRequest List() => new(_service);
 
-    /// <summary>Returns the identity cards on the user's identity card list.</summary>
-    public class ListRequest : PeopleBaseServiceRequest<IdentityCardList>
+    /// <summary>
+    /// Returns the identity cards on the user's identity card list.
+    /// </summary>
+    public class ListRequest : PeopleBaseServiceRequest<IdentityCardResponse>
     {
         private object? _body;
 
-        /// <summary>Constructs a new Get request.</summary>
+        /// <summary>
+        /// Constructs a new Get request.
+        /// </summary>
         public ListRequest(IClientService service) : base(service)
         {
         }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "list";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => Constants.Propfind;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => string.Empty;
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        ///<summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody() => _body ??= new PropFind();
     }
 }

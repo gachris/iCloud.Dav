@@ -21,6 +21,8 @@ internal sealed class Response
     public IReadOnlyList<SupportedReport> SupportedReportSet { get; }
 
     public IReadOnlyList<CalendarComponent> SupportedCalendarComponentSet { get; }
+    
+    public string? SyncToken { get; }
 
     public Response(
         string href,
@@ -31,8 +33,8 @@ internal sealed class Response
         Attribute? calendarData,
         IReadOnlyList<Privilege> currentUserPrivilegeSet,
         IReadOnlyList<SupportedReport> supportedReportSet,
-        IReadOnlyList<CalendarComponent> supportedCalendarComponentSet
-        )
+        IReadOnlyList<CalendarComponent> supportedCalendarComponentSet,
+        string? syncToken)
     {
         Href = href;
         DisplayName = displayName;
@@ -43,5 +45,6 @@ internal sealed class Response
         CurrentUserPrivilegeSet = currentUserPrivilegeSet;
         SupportedReportSet = supportedReportSet;
         SupportedCalendarComponentSet = supportedCalendarComponentSet;
+        SyncToken = syncToken;
     }
 }

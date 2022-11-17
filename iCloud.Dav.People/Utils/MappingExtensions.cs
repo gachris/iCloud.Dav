@@ -1,12 +1,14 @@
 ﻿using iCloud.Dav.Core.Utils;
 using iCloud.Dav.People.CardDav.Types;
-using iCloud.Dav.People.Serialization.Read;
+using iCloud.Dav.People.Responses;
 using iCloud.Dav.People.Types;
+using iCloud.vCard.Net.Serialization.Read;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using vCardLib.Deserializers;
 
 namespace iCloud.Dav.People.Utils;
 
@@ -15,7 +17,7 @@ internal static class MappingExtensions
     private static readonly ContactReader _contactReader = new();
     private static readonly ContactGroupReader _contactGroupReader = new();
 
-    public static IdentityCardList ToIdentityCardList(this IEnumerable<Response> responses) =>
+    public static IdentityCardResponse ToIdentityCardList(this IEnumerable<Response> responses) =>
         new(responses.Where(response => response.Href.Split('/', StringSplitOptions.RemoveEmptyEntries).Length == 3).Select(ToIdentityCard));
 
     public static IdentityCard ToIdentityCard(this Response response)
@@ -24,7 +26,7 @@ internal static class MappingExtensions
         return new(resource, resource, response.Href.ThrowIfNull(nameof(response.Href)));
     }
 
-    public static ContactGroupList ToContactGroupList(this IEnumerable<Response> responses) => new(responses.Select(ToContactGroup));
+    public static ContactGroupResponse ToContactGroupList(this IEnumerable<Response> responses) => new(responses.Select(ToContactGroup));
 
     public static ContactGroup ToContactGroup(this Response response)
     {
@@ -41,8 +43,7 @@ internal static class MappingExtensions
         return contactGroup;
     }
 
-    public static ContactList ToContactList(this IEnumerable<Response> responses) =>
-        new(responses.Where(response => !response.AddressData.Value.Contains("X-ADDRESSBOOKSERVER-KIND:group")).Select(ToContact));
+    public static ContactResponse ToContactList(this IEnumerable<Response> responses) => new(responses.Select(ToContact));
 
     public static Contact ToContact(this Response response)
     {

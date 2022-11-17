@@ -1,6 +1,6 @@
 ﻿using iCloud.Dav.Calendar.CalDav.Types;
+using iCloud.Dav.Calendar.Data;
 using iCloud.Dav.Calendar.Serialization;
-using iCloud.Dav.Calendar.Types;
 using iCloud.Dav.Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -15,20 +15,21 @@ internal static class MappingExtensions
     public static CalendarList ToCalendarList(this IEnumerable<Response> responses)
     {
         if (responses is null) throw new ArgumentNullException(nameof(responses));
-        return new CalendarList(responses.Select(ToCalendar));
+        return new(responses.Select(ToCalendar));
     }
 
-    public static Types.Calendar ToCalendar(this Response response)
+    public static Data.Calendar ToCalendar(this Response response)
     {
         if (response is null) throw new ArgumentNullException(nameof(response));
         var id = response.Href.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
-        var calendarListEntry = new Types.Calendar()
+        var calendarListEntry = new Data.Calendar()
         {
             Uid = id,
             ETag = response.Etag,
             CTag = response.Ctag?.Value,
             Color = response.CalendarColor,
-            Summary = response.DisplayName ?? id
+            Summary = response.DisplayName ?? id,
+            SyncToken = response.SyncToken
         };
         calendarListEntry.Privileges.AddRange(response.CurrentUserPrivilegeSet.Select(privilege => privilege.Name));
         calendarListEntry.SupportedReports.AddRange(response.SupportedReportSet.Select(supportedReport => supportedReport.Name));
@@ -36,10 +37,10 @@ internal static class MappingExtensions
         return calendarListEntry;
     }
 
-    public static EventList ToEventList(this IEnumerable<Response> responses)
+    public static Events ToEventList(this IEnumerable<Response> responses)
     {
         if (responses is null) throw new ArgumentNullException(nameof(responses));
-        return new EventList(responses.Where(x => x.CalendarData is not null).Select(ToEvent));
+        return new Events(responses.Where(x => x.CalendarData is not null).Select(ToEvent));
     }
 
     public static Event ToEvent(this Response response)
@@ -60,10 +61,10 @@ internal static class MappingExtensions
         return calendarEvent;
     }
 
-    public static ReminderList ToReminderList(this IEnumerable<Response> responses)
+    public static Reminders ToReminderList(this IEnumerable<Response> responses)
     {
         if (responses is null) throw new ArgumentNullException(nameof(responses));
-        return new ReminderList(responses.Where(x => x.CalendarData is not null).Select(ToReminder));
+        return new Reminders(responses.Where(x => x.CalendarData is not null).Select(ToReminder));
     }
 
     public static Reminder ToReminder(this Response response)

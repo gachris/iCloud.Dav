@@ -13,7 +13,7 @@ internal sealed class AddressBookQuery : IXmlSerializable
 {
     public Filters? Filter { get; set; }
 
-    public XmlSchema GetSchema() => new XmlSchema();
+    public XmlSchema GetSchema() => new();
 
     public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
@@ -33,6 +33,12 @@ internal sealed class AddressBookQuery : IXmlSerializable
 
             writer.WriteStartElement("prop-filter", "urn:ietf:params:xml:ns:carddav");
             writer.WriteAttributeString("name", Filter.Name);
+
+            if (Filter.IsNotDefined)
+            {
+                writer.WriteStartElement("is-not-defined", "urn:ietf:params:xml:ns:carddav");
+                writer.WriteEndElement();
+            }
 
             Filter.TextMatches.ForEach(textMatche =>
             {
@@ -55,6 +61,8 @@ internal sealed class Filters
     public string? Name { get; set; }
 
     public string? Type { get; set; }
+
+    public bool IsNotDefined { get; set; }
 
     public IList<TextMatch> TextMatches { get; }
 

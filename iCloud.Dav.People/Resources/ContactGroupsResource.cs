@@ -3,71 +3,94 @@ using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Utils;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Requests;
-using iCloud.Dav.People.Serialization.Write;
+using iCloud.Dav.People.Responses;
 using iCloud.Dav.People.Types;
+using iCloud.vCard.Net.Serialization.Write;
 using System.IO;
 using System.Text;
 
 namespace iCloud.Dav.People.Resources;
 
-/// <summary>The "ContactGroups" collection of methods.</summary>
+/// <summary>
+/// The "ContactGroups" collection of methods.
+/// </summary>
 public class ContactGroupsResource
 {
-    /// <summary>The service which this resource belongs to.</summary>
+    /// <summary>
+    /// The service which this resource belongs to.
+    /// </summary>
     private readonly IClientService _service;
 
-    /// <summary>Constructs a new resource.</summary>
+    /// <summary>
+    /// Constructs a new resource.
+    /// </summary>
     public ContactGroupsResource(IClientService service) => _service = service;
 
-    /// <summary>Returns the Contact Groups on the user's Contact Group list.</summary>
+    /// <summary>
+    /// Returns the Contact Groups on the user's Contact Group list.
+    /// </summary>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
     public virtual ListRequest List(string resourceName) => new(_service, resourceName);
 
-    /// <summary>Returns a contact group from the user's contact group list.</summary>
+    /// <summary>
+    /// Returns a contact group from the user's contact group list.
+    /// </summary>
     /// <param name="uniqueId">Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
     public virtual GetRequest Get(string uniqueId, string resourceName) => new(_service, uniqueId, resourceName);
 
-    /// <summary>Inserts Contact Group into the user's contact group list.</summary>
+    /// <summary>
+    /// Inserts Contact Group into the user's contact group list.
+    /// </summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
     public virtual InsertRequest Insert(ContactGroup body, string resourceName) => new(_service, body, resourceName);
 
-    /// <summary>Updates an existing contact group on the user's contact group list.</summary>
+    /// <summary>
+    /// Updates an existing contact group on the user's contact group list.
+    /// </summary>
     /// <param name="body">The body of the request.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
     public virtual UpdateRequest Update(ContactGroup body, string resourceName) => new(_service, body, resourceName);
 
-    /// <summary>Removes a contact group from the user's contact group list.</summary>
+    /// <summary>
+    /// Removes a contact group from the user's contact group list.
+    /// </summary>
     /// <param name="uniqueId">Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.</param>
     /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
     public virtual DeleteRequest Delete(string uniqueId, string resourceName) => new(_service, uniqueId, resourceName);
 
-    /// <summary>Returns the contact groups on the user's contact group list.</summary>
-    public class ListRequest : PeopleBaseServiceRequest<ContactGroupList>
+    /// <summary>
+    /// Returns the contact groups on the user's contact group list.
+    /// </summary>
+    public class ListRequest : PeopleBaseServiceRequest<ContactGroupResponse>
     {
         private object? _body;
 
-        /// <summary>Constructs a new List request.</summary>
+        /// <summary>
+        /// Constructs a new List request.
+        /// </summary>
         public ListRequest(IClientService service, string resourceName) : base(service) => ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
 
-        /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
+        /// <summary>
+        /// Resource Name. To retrieve resource names call the identityCard.list method.
+        /// </summary>
         [RequestParameter("resourceName", RequestParameterType.Path)]
         public virtual string ResourceName { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => Constants.Report;
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => Constants.Report;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{resourceName}";
 
-        ///<summary>Gets the depth.</summary>
+        /// <inheritdoc/>
         public override string Depth => "1";
 
-        ///<summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody()
         {
             if (_body is null)
@@ -85,7 +108,7 @@ public class ContactGroupsResource
                 {
                     Collation = "i;unicode-casemap",
                     NegateCondition = "no",
-                    MatchType = "contains",
+                    MatchType = "equals",
                     SearchText = "group"
                 });
 
@@ -94,7 +117,7 @@ public class ContactGroupsResource
             return _body;
         }
 
-        /// <summary>Initializes List parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
@@ -103,34 +126,42 @@ public class ContactGroupsResource
         }
     }
 
-    /// <summary>Returns a contact group from the user's contact group list.</summary>
+    /// <summary>
+    /// Returns a contact group from the user's contact group list.
+    /// </summary>
     public class GetRequest : PeopleBaseServiceRequest<ContactGroup>
     {
-        /// <summary>Constructs a new Get request.</summary>
+        /// <summary>
+        /// Constructs a new Get request.
+        /// </summary>
         public GetRequest(IClientService service, string uniqueId, string resourceName) : base(service)
         {
             UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
         }
 
-        /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
+        /// <summary>
+        /// Resource Name. To retrieve resource names call the identityCard.list method.
+        /// </summary>
         [RequestParameter("resourceName", RequestParameterType.Path)]
         public virtual string ResourceName { get; }
 
-        /// <summary>Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.</summary>
+        /// <summary>
+        /// Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.
+        /// </summary>
         [RequestParameter("uniqueId", RequestParameterType.Path)]
         public virtual string UniqueId { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "get";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => Constants.Get;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
 
-        /// <summary>Initializes Get parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
@@ -140,44 +171,54 @@ public class ContactGroupsResource
         }
     }
 
-    /// <summary>Inserts an existing contact group into the user's contact group list.</summary>
+    /// <summary>
+    /// Inserts an existing contact group into the user's contact group list.
+    /// </summary>
     public class InsertRequest : PeopleBaseServiceRequest<VoidResponse>
     {
         private object? _body;
 
-        /// <summary>Constructs a new Insert request.</summary>
+        /// <summary>
+        /// Constructs a new Insert request.
+        /// </summary>
         public InsertRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
         {
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             Body = body.ThrowIfNull(nameof(body));
-            UniqueId = body.UniqueId.ThrowIfNull(nameof(body.UniqueId));
+            UniqueId = body.Uid.ThrowIfNull(nameof(body.Uid));
             ETagAction = ETagAction.IfMatch;
         }
 
-        /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
+        /// <summary>
+        /// Resource Name. To retrieve resource names call the identityCard.list method.
+        /// </summary>
         [RequestParameter("resourceName", RequestParameterType.Path)]
         public virtual string ResourceName { get; }
 
-        /// <summary>Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.</summary>
+        /// <summary>
+        /// Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.
+        /// </summary>
         [RequestParameter("uniqueId", RequestParameterType.Path)]
         public virtual string UniqueId { get; }
 
-        /// <summary>Gets the body of this request.</summary>
+        /// <summary>
+        /// Gets the body of this request.
+        /// </summary>
         private ContactGroup Body { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "insert";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => Constants.Put;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
 
-        ///<summary>Gets the Content-Type.</summary>
+        /// <inheritdoc/>
         public override string ContentType => Constants.TEXT_VCARD;
 
-        ///<summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody()
         {
             if (_body is null)
@@ -195,7 +236,7 @@ public class ContactGroupsResource
             return _body;
         }
 
-        /// <summary>Initializes Insert parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
@@ -205,44 +246,54 @@ public class ContactGroupsResource
         }
     }
 
-    /// <summary>Updates an existing contact group on the user's contact group list.</summary>
+    /// <summary>
+    /// Updates an existing contact group on the user's contact group list.
+    /// </summary>
     public class UpdateRequest : PeopleBaseServiceRequest<VoidResponse>
     {
         private object? _body;
 
-        /// <summary>Constructs a new Update request.</summary>
+        /// <summary>
+        /// Constructs a new Update request.
+        /// </summary>
         public UpdateRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
-            UniqueId = body.UniqueId.ThrowIfNullOrEmpty(nameof(ContactGroup.UniqueId));
+            UniqueId = body.Uid.ThrowIfNullOrEmpty(nameof(ContactGroup.Uid));
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             ETagAction = ETagAction.IfMatch;
         }
 
-        /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
+        /// <summary>
+        /// Resource Name. To retrieve resource names call the identityCard.list method.
+        /// </summary>
         [RequestParameter("resourceName", RequestParameterType.Path)]
         public virtual string ResourceName { get; }
 
-        /// <summary>Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.</summary>
+        /// <summary>
+        /// Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.
+        /// </summary>
         [RequestParameter("uniqueId", RequestParameterType.Path)]
         public virtual string UniqueId { get; }
 
-        /// <summary>Gets the body of this request.</summary>
+        /// <summary>
+        /// Gets the body of this request.
+        /// </summary>
         private ContactGroup Body { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "update";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => Constants.Put;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
 
-        ///<summary>Gets the Content-Type.</summary>
+        /// <inheritdoc/>
         public override string ContentType => Constants.TEXT_VCARD;
 
-        ///<summary>Returns the body of the request.</summary>
+        /// <inheritdoc/>
         protected override object GetBody()
         {
             if (_body is null)
@@ -260,7 +311,7 @@ public class ContactGroupsResource
             return _body;
         }
 
-        /// <summary>Initializes Update parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();
@@ -270,34 +321,42 @@ public class ContactGroupsResource
         }
     }
 
-    /// <summary>Removes a contact group from the user's contact group list.</summary>
+    /// <summary>
+    /// Removes a contact group from the user's contact group list.
+    /// </summary>
     public class DeleteRequest : PeopleBaseServiceRequest<VoidResponse>
     {
-        /// <summary>Constructs a new Delete request.</summary>
+        /// <summary>
+        /// Constructs a new Delete request.
+        /// </summary>
         public DeleteRequest(IClientService service, string uniqueId, string resourceName) : base(service)
         {
             UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
             ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(uniqueId));
         }
 
-        /// <summary>Resource Name. To retrieve resource names call the identityCard.list method.</summary>
+        /// <summary>
+        /// Resource Name. To retrieve resource names call the identityCard.list method.
+        /// </summary>
         [RequestParameter("resourceName", RequestParameterType.Path)]
         public virtual string ResourceName { get; }
 
-        /// <summary>Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.</summary>
+        /// <summary>
+        /// Contact Group identifier. To retrieve contact group IDs call the contactGroups.list method.
+        /// </summary>
         [RequestParameter("uniqueId", RequestParameterType.Path)]
         public virtual string UniqueId { get; }
 
-        ///<summary>Gets the method name.</summary>
+        /// <inheritdoc/>
         public override string MethodName => "delete";
 
-        ///<summary>Gets the HTTP method.</summary>
+        /// <inheritdoc/>
         public override string HttpMethod => Constants.Delete;
 
-        ///<summary>Gets the REST path.</summary>
+        /// <inheritdoc/>
         public override string RestPath => "{resourceName}/{uniqueId}.vcf";
 
-        /// <summary>Initializes Delete parameter list.</summary>
+        /// <inheritdoc/>
         protected override void InitParameters()
         {
             base.InitParameters();

@@ -19,6 +19,9 @@ internal sealed class CalendarQuery : IXmlSerializable
         writer.WriteStartElement("prop", "DAV:");
         writer.WriteElementString("calendar-data", "urn:ietf:params:xml:ns:caldav", null);
         writer.WriteElementString("getetag", "DAV:", null);
+        writer.WriteElementString("calendar-color", "http://apple.com/ns/ical/", null);
+        writer.WriteElementString("calendar-order", "http://apple.com/ns/ical/", null);
+        writer.WriteElementString("sync-token", "DAV:", null);
         writer.WriteEndElement();
 
         if (CompFilter is not null)

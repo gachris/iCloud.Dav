@@ -3,10 +3,16 @@ using iCloud.Dav.Core;
 
 namespace iCloud.Dav.Calendar.Services;
 
+/// <summary>
+/// The calendar service collection of resources.
+/// </summary>
 public class CalendarService : BaseClientService
 {
     public const string Version = "v1";
 
+    /// <summary>
+    /// Constructs a new service.
+    /// </summary>
     public CalendarService(Initializer initializer) : base(initializer)
     {
         Events = new EventsResource(this);
@@ -15,16 +21,24 @@ public class CalendarService : BaseClientService
         BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar);
     }
 
+    /// <inheritdoc/>
     public override string Name => "calendar";
 
+    /// <inheritdoc/>
     public override string BasePath { get; }
 
-    /// <summary>Gets the Events resource.</summary>
+    /// <summary>
+    /// Gets the Events resource.
+    /// </summary>
     public virtual EventsResource Events { get; }
 
-    /// <summary>Gets the Reminders resource.</summary>
+    /// <summary>
+    /// Gets the Reminders resource.
+    /// </summary>
     public virtual RemindersResource Reminders { get; }
 
-    /// <summary>Gets the Calendars resource.</summary>
+    /// <summary>
+    /// Gets the Calendars resource.
+    /// </summary>
     public virtual CalendarsResource Calendars { get; }
 }
