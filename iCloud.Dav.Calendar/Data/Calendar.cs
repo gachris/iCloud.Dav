@@ -37,6 +37,6 @@ public class Calendar : IDirectResponseSchema
     public virtual List<string> SupportedCalendarComponents { get; }
 
     public virtual VTimeZone? TimeZone { get; set; }
-    
+
     public string? SyncToken { get; internal set; }
 }

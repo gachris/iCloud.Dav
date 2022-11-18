@@ -22,8 +22,4 @@
 		<None Remove="iCloud.vCard.Net_SignAssembly_Key.snk" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="vCardLib.dll" Version="4.0.3" />
-	</ItemGroup>
-
 </Project>

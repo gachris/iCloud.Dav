@@ -2,21 +2,17 @@
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Responses;
 using iCloud.Dav.People.Types;
-using iCloud.vCard.Net.Serialization.Read;
+using iCloud.vCard.Net.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using vCardLib.Deserializers;
 
 namespace iCloud.Dav.People.Utils;
 
 internal static class MappingExtensions
 {
-    private static readonly ContactReader _contactReader = new();
-    private static readonly ContactGroupReader _contactGroupReader = new();
-
     public static IdentityCardResponse ToIdentityCardList(this IEnumerable<Response> responses) =>
         new(responses.Where(response => response.Href.Split('/', StringSplitOptions.RemoveEmptyEntries).Length == 3).Select(ToIdentityCard));
 
@@ -35,12 +31,11 @@ internal static class MappingExtensions
         return contactGroup;
     }
 
-    public static ContactGroup ToContactGroup(this string text)
+    public static ContactGroup ToContactGroup(this string data)
     {
-        var contactGroup = new ContactGroup();
-        var bytes = Encoding.UTF8.GetBytes(text);
-        _contactGroupReader.ReadInto(contactGroup, new StringReader(Encoding.UTF8.GetString(bytes)));
-        return contactGroup;
+        var bytes = Encoding.UTF8.GetBytes(data);
+        using var stream = new MemoryStream(bytes);
+        return CardDeserializer.Default.Deserialize<ContactGroup>(new StreamReader(stream, Encoding.UTF8));
     }
 
     public static ContactResponse ToContactList(this IEnumerable<Response> responses) => new(responses.Select(ToContact));
@@ -52,14 +47,10 @@ internal static class MappingExtensions
         return contact;
     }
 
-    public static Contact ToContact(this string text)
+    public static Contact ToContact(this string data)
     {
-        var contact = new Contact();
-        text = text.Replace($"{Environment.NewLine} ", string.Empty);
-
-        using var stringReader = new StringReader(text);
-        _contactReader.ReadInto(contact, stringReader);
-
-        return contact;
+        var bytes = Encoding.UTF8.GetBytes(data);
+        using var stream = new MemoryStream(bytes);
+        return CardDeserializer.Default.Deserialize<Contact>(new StreamReader(stream, Encoding.UTF8));
     }
 }

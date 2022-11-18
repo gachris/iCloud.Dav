@@ -1,4 +1,4 @@
-﻿using iCloud.vCard.Net.Types;
+﻿using iCloud.vCard.Net.Data;
 using iCloud.vCard.Net.Utils;
 
 namespace iCloud.vCard.Net.Serialization.Mapping;

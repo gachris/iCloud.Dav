@@ -8,7 +8,7 @@ namespace iCloud.Dav.People.Types;
 /// <inheritdoc/>
 [Serializable]
 [TypeConverter(typeof(ContactConverter))]
-public class Contact : vCard.Net.Types.Contact, IDirectResponseSchema
+public class Contact : vCard.Net.Data.Contact, IDirectResponseSchema
 {
     /// <inheritdoc/>
     public virtual string? ETag { get; set; }

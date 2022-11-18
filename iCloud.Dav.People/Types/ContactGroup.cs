@@ -8,7 +8,7 @@ namespace iCloud.Dav.People.Types;
 /// <inheritdoc/>
 [Serializable]
 [TypeConverter(typeof(ContactGroupConverter))]
-public class ContactGroup : vCard.Net.Types.ContactGroup, IDirectResponseSchema
+public class ContactGroup : vCard.Net.Data.ContactGroup, IDirectResponseSchema
 {
     /// <inheritdoc/>
     public virtual string? ETag { get; set; }

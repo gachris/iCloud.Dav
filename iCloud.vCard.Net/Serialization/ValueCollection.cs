@@ -1,5 +1,4 @@
-﻿using iCloud.vCard.Net.Utils;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 
 namespace iCloud.vCard.Net.Serialization;
 
@@ -28,16 +27,4 @@ public class ValueCollection : StringCollection
     ///     writing the collection as a string.
     /// </param>
     public ValueCollection(char separator) => Separator = separator;
-
-    /// <summary>
-    ///     Adds the contents of a StringCollection to the collection.
-    /// </summary>
-    /// <param name="values">
-    ///     An initialized StringCollection containing zero or more values.
-    /// </param>
-    public void Add(StringCollection values)
-    {
-        values.ThrowIfNull(nameof(values));
-        values.ForEach<string>(value => Add(value));
-    }
 }

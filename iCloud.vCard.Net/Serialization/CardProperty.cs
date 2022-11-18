@@ -1,4 +1,4 @@
-﻿using iCloud.vCard.Net.Types;
+﻿using iCloud.vCard.Net.Data;
 using iCloud.vCard.Net.Utils;
 using System;
 using System.Linq;
@@ -113,7 +113,7 @@ public class CardProperty
 
     public Subproperty? FindByName(string name) => Subproperties?.FirstOrDefault(x => x.Name == name);
 
-    public static CardProperty Create(string name, ValueCollection values) => new CardProperty(name, values);
+    public static CardProperty Create(string name, ValueCollection values) => new(name, values);
 
-    public override string ToString() => Value?.ToString() ?? string.Empty;
+    public override string? ToString() => Value?.ToString();
 }

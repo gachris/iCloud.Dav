@@ -21,7 +21,7 @@ internal sealed class Response
     public IReadOnlyList<SupportedReport> SupportedReportSet { get; }
 
     public IReadOnlyList<CalendarComponent> SupportedCalendarComponentSet { get; }
-    
+
     public string? SyncToken { get; }
 
     public Response(

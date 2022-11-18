@@ -5,8 +5,7 @@ using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.Responses;
 using iCloud.Dav.People.Types;
-using iCloud.vCard.Net.Serialization.Write;
-using System.IO;
+using iCloud.vCard.Net.Serialization;
 using System.Text;
 
 namespace iCloud.Dav.People.Resources;
@@ -219,22 +218,7 @@ public class ContactGroupsResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody()
-        {
-            if (_body is null)
-            {
-                using var stream = new MemoryStream();
-                using var textWriter = new StreamWriter(stream);
-                var writer = new ContactGroupWriter();
-                writer.Write(Body, textWriter, Encoding.UTF8.WebName);
-                textWriter.Flush();
-
-                stream.Seek(0, SeekOrigin.Begin);
-                using var streamReader = new StreamReader(stream);
-                _body = streamReader.ReadToEnd();
-            }
-            return _body;
-        }
+        protected override object GetBody() => _body ??= CardSerializer.Default.SerializeToString(Body, Encoding.UTF8.WebName);
 
         /// <inheritdoc/>
         protected override void InitParameters()
@@ -294,22 +278,7 @@ public class ContactGroupsResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody()
-        {
-            if (_body is null)
-            {
-                using var stream = new MemoryStream();
-                using var textWriter = new StreamWriter(stream);
-                var writer = new ContactGroupWriter();
-                writer.Write(Body, textWriter, Encoding.UTF8.WebName);
-                textWriter.Flush();
-
-                stream.Seek(0, SeekOrigin.Begin);
-                using var streamReader = new StreamReader(stream);
-                _body = streamReader.ReadToEnd();
-            }
-            return _body;
-        }
+        protected override object GetBody() => _body ??= CardSerializer.Default.SerializeToString(Body, Encoding.UTF8.WebName);
 
         /// <inheritdoc/>
         protected override void InitParameters()
