@@ -13,14 +13,14 @@ namespace iCloud.Dav.Calendar.Serialization;
 
 public class CalendarDeserializer
 {
-    public static readonly CalendarDeserializer Default = new(new DataTypeMapper(), new SerializerFactory(), new ComponentFactory());
+    public static readonly CalendarDeserializer Default = new(new ExtendedDataTypeMapper(), new SerializerFactory(), new ExtendedCalendarComponentFactory());
     private static readonly Regex _contentLineRegex = new(BuildContentLineRegex(), RegexOptions.Compiled);
 
-    private readonly DataTypeMapper _dataTypeMapper;
+    private readonly ExtendedDataTypeMapper _dataTypeMapper;
     private readonly ISerializerFactory _serializerFactory;
     private readonly CalendarComponentFactory _componentFactory;
 
-    internal CalendarDeserializer(DataTypeMapper dataTypeMapper, ISerializerFactory serializerFactory, CalendarComponentFactory componentFactory)
+    internal CalendarDeserializer(ExtendedDataTypeMapper dataTypeMapper, ISerializerFactory serializerFactory, CalendarComponentFactory componentFactory)
     {
         _dataTypeMapper = dataTypeMapper;
         _serializerFactory = serializerFactory;

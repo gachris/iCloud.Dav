@@ -1,4 +1,5 @@
-﻿using iCloud.Dav.People.Utils;
+﻿using iCloud.Dav.People.PeopleComponents;
+using iCloud.Dav.People.Utils;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -14,6 +15,6 @@ internal sealed class ContactConverter : TypeConverter
     public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
         if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
-        return ((string)value).ToContact();
+        return ((string)value).Deserialize<Contact>();
     }
 }

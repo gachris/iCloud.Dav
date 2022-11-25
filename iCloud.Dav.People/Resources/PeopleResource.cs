@@ -2,11 +2,10 @@
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Utils;
 using iCloud.Dav.People.CardDav.Types;
+using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.PeopleComponents;
 using iCloud.Dav.People.Requests;
-using iCloud.Dav.People.Responses;
-using iCloud.Dav.People.Types;
-using iCloud.vCard.Net.Serialization;
-using System.Text;
+using iCloud.Dav.People.Utils;
 
 namespace iCloud.Dav.People.Resources;
 
@@ -60,7 +59,7 @@ public class PeopleResource
     /// <summary>
     /// Returns the peoples on the user's people list.
     /// </summary>
-    public class ListRequest : PeopleBaseServiceRequest<ContactResponse>
+    public class ListRequest : PeopleBaseServiceRequest<ContactList>
     {
         private object? _body;
 
@@ -217,7 +216,7 @@ public class PeopleResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody() => _body ??= CardSerializer.Default.SerializeToString(Body, Encoding.UTF8.WebName);
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <inheritdoc/>
         protected override void InitParameters()
@@ -277,7 +276,7 @@ public class PeopleResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody() => _body ??= CardSerializer.Default.SerializeToString(Body, Encoding.UTF8.WebName);
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <summary>Initializes Update parameter list.</summary>
         protected override void InitParameters()

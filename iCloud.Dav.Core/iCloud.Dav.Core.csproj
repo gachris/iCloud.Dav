@@ -10,10 +10,12 @@
 		<Authors>gachris</Authors>
 		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav</PackageProjectUrl>
 		<Copyright>Copyright © 2022.</Copyright>
+		<PackageId>iCloud.Dav.Core</PackageId>
+		<Product>iCloud.Dav.Core</Product>
 		<Description>Package for accessing contacts and calendars of the iCloud provider with the CalDav / CardDav protocol.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591</NoWarn>
-		<Version>3.0.0</Version>
+		<Version>3.0.0-alpha</Version>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
@@ -22,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="All" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
 </Project>

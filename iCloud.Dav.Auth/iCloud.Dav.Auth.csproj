@@ -8,23 +8,19 @@
 		<AssemblyOriginatorKeyFile>iCloud.Dav.Auth_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
 		<RepositoryUrl>https://github.com/gachris/iCloud.Dav/tree/master/iCloud.Dav.Auth</RepositoryUrl>
 		<Authors>gachris</Authors>
-		<PackageId>iCloud.Dav.Auth</PackageId>
-		<Product>iCloud.Dav.Auth</Product>
 		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav</PackageProjectUrl>
 		<Copyright>Copyright © 2022.</Copyright>
+		<PackageId>iCloud.Dav.Auth</PackageId>
+		<Product>iCloud.Dav.Auth</Product>
 		<Description>Package for accessing contacts and calendars of the iCloud provider with the CalDav / CardDav protocol.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591</NoWarn>
-		<Version>3.0.0</Version>
+		<Version>3.0.0-alpha</Version>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="iCloud.dav.Auth_SignAssembly_Key.snk" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="All" />
 	</ItemGroup>
 	
 	<ItemGroup>

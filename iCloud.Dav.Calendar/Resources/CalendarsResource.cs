@@ -1,6 +1,6 @@
 ﻿using Ical.Net.Serialization;
 using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.Data;
+using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Request;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Response;
@@ -38,13 +38,13 @@ public class CalendarsResource
     /// Inserts a calendar into the user's calendar list.
     /// </summary>
     /// <param name="body">The body of the request.</param>
-    public virtual InsertRequest Insert(Data.Calendar body) => new(_service, body);
+    public virtual InsertRequest Insert(DataTypes.Calendar body) => new(_service, body);
 
     /// <summary>
     /// Updates an existing calendar on the user's calendar list.
     /// </summary>
     /// <param name="body">The body of the request.</param>
-    public virtual UpdateRequest Update(Data.Calendar body) => new(_service, body);
+    public virtual UpdateRequest Update(DataTypes.Calendar body) => new(_service, body);
 
     /// <summary>
     /// Removes a calendar from the user's calendar list.
@@ -85,7 +85,7 @@ public class CalendarsResource
     /// <summary>
     /// Returns a calendar from the user's calendar list.
     /// </summary>
-    public class GetRequest : CalendarBaseServiceRequest<Data.Calendar>
+    public class GetRequest : CalendarBaseServiceRequest<DataTypes.Calendar>
     {
         private object? _body;
 
@@ -134,7 +134,7 @@ public class CalendarsResource
         /// <summary>
         /// Constructs a new Insert request.
         /// </summary>
-        public InsertRequest(IClientService service, Data.Calendar body) : base(service)
+        public InsertRequest(IClientService service, DataTypes.Calendar body) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
             CalendarId = Body.Uid.ThrowIfNull(nameof(Body.Uid));
@@ -149,7 +149,7 @@ public class CalendarsResource
         /// <summary>
         /// Gets the body of this request.
         /// </summary>
-        private Data.Calendar Body { get; }
+        private DataTypes.Calendar Body { get; }
 
         /// <inheritdoc/>
         public override string MethodName => Constants.Mkcalendar;
@@ -208,10 +208,10 @@ public class CalendarsResource
         /// <summary>
         /// Constructs a new Update request.
         /// </summary>
-        public UpdateRequest(IClientService service, Data.Calendar body) : base(service)
+        public UpdateRequest(IClientService service, DataTypes.Calendar body) : base(service)
         {
             Body = body.ThrowIfNull(nameof(body));
-            CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(Data.Calendar.Uid));
+            CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(DataTypes.Calendar.Uid));
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ public class CalendarsResource
         /// <summary>
         /// Gets the body of this request.
         /// </summary>
-        private Data.Calendar Body { get; }
+        private DataTypes.Calendar Body { get; }
 
         /// <inheritdoc/>
         public override string MethodName => "update";

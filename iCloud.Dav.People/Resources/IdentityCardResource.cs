@@ -1,7 +1,7 @@
 ﻿using iCloud.Dav.Core;
 using iCloud.Dav.People.CardDav.Types;
+using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Requests;
-using iCloud.Dav.People.Responses;
 
 namespace iCloud.Dav.People.Resources;
 

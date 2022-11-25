@@ -1,5 +1,5 @@
 ﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.Data;
+using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Serialization;
 using iCloud.Dav.Core.Utils;
 using System;
@@ -18,11 +18,11 @@ internal static class MappingExtensions
         return new(responses.Select(ToCalendar));
     }
 
-    public static Data.Calendar ToCalendar(this Response response)
+    public static DataTypes.Calendar ToCalendar(this Response response)
     {
         if (response is null) throw new ArgumentNullException(nameof(response));
         var id = response.Href.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
-        var calendarListEntry = new Data.Calendar()
+        var calendarListEntry = new DataTypes.Calendar()
         {
             Uid = id,
             ETag = response.Etag,

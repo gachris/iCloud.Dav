@@ -1,6 +1,6 @@
 ﻿using Ical.Net.Serialization;
 using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.Data;
+using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Request;
 using iCloud.Dav.Calendar.Utils;
 using iCloud.Dav.Core;

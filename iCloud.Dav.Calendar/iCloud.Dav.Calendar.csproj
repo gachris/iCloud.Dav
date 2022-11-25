@@ -6,14 +6,16 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>iCloud.Dav.Calendar_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
-		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav</PackageProjectUrl>
-		<Authors>gachris</Authors>
 		<RepositoryUrl>https://github.com/gachris/iCloud.Dav/tree/master/iCloud.Dav.Calendar</RepositoryUrl>
+		<Authors>gachris</Authors>
+		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav</PackageProjectUrl>
 		<Copyright>Copyright © 2022.</Copyright>
+		<PackageId>iCloud.Dav.Calendar</PackageId>
+		<Product>iCloud.Dav.Calendar</Product>
 		<Description>Package for accessing contacts and calendars of the iCloud provider with the CalDav / CardDav protocol.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591</NoWarn>
-		<Version>3.0.0</Version>
+		<Version>3.0.0-alpha</Version>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
