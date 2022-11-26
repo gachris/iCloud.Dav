@@ -1,27 +1,28 @@
 ﻿using Newtonsoft.Json;
 
-namespace iCloud.Dav.Auth;
-
-/// <summary>
-/// Calendar user address set
-/// </summary>
-public class CalendarUserAddressSet
+namespace iCloud.Dav.Auth
 {
     /// <summary>
-    /// Gets or sets url.
+    /// Calendar user address set
     /// </summary>
-    [JsonProperty("url")]
-    public string Url { get; }
-
-    /// <summary>
-    /// Gets or sets preferred.
-    /// </summary>
-    [JsonProperty("preferred")]
-    public bool Preferred { get; }
-
-    public CalendarUserAddressSet(string url, bool preferred)
+    public class CalendarUserAddressSet
     {
-        Url = url;
-        Preferred = preferred;
+        /// <summary>
+        /// Gets or sets url.
+        /// </summary>
+        [JsonProperty("url")]
+        public string Url { get; }
+
+        /// <summary>
+        /// Gets or sets preferred.
+        /// </summary>
+        [JsonProperty("preferred")]
+        public bool Preferred { get; }
+
+        public CalendarUserAddressSet(string url, bool preferred)
+        {
+            Url = url;
+            Preferred = preferred;
+        }
     }
 }

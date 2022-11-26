@@ -6,37 +6,38 @@ using iCloud.Dav.Core.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace iCloud.Dav.Calendar.DataTypes;
-
-[XmlDeserializeType(typeof(MultiStatus))]
-[TypeConverter(typeof(CalendarConverter))]
-public class Calendar : IDirectResponseSchema
+namespace iCloud.Dav.Calendar.DataTypes
 {
-    public Calendar()
+    [XmlDeserializeType(typeof(MultiStatus))]
+    [TypeConverter(typeof(CalendarConverter))]
+    public class Calendar : IDirectResponseSchema
     {
-        Privileges = new List<string>();
-        SupportedReports = new List<string>();
-        SupportedCalendarComponents = new List<string>();
+        public Calendar()
+        {
+            Privileges = new List<string>();
+            SupportedReports = new List<string>();
+            SupportedCalendarComponents = new List<string>();
+        }
+
+        public virtual string Uid { get; set; }
+
+        public virtual string Summary { get; set; }
+
+        public virtual string Color { get; set; }
+
+        /// <inheritdoc/>
+        public virtual string ETag { get; set; }
+
+        public virtual string CTag { get; set; }
+
+        public virtual List<string> Privileges { get; }
+
+        public virtual List<string> SupportedReports { get; }
+
+        public virtual List<string> SupportedCalendarComponents { get; }
+
+        public virtual VTimeZone TimeZone { get; set; }
+
+        public string SyncToken { get; internal set; }
     }
-
-    public virtual string? Uid { get; set; }
-
-    public virtual string? Summary { get; set; }
-
-    public virtual string? Color { get; set; }
-
-    /// <inheritdoc/>
-    public virtual string? ETag { get; set; }
-
-    public virtual string? CTag { get; set; }
-
-    public virtual List<string> Privileges { get; }
-
-    public virtual List<string> SupportedReports { get; }
-
-    public virtual List<string> SupportedCalendarComponents { get; }
-
-    public virtual VTimeZone? TimeZone { get; set; }
-
-    public string? SyncToken { get; internal set; }
 }

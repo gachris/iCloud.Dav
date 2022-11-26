@@ -1,7 +1,8 @@
-﻿namespace iCloud.Dav.Core;
-
-public interface IConfigurableHttpClientInitializer
+﻿namespace iCloud.Dav.Core
 {
-    /// <summary>Initializes a HTTP client after it was created.</summary>
-    void Initialize(ConfigurableHttpClient httpClient);
+    public interface IConfigurableHttpClientInitializer
+    {
+        /// <summary>Initializes a HTTP client after it was created.</summary>
+        void Initialize(ConfigurableHttpClient httpClient);
+    }
 }

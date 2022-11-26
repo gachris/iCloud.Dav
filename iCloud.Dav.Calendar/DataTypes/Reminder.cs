@@ -3,12 +3,13 @@ using iCloud.Dav.Calendar.Serialization.Converters;
 using iCloud.Dav.Core;
 using System.ComponentModel;
 
-namespace iCloud.Dav.Calendar.DataTypes;
-
-/// <inheritdoc/>
-[TypeConverter(typeof(ReminderConverter))]
-public class Reminder : Todo, IDirectResponseSchema
+namespace iCloud.Dav.Calendar.DataTypes
 {
     /// <inheritdoc/>
-    public virtual string? ETag { get; set; }
+    [TypeConverter(typeof(ReminderConverter))]
+    public class Reminder : Todo, IDirectResponseSchema
+    {
+        /// <inheritdoc/>
+        public virtual string ETag { get; set; }
+    }
 }

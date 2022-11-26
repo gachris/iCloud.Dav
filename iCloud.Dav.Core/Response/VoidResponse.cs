@@ -1,5 +1,6 @@
-﻿namespace iCloud.Dav.Core.Response;
-
-public class VoidResponse
+﻿namespace iCloud.Dav.Core.Response
 {
+    public class VoidResponse
+    {
+    }
 }

@@ -1,10 +1,15 @@
-﻿namespace iCloud.Dav.Calendar.CalDav.Types;
-
-internal sealed class SupportedReport
+﻿namespace iCloud.Dav.Calendar.CalDav.Types
 {
-    public string Name { get; }
+    internal sealed class SupportedReport
+    {
+        public string Name { get; }
 
-    public string NameSpace { get; }
+        public string NameSpace { get; }
 
-    public SupportedReport(string name, string nameSpace) => (Name, NameSpace) = (name, nameSpace);
+        public SupportedReport(string name, string nameSpace)
+        {
+            Name = name;
+            NameSpace = nameSpace;
+        }
+    }
 }

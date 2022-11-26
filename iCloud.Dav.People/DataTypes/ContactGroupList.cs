@@ -5,17 +5,18 @@ using iCloud.Dav.People.Serialization.Converters;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace iCloud.Dav.People.DataTypes;
-
-/// <summary>
-/// Represents a strongly typed list of objects that can be accessed by index. Provides
-/// methods to search, sort, and manipulate lists.
-/// </summary>   
-[TypeConverter(typeof(ContactGroupListConverter))]
-[XmlDeserializeType(typeof(MultiStatus))]
-public class ContactGroupList
+namespace iCloud.Dav.People.DataTypes
 {
-    internal ContactGroupList(IEnumerable<ContactGroup> contactGroups) => ContactGroups = contactGroups;
+    /// <summary>
+    /// Represents a strongly typed list of objects that can be accessed by index. Provides
+    /// methods to search, sort, and manipulate lists.
+    /// </summary>   
+    [TypeConverter(typeof(ContactGroupListConverter))]
+    [XmlDeserializeType(typeof(MultiStatus))]
+    public class ContactGroupList
+    {
+        internal ContactGroupList(IEnumerable<ContactGroup> contactGroups) => ContactGroups = contactGroups;
 
-    public IEnumerable<ContactGroup> ContactGroups { get; set; }
+        public IEnumerable<ContactGroup> ContactGroups { get; set; }
+    }
 }

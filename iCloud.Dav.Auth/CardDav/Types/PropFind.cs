@@ -3,35 +3,36 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Auth.CardDav.Types;
-
-[XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-internal sealed class PropFind : IXmlSerializable
+namespace iCloud.Dav.Auth.CardDav.Types
 {
-    public bool CalendarHomeSet { get; set; }
-
-    public bool CalendarUserAddressSet { get; set; }
-
-    public bool AddressBookHomeSet { get; set; }
-
-    public bool CurrentUserPrincipal { get; set; }
-
-    public bool DisplayName { get; set; }
-
-    public XmlSchema GetSchema() => new();
-
-    public void ReadXml(XmlReader reader) => throw new NotSupportedException();
-
-    public void WriteXml(XmlWriter writer)
+    [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
+    internal sealed class PropFind : IXmlSerializable
     {
-        writer.WriteStartElement("prop", "DAV:");
+        public bool CalendarHomeSet { get; set; }
 
-        if (AddressBookHomeSet) writer.WriteElementString("addressbook-home-set", "urn:ietf:params:xml:ns:caldav", null);
-        if (CurrentUserPrincipal) writer.WriteElementString("current-user-principal", "DAV:", null);
-        if (DisplayName) writer.WriteElementString("displayname", "DAV:", null);
-        if (CalendarHomeSet) writer.WriteElementString("calendar-home-set", "urn:ietf:params:xml:ns:caldav", null);
-        if (CalendarUserAddressSet) writer.WriteElementString("calendar-user-address-set", "urn:ietf:params:xml:ns:caldav", null);
+        public bool CalendarUserAddressSet { get; set; }
 
-        writer.WriteFullEndElement();
+        public bool AddressBookHomeSet { get; set; }
+
+        public bool CurrentUserPrincipal { get; set; }
+
+        public bool DisplayName { get; set; }
+
+        public XmlSchema GetSchema() => new XmlSchema();
+
+        public void ReadXml(XmlReader reader) => throw new NotSupportedException();
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("prop", "DAV:");
+
+            if (AddressBookHomeSet) writer.WriteElementString("addressbook-home-set", "urn:ietf:params:xml:ns:caldav", null);
+            if (CurrentUserPrincipal) writer.WriteElementString("current-user-principal", "DAV:", null);
+            if (DisplayName) writer.WriteElementString("displayname", "DAV:", null);
+            if (CalendarHomeSet) writer.WriteElementString("calendar-home-set", "urn:ietf:params:xml:ns:caldav", null);
+            if (CalendarUserAddressSet) writer.WriteElementString("calendar-user-address-set", "urn:ietf:params:xml:ns:caldav", null);
+
+            writer.WriteFullEndElement();
+        }
     }
 }

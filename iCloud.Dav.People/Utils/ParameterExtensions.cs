@@ -1,50 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace iCloud.Dav.People.Utils;
-
-internal static class ParameterExtensions
+namespace iCloud.Dav.People.Utils
 {
-    public static bool TryParse<T>(this IEnumerable<string> collection, out T enumResult) where T : Enum
+    internal static class ParameterExtensions
     {
-        var success = false;
-
-        int result = 0;
-
-        foreach (var value in collection)
+        public static bool TryParse<TEnum>(this IEnumerable<string> collection, out TEnum enumResult) where TEnum : struct
         {
-            if (!value.TryParse<T>(out var type)) continue;
-            result |= Convert.ToInt32(type);
+            var success = false;
+
+            int result = 0;
+
+            foreach (var value in collection)
+            {
+                if (!value.TryParse<TEnum>(out var type)) continue;
+                result |= Convert.ToInt32(type);
+            }
+
+            object defaultValue = 0;
+
+            enumResult = (TEnum)defaultValue;
+
+            var obj = (TEnum)Enum.ToObject(typeof(TEnum), result);
+
+            if (obj is TEnum enums)
+            {
+                success = true;
+                enumResult = enums;
+            }
+
+            return success;
         }
 
-        object defaultValue = 0;
-
-        enumResult = (T)defaultValue;
-
-        var obj = (T)Enum.ToObject(typeof(T), result);
-
-        if (obj is T enums)
+        public static bool TryParse<TEnum>(this string value, out TEnum enumResult) where TEnum : struct
         {
-            success = true;
-            enumResult = enums;
+            var success = Enum.TryParse<TEnum>(value, true, out var result);
+
+            object defaultValue = 0;
+
+            enumResult = (TEnum)defaultValue;
+
+            if (result is TEnum enums)
+            {
+                enumResult = enums;
+            }
+
+            return success;
         }
-
-        return success;
-    }
-
-    public static bool TryParse<T>(this string value, out T enumResult) where T : Enum
-    {
-        var success = Enum.TryParse(typeof(T), value, true, out var result);
-
-        object defaultValue = 0;
-
-        enumResult = (T)defaultValue;
-
-        if (result is T enums)
-        {
-            enumResult = enums;
-        }
-
-        return success;
     }
 }

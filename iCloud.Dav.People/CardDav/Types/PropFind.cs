@@ -3,22 +3,23 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.People.CardDav.Types;
-
-[XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-internal sealed class PropFind : IXmlSerializable
+namespace iCloud.Dav.People.CardDav.Types
 {
-    public XmlSchema GetSchema() => new XmlSchema();
-
-    public void ReadXml(XmlReader reader) => throw new NotSupportedException();
-
-    public void WriteXml(XmlWriter writer)
+    [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
+    internal sealed class PropFind : IXmlSerializable
     {
-        writer.WriteStartElement("prop", "DAV:");
+        public XmlSchema GetSchema() => new XmlSchema();
 
-        writer.WriteStartElement("allprop", "DAV:");
-        writer.WriteEndElement();
+        public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
-        writer.WriteEndElement();
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("prop", "DAV:");
+
+            writer.WriteStartElement("allprop", "DAV:");
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+        }
     }
 }

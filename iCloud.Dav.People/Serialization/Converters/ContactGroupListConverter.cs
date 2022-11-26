@@ -7,17 +7,18 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace iCloud.Dav.People.Serialization.Converters;
-
-internal sealed class ContactGroupListConverter : TypeConverter
+namespace iCloud.Dav.People.Serialization.Converters
 {
-    /// <inheritdoc/>
-    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType == typeof(MultiStatus);
-
-    /// <inheritdoc/>
-    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+    internal sealed class ContactGroupListConverter : TypeConverter
     {
-        if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
-        return new ContactGroupList(((MultiStatus)value).Responses.Select(MappingExtensions.Deserialize<ContactGroup>));
+        /// <inheritdoc/>
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+        /// <inheritdoc/>
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+            return new ContactGroupList(((MultiStatus)value).Responses.Select(MappingExtensions.Deserialize<ContactGroup>));
+        }
     }
 }

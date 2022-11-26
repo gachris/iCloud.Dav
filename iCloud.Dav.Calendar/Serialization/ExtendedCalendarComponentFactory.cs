@@ -2,28 +2,35 @@
 using Ical.Net.Serialization;
 using iCloud.Dav.Calendar.DataTypes;
 
-namespace iCloud.Dav.Calendar.Serialization;
-
-internal class ExtendedCalendarComponentFactory : CalendarComponentFactory
+namespace iCloud.Dav.Calendar.Serialization
 {
-    public override ICalendarComponent Build(string objectName)
+    internal class ExtendedCalendarComponentFactory : CalendarComponentFactory
     {
-        var text = objectName.ToUpper();
-        var calendarComponent = text switch
+        public override ICalendarComponent Build(string objectName)
         {
-            "VEVENT" => new Event(),
-            "VTODO" => new Reminder(),
-            _ => (ICalendarComponent?)null,
-        };
+            var text = objectName.ToUpper();
+            var calendarComponent = default(ICalendarComponent);
+            switch (text)
+            {
+                case "VEVENT":
+                    calendarComponent = new Event();
+                    break;
+                case "VTODO":
+                    calendarComponent = new Reminder();
+                    break;
+                default:
+                    break;
+            }
 
-        if (calendarComponent is null)
-        {
-            return base.Build(objectName);
-        }
-        else
-        {
-            calendarComponent.Name = text;
-            return calendarComponent;
+            if (calendarComponent is null)
+            {
+                return base.Build(objectName);
+            }
+            else
+            {
+                calendarComponent.Name = text;
+                return calendarComponent;
+            }
         }
     }
 }

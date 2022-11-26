@@ -4,17 +4,18 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace iCloud.Dav.Calendar.Serialization.Converters;
-
-internal sealed class EventListConverter : TypeConverter
+namespace iCloud.Dav.Calendar.Serialization.Converters
 {
-    /// <inheritdoc/>
-    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType == typeof(MultiStatus);
-
-    /// <inheritdoc/>
-    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+    internal sealed class EventListConverter : TypeConverter
     {
-        if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
-        return ((MultiStatus)value).Responses.ToEventList();
+        /// <inheritdoc/>
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+        /// <inheritdoc/>
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+            return ((MultiStatus)value).Responses.ToEventList();
+        }
     }
 }

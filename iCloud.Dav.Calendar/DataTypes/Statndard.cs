@@ -1,10 +1,11 @@
 ﻿using Ical.Net.CalendarComponents;
 
-namespace iCloud.Dav.Calendar.DataTypes;
-
-public class Statndard : CalendarComponent
+namespace iCloud.Dav.Calendar.DataTypes
 {
-    public Statndard() : base("STANDARD")
+    public class Statndard : CalendarComponent
     {
+        public Statndard() : base("STANDARD")
+        {
+        }
     }
 }

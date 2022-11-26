@@ -1,10 +1,15 @@
-﻿namespace iCloud.Dav.Calendar.CalDav.Types;
-
-internal sealed class Privilege
+﻿namespace iCloud.Dav.Calendar.CalDav.Types
 {
-    public string Name { get; }
+    internal sealed class Privilege
+    {
+        public string Name { get; }
 
-    public string NameSpace { get; }
+        public string NameSpace { get; }
 
-    public Privilege(string name, string nameSpace) => (Name, NameSpace) = (name, nameSpace);
+        public Privilege(string name, string nameSpace)
+        {
+            Name = name;
+            NameSpace = nameSpace;
+        }
+    }
 }

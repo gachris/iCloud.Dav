@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.1;net461;net462;net47;net471;net472;net48;netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
@@ -16,7 +16,6 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591</NoWarn>
 		<Version>3.0.0-alpha</Version>
-		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,6 +24,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="System.Net.Http" Version="4.3.0.0" Condition="'$(TargetFramework)'=='net461' Or
+						  '$(TargetFramework)'=='net462' Or
+						  '$(TargetFramework)'=='net47' Or
+						  '$(TargetFramework)'=='net471' Or
+						  '$(TargetFramework)'=='net472' Or
+						  '$(TargetFramework)'=='net48'" />
 	</ItemGroup>
 
 </Project>

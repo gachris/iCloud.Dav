@@ -1,11 +1,12 @@
 ﻿using System;
 
-namespace iCloud.Dav.Core.Serialization;
-
-[AttributeUsage(AttributeTargets.All)]
-public class XmlDeserializeTypeAttribute : Attribute
+namespace iCloud.Dav.Core.Serialization
 {
-    public Type Type { get; }
+    [AttributeUsage(AttributeTargets.All)]
+    public class XmlDeserializeTypeAttribute : Attribute
+    {
+        public Type Type { get; }
 
-    public XmlDeserializeTypeAttribute(Type type) : base() => Type = type;
+        public XmlDeserializeTypeAttribute(Type type) : base() => Type = type;
+    }
 }

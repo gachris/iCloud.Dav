@@ -2,26 +2,27 @@
 using iCloud.Dav.People.Utils;
 using vCard.Net.Serialization;
 
-namespace iCloud.Dav.People.Serialization;
-
-/// <inheritdoc/>
-public class ExtendedSerializerFactory : SerializerFactory, ISerializerFactory
+namespace iCloud.Dav.People.Serialization
 {
-    private readonly ISerializerFactory _mDataTypeSerializerFactory;
-
     /// <inheritdoc/>
-    public ExtendedSerializerFactory() => _mDataTypeSerializerFactory = new ExtendedDataTypeSerializerFactory();
-
-    /// <inheritdoc/>
-    public override ISerializer Build(Type objectType, SerializationContext ctx)
+    public class ExtendedSerializerFactory : SerializerFactory, ISerializerFactory
     {
-        ISerializer? s = null;
+        private readonly ISerializerFactory _mDataTypeSerializerFactory;
 
-        if (typeof(vCard.Net.DataTypes.ICardDataType).IsAssignableFrom(objectType))
+        /// <inheritdoc/>
+        public ExtendedSerializerFactory() => _mDataTypeSerializerFactory = new ExtendedDataTypeSerializerFactory();
+
+        /// <inheritdoc/>
+        public override ISerializer Build(Type objectType, SerializationContext ctx)
         {
-            s = _mDataTypeSerializerFactory.Build(objectType, ctx);
-        }
+            ISerializer s = null;
 
-        return s ?? base.Build(objectType, ctx);
+            if (typeof(vCard.Net.DataTypes.ICardDataType).IsAssignableFrom(objectType))
+            {
+                s = _mDataTypeSerializerFactory.Build(objectType, ctx);
+            }
+
+            return s ?? base.Build(objectType, ctx);
+        }
     }
 }

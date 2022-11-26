@@ -1,18 +1,19 @@
 ﻿using iCloud.Dav.Core;
 using iCloud.Dav.People.Resources;
 
-namespace iCloud.Dav.People.Services;
-
-public class CloudGatewayService : BaseClientService
+namespace iCloud.Dav.People.Services
 {
-    public const string Version = "v1";
+    public class CloudGatewayService : BaseClientService
+    {
+        public const string Version = "v1";
 
-    public CloudGatewayService(Initializer initializer) : base(initializer) => CloudGateway = new CloudGatewayResource(this);
+        public CloudGatewayService(Initializer initializer) : base(initializer) => CloudGateway = new CloudGatewayResource(this);
 
-    public override string Name => "cloud_gateway";
+        public override string Name => "cloud_gateway";
 
-    public override string BasePath => "https://gateway.icloud.com/";
+        public override string BasePath => "https://gateway.icloud.com/";
 
-    /// <summary>Gets the CloudGateway resource.</summary>
-    public virtual CloudGatewayResource CloudGateway { get; }
+        /// <summary>Gets the CloudGateway resource.</summary>
+        public virtual CloudGatewayResource CloudGateway { get; }
+    }
 }

@@ -1,44 +1,45 @@
 ﻿using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Utils;
 
-namespace iCloud.Dav.People.DataTypes.Mapping;
-
-internal class EmailTypeMapping
+namespace iCloud.Dav.People.DataTypes.Mapping
 {
-    public static readonly TypeMapping<EmailTypeInternal, EmailType> Home = new(EmailTypeInternal.Home | EmailTypeInternal.Internet, EmailType.Home);
-    public static readonly TypeMapping<EmailTypeInternal, EmailType> Work = new(EmailTypeInternal.Work | EmailTypeInternal.Internet, EmailType.Work);
-    public static readonly TypeMapping<EmailTypeInternal, EmailType> Other = new(EmailTypeInternal.Other | EmailTypeInternal.Internet, EmailType.Other);
-
-    private static readonly TypeMapping<EmailTypeInternal, EmailType>[] _typeMappings = new[]
+    internal class EmailTypeMapping
     {
+        public static readonly TypeMapping<EmailTypeInternal, EmailType> Home = new TypeMapping<EmailTypeInternal, EmailType>(EmailTypeInternal.Home | EmailTypeInternal.Internet, EmailType.Home);
+        public static readonly TypeMapping<EmailTypeInternal, EmailType> Work = new TypeMapping<EmailTypeInternal, EmailType>(EmailTypeInternal.Work | EmailTypeInternal.Internet, EmailType.Work);
+        public static readonly TypeMapping<EmailTypeInternal, EmailType> Other = new TypeMapping<EmailTypeInternal, EmailType>(EmailTypeInternal.Other | EmailTypeInternal.Internet, EmailType.Other);
+
+        private static readonly TypeMapping<EmailTypeInternal, EmailType>[] _typeMappings = new[]
+        {
         Home,
         Work,
         Other,
     };
 
-    public static EmailType GetType(EmailTypeInternal typeInternal)
-    {
-        foreach (var typeMapping in _typeMappings)
+        public static EmailType GetType(EmailTypeInternal typeInternal)
         {
-            if (typeInternal.HasFlags(typeMapping.TypeInternal))
+            foreach (var typeMapping in _typeMappings)
             {
-                return typeMapping.Type;
+                if (typeInternal.HasFlags(typeMapping.TypeInternal))
+                {
+                    return typeMapping.Type;
+                }
             }
+
+            return 0;
         }
 
-        return 0;
-    }
-
-    public static EmailTypeInternal GetType(EmailType type)
-    {
-        foreach (var typeMapping in _typeMappings)
+        public static EmailTypeInternal GetType(EmailType type)
         {
-            if (typeMapping.Type == type)
+            foreach (var typeMapping in _typeMappings)
             {
-                return typeMapping.TypeInternal;
+                if (typeMapping.Type == type)
+                {
+                    return typeMapping.TypeInternal;
+                }
             }
-        }
 
-        return 0;
+            return 0;
+        }
     }
 }

@@ -5,68 +5,69 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace iCloud.Dav.Calendar.Utils;
-
-internal class SerializationUtil
+namespace iCloud.Dav.Calendar.Utils
 {
-    private static readonly ConcurrentDictionary<Type, List<MethodInfo>> _onDeserializingMethods = new();
-
-    private static readonly ConcurrentDictionary<Type, List<MethodInfo>> _onDeserializedMethods = new();
-
-    public static void OnDeserializing(object obj)
+    internal class SerializationUtil
     {
-        foreach (MethodInfo deserializingMethod in GetDeserializingMethods(obj.GetType()))
-        {
-            deserializingMethod.Invoke(obj, new object[1] { default(StreamingContext) });
-        }
-    }
+        private static readonly ConcurrentDictionary<Type, List<MethodInfo>> _onDeserializingMethods = new ConcurrentDictionary<Type, List<MethodInfo>>();
 
-    public static void OnDeserialized(object obj)
-    {
-        foreach (MethodInfo deserializedMethod in GetDeserializedMethods(obj.GetType()))
-        {
-            deserializedMethod.Invoke(obj, new object[1] { default(StreamingContext) });
-        }
-    }
+        private static readonly ConcurrentDictionary<Type, List<MethodInfo>> _onDeserializedMethods = new ConcurrentDictionary<Type, List<MethodInfo>>();
 
-    private static List<MethodInfo> GetDeserializingMethods(Type targetType)
-    {
-        if (targetType == null)
+        public static void OnDeserializing(object obj)
         {
-            return new List<MethodInfo>();
+            foreach (MethodInfo deserializingMethod in GetDeserializingMethods(obj.GetType()))
+            {
+                deserializingMethod.Invoke(obj, new object[1] { default(StreamingContext) });
+            }
         }
 
-        if (_onDeserializingMethods.ContainsKey(targetType))
+        public static void OnDeserialized(object obj)
         {
-            return _onDeserializingMethods[targetType];
+            foreach (MethodInfo deserializedMethod in GetDeserializedMethods(obj.GetType()))
+            {
+                deserializedMethod.Invoke(obj, new object[1] { default(StreamingContext) });
+            }
         }
 
-        return _onDeserializingMethods.GetOrAdd(targetType, (tt) => (from targetTypeMethodInfo in tt.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                                                                     where targetTypeMethodInfo.GetCustomAttributes(typeof(OnDeserializingAttribute), inherit: false).Any()
-                                                                     select targetTypeMethodInfo).ToList());
-    }
-
-    private static List<MethodInfo> GetDeserializedMethods(Type targetType)
-    {
-        if (targetType == null)
+        private static List<MethodInfo> GetDeserializingMethods(Type targetType)
         {
-            return new List<MethodInfo>();
+            if (targetType == null)
+            {
+                return new List<MethodInfo>();
+            }
+
+            if (_onDeserializingMethods.ContainsKey(targetType))
+            {
+                return _onDeserializingMethods[targetType];
+            }
+
+            return _onDeserializingMethods.GetOrAdd(targetType, (tt) => (from targetTypeMethodInfo in tt.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                                                                         where targetTypeMethodInfo.GetCustomAttributes(typeof(OnDeserializingAttribute), inherit: false).Any()
+                                                                         select targetTypeMethodInfo).ToList());
         }
 
-        if (_onDeserializedMethods.TryGetValue(targetType, out var methodInfos))
+        private static List<MethodInfo> GetDeserializedMethods(Type targetType)
         {
+            if (targetType == null)
+            {
+                return new List<MethodInfo>();
+            }
+
+            if (_onDeserializedMethods.TryGetValue(targetType, out var methodInfos))
+            {
+                return methodInfos;
+            }
+
+            methodInfos = (from targetTypeMethodInfo in targetType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                           select new
+                           {
+                               targetTypeMethodInfo,
+                               attrs = targetTypeMethodInfo.GetCustomAttributes(typeof(OnDeserializedAttribute), inherit: false).ToList()
+                           } into t
+                           where t.attrs.Count > 0
+                           select t.targetTypeMethodInfo).ToList();
+            _onDeserializedMethods.AddOrUpdate(targetType, methodInfos, (type, list) => methodInfos);
             return methodInfos;
         }
-
-        methodInfos = (from targetTypeMethodInfo in targetType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                       select new
-                       {
-                           targetTypeMethodInfo,
-                           attrs = targetTypeMethodInfo.GetCustomAttributes(typeof(OnDeserializedAttribute), inherit: false).ToList()
-                       } into t
-                       where t.attrs.Count > 0
-                       select t.targetTypeMethodInfo).ToList();
-        _onDeserializedMethods.AddOrUpdate(targetType, methodInfos, (type, list) => methodInfos);
-        return methodInfos;
     }
 }

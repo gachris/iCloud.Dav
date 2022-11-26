@@ -2,21 +2,22 @@
 using System;
 using vCard.Net.Serialization;
 
-namespace iCloud.Dav.People.Serialization;
-
-public class ContactSerializer : ComponentSerializer
+namespace iCloud.Dav.People.Serialization
 {
-    public ContactSerializer()
+    public class ContactSerializer : ComponentSerializer
     {
-        SetService(new ExtendedDataTypeMapper());
-        SetService(new ExtendedSerializerFactory());
-    }
+        public ContactSerializer()
+        {
+            SetService(new ExtendedDataTypeMapper());
+            SetService(new ExtendedSerializerFactory());
+        }
 
-    public ContactSerializer(SerializationContext ctx) : base(ctx)
-    {
-        SetService(new ExtendedDataTypeMapper());
-        SetService(new ExtendedSerializerFactory());
-    }
+        public ContactSerializer(SerializationContext ctx) : base(ctx)
+        {
+            SetService(new ExtendedDataTypeMapper());
+            SetService(new ExtendedSerializerFactory());
+        }
 
-    public override Type TargetType => typeof(Contact);
+        public override Type TargetType => typeof(Contact);
+    }
 }

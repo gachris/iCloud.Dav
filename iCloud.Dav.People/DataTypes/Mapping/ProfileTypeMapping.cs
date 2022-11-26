@@ -1,18 +1,18 @@
 ﻿using iCloud.Dav.People.Utils;
 
-namespace iCloud.Dav.People.DataTypes.Mapping;
-
-internal class ProfileTypeMapping
+namespace iCloud.Dav.People.DataTypes.Mapping
 {
-    public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Twitter = new(ProfileTypeInternal.Twitter, ProfileType.Twitter);
-    public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Facebook = new(ProfileTypeInternal.Facebook, ProfileType.Facebook);
-    public static readonly TypeMapping<ProfileTypeInternal, ProfileType> LinkedIn = new(ProfileTypeInternal.LinkedIn, ProfileType.LinkedIn);
-    public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Flickr = new(ProfileTypeInternal.Flickr, ProfileType.Flickr);
-    public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Myspace = new(ProfileTypeInternal.Myspace, ProfileType.Myspace);
-    public static readonly TypeMapping<ProfileTypeInternal, ProfileType> SinaWeibo = new(ProfileTypeInternal.SinaWeibo, ProfileType.SinaWeibo);
-
-    private static readonly TypeMapping<ProfileTypeInternal, ProfileType>[] _typeMappings = new[]
+    internal class ProfileTypeMapping
     {
+        public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Twitter = new TypeMapping<ProfileTypeInternal, ProfileType>(ProfileTypeInternal.Twitter, ProfileType.Twitter);
+        public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Facebook = new TypeMapping<ProfileTypeInternal, ProfileType>(ProfileTypeInternal.Facebook, ProfileType.Facebook);
+        public static readonly TypeMapping<ProfileTypeInternal, ProfileType> LinkedIn = new TypeMapping<ProfileTypeInternal, ProfileType>(ProfileTypeInternal.LinkedIn, ProfileType.LinkedIn);
+        public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Flickr = new TypeMapping<ProfileTypeInternal, ProfileType>(ProfileTypeInternal.Flickr, ProfileType.Flickr);
+        public static readonly TypeMapping<ProfileTypeInternal, ProfileType> Myspace = new TypeMapping<ProfileTypeInternal, ProfileType>(ProfileTypeInternal.Myspace, ProfileType.Myspace);
+        public static readonly TypeMapping<ProfileTypeInternal, ProfileType> SinaWeibo = new TypeMapping<ProfileTypeInternal, ProfileType>(ProfileTypeInternal.SinaWeibo, ProfileType.SinaWeibo);
+
+        private static readonly TypeMapping<ProfileTypeInternal, ProfileType>[] _typeMappings = new[]
+        {
         Twitter,
         Facebook,
         LinkedIn,
@@ -21,29 +21,30 @@ internal class ProfileTypeMapping
         SinaWeibo
     };
 
-    public static ProfileType GetType(ProfileTypeInternal typeInternal)
-    {
-        foreach (var typeMapping in _typeMappings)
+        public static ProfileType GetType(ProfileTypeInternal typeInternal)
         {
-            if (typeInternal.HasFlags(typeMapping.TypeInternal))
+            foreach (var typeMapping in _typeMappings)
             {
-                return typeMapping.Type;
+                if (typeInternal.HasFlags(typeMapping.TypeInternal))
+                {
+                    return typeMapping.Type;
+                }
             }
+
+            return 0;
         }
 
-        return 0;
-    }
-
-    public static ProfileTypeInternal GetType(ProfileType type)
-    {
-        foreach (var typeMapping in _typeMappings)
+        public static ProfileTypeInternal GetType(ProfileType type)
         {
-            if (typeMapping.Type == type)
+            foreach (var typeMapping in _typeMappings)
             {
-                return typeMapping.TypeInternal;
+                if (typeMapping.Type == type)
+                {
+                    return typeMapping.TypeInternal;
+                }
             }
-        }
 
-        return 0;
+            return 0;
+        }
     }
 }

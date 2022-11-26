@@ -1,40 +1,40 @@
-﻿using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
+﻿using iCloud.Dav.People.Utils;
 
-namespace iCloud.Dav.People.DataTypes.Mapping;
-
-internal class DateTypeMapping
+namespace iCloud.Dav.People.DataTypes.Mapping
 {
-    public static readonly TypeMapping<DateTypeInternal, DateType> Other = new(DateTypeInternal.Other, DateType.Other);
-
-    private static readonly TypeMapping<DateTypeInternal, DateType>[] _typeMappings = new[]
+    internal class DateTypeMapping
     {
+        public static readonly TypeMapping<DateTypeInternal, DateType> Other = new TypeMapping<DateTypeInternal, DateType>(DateTypeInternal.Other, DateType.Other);
+
+        private static readonly TypeMapping<DateTypeInternal, DateType>[] _typeMappings = new[]
+        {
         Other,
     };
 
-    public static DateType GetType(DateTypeInternal typeInternal)
-    {
-        foreach (var typeMapping in _typeMappings)
+        public static DateType GetType(DateTypeInternal typeInternal)
         {
-            if (typeInternal.HasFlags(typeMapping.TypeInternal))
+            foreach (var typeMapping in _typeMappings)
             {
-                return typeMapping.Type;
+                if (typeInternal.HasFlags(typeMapping.TypeInternal))
+                {
+                    return typeMapping.Type;
+                }
             }
+
+            return 0;
         }
 
-        return 0;
-    }
-
-    public static DateTypeInternal GetType(DateType type)
-    {
-        foreach (var typeMapping in _typeMappings)
+        public static DateTypeInternal GetType(DateType type)
         {
-            if (typeMapping.Type == type)
+            foreach (var typeMapping in _typeMappings)
             {
-                return typeMapping.TypeInternal;
+                if (typeMapping.Type == type)
+                {
+                    return typeMapping.TypeInternal;
+                }
             }
-        }
 
-        return 0;
+            return 0;
+        }
     }
 }

@@ -1,10 +1,17 @@
-﻿namespace iCloud.Dav.Calendar.CalDav.Types;
+﻿using System.Xml.Linq;
 
-internal sealed class TimeRange
+namespace iCloud.Dav.Calendar.CalDav.Types
 {
-    public string? Start { get; }
+    internal sealed class TimeRange
+    {
+        public string Start { get; }
 
-    public string? End { get; }
+        public string End { get; }
 
-    public TimeRange(string? start, string? end) => (Start, End) = (start, end);
+        public TimeRange(string start, string end)
+        {
+            Start = start;
+            End = end;
+        }
+    }
 }

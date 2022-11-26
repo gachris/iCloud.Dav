@@ -1,16 +1,17 @@
 ﻿using System.Net.Http;
 
-namespace iCloud.Dav.Core;
-
-public class ConfigurableHttpClient : HttpClient
+namespace iCloud.Dav.Core
 {
-    /// <summary>Gets the configurable message handler.</summary>
-    public ConfigurableMessageHandler MessageHandler { get; private set; }
-
-    /// <summary>Constructs a new HTTP client.</summary>
-    public ConfigurableHttpClient(ConfigurableMessageHandler handler) : base(handler)
+    public class ConfigurableHttpClient : HttpClient
     {
-        MessageHandler = handler;
-        DefaultRequestHeaders.ExpectContinue = new bool?(false);
+        /// <summary>Gets the configurable message handler.</summary>
+        public ConfigurableMessageHandler MessageHandler { get; private set; }
+
+        /// <summary>Constructs a new HTTP client.</summary>
+        public ConfigurableHttpClient(ConfigurableMessageHandler handler) : base(handler)
+        {
+            MessageHandler = handler;
+            DefaultRequestHeaders.ExpectContinue = new bool?(false);
+        }
     }
 }

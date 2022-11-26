@@ -4,13 +4,14 @@ using iCloud.Dav.Core.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace iCloud.Dav.Calendar.DataTypes;
-
-[TypeConverter(typeof(ReminderListConverter))]
-[XmlDeserializeType(typeof(MultiStatus))]
-public class Reminders
+namespace iCloud.Dav.Calendar.DataTypes
 {
-    internal Reminders(IEnumerable<Reminder> items) => Items = items;
+    [TypeConverter(typeof(ReminderListConverter))]
+    [XmlDeserializeType(typeof(MultiStatus))]
+    public class Reminders
+    {
+        internal Reminders(IEnumerable<Reminder> items) => Items = items;
 
-    public IEnumerable<Reminder> Items { get; set; }
+        public IEnumerable<Reminder> Items { get; set; }
+    }
 }

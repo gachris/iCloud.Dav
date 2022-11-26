@@ -1,10 +1,15 @@
-﻿namespace iCloud.Dav.Auth.CardDav.Types;
-
-internal sealed class CalendarUserAddress
+﻿namespace iCloud.Dav.Auth.CardDav.Types
 {
-    public bool Preferred { get; }
+    internal sealed class CalendarUserAddress
+    {
+        public bool Preferred { get; }
 
-    public string Value { get; }
+        public string Value { get; }
 
-    public CalendarUserAddress(bool preferred, string value) => (Preferred, Value) = (preferred, value);
+        public CalendarUserAddress(bool preferred, string value)
+        {
+            Preferred = preferred;
+            Value = value;
+        }
+    }
 }

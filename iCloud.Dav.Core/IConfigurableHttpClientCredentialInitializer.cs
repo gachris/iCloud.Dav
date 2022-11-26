@@ -1,6 +1,7 @@
-﻿namespace iCloud.Dav.Core;
-
-public interface IConfigurableHttpClientCredentialInitializer : IConfigurableHttpClientInitializer
+﻿namespace iCloud.Dav.Core
 {
-    string GetUri(PrincipalHomeSet principal);
+    public interface IConfigurableHttpClientCredentialInitializer : IConfigurableHttpClientInitializer
+    {
+        string GetUri(PrincipalHomeSet principal);
+    }
 }
