@@ -9,9 +9,9 @@ using iCloud.Dav.Core.Utils;
 namespace iCloud.Dav.Calendar.Resources
 {
     /// <summary>
-    /// The calendars collection of methods.
+    /// The calendar list collection of methods.
     /// </summary>
-    public class CalendarsResource
+    public class CalendarListResource
     {
         /// <summary>
         /// The service which this resource belongs to.
@@ -21,7 +21,12 @@ namespace iCloud.Dav.Calendar.Resources
         /// <summary>
         /// Constructs a new resource.
         /// </summary>
-        public CalendarsResource(IClientService service) => _service = service;
+        public CalendarListResource(IClientService service) => _service = service;
+
+        /// <summary>
+        /// Returns changes on the user's calendar list.
+        /// </summary>
+        public virtual SyncCollectionRequest SyncCollection(string calendarId) => new SyncCollectionRequest(_service);
 
         /// <summary>
         /// Returns the calendars on the user's calendar list.
@@ -38,19 +43,70 @@ namespace iCloud.Dav.Calendar.Resources
         /// Inserts a calendar into the user's calendar list.
         /// </summary>
         /// <param name="body">The body of the request.</param>
-        public virtual InsertRequest Insert(DataTypes.Calendar body) => new InsertRequest(_service, body);
+        public virtual InsertRequest Insert(CalendarListEntry body) => new InsertRequest(_service, body);
 
         /// <summary>
         /// Updates an existing calendar on the user's calendar list.
         /// </summary>
         /// <param name="body">The body of the request.</param>
-        public virtual UpdateRequest Update(DataTypes.Calendar body) => new UpdateRequest(_service, body);
+        public virtual UpdateRequest Update(CalendarListEntry body) => new UpdateRequest(_service, body);
 
         /// <summary>
         /// Removes a calendar from the user's calendar list.
         /// </summary>
         /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="List"/> method.</param>
         public virtual DeleteRequest Delete(string calendarId) => new DeleteRequest(_service, calendarId);
+
+        /// <summary>
+        /// Returns changes on the user's calendar list.
+        /// </summary>
+        public class SyncCollectionRequest : CalendarBaseServiceRequest<CalendarList>
+        {
+            private SyncCollection _body;
+
+            /// <summary>
+            /// Constructs a new Sync Collection request.
+            /// </summary>
+            public SyncCollectionRequest(IClientService service) : base(service)
+            {
+                SyncLevel = "1";
+            }
+
+            /// <summary>
+            /// Token obtained from the nextSyncToken field returned on the last page of results
+            /// from the previous list request. It makes the result of this list request contain
+            /// only entries that have changed since then. Optional. The default is to return all entries.
+            /// </summary>
+            public virtual string SyncToken { get; set; }
+
+            public virtual string SyncLevel { get; set; }
+
+            /// <inheritdoc/>
+            public override string MethodName => "list";
+
+            /// <inheritdoc/>
+            public override string HttpMethod => Constants.Report;
+
+            /// <inheritdoc/>
+            public override string RestPath => string.Empty;
+
+            /// <inheritdoc/>
+            public override string Depth => "0";
+
+            /// <inheritdoc/>
+            protected override object GetBody()
+            {
+                if (_body == null)
+                {
+                    _body = new SyncCollection();
+                }
+
+                _body.SyncToken = SyncToken;
+                _body.SyncLevel = SyncLevel;
+
+                return _body;
+            }
+        }
 
         /// <summary>
         /// Returns the calendars on the user's calendar list.
@@ -92,7 +148,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// <summary>
         /// Returns a calendar from the user's calendar list.
         /// </summary>
-        public class GetRequest : CalendarBaseServiceRequest<DataTypes.Calendar>
+        public class GetRequest : CalendarBaseServiceRequest<CalendarListEntry>
         {
             private object _body;
 
@@ -108,7 +164,7 @@ namespace iCloud.Dav.Calendar.Resources
             public virtual string CalendarId { get; }
 
             /// <inheritdoc/>
-            public override string MethodName => Constants.Propfind;
+            public override string MethodName => "get";
 
             /// <inheritdoc/>
             public override string HttpMethod => Constants.Propfind;
@@ -148,7 +204,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Constructs a new Insert request.
             /// </summary>
-            public InsertRequest(IClientService service, DataTypes.Calendar body) : base(service)
+            public InsertRequest(IClientService service, CalendarListEntry body) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
                 CalendarId = Body.Uid.ThrowIfNull(nameof(Body.Uid));
@@ -163,10 +219,10 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Gets the body of this request.
             /// </summary>
-            private DataTypes.Calendar Body { get; }
+            private CalendarListEntry Body { get; }
 
             /// <inheritdoc/>
-            public override string MethodName => Constants.Mkcalendar;
+            public override string MethodName => "insert";
 
             /// <inheritdoc/>
             public override string HttpMethod => Constants.Mkcalendar;
@@ -192,7 +248,7 @@ namespace iCloud.Dav.Calendar.Resources
                         var calendar = new Ical.Net.Calendar();
                         var calendarSerializer = new CalendarSerializer();
                         calendar.TimeZones.Add(Body.TimeZone);
-                        mkCalendar.CalendarTimeZoneSerializedString = calendarSerializer.SerializeToString(calendar);
+                        mkCalendar.CalendarTimeZone = calendarSerializer.SerializeToString(calendar);
                     }
 
                     mkCalendar.SupportedCalendarComponents.AddRange(Body.SupportedCalendarComponents);
@@ -222,10 +278,10 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Constructs a new Update request.
             /// </summary>
-            public UpdateRequest(IClientService service, DataTypes.Calendar body) : base(service)
+            public UpdateRequest(IClientService service, CalendarListEntry body) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
-                CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(DataTypes.Calendar.Uid));
+                CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Uid));
             }
 
             /// <summary>
@@ -237,7 +293,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Gets the body of this request.
             /// </summary>
-            private DataTypes.Calendar Body { get; }
+            private CalendarListEntry Body { get; }
 
             /// <inheritdoc/>
             public override string MethodName => "update";

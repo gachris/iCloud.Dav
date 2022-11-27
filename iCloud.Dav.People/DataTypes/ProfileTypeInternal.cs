@@ -2,8 +2,8 @@
 
 namespace iCloud.Dav.People.DataTypes
 {
-    /// <summary>Identifies the type of social profile type in a Person.</summary>
-    /// <seealso cref="Profile" />
+    /// <summary>Identifies the type of social profile type in a vCard.</summary>
+    /// <seealso cref="X_SocialProfile" />
     [Flags]
     internal enum ProfileTypeInternal
     {

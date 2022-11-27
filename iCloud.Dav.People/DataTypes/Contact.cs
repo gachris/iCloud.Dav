@@ -1,43 +1,15 @@
-﻿using iCloud.Dav.Core;
-using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Serialization.Converters;
+﻿using iCloud.Dav.People.Serialization.Converters;
 using System.Collections.Generic;
 using System.ComponentModel;
 using vCard.Net;
-using vCard.Net.CardComponents;
+using vCard.Net.DataTypes;
 
-namespace iCloud.Dav.People.PeopleComponents
+namespace iCloud.Dav.People.DataTypes
 {
     /// <inheritdoc/>
     [TypeConverter(typeof(ContactConverter))]
-    public class Contact : CardComponent, IDirectResponseSchema
+    public class Contact : CloudComponent
     {
-        // TODO: Add AddRelationship() public method.
-        // This method will add the UID of a related component
-        // to the Related_To property, along with any "RELTYPE"
-        // parameter ("PARENT", "CHILD", "SIBLING", or other)
-        // TODO: Add RemoveRelationship() public method.        
-
-        /// <inheritdoc/>
-        public string ETag { get; set; }
-
-        /// <summary>
-        /// A value that uniquely identifies the card.
-        /// </summary>
-        /// <remarks>
-        ///     This value is optional.  The string must be any string
-        ///     that can be used to uniquely identify the Person.  The
-        ///     usage of the field is determined by the software.  Typical
-        ///     possibilities for a unique string include a URL, a GUID,
-        ///     or an LDAP directory path.  However, there is no particular
-        ///     standard dictated by the Person specification.
-        /// </remarks>
-        public virtual string Uid
-        {
-            get => Properties.Get<string>("UID");
-            set => Properties.Set("UID", value);
-        }
-
         /// <summary>
         /// The name of the product that generated the card.
         /// </summary>
@@ -55,9 +27,9 @@ namespace iCloud.Dav.People.PeopleComponents
         ///     card when modifying properties. It is up to the
         ///     developer to change the revision date as needed.
         /// </remarks>
-        public virtual vCard.Net.DataTypes.IDateTime RevisionDate
+        public virtual IDateTime RevisionDate
         {
-            get => Properties.Get<vCard.Net.DataTypes.IDateTime>("REV");
+            get => Properties.Get<IDateTime>("REV");
             set => Properties.Set("REV", value);
         }
 
@@ -79,18 +51,18 @@ namespace iCloud.Dav.People.PeopleComponents
         /// <summary>
         /// The name of the card.
         /// </summary>
-        public virtual vCard.Net.DataTypes.Name N
+        public virtual Name N
         {
-            get => Properties.Get<vCard.Net.DataTypes.Name>("N");
+            get => Properties.Get<Name>("N");
             set => Properties.Set("N", value);
         }
 
         /// <summary>
         /// The kind of the card.
         /// </summary>
-        public string Kind
+        public Kind Kind
         {
-            get => Properties.Get<string>("X-ADDRESSBOOKSERVER-KIND");
+            get => Properties.Get<Kind>("X-ADDRESSBOOKSERVER-KIND");
             set => Properties.Set("X-ADDRESSBOOKSERVER-KIND", value);
         }
 
@@ -142,18 +114,18 @@ namespace iCloud.Dav.People.PeopleComponents
         /// <summary>
         /// The ORG of the card.
         /// </summary>
-        public virtual string ORG
+        public virtual Organization Organization
         {
-            get => Properties.Get<string>("ORG");
+            get => Properties.Get<Organization>("ORG");
             set => Properties.Set("ORG", value);
         }
 
         /// <summary>
         /// The birthdate of the card.
         /// </summary>
-        public virtual string Birthdate
+        public virtual IDateTime Birthdate
         {
-            get => Properties.Get<string>("BDAY");
+            get => Properties.Get<IDateTime>("BDAY");
             set => Properties.Set("BDAY", value);
         }
 

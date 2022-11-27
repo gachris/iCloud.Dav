@@ -13,6 +13,8 @@ namespace iCloud.Dav.People.CardDav.Types
     {
         public Filters Filter { get; set; }
 
+        public bool RequestSyncToken { get; set; }
+
         public XmlSchema GetSchema() => new XmlSchema();
 
         public void ReadXml(XmlReader reader) => throw new NotSupportedException();

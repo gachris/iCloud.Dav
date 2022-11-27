@@ -1,8 +1,12 @@
 ﻿using iCloud.Dav.Calendar.CalDav.Types;
+using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace iCloud.Dav.Calendar.Serialization.Converters
 {
@@ -15,7 +19,50 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
-            return ((MultiStatus)value).Responses.ToEventList();
+
+            var multiStatus = (MultiStatus)value;
+            var calendarResponse = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true || !Path.HasExtension(x.Href));
+
+            return new Events()
+            {
+                Kind = "events",
+                ETag = calendarResponse?.Etag,
+                NextSyncToken = calendarResponse?.SyncToken ?? multiStatus.SyncToken,
+                Items = multiStatus.Responses.Except(new HashSet<Response>() { calendarResponse }).Select(ToEvent).ToList()
+            };
+        }
+
+        private static Event ToEvent(Response response)
+        {
+            Event calendarEvent;
+            var id = Path.GetFileNameWithoutExtension(response.Href);
+
+            if (response.Status == Status.NotFound)
+            {
+                calendarEvent = new Event
+                {
+                    Id = id,
+                    Uid = null,
+                    Deleted = true,
+                    ETag = response.Etag
+                };
+                return calendarEvent;
+            }
+            else if (response.CalendarData is null)
+            {
+                calendarEvent = new Event
+                {
+                    Id = id,
+                    Uid = null,
+                    ETag = response.Etag
+                };
+                return calendarEvent;
+            }
+
+            calendarEvent = response.CalendarData.Value.ToEvent();
+            calendarEvent.ETag = response.Etag;
+            calendarEvent.Id = id;
+            return calendarEvent;
         }
     }
 }

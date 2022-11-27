@@ -1,13 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace iCloud.Dav.Calendar.CalDav.Types
 {
-    [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-    internal sealed class PropFind : IXmlSerializable
+    [XmlRoot(ElementName = "calendar-multiget", Namespace = "urn:ietf:params:xml:ns:caldav")]
+    internal sealed class CalendarMultiget : IXmlSerializable
     {
+        public List<string> Href { get; }
+
+        public CalendarMultiget()
+        {
+            Href = new List<string>();
+        }
+
         public XmlSchema GetSchema() => new XmlSchema();
 
         public void ReadXml(XmlReader reader) => throw new NotSupportedException();
@@ -52,8 +60,10 @@ namespace iCloud.Dav.Calendar.CalDav.Types
             writer.WriteElementString("supported-report-set", "DAV:", null);
             writer.WriteElementString("sync-token", "DAV:", null);
             writer.WriteElementString("getetag", "DAV:", null);
-            writer.WriteString("calendar-data");
+            writer.WriteElementString("calendar-data", "urn:ietf:params:xml:ns:caldav", null);
             writer.WriteEndElement();
+
+            Href.ForEach(href => writer.WriteElementString("href", "DAV:", href));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace iCloud.Dav.People.DataTypes
 {
-    /// <summary>Identifies the type of date in a Person.</summary>
-    /// <seealso cref="Date" />
+    /// <summary>Identifies the type of date in a vCard.</summary>
+    /// <seealso cref="X_ABDate" />
     public enum DateType
     {
         /// <summary>Indicates the anniversary type.</summary>

@@ -17,7 +17,7 @@ namespace iCloud.Dav.Calendar.Services
         {
             Events = new EventsResource(this);
             Reminders = new RemindersResource(this);
-            Calendars = new CalendarsResource(this);
+            Calendars = new CalendarListResource(this);
             BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar);
         }
 
@@ -40,6 +40,6 @@ namespace iCloud.Dav.Calendar.Services
         /// <summary>
         /// Gets the Calendars resource.
         /// </summary>
-        public virtual CalendarsResource Calendars { get; }
+        public virtual CalendarListResource Calendars { get; }
     }
 }

@@ -10,9 +10,9 @@ namespace iCloud.Dav.Calendar.DataTypes
 {
     [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(CalendarConverter))]
-    public class Calendar : IDirectResponseSchema
+    public class CalendarListEntry : IDirectResponseSchema
     {
-        public Calendar()
+        public CalendarListEntry()
         {
             Privileges = new List<string>();
             SupportedReports = new List<string>();
@@ -22,6 +22,11 @@ namespace iCloud.Dav.Calendar.DataTypes
         public virtual string Uid { get; set; }
 
         public virtual string Summary { get; set; }
+
+        /// <summary>
+        /// Description of the calendar. Optional. Read-only.
+        /// </summary>
+        public virtual string Description { get; set; }
 
         public virtual string Color { get; set; }
 
@@ -38,6 +43,19 @@ namespace iCloud.Dav.Calendar.DataTypes
 
         public virtual VTimeZone TimeZone { get; set; }
 
-        public string SyncToken { get; internal set; }
+        /// <summary>
+        /// Whether this calendar list entry has been deleted from the calendar list. Read-only.
+        /// Optional. The default is False.
+        /// </summary>
+        public virtual bool? Deleted { get; set; }
+
+        public string Order { get; set; }
+
+        /// <summary>
+        /// Type of the collection ("calendar#calendarList").
+        /// </summary>
+        public virtual string Kind { get; set; }
+
+        public string Href { get; internal set; }
     }
 }

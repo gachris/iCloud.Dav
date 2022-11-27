@@ -5,15 +5,26 @@ using System.Xml.Serialization;
 
 namespace iCloud.Dav.Calendar.CalDav.Types
 {
-    [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-    internal sealed class PropFind : IXmlSerializable
+    [XmlRoot(ElementName = "sync-collection", Namespace = "DAV:")]
+    internal sealed class SyncCollection : IXmlSerializable
     {
+        public SyncCollection()
+        {
+            SyncLevel = "1";
+        }
+
+        public string SyncToken { get; set; }
+
+        public string SyncLevel { get; set; }
+
         public XmlSchema GetSchema() => new XmlSchema();
 
         public void ReadXml(XmlReader reader) => throw new NotSupportedException();
 
         public void WriteXml(XmlWriter writer)
         {
+            writer.WriteElementString("sync-token", "DAV:", SyncToken);
+            writer.WriteElementString("sync-level", "DAV:", SyncLevel);
             writer.WriteStartElement("prop", "DAV:");
             writer.WriteElementString("add-member", "DAV:", null);
             writer.WriteElementString("allowed-sharing-modes", "http://calendarserver.org/ns/", null);

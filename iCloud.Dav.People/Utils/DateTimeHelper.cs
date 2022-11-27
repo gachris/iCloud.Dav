@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace iCloud.Dav.People.Utils
@@ -18,18 +17,16 @@ namespace iCloud.Dav.People.Utils
         /// </remarks>
         public static DateTime? ParseDate(string value)
         {
-            if (DateTime.TryParse(value, out var result))
-                return new DateTime?(result);
-            return DateTime.TryParseExact(value, "yyyyMMdd\\THHmmss\\Z", null, DateTimeStyles.AssumeUniversal, out result) ? new DateTime?(result) : new DateTime?();
+            return DateTime.TryParse(value, out var result)
+                ? new DateTime?(result)
+                : DateTime.TryParseExact(value, "yyyyMMdd\\THHmmss\\Z", null, DateTimeStyles.AssumeUniversal, out result) ? new DateTime?(result) : new DateTime?();
         }
 
         public static DateTime? TryParseDate(string value)
         {
             if (DateTime.TryParse(value, out var result))
                 return result;
-            else if (DateTime.TryParseExact(value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-                return result;
-            else return null;
+            else return DateTime.TryParseExact(value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result) ? result : (DateTime?)null;
         }
     }
 }

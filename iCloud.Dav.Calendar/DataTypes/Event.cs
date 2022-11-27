@@ -9,7 +9,18 @@ namespace iCloud.Dav.Calendar.DataTypes
     [TypeConverter(typeof(EventConverter))]
     public class Event : CalendarEvent, IDirectResponseSchema
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string Id { get; set; }
+
         /// <inheritdoc/>
         public virtual string ETag { get; set; }
+
+        /// <summary>
+        /// Whether this event has been deleted from the calendar. Read-only.
+        /// Optional. The default is False.
+        /// </summary>
+        public virtual bool? Deleted { get; set; }
     }
 }

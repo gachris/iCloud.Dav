@@ -1,5 +1,5 @@
-﻿using iCloud.Dav.People.DataTypes.Mapping;
-using iCloud.Dav.People.Serialization.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Utils;
 using System;
 using System.IO;
@@ -7,7 +7,7 @@ using vCard.Net.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 
-namespace iCloud.Dav.People.DataTypes
+namespace iCloud.Dav.People.Serialization.DataTypes
 {
     public class X_ABRelatedNamesSerializer : EncodableDataTypeSerializer
     {

@@ -132,8 +132,6 @@ namespace iCloud.Dav.People.Serialization
             var paramNames = match.Groups[_paramNameGroup].Captures;
             var paramValues = match.Groups[_paramValueGroup].Captures;
 
-            name = Regex.Replace(name, @"^item(\d+).", replace => string.Empty);
-
             var property = new CardProperty(name.ToUpperInvariant());
             context.Push(property);
             SetPropertyParameters(property, paramNames, paramValues);

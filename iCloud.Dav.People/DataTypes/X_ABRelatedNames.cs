@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using iCloud.Dav.People.Serialization.DataTypes;
+using System.Collections.Generic;
 using System.IO;
 using vCard.Net;
 using vCard.Net.DataTypes;

@@ -1,7 +1,9 @@
 ﻿using iCloud.Dav.People.DataTypes;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using vCard.Net;
+using vCard.Net.DataTypes;
 
 namespace iCloud.Dav.People.Serialization
 {
@@ -28,8 +30,9 @@ namespace iCloud.Dav.People.Serialization
             AddPropertyMapping("X-ABDATE", typeof(X_ABDate), true);
             AddPropertyMapping("X-ABRELATEDNAMES", typeof(X_ABRelatedNames), true);
             AddPropertyMapping("X-SOCIALPROFILE", typeof(X_SocialProfile), true);
-            AddPropertyMapping("REV", typeof(vCard.Net.DataTypes.IDateTime), false);
-            AddPropertyMapping("N", typeof(vCard.Net.DataTypes.Name), false);
+            AddPropertyMapping("REV", typeof(IDateTime), false);
+            AddPropertyMapping("BDAY", typeof(IDateTime), false);
+            AddPropertyMapping("N", typeof(Name), false);
         }
 
         public void AddPropertyMapping(string name, Type objectType, bool allowsMultipleValues)
@@ -88,12 +91,11 @@ namespace iCloud.Dav.People.Serialization
                 return null;
             }
 
-            if (!_propertyMap.TryGetValue(p.Name, out var m))
-            {
-                return null;
-            }
+            var name = Regex.Replace(p.Name, @"^ITEM(\d+).", replace => string.Empty);
 
-            return m.Resolver == null
+            return !_propertyMap.TryGetValue(name, out var m)
+                ? null
+                : m.Resolver == null
                 ? m.ObjectType
                 : m.Resolver(p);
         }

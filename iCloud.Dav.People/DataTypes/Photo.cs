@@ -1,5 +1,4 @@
 ﻿using iCloud.Dav.Core.Utils;
-using iCloud.Dav.People.PeopleComponents;
 using iCloud.Dav.People.Serialization.DataTypes;
 using System;
 using System.Drawing;

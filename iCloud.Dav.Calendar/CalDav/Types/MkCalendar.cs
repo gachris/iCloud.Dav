@@ -17,7 +17,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
 
         public List<string> SupportedCalendarComponents { get; }
 
-        public string CalendarTimeZoneSerializedString { get; set; }
+        public string CalendarTimeZone { get; set; }
 
         public MkCalendar(string displayName)
         {
@@ -57,10 +57,10 @@ namespace iCloud.Dav.Calendar.CalDav.Types
                 writer.WriteEndElement();
             }
 
-            if (!string.IsNullOrEmpty(CalendarTimeZoneSerializedString))
+            if (!string.IsNullOrEmpty(CalendarTimeZone))
             {
                 writer.WriteStartElement("calendar-timezone", "urn:ietf:params:xml:ns:caldav");
-                writer.WriteString(CalendarTimeZoneSerializedString);
+                writer.WriteString(CalendarTimeZone);
                 writer.WriteEndElement();
             }
 

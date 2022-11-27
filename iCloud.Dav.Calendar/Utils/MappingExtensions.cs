@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
+﻿using Ical.Net.CalendarComponents;
+using Ical.Net.Serialization;
+using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Serialization;
-using iCloud.Dav.Core.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,44 +12,42 @@ namespace iCloud.Dav.Calendar.Utils
 {
     internal static class MappingExtensions
     {
-        public static CalendarList ToCalendarList(this IEnumerable<Response> responses)
-        {
-            if (responses is null) throw new ArgumentNullException(nameof(responses));
-            return new CalendarList(responses.Select(ToCalendar));
-        }
-
-        public static DataTypes.Calendar ToCalendar(this Response response)
+        public static CalendarListEntry ToCalendar(this Response response)
         {
             if (response is null) throw new ArgumentNullException(nameof(response));
             var id = response.Href.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-            var calendarListEntry = new DataTypes.Calendar()
+            var calendarListEntry = new CalendarListEntry()
             {
+                Href = response.Href,
                 Uid = id,
                 ETag = response.Etag,
                 CTag = response.Ctag?.Value,
                 Color = response.CalendarColor,
-                Summary = response.DisplayName ?? id,
-                SyncToken = response.SyncToken
+                Summary = response.DisplayName,
+                Description = response.CalendarDescription,
+                Order = response.CalendarOrder,
             };
+
+            if (response.Status == Status.NotFound)
+            {
+                calendarListEntry.Deleted = true;
+                return calendarListEntry;
+            }
+
+            if (!string.IsNullOrEmpty(response.CalendarTimeZone))
+            {
+                var byteArray = Encoding.UTF8.GetBytes(response.CalendarTimeZone);
+                using (var stream = new MemoryStream(byteArray))
+                {
+                    var calendars = CalendarDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).OfType<Ical.Net.Calendar>().ToList();
+                    calendarListEntry.TimeZone = calendars.First().TimeZones.OfType<VTimeZone>().First();
+                }
+            }
             calendarListEntry.Privileges.AddRange(response.CurrentUserPrivilegeSet.Select(privilege => privilege.Name));
             calendarListEntry.SupportedReports.AddRange(response.SupportedReportSet.Select(supportedReport => supportedReport.Name));
             calendarListEntry.SupportedCalendarComponents.AddRange(response.SupportedCalendarComponentSet.Select(comp => comp.Name));
+
             return calendarListEntry;
-        }
-
-        public static Events ToEventList(this IEnumerable<Response> responses)
-        {
-            if (responses is null) throw new ArgumentNullException(nameof(responses));
-            return new Events(responses.Where(x => !(x.CalendarData is null)).Select(ToEvent));
-        }
-
-        public static Event ToEvent(this Response response)
-        {
-            var calendarDataAttribute = response.CalendarData.ThrowIfNull(nameof(response.CalendarData));
-            var calendarData = calendarDataAttribute.Value.ThrowIfNull(nameof(response.CalendarData.Value));
-            var calendarEvent = calendarData.ToEvent();
-            calendarEvent.ETag = response.Etag;
-            return calendarEvent;
         }
 
         public static Event ToEvent(this string data)
@@ -63,21 +61,6 @@ namespace iCloud.Dav.Calendar.Utils
             }
         }
 
-        public static Reminders ToReminderList(this IEnumerable<Response> responses)
-        {
-            if (responses is null) throw new ArgumentNullException(nameof(responses));
-            return new Reminders(responses.Where(x => !(x.CalendarData is null)).Select(ToReminder));
-        }
-
-        public static Reminder ToReminder(this Response response)
-        {
-            var calendarDataAttribute = response.CalendarData.ThrowIfNull(nameof(response.CalendarData));
-            var calendarData = calendarDataAttribute.Value.ThrowIfNull(nameof(response.CalendarData.Value));
-            var calendarReminder = calendarData.ToReminder();
-            calendarReminder.ETag = response.Etag;
-            return calendarReminder;
-        }
-
         public static Reminder ToReminder(this string data)
         {
             var byteArray = Encoding.UTF8.GetBytes(data);
@@ -87,6 +70,22 @@ namespace iCloud.Dav.Calendar.Utils
                 var calendarReminder = calendars.First().Todos.OfType<Reminder>().First();
                 return calendarReminder;
             }
+        }
+
+        public static string SerializeToString(this Event calendarEvent)
+        {
+            var calendar = new Ical.Net.Calendar();
+            var calendarSerializer = new CalendarSerializer();
+            calendar.Events.Add(calendarEvent);
+            return calendarSerializer.SerializeToString(calendar);
+        }
+
+        public static string SerializeToString(this Reminder calendarReminder)
+        {
+            var calendar = new Ical.Net.Calendar();
+            var calendarSerializer = new CalendarSerializer();
+            calendar.Todos.Add(calendarReminder);
+            return calendarSerializer.SerializeToString(calendar);
         }
 
         public static string ToFilterTime(this DateTime? dateTime)

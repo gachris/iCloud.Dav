@@ -12,6 +12,8 @@ namespace iCloud.Dav.Calendar.CalDav.Types
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
     internal sealed class MultiStatus : IXmlSerializable
     {
+        public string SyncToken { get; private set; }
+
         public List<Response> Responses { get; }
 
         public MultiStatus() => Responses = new List<Response>();
@@ -25,71 +27,63 @@ namespace iCloud.Dav.Calendar.CalDav.Types
             var rootDescendants = root.Descendants().OfType<XElement>();
             var xResponses = rootDescendants.Where(x => x.Name.LocalName == "response");
             Responses.AddRange(xResponses.Select(GetResponse));
+            SyncToken = rootDescendants.FirstOrDefault(x => x.Name.LocalName == "sync-token")?.Value;
         }
 
         public void WriteXml(XmlWriter writer) => throw new NotSupportedException();
 
         private static Response GetResponse(XElement xResponse)
         {
-            var href = xResponse.Elements().First(x => x.Name.LocalName == "href").Value;
+            var response = new Response
+            {
+                Href = xResponse.Elements().First(x => x.Name.LocalName == "href").Value,
+                Status = xResponse.Elements().FirstOrDefault(x => x.Name.LocalName == "status")?.Value == "HTTP/1.1 404 Not Found" ? Status.NotFound : Status.OK
+            };
+
+            if (response.Status == Status.NotFound)
+            {
+                return response;
+            }
+
             var propstat = xResponse.Elements().First(x => x.Name.LocalName == "propstat");
-            var status = propstat.Elements().Single(x => x.Name.LocalName == "status");
             var prop = propstat.Elements().FirstOrDefault(x => x.Name.LocalName == "prop");
             var propElements = prop?.Elements();
-
-            var getctag = propElements?.FirstOrDefault(x => x.Name.LocalName == "getctag");
-            var getctagAttribute =
-               !(getctag is null) ?
-               new Attribute(getctag.Name.LocalName, getctag.Name.NamespaceName, getctag.Value) :
-               null;
-
-            var current_user_privilege_set = propElements?.FirstOrDefault(x => x.Name.LocalName == "current-user-privilege-set");
-            var privilege = current_user_privilege_set?.Elements().Where(x => x.Name.LocalName == "privilege");
+            var privilege = propElements?.FirstOrDefault(x => x.Name.LocalName == "current-user-privilege-set")?.Elements().Where(x => x.Name.LocalName == "privilege");
             var privileges = privilege?.Elements()?.
-                Select(element => new Privilege(element.Name.LocalName, element.Name.NamespaceName)).
-                ToList() ??
-                Enumerable.Empty<Privilege>().ToList();
-
-            var supported_report_set = propElements?.FirstOrDefault(x => x.Name.LocalName == "supported-report-set");
-            var supported_reports = supported_report_set?.Elements().Where(x => x.Name.LocalName == "supported-report");
-
+                Select(element => new Privilege(element.Name.LocalName, element.Name.NamespaceName)) ?? Enumerable.Empty<Privilege>();
+            var supported_reports = propElements?.FirstOrDefault(x => x.Name.LocalName == "supported-report-set")?.Elements().Where(x => x.Name.LocalName == "supported-report");
             var reports = supported_reports?.Elements()?.
                 Select(element =>
                 {
                     var report = element.Descendants().First();
                     return new SupportedReport(report.Name.LocalName, report.Name.NamespaceName);
-                }).
-                ToList() ??
-                Enumerable.Empty<SupportedReport>().ToList();
-
-            var supported_calendar_component_set = propElements?.FirstOrDefault(x => x.Name.LocalName == "supported-calendar-component-set");
-            var calendar_component = supported_calendar_component_set?.Elements().Where(x => x.Name.LocalName == "comp");
+                }) ?? Enumerable.Empty<SupportedReport>();
+            var calendar_component = propElements?.FirstOrDefault(x => x.Name.LocalName == "supported-calendar-component-set")?.Elements().Where(x => x.Name.LocalName == "comp");
             var calendar_components = calendar_component?.
-                Select(element => new CalendarComponent(element.Attributes().First(x => x.Name == "name").Value, element.Name.NamespaceName)).
-                ToList() ??
-                Enumerable.Empty<CalendarComponent>().ToList();
-
-            var displayname = propElements?.FirstOrDefault(x => x.Name.LocalName == "displayname")?.Value;
-            var calendar_color = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-color")?.Value;
-            var getetag = propElements?.FirstOrDefault(x => x.Name.LocalName == "getetag")?.Value;
-
+                Select(element => new CalendarComponent(element.Attributes().First(x => x.Name == "name").Value, element.Name.NamespaceName)) ?? Enumerable.Empty<CalendarComponent>();
+            var resourcetype = propElements?.FirstOrDefault(x => x.Name.LocalName == "resourcetype")?.Elements()?.
+                Select(element => new ResourceType(element.Name.LocalName, element.Name.NamespaceName)) ?? Enumerable.Empty<ResourceType>();
             var calendar_data = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-data");
-            var calendar_dataAttribute = !(calendar_data is null) ? new Attribute(calendar_data.Name.LocalName,
+            var getctag = propElements?.FirstOrDefault(x => x.Name.LocalName == "getctag");
+
+            response.Ctag = !(getctag is null) ? new Attribute(getctag.Name.LocalName, getctag.Name.NamespaceName, getctag.Value) : null;
+            response.DisplayName = propElements?.FirstOrDefault(x => x.Name.LocalName == "displayname")?.Value;
+            response.CalendarColor = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-color")?.Value;
+            response.CalendarOrder = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-order")?.Value;
+            response.Etag = propElements?.FirstOrDefault(x => x.Name.LocalName == "getetag")?.Value;
+            response.SyncToken = propElements?.FirstOrDefault(x => x.Name.LocalName == "sync-token")?.Value;
+            response.CalendarTimeZone = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-timezone")?.Value;
+            response.CalendarDescription = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-description")?.Value;
+            response.CalendarData = !(calendar_data is null) ? new Attribute(calendar_data.Name.LocalName,
                                                                                    calendar_data.Name.NamespaceName,
                                                                                    calendar_data.Value) : null;
 
-            var syncToken = propElements?.FirstOrDefault(x => x.Name.LocalName == "sync-token")?.Value;
+            response.CurrentUserPrivilegeSet.AddRange(privileges);
+            response.SupportedReportSet.AddRange(reports);
+            response.SupportedCalendarComponentSet.AddRange(calendar_components);
+            response.ResourceType.AddRange(resourcetype);
 
-            return new Response(href,
-                       displayname,
-                       calendar_color,
-                       getetag,
-                       getctagAttribute,
-                       calendar_dataAttribute,
-                       privileges,
-                       reports,
-                       calendar_components,
-                       syncToken);
+            return response;
         }
     }
 }

@@ -3,7 +3,6 @@ using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Utils;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.PeopleComponents;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.Utils;
 
@@ -23,6 +22,12 @@ namespace iCloud.Dav.People.Resources
         /// Constructs a new resource.
         /// </summary>
         public PeopleResource(IClientService service) => _service = service;
+
+        /// <summary>
+        /// Returns the changes on the user's people list.
+        /// </summary>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
+        public virtual SyncCollectionRequest SyncCollection(string resourceName) => new SyncCollectionRequest(_service, resourceName);
 
         /// <summary>
         /// Returns the peoples on the user's people list.
@@ -55,6 +60,73 @@ namespace iCloud.Dav.People.Resources
         /// <param name="uniqueId">People identifier. To retrieve people IDs call the people.list method.</param>
         /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
         public virtual DeleteRequest Delete(string uniqueId, string resourceName) => new DeleteRequest(_service, uniqueId, resourceName);
+
+        /// <summary>
+        /// Returns the changes on the user's people list.
+        /// </summary>
+        public class SyncCollectionRequest : PeopleBaseServiceRequest<ContactList>
+        {
+            private SyncCollection _body;
+
+            /// <summary>
+            /// Constructs a new Sync Collection request.
+            /// </summary>
+            public SyncCollectionRequest(IClientService service, string resourceName) : base(service) 
+            {
+                SyncLevel = "1";
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+            }
+
+            /// <summary>
+            /// Resource Name. To retrieve resource names call the identityCard.list method.
+            /// </summary>
+            [RequestParameter("resourceName", RequestParameterType.Path)]
+            public virtual string ResourceName { get; }
+
+            /// <summary>
+            /// Optional. A sync token, received from a previous response `next_sync_token` Provide
+            /// this to retrieve only the resources changed since the last request. When syncing,
+            /// all other parameters provided to `people.list` must match the first
+            /// call that provided the sync token. More details about sync behavior at `people.list`.
+            /// </summary>
+            public virtual string SyncToken { get; set; }
+
+            public virtual string SyncLevel { get; set; }
+
+            /// <inheritdoc/>
+            public override string MethodName => "list";
+
+            /// <inheritdoc/>
+            public override string HttpMethod => Constants.Report;
+
+            /// <inheritdoc/>
+            public override string RestPath => "{resourceName}";
+
+            /// <inheritdoc/>
+            public override string Depth => "0";
+
+            /// <inheritdoc/>
+            protected override object GetBody()
+            {
+                if (_body == null)
+                {
+                    _body = new SyncCollection();
+                }
+
+                _body.SyncToken = SyncToken;
+                _body.SyncLevel = SyncLevel;
+
+                return _body;
+            }
+
+            /// <inheritdoc/>
+            protected override void InitParameters()
+            {
+                base.InitParameters();
+
+                RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
+            }
+        }
 
         /// <summary>
         /// Returns the peoples on the user's people list.

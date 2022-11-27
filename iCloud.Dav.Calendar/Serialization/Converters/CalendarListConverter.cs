@@ -1,8 +1,11 @@
 ﻿using iCloud.Dav.Calendar.CalDav.Types;
+using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 
 namespace iCloud.Dav.Calendar.Serialization.Converters
 {
@@ -15,7 +18,16 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
-            return ((MultiStatus)value).Responses.ToCalendarList();
+
+            var responses = ((MultiStatus)value).Responses;
+            var collectionResponse = responses.FirstOrDefault(x => x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection");
+
+            return new CalendarList()
+            {
+                NextSyncToken = collectionResponse?.SyncToken,
+                ETag = collectionResponse?.Etag,
+                Items = responses.Except(new HashSet<Response>() { collectionResponse }).Select(MappingExtensions.ToCalendar).ToList()
+            };
         }
     }
 }

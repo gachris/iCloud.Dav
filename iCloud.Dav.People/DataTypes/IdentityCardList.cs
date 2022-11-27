@@ -11,17 +11,19 @@ namespace iCloud.Dav.People.DataTypes
     /// Represents a strongly typed list of objects that can be accessed by index. Provides
     /// methods to search, sort, and manipulate lists.
     /// </summary>   
-    [TypeConverter(typeof(ContactGroupListConverter))]
+    [TypeConverter(typeof(IdentityCardListConverter))]
     [XmlDeserializeType(typeof(MultiStatus))]
-    public class ContactGroupList : IDirectResponseSchema
+    public class IdentityCardList : IDirectResponseSchema
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// ETag of the collection.
+        /// </summary>
         public virtual string ETag { get; set; }
 
         /// <summary>
-        /// The list of groups that the requestor is connected to.
+        /// Items of the collection.
         /// </summary>
-        public virtual IList<ContactGroup> Items { get; set; }
+        public virtual IList<IdentityCard> Items { get; set; }
 
         /// <summary>
         /// A token, which can be sent as `sync_token` to retrieve changes since the last
@@ -31,7 +33,7 @@ namespace iCloud.Dav.People.DataTypes
         public virtual string NextSyncToken { get; set; }
 
         /// <summary>
-        /// Type of the collection ("people#groups").
+        /// Type of the collection ("people#resource").
         /// </summary>
         public virtual string Kind { get; set; }
     }

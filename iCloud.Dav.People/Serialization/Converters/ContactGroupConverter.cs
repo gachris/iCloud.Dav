@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.People.PeopleComponents;
+﻿using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Utils;
 using System;
 using System.ComponentModel;

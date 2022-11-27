@@ -16,8 +16,8 @@ namespace iCloud.Dav.People.CardDav.Types
         {
             writer.WriteStartElement("prop", "DAV:");
 
-            writer.WriteStartElement("allprop", "DAV:");
-            writer.WriteEndElement();
+            writer.WriteElementString("allprop", "DAV:", null);
+            writer.WriteElementString("sync-token", "DAV:", null);
 
             writer.WriteEndElement();
         }
