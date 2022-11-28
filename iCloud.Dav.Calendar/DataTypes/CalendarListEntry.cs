@@ -3,8 +3,10 @@ using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.Serialization.Converters;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Serialization;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {
@@ -12,14 +14,9 @@ namespace iCloud.Dav.Calendar.DataTypes
     [TypeConverter(typeof(CalendarConverter))]
     public class CalendarListEntry : IDirectResponseSchema
     {
-        public CalendarListEntry()
-        {
-            Privileges = new List<string>();
-            SupportedReports = new List<string>();
-            SupportedCalendarComponents = new List<string>();
-        }
 
-        public virtual string Uid { get; set; }
+
+        public virtual string Id { get; set; }
 
         public virtual string Summary { get; set; }
 
@@ -43,12 +40,6 @@ namespace iCloud.Dav.Calendar.DataTypes
 
         public virtual VTimeZone TimeZone { get; set; }
 
-        /// <summary>
-        /// Whether this calendar list entry has been deleted from the calendar list. Read-only.
-        /// Optional. The default is False.
-        /// </summary>
-        public virtual bool? Deleted { get; set; }
-
         public string Order { get; set; }
 
         /// <summary>
@@ -56,6 +47,21 @@ namespace iCloud.Dav.Calendar.DataTypes
         /// </summary>
         public virtual string Kind { get; set; }
 
-        public string Href { get; internal set; }
+        public CalendarListEntry()
+        {
+            Privileges = new List<string>();
+            SupportedReports = new List<string>();
+            SupportedCalendarComponents = new List<string>();
+            EnsureProperties();
+        }
+
+        private void EnsureProperties()
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                // Create a new ID for the component
+                Id = Guid.NewGuid().ToString();
+            }
+        }
     }
 }

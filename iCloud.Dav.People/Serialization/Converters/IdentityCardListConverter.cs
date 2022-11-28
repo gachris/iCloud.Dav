@@ -21,15 +21,14 @@ namespace iCloud.Dav.People.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection") || !Path.HasExtension(x.Href));
-            var cardResponses = multiStatus.Responses.Where(x => Path.HasExtension(x.Href));
+            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection") || !Path.HasExtension(x.Href.TrimEnd('/')));
 
             var identityCardList = new IdentityCardList()
             {
                 Kind = "resources",
                 ETag = collectionResponse?.Etag,
                 NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                Items = multiStatus.Responses.Except(new HashSet<Response>(cardResponses) { collectionResponse }).Select(ToIdentityCard).ToList(),
+                Items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToIdentityCard).ToList(),
             };
 
             if (!identityCardList.Items.Any())
@@ -38,7 +37,6 @@ namespace iCloud.Dav.People.Serialization.Converters
                 {
                     ETag = collectionResponse?.Etag,
                     NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                    Items = cardResponses.Select(ToCloudComponent).ToList()
                 });
             }
 
@@ -47,47 +45,12 @@ namespace iCloud.Dav.People.Serialization.Converters
 
         public static IdentityCard ToIdentityCard(Response response)
         {
-            var resourceName = response.Href.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
             return new IdentityCard()
             {
-                ResourceName = resourceName,
-                Url = response.Href,
+                ResourceName = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
                 ETag = response.Etag,
                 NextSyncToken = response.SyncToken
             };
-        }
-
-        public static CloudComponent ToCloudComponent(Response response)
-        {
-            CloudComponent contactGroup;
-            var id = Path.GetFileNameWithoutExtension(response.Href);
-
-            if (response.Status == Status.NotFound)
-            {
-                contactGroup = new CloudComponent
-                {
-                    Id = id,
-                    Uid = null,
-                    Deleted = true,
-                    ETag = response.Etag
-                };
-                return contactGroup;
-            }
-            else if (response.AddressData is null)
-            {
-                contactGroup = new CloudComponent
-                {
-                    Id = id,
-                    Uid = null,
-                    ETag = response.Etag
-                };
-                return contactGroup;
-            }
-
-            contactGroup = response.AddressData.Value.Deserialize<CloudComponent>();
-            contactGroup.ETag = response.Etag;
-            contactGroup.Id = id;
-            return contactGroup;
         }
     }
 }

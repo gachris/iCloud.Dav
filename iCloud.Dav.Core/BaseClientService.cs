@@ -3,11 +3,9 @@ using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Serialization;
 using iCloud.Dav.Core.Utils;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace iCloud.Dav.Core
@@ -19,8 +17,6 @@ namespace iCloud.Dav.Core
 
         /// <summary>The default maximum allowed length of a URL string for GET requests.</summary>
         public const uint DefaultMaxUrlLength = 2048;
-        
-        private readonly SerializationContext _serializationContext;
 
         public ConfigurableHttpClient HttpClient { get; private set; }
 
@@ -43,9 +39,6 @@ namespace iCloud.Dav.Core
                 Logger.Warning("Application name is not set. Please set Initializer.ApplicationName property");
             HttpClientInitializer = initializer.HttpClientInitializer;
             HttpClient = CreateHttpClient(initializer);
-
-            _serializationContext = new SerializationContext(this, "MySampleProp");
-            _serializationContext.SetService(HttpClient);
         }
 
         private ConfigurableHttpClient CreateHttpClient(Initializer initializer)
@@ -94,7 +87,7 @@ namespace iCloud.Dav.Core
                     if (converter != null)
                     {
                         var canConvert = converter.CanConvertFrom(result.GetType());
-                        if (canConvert) obj = converter.ConvertFrom(_serializationContext, null, result);
+                        if (canConvert) obj = converter.ConvertFrom(result);
                     }
                 }
                 else if (converter != null)
@@ -119,6 +112,11 @@ namespace iCloud.Dav.Core
             catch (Exception ex)
             {
                 throw new ICloudApiException(Name, $"Failed to parse response from server [{responseContentString}]", ex);
+            }
+
+            if (obj is IUrlPath url)
+            {
+                url.Id = Path.GetFileNameWithoutExtension(response.RequestMessage.RequestUri.OriginalString.TrimEnd('/'));
             }
 
             if (obj is IDirectResponseSchema directResponseSchema && string.IsNullOrEmpty(response.Headers.ETag?.Tag) == false) directResponseSchema.ETag = response.Headers.ETag?.Tag;
@@ -187,171 +185,6 @@ namespace iCloud.Dav.Core
                 Serializer = new XmlObjectSerializer();
                 DefaultExponentialBackOffPolicy = ExponentialBackOffPolicy.UnsuccessfulResponse503;
                 MaxUrlLength = 2048U;
-            }
-        }
-    }
-
-    public class SerializationContext : ITypeDescriptorContext
-    {
-        private readonly Stack<WeakReference> _mStack = new Stack<WeakReference>();
-        private readonly ServiceProvider _mServiceProvider = new ServiceProvider();
-
-        public SerializationContext(object instance, string propertyName)
-        {
-            Instance = instance;
-            PropertyDescriptor = TypeDescriptor.GetProperties(instance)[propertyName];
-        }
-
-        public object Instance { get;  }
-
-        public PropertyDescriptor PropertyDescriptor { get;  }
-
-        public IContainer Container { get; }
-
-        public void OnComponentChanged()
-        {
-        }
-
-        public bool OnComponentChanging()
-        {
-            return true;
-        }
-
-        public virtual void Push(object item)
-        {
-            if (item != null)
-            {
-                _mStack.Push(new WeakReference(item));
-            }
-        }
-
-        public virtual object Pop()
-        {
-            if (_mStack.Count > 0)
-            {
-                var r = _mStack.Pop();
-                if (r.IsAlive)
-                {
-                    return r.Target;
-                }
-            }
-            return null;
-        }
-
-        public virtual object Peek()
-        {
-            if (_mStack.Count > 0)
-            {
-                var r = _mStack.Peek();
-                if (r.IsAlive)
-                {
-                    return r.Target;
-                }
-            }
-            return null;
-        }
-
-        public virtual object GetService(Type serviceType) => _mServiceProvider.GetService(serviceType);
-
-        public virtual object GetService(string name) => _mServiceProvider.GetService(name);
-
-        public virtual T GetService<T>() => _mServiceProvider.GetService<T>();
-
-        public virtual T GetService<T>(string name) => _mServiceProvider.GetService<T>(name);
-
-        public virtual void SetService(string name, object obj) => _mServiceProvider.SetService(name, obj);
-
-        public virtual void SetService(object obj) => _mServiceProvider.SetService(obj);
-
-        public virtual void RemoveService(Type type) => _mServiceProvider.RemoveService(type);
-
-        public virtual void RemoveService(string name) => _mServiceProvider.RemoveService(name);
-    }
-
-    public class ServiceProvider
-    {
-        private readonly IDictionary<Type, object> _mTypedServices = new Dictionary<Type, object>();
-        private readonly IDictionary<string, object> _mNamedServices = new Dictionary<string, object>();
-
-        public virtual object GetService(Type serviceType)
-        {
-            object service;
-            _mTypedServices.TryGetValue(serviceType, out service);
-            return service;
-        }
-
-        public virtual object GetService(string name)
-        {
-            object service;
-            _mNamedServices.TryGetValue(name, out service);
-            return service;
-        }
-
-        public virtual T GetService<T>()
-        {
-            var service = GetService(typeof(T));
-            if (service is T)
-            {
-                return (T)service;
-            }
-            return default;
-        }
-
-        public virtual T GetService<T>(string name)
-        {
-            var service = GetService(name);
-            if (service is T)
-            {
-                return (T)service;
-            }
-            return default;
-        }
-
-        public virtual void SetService(string name, object obj)
-        {
-            if (!string.IsNullOrEmpty(name) && obj != null)
-            {
-                _mNamedServices[name] = obj;
-            }
-        }
-
-        public virtual void SetService(object obj)
-        {
-            if (obj != null)
-            {
-                var type = obj.GetType();
-                _mTypedServices[type] = obj;
-
-                // Get interfaces for the given type
-                foreach (var iface in type.GetInterfaces())
-                {
-                    _mTypedServices[iface] = obj;
-                }
-            }
-        }
-
-        public virtual void RemoveService(Type type)
-        {
-            if (type != null)
-            {
-                if (_mTypedServices.ContainsKey(type))
-                {
-                    _mTypedServices.Remove(type);
-                }
-
-                // Get interfaces for the given type
-                foreach (var iface in type.GetInterfaces().Where(iface => _mTypedServices.ContainsKey(iface)))
-                {
-                    _mTypedServices.Remove(iface);
-                }
-            }
-        }
-
-        public virtual void RemoveService(string name)
-        {
-            if (_mNamedServices.ContainsKey(name))
-            {
-                _mNamedServices.Remove(name);
             }
         }
     }

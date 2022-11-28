@@ -72,9 +72,9 @@ namespace iCloud.Dav.Calendar.Resources
         public virtual DeleteRequest Delete(string calendarId, string reminderId) => new DeleteRequest(_service, calendarId, reminderId);
 
         /// <summary>
-        /// Returns changes on the specified calendar.
+        /// Returns changes on the specified list.
         /// </summary>
-        public class SyncCollectionRequest : CalendarBaseServiceRequest<Reminders>
+        public class SyncCollectionRequest : CalendarBaseServiceRequest<SyncCollectionList>
         {
             private SyncCollection _body;
 
@@ -329,7 +329,7 @@ namespace iCloud.Dav.Calendar.Resources
             public InsertRequest(IClientService service, Reminder body, string calendarId) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
-                ReminderId = body.Uid.ThrowIfNull(nameof(body));
+                ReminderId = body.Id.ThrowIfNull(nameof(body.Id));
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             }
 
@@ -386,7 +386,7 @@ namespace iCloud.Dav.Calendar.Resources
             public UpdateRequest(IClientService service, Reminder body, string calendarId) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
-                ReminderId = Body.Uid.ThrowIfNullOrEmpty(nameof(Reminder.Uid));
+                ReminderId = Body.Id.ThrowIfNullOrEmpty(nameof(Reminder.Id));
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             }
 

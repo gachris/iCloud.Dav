@@ -1,17 +1,26 @@
-﻿using iCloud.Dav.People.Serialization.Converters;
+﻿using iCloud.Dav.Core;
+using iCloud.Dav.People.Serialization.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using vCard.Net;
+using vCard.Net.CardComponents;
 using vCard.Net.DataTypes;
 
 namespace iCloud.Dav.People.DataTypes
 {
     /// <inheritdoc/>
     [TypeConverter(typeof(ContactConverter))]
-    public class Contact : CloudComponent
+    public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     {
+        /// <inheritdoc/>
+        public virtual string ETag { get; set; }
+
+        public virtual string Id { get; set; }
+
         /// <summary>
-        /// The name of the product that generated the card.
+        /// The name of the product that generated the vCard.
         /// </summary>
         public virtual string ProductId
         {
@@ -20,7 +29,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The revision date of the card.
+        /// The revision date of the vCard.
         /// </summary>
         /// <remarks>
         ///     The revision date is not automatically updated by the
@@ -34,10 +43,10 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The formatted name of the card.
+        /// The formatted name of the vCard.
         /// </summary>
         /// <remarks>
-        ///     This property allows the name of the card to be
+        ///     This property allows the name of the vCard to be
         ///     written in a manner specific to his or her culture.
         ///     The formatted name is not required to strictly
         ///     correspond with the family name, given name, etc.
@@ -49,7 +58,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The name of the card.
+        /// The name of the vCard.
         /// </summary>
         public virtual Name N
         {
@@ -58,7 +67,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The kind of the card.
+        /// The kind of the vCard.
         /// </summary>
         public Kind Kind
         {
@@ -67,7 +76,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The phonetic last name of the card.
+        /// The phonetic last name of the vCard.
         /// </summary>
         public virtual string PhoneticLastName
         {
@@ -76,7 +85,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The phonetic first name of the card.
+        /// The phonetic first name of the vCard.
         /// </summary>
         public virtual string PhoneticFirstName
         {
@@ -85,7 +94,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The nickname of the card.
+        /// The nickname of the vCard.
         /// </summary>
         public virtual string Nickname
         {
@@ -94,7 +103,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The job title of the card.
+        /// The job title of the vCard.
         /// </summary>
         public virtual string Title
         {
@@ -103,16 +112,16 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The phonetic ORG of the card.
+        /// The phonetic ORG of the vCard.
         /// </summary>
-        public virtual string PhoneticORG
+        public virtual string PhoneticOrganization
         {
             get => Properties.Get<string>("X-PHONETIC-ORG");
             set => Properties.Set("X-PHONETIC-ORG", value);
         }
 
         /// <summary>
-        /// The ORG of the card.
+        /// The ORG of the vCard.
         /// </summary>
         public virtual Organization Organization
         {
@@ -121,7 +130,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The birthdate of the card.
+        /// The birthdate of the vCard.
         /// </summary>
         public virtual IDateTime Birthdate
         {
@@ -130,7 +139,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// Notes or comments of the card.
+        /// Notes or comments of the vCard.
         /// </summary>
         public virtual string Notes
         {
@@ -139,7 +148,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The organization or company of the card.
+        /// The organization or company of the vCard.
         /// </summary>
         public virtual string ShowAs
         {
@@ -148,7 +157,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The photo of the card.
+        /// The photo of the vCard.
         /// </summary>
         public virtual Photo Photo
         {
@@ -157,7 +166,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="Website" /> objects for the card.
+        /// A collection of <see cref="Website" /> objects for the vCard.
         /// </summary>
         /// <seealso cref="Website" />
         public virtual IList<Website> Websites
@@ -167,25 +176,25 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="Phone" /> objects for the card.
+        /// A collection of <see cref="Phone" /> objects for the vCard.
         /// </summary>
-        public virtual IList<Phone> Phones
+        public virtual IList<Phone> Telephones
         {
             get => Properties.GetMany<Phone>("TEL");
             set => Properties.Set("TEL", value);
         }
 
         /// <summary>
-        /// A collection of <see cref="X_SocialProfile" /> objects for the card.
+        /// A collection of <see cref="SocialProfile" /> objects for the vCard.
         /// </summary>
-        public virtual IList<X_SocialProfile> Profiles
+        public virtual IList<SocialProfile> SocialProfiles
         {
-            get => Properties.GetMany<X_SocialProfile>("X-SOCIALPROFILE");
+            get => Properties.GetMany<SocialProfile>("X-SOCIALPROFILE");
             set => Properties.Set("X-SOCIALPROFILE", value);
         }
 
         /// <summary>
-        /// A collection of <see cref="Address" /> objects for the card.
+        /// A collection of <see cref="Address" /> objects for the vCard.
         /// </summary>
         public virtual IList<Address> Addresses
         {
@@ -194,41 +203,106 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="X_ABRelatedNames" /> objects for the card.
+        /// A collection of <see cref="DataTypes.RelatedNames" /> objects for the vCard.
         /// </summary>
-        public virtual IList<X_ABRelatedNames> RelatedPeople
+        public virtual IList<RelatedNames> RelatedNames
         {
-            get => Properties.GetMany<X_ABRelatedNames>("X-ABRELATEDNAMES");
+            get => Properties.GetMany<RelatedNames>("X-ABRELATEDNAMES");
             set => Properties.Set("X-ABRELATEDNAMES", value);
         }
 
         /// <summary>
-        /// A collection of <see cref="X_ABDate" /> objects for the card.
+        /// A collection of <see cref="Date" /> objects for the vCard.
         /// </summary>
-        public virtual IList<X_ABDate> Dates
+        public virtual IList<Date> Dates
         {
-            get => Properties.GetMany<X_ABDate>("X-ABDATE");
+            get => Properties.GetMany<Date>("X-ABDATE");
             set => Properties.Set("X-ABDATE", value);
         }
 
         /// <summary>
-        /// A collection of <see cref="Email" /> objects for the card.
+        /// A collection of <see cref="Email" /> objects for the vCard.
         /// </summary>
-        public virtual IList<Email> EmailAddresses
+        public virtual IList<Email> Emails
         {
             get => Properties.GetMany<Email>("EMAIL");
             set => Properties.Set("EMAIL", value);
         }
 
         /// <summary>
-        /// A collection of <see cref="InstantMessage" /> objects for the card.
+        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
         /// </summary>
-        public virtual IList<InstantMessage> InstantMessageCollection
+        public virtual IList<InstantMessage> ImppInstantMessages
         {
             get => Properties.GetMany<InstantMessage>("IMPP");
             set => Properties.Set("IMPP", value);
         }
 
-        public Contact() => Name = Components.VCARD;
+        /// <summary>
+        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
+        /// </summary>
+        public virtual IList<InstantMessage> AimInstantMessages
+        {
+            get => Properties.GetMany<InstantMessage>("X-AIM");
+            set => Properties.Set("X-AIM", value);
+        }
+
+        /// <summary>
+        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
+        /// </summary>
+        public virtual IList<InstantMessage> IcqInstantMessages
+        {
+            get => Properties.GetMany<InstantMessage>("X-ICQ");
+            set => Properties.Set("X-ICQ", value);
+        }
+
+        /// <summary>
+        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
+        /// </summary>
+        public virtual IList<InstantMessage> JabberInstantMessages
+        {
+            get => Properties.GetMany<InstantMessage>("X-JABBER");
+            set => Properties.Set("X-JABBER", value);
+        }
+
+        /// <summary>
+        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
+        /// </summary>
+        public virtual IList<InstantMessage> MsnInstantMessages
+        {
+            get => Properties.GetMany<InstantMessage>("X-MSN");
+            set => Properties.Set("X-JABBER", value);
+        }
+
+        /// <summary>
+        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
+        /// </summary>
+        public virtual IList<InstantMessage> YahooInstantMessages
+        {
+            get => Properties.GetMany<InstantMessage>("X-YAHOO");
+            set => Properties.Set("X-YAHOO", value);
+        }
+
+        public Contact()
+        {
+            Name = Components.VCARD;
+            EnsureProperties();
+        }
+
+        protected override void OnDeserialized(StreamingContext context)
+        {
+            base.OnDeserialized(context);
+
+            EnsureProperties();
+        }
+
+        private void EnsureProperties()
+        {
+            if (string.IsNullOrEmpty(Uid))
+            {
+                // Create a new UID for the component
+                Id = Uid = Guid.NewGuid().ToString();
+            }
+        }
     }
 }

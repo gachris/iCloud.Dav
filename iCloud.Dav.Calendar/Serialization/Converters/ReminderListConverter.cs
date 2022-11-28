@@ -21,7 +21,7 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var calendarResponse = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true || !Path.HasExtension(x.Href));
+            var calendarResponse = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true || !Path.HasExtension(x.Href.TrimEnd('/')));
 
             return new Reminders()
             {
@@ -34,34 +34,9 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
 
         private static Reminder ToReminder(Response response)
         {
-            Reminder calendarReminder;
-            var id = Path.GetFileNameWithoutExtension(response.Href);
-
-            if (response.Status == Status.NotFound)
-            {
-                calendarReminder = new Reminder
-                {
-                    Id = id,
-                    Uid = null,
-                    Deleted = true,
-                    ETag = response.Etag
-                };
-                return calendarReminder;
-            }
-            else if (response.CalendarData is null)
-            {
-                calendarReminder = new Reminder
-                {
-                    Id = id,
-                    Uid = null,
-                    ETag = response.Etag
-                };
-                return calendarReminder;
-            }
-
-            calendarReminder = response.CalendarData.Value.ToReminder();
+            var calendarReminder = response.CalendarData.Value.ToReminder();
             calendarReminder.ETag = response.Etag;
-            calendarReminder.Id = id;
+            calendarReminder.Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/'));
             return calendarReminder;
         }
     }

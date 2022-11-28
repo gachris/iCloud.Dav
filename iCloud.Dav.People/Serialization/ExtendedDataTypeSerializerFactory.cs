@@ -33,17 +33,29 @@ namespace iCloud.Dav.People.Serialization
             {
                 s = new WebsiteSerializer(ctx);
             }
-            else if (typeof(X_ABDate).IsAssignableFrom(objectType))
+            else if (typeof(Date).IsAssignableFrom(objectType))
             {
-                s = new X_ABDateSerializer(ctx);
+                s = new DateSerializer(ctx);
             }
-            else if (typeof(X_ABRelatedNames).IsAssignableFrom(objectType))
+            else if (typeof(RelatedNames).IsAssignableFrom(objectType))
             {
-                s = new X_ABRelatedNamesSerializer(ctx);
+                s = new RelatedNamesSerializer(ctx);
             }
-            else if (typeof(X_SocialProfile).IsAssignableFrom(objectType))
+            else if (typeof(SocialProfile).IsAssignableFrom(objectType))
             {
-                s = new X_SocialProfileSerializer(ctx);
+                s = new SocialProfileSerializer(ctx);
+            }
+            else if (typeof(Label).IsAssignableFrom(objectType))
+            {
+                s = new LabelSerializer(ctx);
+            }
+            else if (typeof(InstantMessage).IsAssignableFrom(objectType))
+            {
+                s = new InstantMessageSerializer(ctx);
+            }
+            else if (typeof(X_ABAddress).IsAssignableFrom(objectType))
+            {
+                s = new X_ABAddressSerializer(ctx);
             }
             else if (typeof(vCard.Net.DataTypes.IDateTime).IsAssignableFrom(objectType))
             {

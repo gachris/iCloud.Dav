@@ -34,7 +34,7 @@ namespace iCloud.Dav.People.Resources
         /// <summary>
         /// Returns the changes on the user's identity card list.
         /// </summary>
-        public class SyncCollectionRequest : PeopleBaseServiceRequest<IdentityCardList>
+        public class SyncCollectionRequest : PeopleBaseServiceRequest<SyncCollectionList>
         {
             private SyncCollection _body;
 

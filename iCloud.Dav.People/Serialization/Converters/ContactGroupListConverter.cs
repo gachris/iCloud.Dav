@@ -21,7 +21,7 @@ namespace iCloud.Dav.People.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var addressbook = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true || !Path.HasExtension(x.Href));
+            var addressbook = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true || !Path.HasExtension(x.Href.TrimEnd('/')));
 
             return new ContactGroupList()
             {
@@ -34,34 +34,9 @@ namespace iCloud.Dav.People.Serialization.Converters
 
         public static ContactGroup ToContactGroup(Response response)
         {
-            ContactGroup contactGroup;
-            var id = Path.GetFileNameWithoutExtension(response.Href);
-
-            if (response.Status == Status.NotFound)
-            {
-                contactGroup = new ContactGroup
-                {
-                    Id = id,
-                    Uid = null,
-                    Deleted = true,
-                    ETag = response.Etag
-                };
-                return contactGroup;
-            }
-            else if (response.AddressData is null)
-            {
-                contactGroup = new ContactGroup
-                {
-                    Id = id,
-                    Uid = null,
-                    ETag = response.Etag
-                };
-                return contactGroup;
-            }
-
-            contactGroup = response.AddressData.Value.Deserialize<ContactGroup>();
+            var contactGroup = response.AddressData.Value.DeserializeContactGroup();
             contactGroup.ETag = response.Etag;
-            contactGroup.Id = id;
+            contactGroup.Id = Path.GetFileNameWithoutExtension(response.Href);
             return contactGroup;
         }
     }

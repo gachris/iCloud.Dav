@@ -60,7 +60,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// <summary>
         /// Returns changes on the user's calendar list.
         /// </summary>
-        public class SyncCollectionRequest : CalendarBaseServiceRequest<CalendarList>
+        public class SyncCollectionRequest : CalendarBaseServiceRequest<SyncCollectionList>
         {
             private SyncCollection _body;
 
@@ -207,7 +207,7 @@ namespace iCloud.Dav.Calendar.Resources
             public InsertRequest(IClientService service, CalendarListEntry body) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
-                CalendarId = Body.Uid.ThrowIfNull(nameof(Body.Uid));
+                CalendarId = Body.Id.ThrowIfNull(nameof(Body.Id));
             }
 
             /// <summary>
@@ -281,7 +281,7 @@ namespace iCloud.Dav.Calendar.Resources
             public UpdateRequest(IClientService service, CalendarListEntry body) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
-                CalendarId = body.Uid.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Uid));
+                CalendarId = body.Id.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
             }
 
             /// <summary>

@@ -1,15 +1,17 @@
 ﻿using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.DataTypes.Mapping;
-using iCloud.Dav.People.Utils;
 using System;
 using System.IO;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
+using vCard.Net.Utility;
+using System.Text.RegularExpressions;
 
 namespace iCloud.Dav.People.Serialization.DataTypes
 {
     public class AddressSerializer : StringSerializer
     {
+        private static readonly Regex _reSplitSemiColon = new Regex("(?:^[;])|(?<=(?:[^\\\\]))[;]");
+
         public AddressSerializer()
         {
         }
@@ -27,73 +29,51 @@ namespace iCloud.Dav.People.Serialization.DataTypes
                 return null;
             }
 
-            //    var sc = obj as StatusCode;
-            //    if (sc == null)
-            //    {
-            //        return null;
-            //    }
+            var array = new string[7];
+            var num = 0;
+            if (address.POBox != null && address.POBox.Length > 0)
+            {
+                num = 1;
+                array[0] = address.POBox;
+            }
 
-            //    var vals = new string[sc.Parts.Length];
-            //    for (var i = 0; i < sc.Parts.Length; i++)
-            //    {
-            //        vals[i] = sc.Parts[i].ToString();
-            //    }
-            //    return Encode(sc, Escape(string.Join(".", vals)));
+            if (address.ExtendedAddress != null && address.ExtendedAddress.Length > 0)
+            {
+                num = 2;
+                array[1] = address.ExtendedAddress;
+            }
 
-            //    var properties = new List<CardProperty>();
-            //    if (IsNullOrEmpty(address)) throw new ArgumentNullException(nameof(address), "Cannot be empty!");
-            //    var valueCollection = new ValueCollection(';')
-            //    {
-            //        string.Empty,
-            //        string.Empty,
-            //        address.Street,
-            //        address.City,
-            //        address.Region,
-            //        address.PostalCode,
-            //        address.Country
-            //    };
-            //    var groupId = Guid.NewGuid().ToString();
-            //    var addressProperty = new CardProperty(Constants.Contact.Address.Property.ADR, valueCollection)
-            //    {
-            //        Group = groupId
-            //    };
-            //    properties.Add(addressProperty);
+            if (address.StreetAddress != null && address.StreetAddress.Length > 0)
+            {
+                num = 3;
+                array[2] = address.StreetAddress;
+            }
 
-            //    var addressTypeInternal = AddressTypeMapping.GetType(address.AddressType);
-            //    if (address.IsPreferred)
-            //    {
-            //        addressTypeInternal = addressTypeInternal.AddFlags(AddressTypeInternal.Pref);
-            //    }
+            if (address.Locality != null && address.Locality.Length > 0)
+            {
+                num = 4;
+                array[3] = address.Locality;
+            }
 
-            //    if (addressTypeInternal is not 0)
-            //    {
-            //        addressTypeInternal.StringArrayFlags()?.
-            //            ForEach(type => addressProperty.Subproperties.Add(Constants.Contact.Address.Property.TYPE, type.ToUpper()));
-            //    }
+            if (address.Region != null && address.Region.Length > 0)
+            {
+                num = 5;
+                array[4] = address.Region;
+            }
 
-            //    var label = address.AddressType switch
-            //    {
-            //        AddressType.School => Constants.Contact.Address.CustomType.School,
-            //        AddressType.Custom => address.Label,
-            //        _ => null,
-            //    };
+            if (address.PostalCode != null && address.PostalCode.Length > 0)
+            {
+                num = 6;
+                array[5] = address.PostalCode;
+            }
 
-            //    if (label is not null)
-            //    {
-            //        var labelProperty = new CardProperty(Constants.Contact.Address.Property.X_ABLABEL, label, groupId);
-            //        properties.Add(labelProperty);
-            //    }
+            if (address.Country != null && address.Country.Length > 0)
+            {
+                num = 7;
+                array[6] = address.Country;
+            }
 
-            //    if (!string.IsNullOrEmpty(address.CountryCode))
-            //    {
-            //        var abAdrProperty = new CardProperty(Constants.Contact.Address.Property.X_ABADR, address.CountryCode, groupId);
-            //        properties.Add(abAdrProperty);
-            //    }
-
-            //    return new(properties);
-
-            var value = address.Label;
-            return Encode(address, value);
+            return num == 0 ? null : Encode(address, string.Join(";", array, 0, num));
         }
 
         public Address Deserialize(string value)
@@ -117,65 +97,47 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             }
 
             var parts = value.Split(';');
-
-            if (parts.Length >= 7)
-                address.Country = parts[6].Trim();
-            if (parts.Length >= 6)
-                address.PostalCode = parts[5].Trim();
-            if (parts.Length >= 5)
-                address.Region = parts[4].Trim();
-            if (parts.Length >= 4)
-                address.City = parts[3].Trim();
-            if (parts.Length >= 3)
-                address.Street = parts[2].Trim();
-
-            // address.CountryCode = properties.FindByName(Constants.Contact.Address.Property.X_ABADR)?.Value?.ToString();
-
-            var types = address.Parameters.GetMany("TYPE");
-
-            _ = types.TryParse<AddressTypeInternal>(out var addressTypeInternal);
-            var isPreferred = addressTypeInternal.HasFlag(AddressTypeInternal.Pref);
-            if (isPreferred)
+            if (value != null && value.Length > 0)
             {
-                address.IsPreferred = true;
-                addressTypeInternal = addressTypeInternal.RemoveFlags(AddressTypeInternal.Pref);
+                string[] array = _reSplitSemiColon.Split(value);
+                if (array.Length != 0)
+                {
+                    address.POBox = array[0].Unescape();
+                }
+
+                if (array.Length > 1)
+                {
+                    address.ExtendedAddress = array[1].Unescape();
+                }
+
+                if (array.Length > 2)
+                {
+                    address.StreetAddress = array[2].Unescape();
+                }
+
+                if (array.Length > 3)
+                {
+                    address.Locality = array[3].Unescape();
+                }
+
+                if (array.Length > 4)
+                {
+                    address.Region = array[4].Unescape();
+                }
+
+                if (array.Length > 5)
+                {
+                    address.PostalCode = array[5].Unescape();
+                }
+
+                if (array.Length > 6)
+                {
+                    address.Country = array[6].Unescape();
+                }
             }
-
-            var addressTypeFromInternal = AddressTypeMapping.GetType(addressTypeInternal);
-            if (addressTypeFromInternal is 0)
-            {
-                //var labelProperty = properties.FindByName(Constants.Contact.Address.Property.X_ABLABEL);
-                //if (labelProperty is not null && labelProperty.Value?.ToString() is string label)
-                //{
-                //    switch (label)
-                //    {
-                //        case Constants.Contact.Address.CustomType.School:
-                //            addressTypeFromInternal = AddressType.School;
-                //            break;
-                //        default:
-                //            addressTypeFromInternal = AddressType.Custom;
-                //            address.Label = label;
-                //            break;
-                //    }
-                //}
-            }
-
-            address.AddressType = addressTypeFromInternal;
-
             return address;
         }
 
         public override object Deserialize(TextReader tr) => Deserialize(tr.ReadToEnd());
-
-        private static bool IsNullOrEmpty(Address address)
-        {
-            if (string.IsNullOrEmpty(address?.City)
-             && string.IsNullOrEmpty(address?.Country)
-             && string.IsNullOrEmpty(address?.PostalCode)
-             && string.IsNullOrEmpty(address?.Region)
-             && string.IsNullOrEmpty(address?.Street))
-                return true;
-            return false;
-        }
     }
 }

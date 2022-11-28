@@ -1,15 +1,24 @@
-﻿using iCloud.Dav.People.Serialization.Converters;
+﻿using iCloud.Dav.Core;
+using iCloud.Dav.People.Serialization.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using vCard.Net;
+using vCard.Net.CardComponents;
 using vCard.Net.DataTypes;
 
 namespace iCloud.Dav.People.DataTypes
 {
     /// <inheritdoc/>
     [TypeConverter(typeof(ContactGroupConverter))]
-    public class ContactGroup : CloudComponent
+    public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
     {
+        /// <inheritdoc/>
+        public virtual string ETag { get; set; }
+
+        public virtual string Id { get; set; }
+
         #region Properties
 
         /// <summary>
@@ -82,6 +91,31 @@ namespace iCloud.Dav.People.DataTypes
         /// <summary>
         /// Initializes a new instance of the <see cref="ContactGroup" /> class.
         /// </summary>
-        public ContactGroup() => Name = Components.VCARD;
+        public ContactGroup()
+        {
+            Name = Components.VCARD;
+            EnsureProperties();
+        }
+
+        protected override void OnDeserialized(StreamingContext context)
+        {
+            base.OnDeserialized(context);
+
+            EnsureProperties();
+        }
+
+        private void EnsureProperties()
+        {
+            if (string.IsNullOrEmpty(Uid))
+            {
+                // Create a new UID for the component
+                Id = Uid = Guid.NewGuid().ToString();
+            }
+
+            if (Kind == null)
+            {
+                Kind = new Kind() { CardKind = CardKind.Group };
+            }
+        }
     }
 }

@@ -14,12 +14,9 @@ namespace iCloud.Dav.Calendar.Utils
     {
         public static CalendarListEntry ToCalendar(this Response response)
         {
-            if (response is null) throw new ArgumentNullException(nameof(response));
-            var id = response.Href.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
             var calendarListEntry = new CalendarListEntry()
             {
-                Href = response.Href,
-                Uid = id,
+                Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
                 ETag = response.Etag,
                 CTag = response.Ctag?.Value,
                 Color = response.CalendarColor,
@@ -27,12 +24,6 @@ namespace iCloud.Dav.Calendar.Utils
                 Description = response.CalendarDescription,
                 Order = response.CalendarOrder,
             };
-
-            if (response.Status == Status.NotFound)
-            {
-                calendarListEntry.Deleted = true;
-                return calendarListEntry;
-            }
 
             if (!string.IsNullOrEmpty(response.CalendarTimeZone))
             {
@@ -43,6 +34,7 @@ namespace iCloud.Dav.Calendar.Utils
                     calendarListEntry.TimeZone = calendars.First().TimeZones.OfType<VTimeZone>().First();
                 }
             }
+
             calendarListEntry.Privileges.AddRange(response.CurrentUserPrivilegeSet.Select(privilege => privilege.Name));
             calendarListEntry.SupportedReports.AddRange(response.SupportedReportSet.Select(supportedReport => supportedReport.Name));
             calendarListEntry.SupportedCalendarComponents.AddRange(response.SupportedCalendarComponentSet.Select(comp => comp.Name));

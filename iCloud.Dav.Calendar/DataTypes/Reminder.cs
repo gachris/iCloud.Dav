@@ -1,13 +1,15 @@
 ﻿using Ical.Net.CalendarComponents;
 using iCloud.Dav.Calendar.Serialization.Converters;
 using iCloud.Dav.Core;
+using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {
     /// <inheritdoc/>
     [TypeConverter(typeof(ReminderConverter))]
-    public class Reminder : Todo, IDirectResponseSchema
+    public class Reminder : Todo, IDirectResponseSchema, IUrlPath
     {
         /// <summary>
         /// 
@@ -17,10 +19,25 @@ namespace iCloud.Dav.Calendar.DataTypes
         /// <inheritdoc/>
         public virtual string ETag { get; set; }
 
-        /// <summary>
-        /// Whether this event has been deleted from the calendar. Read-only.
-        /// Optional. The default is False.
-        /// </summary>
-        public virtual bool? Deleted { get; set; }
+        public Reminder() : base()
+        {
+            EnsureProperties();
+        }
+
+        protected override void OnDeserialized(StreamingContext context)
+        {
+            base.OnDeserialized(context);
+
+            EnsureProperties();
+        }
+
+        private void EnsureProperties()
+        {
+            if (string.IsNullOrEmpty(Uid))
+            {
+                // Create a new UID for the component
+                Id = Uid = Guid.NewGuid().ToString();
+            }
+        }
     }
 }

@@ -66,7 +66,7 @@ namespace iCloud.Dav.People.Resources
         /// <summary>
         /// Returns the changes on the user's contact group list.
         /// </summary>
-        public class SyncCollectionRequest : PeopleBaseServiceRequest<ContactGroupList>
+        public class SyncCollectionRequest : PeopleBaseServiceRequest<SyncCollectionList>
         {
             private SyncCollection _body;
 
@@ -255,7 +255,7 @@ namespace iCloud.Dav.People.Resources
             {
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
                 Body = body.ThrowIfNull(nameof(body));
-                UniqueId = body.Uid.ThrowIfNull(nameof(body.Uid));
+                UniqueId = body.Id.ThrowIfNull(nameof(body.Id));
                 ETagAction = ETagAction.IfMatch;
             }
 
@@ -321,7 +321,7 @@ namespace iCloud.Dav.People.Resources
             public UpdateRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
-                UniqueId = body.Uid.ThrowIfNullOrEmpty(nameof(ContactGroup.Uid));
+                UniqueId = body.Id.ThrowIfNullOrEmpty(nameof(ContactGroup.Id));
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
                 ETagAction = ETagAction.IfMatch;
             }
@@ -356,7 +356,14 @@ namespace iCloud.Dav.People.Resources
             public override string ContentType => Constants.TEXT_VCARD;
 
             /// <inheritdoc/>
-            protected override object GetBody() => _body = Body.SerializeToString();
+            protected override object GetBody()
+            {
+                if (_body == null)
+                {
+                    _body = Body.SerializeToString();
+                }
+                return _body;
+            }
 
             /// <inheritdoc/>
             protected override void InitParameters()

@@ -21,7 +21,7 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var calendarResponse = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true || !Path.HasExtension(x.Href));
+            var calendarResponse = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true || !Path.HasExtension(x.Href.TrimEnd('/')));
 
             return new Events()
             {
@@ -34,34 +34,9 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
 
         private static Event ToEvent(Response response)
         {
-            Event calendarEvent;
-            var id = Path.GetFileNameWithoutExtension(response.Href);
-
-            if (response.Status == Status.NotFound)
-            {
-                calendarEvent = new Event
-                {
-                    Id = id,
-                    Uid = null,
-                    Deleted = true,
-                    ETag = response.Etag
-                };
-                return calendarEvent;
-            }
-            else if (response.CalendarData is null)
-            {
-                calendarEvent = new Event
-                {
-                    Id = id,
-                    Uid = null,
-                    ETag = response.Etag
-                };
-                return calendarEvent;
-            }
-
-            calendarEvent = response.CalendarData.Value.ToEvent();
+            var calendarEvent = response.CalendarData.Value.ToEvent();
             calendarEvent.ETag = response.Etag;
-            calendarEvent.Id = id;
+            calendarEvent.Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/'));
             return calendarEvent;
         }
     }

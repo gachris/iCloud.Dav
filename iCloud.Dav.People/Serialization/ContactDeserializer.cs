@@ -1,37 +1,39 @@
-﻿using System;
+﻿using iCloud.Dav.People.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using vCard.Net;
-using vCard.Net.CardComponents;
 using vCard.Net.Serialization;
 
 namespace iCloud.Dav.People.Serialization
 {
-    public class CardDeserializer
+    public class ContactDeserializer
     {
-        internal CardDeserializer(
-          ExtendedDataTypeMapper dataTypeMapper,
+        internal ContactDeserializer(
+          ContactDataTypeMapper dataTypeMapper,
           ISerializerFactory serializerFactory)
         {
             _dataTypeMapper = dataTypeMapper;
             _serializerFactory = serializerFactory;
         }
 
-        public static readonly CardDeserializer Default = new CardDeserializer(
-            new ExtendedDataTypeMapper(),
+        public static readonly ContactDeserializer Default = new ContactDeserializer(
+            new ContactDataTypeMapper(),
             new ExtendedSerializerFactory());
 
         private const string _nameGroup = "name";
+        private const string _prefixGroup = "prefix";
         private const string _valueGroup = "value";
         private const string _paramNameGroup = "paramName";
         private const string _paramValueGroup = "paramValue";
 
+        private static readonly Regex _prefixRegex = new Regex(@"^(?<prefix>item\d+).", RegexOptions.Compiled);
         private static readonly Regex _contentLineRegex = new Regex(BuildContentLineRegex(), RegexOptions.Compiled);
 
-        private readonly ExtendedDataTypeMapper _dataTypeMapper;
+        private readonly ContactDataTypeMapper _dataTypeMapper;
         private readonly ISerializerFactory _serializerFactory;
 
         private static string BuildContentLineRegex()
@@ -66,35 +68,39 @@ namespace iCloud.Dav.People.Serialization
             return contentLine;
         }
 
-        public IEnumerable<ICardComponent> Deserialize<T>(TextReader tr) where T : ICardComponent
+        public IEnumerable<Contact> Deserialize(TextReader tr)
         {
             var context = new SerializationContext();
 
-            context.SetService(new ExtendedDataTypeMapper());
+            context.SetService(new ContactDataTypeMapper());
             context.SetService(new ExtendedSerializerFactory());
 
-            var stack = new Stack<ICardComponent>();
-            var current = default(ICardComponent);
+            var stack = new Stack<Contact>();
+            var current = default(Contact);
+
+            IRelatedDataType dataType = null;
+            string groupPrefix = null;
+
             foreach (var contentLineString in GetContentLines(tr))
             {
                 var contentLine = ParseContentLine(context, contentLineString);
-                if (string.Equals(contentLine.Name, "BEGIN", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(contentLine.Property.Name, "BEGIN", StringComparison.OrdinalIgnoreCase))
                 {
                     stack.Push(current);
-                    current = (ICardComponent)Activator.CreateInstance(typeof(T));
+                    current = (Contact)Activator.CreateInstance(typeof(Contact));
                     SerializationUtil.OnDeserializing(current);
                 }
                 else
                 {
                     if (current == null)
                     {
-                        throw new SerializationException($"Expected 'BEGIN', found '{contentLine.Name}'");
+                        throw new SerializationException($"Expected 'BEGIN', found '{contentLine.Property.Name}'");
                     }
-                    if (string.Equals(contentLine.Name, "END", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(contentLine.Property.Name, "END", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (!string.Equals((string)contentLine.Value, current.Name, StringComparison.OrdinalIgnoreCase))
+                        if (!string.Equals((string)contentLine.Property.Value, current.Name, StringComparison.OrdinalIgnoreCase))
                         {
-                            throw new SerializationException($"Expected 'END:{current.Name}', found 'END:{contentLine.Value}'");
+                            throw new SerializationException($"Expected 'END:{current.Name}', found 'END:{contentLine.Property.Value}'");
                         }
                         SerializationUtil.OnDeserialized(current);
                         var finished = current;
@@ -110,7 +116,24 @@ namespace iCloud.Dav.People.Serialization
                     }
                     else
                     {
-                        current.Properties.Add(contentLine);
+                        if ((contentLine.Prefix?.Equals(groupPrefix) ?? false) && !string.IsNullOrEmpty(groupPrefix))
+                        {
+                            dataType.Properties.Add(contentLine.Property);
+                            continue;
+                        }
+                        else if (dataType != null)
+                        {
+                            groupPrefix = null;
+                            dataType = null;
+                        }
+
+                        if (contentLine.Property.Value is IRelatedDataType _dataType && !string.IsNullOrWhiteSpace(contentLine.Prefix) && !string.IsNullOrEmpty(contentLine.Prefix))
+                        {
+                            dataType = _dataType;
+                            groupPrefix = contentLine.Prefix;
+                        }
+
+                        current.Properties.Add(contentLine.Property);
                     }
                 }
             }
@@ -120,14 +143,24 @@ namespace iCloud.Dav.People.Serialization
             }
         }
 
-        private CardProperty ParseContentLine(SerializationContext context, string input)
+        private (CardProperty Property, string Prefix) ParseContentLine(SerializationContext context, string input)
         {
             var match = _contentLineRegex.Match(input);
             if (!match.Success)
             {
                 throw new SerializationException($"Could not parse line: '{input}'");
             }
+
+            string prefix = null;
             var name = match.Groups[_nameGroup].Value;
+            var prefixMatch = _prefixRegex.Match(name);
+
+            if (prefixMatch.Success)
+            {
+                prefix = prefixMatch.Groups[_prefixGroup].Value;
+                name = _prefixRegex.Replace(name, string.Empty);
+            }
+
             var value = match.Groups[_valueGroup].Value;
             var paramNames = match.Groups[_paramNameGroup].Captures;
             var paramValues = match.Groups[_paramValueGroup].Captures;
@@ -137,7 +170,7 @@ namespace iCloud.Dav.People.Serialization
             SetPropertyParameters(property, paramNames, paramValues);
             SetPropertyValue(context, property, value);
             context.Pop();
-            return property;
+            return (property, prefix?.ToUpperInvariant());
         }
 
         private static void SetPropertyParameters(CardProperty property, CaptureCollection paramNames, CaptureCollection paramValues)
@@ -164,7 +197,6 @@ namespace iCloud.Dav.People.Serialization
             var serializer = (SerializerBase)_serializerFactory.Build(type, context);
             using (var valueReader = new StringReader(value))
             {
-
                 var propertyValue = serializer.Deserialize(valueReader);
                 if (propertyValue is IEnumerable<string> propertyValues)
                 {

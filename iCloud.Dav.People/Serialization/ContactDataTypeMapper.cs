@@ -1,15 +1,12 @@
 ﻿using iCloud.Dav.People.DataTypes;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using vCard.Net;
 using vCard.Net.DataTypes;
 
 namespace iCloud.Dav.People.Serialization
 {
-    internal delegate Type TypeResolverDelegate(object context);
-
-    internal class ExtendedDataTypeMapper
+    internal class ContactDataTypeMapper
     {
         private class PropertyMapping
         {
@@ -20,19 +17,24 @@ namespace iCloud.Dav.People.Serialization
 
         private readonly IDictionary<string, PropertyMapping> _propertyMap = new Dictionary<string, PropertyMapping>(StringComparer.OrdinalIgnoreCase);
 
-        public ExtendedDataTypeMapper()
+        public ContactDataTypeMapper()
         {
             AddPropertyMapping("ADR", typeof(Address), true);
             AddPropertyMapping("EMAIL", typeof(Email), true);
             AddPropertyMapping("TEL", typeof(Phone), true);
-            AddPropertyMapping("PHOTO", typeof(Photo), true);
+            AddPropertyMapping("ORG", typeof(Organization), false);
+            AddPropertyMapping("PHOTO", typeof(Photo), false);
             AddPropertyMapping("URL", typeof(Website), true);
-            AddPropertyMapping("X-ABDATE", typeof(X_ABDate), true);
-            AddPropertyMapping("X-ABRELATEDNAMES", typeof(X_ABRelatedNames), true);
-            AddPropertyMapping("X-SOCIALPROFILE", typeof(X_SocialProfile), true);
             AddPropertyMapping("REV", typeof(IDateTime), false);
             AddPropertyMapping("BDAY", typeof(IDateTime), false);
             AddPropertyMapping("N", typeof(Name), false);
+            AddPropertyMapping("X-ABDATE", typeof(Date), true);
+            AddPropertyMapping("X-ABRELATEDNAMES", typeof(RelatedNames), true);
+            AddPropertyMapping("X-SOCIALPROFILE", typeof(SocialProfile), true);
+            AddPropertyMapping("X-ADDRESSBOOKSERVER-KIND", typeof(Kind), false);
+            AddPropertyMapping("X-ABLABEL", typeof(Label), true);
+            AddPropertyMapping("X-ABADR", typeof(X_ABAddress), true);
+            AddPropertyMapping("IMPP", typeof(InstantMessage), true);
         }
 
         public void AddPropertyMapping(string name, Type objectType, bool allowsMultipleValues)
@@ -86,14 +88,9 @@ namespace iCloud.Dav.People.Serialization
         public virtual Type GetPropertyMapping(object obj)
         {
             var p = obj as ICardProperty;
-            if (p?.Name == null)
-            {
-                return null;
-            }
-
-            var name = Regex.Replace(p.Name, @"^ITEM(\d+).", replace => string.Empty);
-
-            return !_propertyMap.TryGetValue(name, out var m)
+            return p?.Name == null
+                ? null
+                : !_propertyMap.TryGetValue(p.Name, out var m)
                 ? null
                 : m.Resolver == null
                 ? m.ObjectType

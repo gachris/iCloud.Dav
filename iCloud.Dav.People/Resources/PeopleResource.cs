@@ -64,7 +64,7 @@ namespace iCloud.Dav.People.Resources
         /// <summary>
         /// Returns the changes on the user's people list.
         /// </summary>
-        public class SyncCollectionRequest : PeopleBaseServiceRequest<ContactList>
+        public class SyncCollectionRequest : PeopleBaseServiceRequest<SyncCollectionList>
         {
             private SyncCollection _body;
 
@@ -253,7 +253,7 @@ namespace iCloud.Dav.People.Resources
             public InsertRequest(IClientService service, Contact body, string resourceName) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(body));
-                UniqueId = body.Uid.ThrowIfNull(nameof(body.Uid));
+                UniqueId = body.Id.ThrowIfNull(nameof(body.Id));
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
                 ETagAction = ETagAction.IfNoneMatch;
             }
@@ -321,7 +321,7 @@ namespace iCloud.Dav.People.Resources
             {
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
                 Body = body.ThrowIfNull(nameof(body));
-                UniqueId = body.Uid.ThrowIfNullOrEmpty(nameof(body.Uid));
+                UniqueId = body.Id.ThrowIfNullOrEmpty(nameof(body.Id));
                 ETagAction = ETagAction.IfMatch;
             }
 
