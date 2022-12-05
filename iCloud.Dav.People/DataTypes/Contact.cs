@@ -17,6 +17,10 @@ namespace iCloud.Dav.People.DataTypes
         /// <inheritdoc/>
         public virtual string ETag { get; set; }
 
+        /// <summary>
+        /// A value that uniquely identifies the vCard. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+        /// </summary>
+        /// <remarks>The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/></remarks>
         public virtual string Id { get; set; }
 
         /// <summary>
@@ -232,55 +236,10 @@ namespace iCloud.Dav.People.DataTypes
         /// <summary>
         /// A collection of <see cref="InstantMessage" /> objects for the vCard.
         /// </summary>
-        public virtual IList<InstantMessage> ImppInstantMessages
+        public virtual IList<InstantMessage> InstantMessages
         {
             get => Properties.GetMany<InstantMessage>("IMPP");
             set => Properties.Set("IMPP", value);
-        }
-
-        /// <summary>
-        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
-        /// </summary>
-        public virtual IList<InstantMessage> AimInstantMessages
-        {
-            get => Properties.GetMany<InstantMessage>("X-AIM");
-            set => Properties.Set("X-AIM", value);
-        }
-
-        /// <summary>
-        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
-        /// </summary>
-        public virtual IList<InstantMessage> IcqInstantMessages
-        {
-            get => Properties.GetMany<InstantMessage>("X-ICQ");
-            set => Properties.Set("X-ICQ", value);
-        }
-
-        /// <summary>
-        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
-        /// </summary>
-        public virtual IList<InstantMessage> JabberInstantMessages
-        {
-            get => Properties.GetMany<InstantMessage>("X-JABBER");
-            set => Properties.Set("X-JABBER", value);
-        }
-
-        /// <summary>
-        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
-        /// </summary>
-        public virtual IList<InstantMessage> MsnInstantMessages
-        {
-            get => Properties.GetMany<InstantMessage>("X-MSN");
-            set => Properties.Set("X-JABBER", value);
-        }
-
-        /// <summary>
-        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
-        /// </summary>
-        public virtual IList<InstantMessage> YahooInstantMessages
-        {
-            get => Properties.GetMany<InstantMessage>("X-YAHOO");
-            set => Properties.Set("X-YAHOO", value);
         }
 
         public Contact()

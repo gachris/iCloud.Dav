@@ -31,60 +31,60 @@ namespace iCloud.Dav.People.DataTypes
         public virtual string Name { get; set; }
 
         /// <summary>The related person type.</summary>
-        public virtual RelatedPeopleType Type
+        public virtual RelatedNamesType Type
         {
             get
             {
                 var types = Parameters.GetMany("TYPE");
 
-                _ = types.TryParse<RelatedPeopleTypeInternal>(out var typeInternal);
-                var isPreferred = typeInternal.HasFlag(RelatedPeopleTypeInternal.Pref);
+                _ = types.TryParse<RelatedNamesTypeInternal>(out var typeInternal);
+                var isPreferred = typeInternal.HasFlag(RelatedNamesTypeInternal.Pref);
                 if (isPreferred)
                 {
                     IsPreferred = true;
-                    typeInternal = typeInternal.RemoveFlags(RelatedPeopleTypeInternal.Pref);
+                    typeInternal = typeInternal.RemoveFlags(RelatedNamesTypeInternal.Pref);
                 }
 
-                var typeFromInternal = RelatedPeopleTypeMapping.GetType(typeInternal);
+                var typeFromInternal = RelatedNamesMapping.GetType(typeInternal);
                 if (typeFromInternal is 0)
                 {
                     switch (Label?.Value)
                     {
                         case Father:
-                            typeFromInternal = RelatedPeopleType.Father;
+                            typeFromInternal = RelatedNamesType.Father;
                             break;
                         case Mother:
-                            typeFromInternal = RelatedPeopleType.Mother;
+                            typeFromInternal = RelatedNamesType.Mother;
                             break;
                         case Parent:
-                            typeFromInternal = RelatedPeopleType.Parent;
+                            typeFromInternal = RelatedNamesType.Parent;
                             break;
                         case Brother:
-                            typeFromInternal = RelatedPeopleType.Brother;
+                            typeFromInternal = RelatedNamesType.Brother;
                             break;
                         case Sister:
-                            typeFromInternal = RelatedPeopleType.Sister;
+                            typeFromInternal = RelatedNamesType.Sister;
                             break;
                         case Child:
-                            typeFromInternal = RelatedPeopleType.Child;
+                            typeFromInternal = RelatedNamesType.Child;
                             break;
                         case Friend:
-                            typeFromInternal = RelatedPeopleType.Friend;
+                            typeFromInternal = RelatedNamesType.Friend;
                             break;
                         case Spouse:
-                            typeFromInternal = RelatedPeopleType.Spouse;
+                            typeFromInternal = RelatedNamesType.Spouse;
                             break;
                         case Partner:
-                            typeFromInternal = RelatedPeopleType.Partner;
+                            typeFromInternal = RelatedNamesType.Partner;
                             break;
                         case Assistant:
-                            typeFromInternal = RelatedPeopleType.Assistant;
+                            typeFromInternal = RelatedNamesType.Assistant;
                             break;
                         case Manager:
-                            typeFromInternal = RelatedPeopleType.Manager;
+                            typeFromInternal = RelatedNamesType.Manager;
                             break;
                         default:
-                            typeFromInternal = RelatedPeopleType.Custom;
+                            typeFromInternal = RelatedNamesType.Custom;
                             break;
                     }
                 }
@@ -93,14 +93,15 @@ namespace iCloud.Dav.People.DataTypes
             }
             set
             {
-                var typeInternal = RelatedPeopleTypeMapping.GetType(value);
+                var typeInternal = RelatedNamesMapping.GetType(value);
                 if (IsPreferred)
                 {
-                    typeInternal = typeInternal.AddFlags(RelatedPeopleTypeInternal.Pref);
+                    typeInternal = typeInternal.AddFlags(RelatedNamesTypeInternal.Pref);
                 }
 
                 if (!(typeInternal is 0))
                 {
+                    Parameters.Remove("TYPE");
                     Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
                 else
@@ -108,41 +109,39 @@ namespace iCloud.Dav.People.DataTypes
                     Parameters.Remove("TYPE");
                 }
 
-                var typeFromInternal = RelatedPeopleTypeMapping.GetType(typeInternal);
-
-                switch (typeFromInternal)
+                switch (value)
                 {
-                    case RelatedPeopleType.Father:
+                    case RelatedNamesType.Father:
                         Label = new Label() { Value = Father };
                         break;
-                    case RelatedPeopleType.Mother:
+                    case RelatedNamesType.Mother:
                         Label = new Label() { Value = Mother };
                         break;
-                    case RelatedPeopleType.Parent:
+                    case RelatedNamesType.Parent:
                         Label = new Label() { Value = Parent };
                         break;
-                    case RelatedPeopleType.Brother:
+                    case RelatedNamesType.Brother:
                         Label = new Label() { Value = Brother };
                         break;
-                    case RelatedPeopleType.Sister:
+                    case RelatedNamesType.Sister:
                         Label = new Label() { Value = Sister };
                         break;
-                    case RelatedPeopleType.Child:
+                    case RelatedNamesType.Child:
                         Label = new Label() { Value = Child };
                         break;
-                    case RelatedPeopleType.Friend:
+                    case RelatedNamesType.Friend:
                         Label = new Label() { Value = Friend };
                         break;
-                    case RelatedPeopleType.Spouse:
+                    case RelatedNamesType.Spouse:
                         Label = new Label() { Value = Spouse };
                         break;
-                    case RelatedPeopleType.Partner:
+                    case RelatedNamesType.Partner:
                         Label = new Label() { Value = Partner };
                         break;
-                    case RelatedPeopleType.Assistant:
+                    case RelatedNamesType.Assistant:
                         Label = new Label() { Value = Assistant };
                         break;
-                    case RelatedPeopleType.Manager:
+                    case RelatedNamesType.Manager:
                         Label = new Label() { Value = Manager };
                         break;
                     default:
@@ -158,13 +157,13 @@ namespace iCloud.Dav.People.DataTypes
             get => Properties.Get<Label>("X-ABLABEL");
             set
             {
-                if (value == null)
+                if (value == null && Label != null) 
                 {
                     Properties.Remove("X-ABLABEL");
-                    var typeInternal = RelatedPeopleTypeMapping.GetType(RelatedPeopleType.Other);
-                    Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
+                    Parameters.Remove("TYPE");
+                    Parameters.Set("TYPE", RelatedNamesMapping.GetType(RelatedNamesType.Other).StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
-                else
+                else if (value != null)
                 {
                     Properties.Set("X-ABLABEL", value);
                     Parameters.Remove("TYPE");
@@ -180,13 +179,13 @@ namespace iCloud.Dav.People.DataTypes
         public RelatedNames()
         {
             Initialize();
-            Type = RelatedPeopleType.Other;
+            Type = RelatedNamesType.Other;
         }
 
         public RelatedNames(string value)
         {
             Initialize();
-            Type = RelatedPeopleType.Other;
+            Type = RelatedNamesType.Other;
             if (string.IsNullOrWhiteSpace(value))
             {
                 return;

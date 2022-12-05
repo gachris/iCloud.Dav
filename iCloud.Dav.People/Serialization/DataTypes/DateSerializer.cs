@@ -51,7 +51,7 @@ namespace iCloud.Dav.People.Serialization.DataTypes
                 return null;
             }
 
-            date.DateTime = DateTimeHelper.TryParseDate(value);
+            date.DateTime = DateTimeHelper.TryParseDate(value) ?? DateTime.MinValue;
 
             return date;
         }

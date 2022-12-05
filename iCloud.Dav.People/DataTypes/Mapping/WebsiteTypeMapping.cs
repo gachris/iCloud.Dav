@@ -10,10 +10,10 @@ namespace iCloud.Dav.People.DataTypes.Mapping
 
         private static readonly TypeMapping<WebsiteTypeInternal, WebsiteType>[] _typeMappings = new[]
         {
-        Home,
-        Work,
-        Other,
-    };
+            Home,
+            Work,
+            Other,
+        };
 
         public static WebsiteType GetType(WebsiteTypeInternal typeInternal)
         {

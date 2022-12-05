@@ -25,38 +25,39 @@ namespace iCloud.Dav.People.DataTypes
         public virtual bool IsPreferred { get; set; }
 
         /// <summary>The social profile type.</summary>
-        public virtual ProfileType Type
+        public virtual SocialProfileType Type
         {
             get
             {
                 var types = Parameters.GetMany("TYPE");
 
-                _ = types.TryParse<ProfileTypeInternal>(out var typeInternal);
-                var isPreferred = typeInternal.HasFlag(ProfileTypeInternal.Pref);
+                _ = types.TryParse<SocialProfileTypeInternal>(out var typeInternal);
+                var isPreferred = typeInternal.HasFlag(SocialProfileTypeInternal.Pref);
                 if (isPreferred)
                 {
                     IsPreferred = true;
-                    typeInternal = typeInternal.RemoveFlags(ProfileTypeInternal.Pref);
+                    typeInternal = typeInternal.RemoveFlags(SocialProfileTypeInternal.Pref);
                 }
 
-                var typeFromInternal = ProfileTypeMapping.GetType(typeInternal);
+                var typeFromInternal = SocialProfileTypeMapping.GetType(typeInternal);
                 if (typeFromInternal is 0)
                 {
-                    typeFromInternal = ProfileType.Custom;
+                    typeFromInternal = SocialProfileType.Custom;
                 }
 
                 return typeFromInternal;
             }
             set
             {
-                var typeInternal = ProfileTypeMapping.GetType(value);
+                var typeInternal = SocialProfileTypeMapping.GetType(value);
                 if (IsPreferred)
                 {
-                    typeInternal = typeInternal.AddFlags(ProfileTypeInternal.Pref);
+                    typeInternal = typeInternal.AddFlags(SocialProfileTypeInternal.Pref);
                 }
 
                 if (!(typeInternal is 0))
                 {
+                    Parameters.Remove("TYPE");
                     Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
                 else
@@ -64,11 +65,9 @@ namespace iCloud.Dav.People.DataTypes
                     Parameters.Remove("TYPE");
                 }
 
-                var typeFromInternal = ProfileTypeMapping.GetType(typeInternal);
-
-                switch (typeFromInternal)
+                switch (value)
                 {
-                    case ProfileType.Custom:
+                    case SocialProfileType.Custom:
                         Label = new Label() { Value = Label?.Value };
                         break;
                     default:
@@ -83,13 +82,13 @@ namespace iCloud.Dav.People.DataTypes
             get => Properties.Get<Label>("X-ABLABEL");
             set
             {
-                if (value == null)
+                if (value == null && Label != null) 
                 {
                     Properties.Remove("X-ABLABEL");
-                    var typeInternal = ProfileTypeMapping.GetType(ProfileType.Twitter);
-                    Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
+                    Parameters.Remove("TYPE");
+                    Parameters.Set("TYPE", SocialProfileTypeMapping.GetType(SocialProfileType.Twitter).StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
-                else
+                else if (value != null)
                 {
                     Properties.Set("X-ABLABEL", value);
                     Parameters.Remove("TYPE");
@@ -116,13 +115,13 @@ namespace iCloud.Dav.People.DataTypes
         public SocialProfile()
         {
             Initialize();
-            Type = ProfileType.Twitter;
+            Type = SocialProfileType.Twitter;
         }
 
         public SocialProfile(string value)
         {
             Initialize();
-            Type = ProfileType.Twitter;
+            Type = SocialProfileType.Twitter;
             if (string.IsNullOrWhiteSpace(value))
             {
                 return;

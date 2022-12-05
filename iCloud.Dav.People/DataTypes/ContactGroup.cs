@@ -17,9 +17,11 @@ namespace iCloud.Dav.People.DataTypes
         /// <inheritdoc/>
         public virtual string ETag { get; set; }
 
+        /// <summary>
+        /// A value that uniquely identifies the vCard. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+        /// </summary>
+        /// <remarks>The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/></remarks>
         public virtual string Id { get; set; }
-
-        #region Properties
 
         /// <summary>
         /// The name of the product that generated the vCard.
@@ -85,8 +87,6 @@ namespace iCloud.Dav.People.DataTypes
             get => Properties.GetMany<string>("X-ADDRESSBOOKSERVER-MEMBER");
             set => Properties.Set("X-ADDRESSBOOKSERVER-MEMBER", value);
         }
-
-        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContactGroup" /> class.

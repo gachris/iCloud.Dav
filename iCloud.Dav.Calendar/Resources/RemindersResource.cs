@@ -6,6 +6,7 @@ using iCloud.Dav.Core;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Utils;
 using System;
+using System.Linq;
 
 namespace iCloud.Dav.Calendar.Resources
 {
@@ -84,7 +85,7 @@ namespace iCloud.Dav.Calendar.Resources
             public SyncCollectionRequest(IClientService service, string calendarId) : base(service)
             {
                 SyncLevel = "1";
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
             }
 
             /// <summary>
@@ -97,8 +98,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// Token obtained from the nextSyncToken field returned on the last page of results
             /// from the previous list request. It makes the result of this list request contain
             /// only entries that have changed since then. All events deleted since the previous
-            /// list request will always be in the result.
-            /// Optional. The default is to return all entries.
+            /// list request will always be in the result. Optional. The default is to return all entries.
             /// </summary>
             public virtual string SyncToken { get; set; }
 
@@ -149,7 +149,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Constructs a new List request.
             /// </summary>
-            public ListRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            public ListRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
 
             /// <summary>
             /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
@@ -218,8 +218,8 @@ namespace iCloud.Dav.Calendar.Resources
             /// </summary>
             public GetRequest(IClientService service, string calendarId, string reminderId) : base(service)
             {
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(reminderId));
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+                ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(Reminder.Id));
             }
 
             /// <summary>
@@ -268,7 +268,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// </summary>
             public MultiGetRequest(IClientService service, string calendarId, params string[] reminderIds) : base(service)
             {
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
                 ReminderIds = reminderIds;
             }
 
@@ -304,7 +304,8 @@ namespace iCloud.Dav.Calendar.Resources
                 }
 
                 _body.Href.Clear();
-                _body.Href.AddRange(ReminderIds);
+                _body.Href.AddRange(ReminderIds.Select(reminderId =>
+                new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar), string.Concat(CalendarId, "/", reminderId, ".ics")).AbsolutePath));
 
                 return _body;
             }
@@ -328,9 +329,9 @@ namespace iCloud.Dav.Calendar.Resources
             /// </summary>
             public InsertRequest(IClientService service, Reminder body, string calendarId) : base(service)
             {
-                Body = body.ThrowIfNull(nameof(body));
-                ReminderId = body.Id.ThrowIfNull(nameof(body.Id));
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                Body = body.ThrowIfNull(nameof(Reminder));
+                ReminderId = body.Id.ThrowIfNull(nameof(Reminder.Id));
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
             }
 
             /// <summary>
@@ -385,9 +386,9 @@ namespace iCloud.Dav.Calendar.Resources
             /// </summary>
             public UpdateRequest(IClientService service, Reminder body, string calendarId) : base(service)
             {
-                Body = body.ThrowIfNull(nameof(body));
+                Body = body.ThrowIfNull(nameof(Reminder));
                 ReminderId = Body.Id.ThrowIfNullOrEmpty(nameof(Reminder.Id));
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
             }
 
             /// <summary>
@@ -442,8 +443,8 @@ namespace iCloud.Dav.Calendar.Resources
             /// </summary>
             public DeleteRequest(IClientService service, string calendarId, string reminderId) : base(service)
             {
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
-                ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(reminderId));
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+                ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(Reminder.Id));
             }
 
             /// <summary>

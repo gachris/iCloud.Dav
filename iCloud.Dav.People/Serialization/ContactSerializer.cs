@@ -89,7 +89,7 @@ namespace iCloud.Dav.People.Serialization
                     }
 
                     var stringBuilder = new StringBuilder();
-                    if (v is IRelatedDataType)
+                    if (v is IRelatedDataType dataType && dataType.Properties.Any(x => x.Values.Any()))
                     {
                         stringBuilder.Append($"item{++index}.");
                     }
@@ -115,12 +115,16 @@ namespace iCloud.Dav.People.Serialization
                     {
                         foreach (var property in relatedDataType.Properties)
                         {
+                            var sb2 = new StringBuilder();
                             // Get a serializer for each property.
                             var serializer2 = sf.Build(property.GetType(), SerializationContext) as IStringSerializer;
-                            sb.Append($"item{index}.");
-                            sb.Append(serializer2.SerializeToString(property));
+                            sb2.Append($"item{index}.");
+                            sb2.Append(serializer2.SerializeToString(property));
+
+                            result.Append(TextUtil.FoldLines(sb2.ToString()));
                         }
                     }
+
                 }
 
                 // Pop the object off the serialization context.

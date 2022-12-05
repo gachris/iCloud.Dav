@@ -5,11 +5,13 @@ using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.Utils;
+using System;
+using System.Linq;
 
 namespace iCloud.Dav.People.Resources
 {
     /// <summary>
-    /// The people collection of methods.
+    /// The "People" collection of methods.
     /// </summary>
     public class PeopleResource
     {
@@ -24,109 +26,43 @@ namespace iCloud.Dav.People.Resources
         public PeopleResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns the changes on the user's people list.
-        /// </summary>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-        public virtual SyncCollectionRequest SyncCollection(string resourceName) => new SyncCollectionRequest(_service, resourceName);
-
-        /// <summary>
         /// Returns the peoples on the user's people list.
         /// </summary>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
         public virtual ListRequest List(string resourceName) => new ListRequest(_service, resourceName);
 
         /// <summary>
-        /// Returns a people from the user's people list.
+        /// Returns a contact from the user's people list.
         /// </summary>
-        /// <param name="uniqueId">People identifier. To retrieve people IDs call the people.list method.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-        public virtual GetRequest Get(string uniqueId, string resourceName) => new GetRequest(_service, uniqueId, resourceName);
+        /// <param name="contactId">Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.</param>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        public virtual GetRequest Get(string contactId, string resourceName) => new GetRequest(_service, contactId, resourceName);
 
-        /// <summary>Inserts an existing people into the user's people list.</summary>
+        /// <summary>
+        /// Returns events on the specified calendar.
+        /// </summary>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactIds">Contact identifiers. To retrieve contact IDs call the <see cref="List(string)"/> method.</param>
+        public virtual MultiGetRequest MultiGet(string resourceName, string[] contactIds) => new MultiGetRequest(_service, resourceName, contactIds);
+
+        /// <summary>Inserts an existing contact into the user's people list.</summary>
         /// <param name="body">The body of the request.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
         public virtual InsertRequest Insert(Contact body, string resourceName) => new InsertRequest(_service, body, resourceName);
 
         /// <summary>
-        /// Updates an existing people on the user's people list.
+        /// Updates an existing contact on the user's people list.
         /// </summary>
         /// <param name="body">The body of the request.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
         public virtual UpdateRequest Update(Contact body, string resourceName) => new UpdateRequest(_service, body, resourceName);
 
         /// <summary>
-        /// Removes a people from the user's people list.
+        /// Removes a contact from the user's people list.
         /// </summary>
-        /// <param name="uniqueId">People identifier. To retrieve people IDs call the people.list method.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the identityCard.list method.</param>
-        public virtual DeleteRequest Delete(string uniqueId, string resourceName) => new DeleteRequest(_service, uniqueId, resourceName);
-
-        /// <summary>
-        /// Returns the changes on the user's people list.
-        /// </summary>
-        public class SyncCollectionRequest : PeopleBaseServiceRequest<SyncCollectionList>
-        {
-            private SyncCollection _body;
-
-            /// <summary>
-            /// Constructs a new Sync Collection request.
-            /// </summary>
-            public SyncCollectionRequest(IClientService service, string resourceName) : base(service) 
-            {
-                SyncLevel = "1";
-                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-            }
-
-            /// <summary>
-            /// Resource Name. To retrieve resource names call the identityCard.list method.
-            /// </summary>
-            [RequestParameter("resourceName", RequestParameterType.Path)]
-            public virtual string ResourceName { get; }
-
-            /// <summary>
-            /// Optional. A sync token, received from a previous response `next_sync_token` Provide
-            /// this to retrieve only the resources changed since the last request. When syncing,
-            /// all other parameters provided to `people.list` must match the first
-            /// call that provided the sync token. More details about sync behavior at `people.list`.
-            /// </summary>
-            public virtual string SyncToken { get; set; }
-
-            public virtual string SyncLevel { get; set; }
-
-            /// <inheritdoc/>
-            public override string MethodName => "list";
-
-            /// <inheritdoc/>
-            public override string HttpMethod => Constants.Report;
-
-            /// <inheritdoc/>
-            public override string RestPath => "{resourceName}";
-
-            /// <inheritdoc/>
-            public override string Depth => "0";
-
-            /// <inheritdoc/>
-            protected override object GetBody()
-            {
-                if (_body == null)
-                {
-                    _body = new SyncCollection();
-                }
-
-                _body.SyncToken = SyncToken;
-                _body.SyncLevel = SyncLevel;
-
-                return _body;
-            }
-
-            /// <inheritdoc/>
-            protected override void InitParameters()
-            {
-                base.InitParameters();
-
-                RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
-            }
-        }
+        /// <param name="contactId">Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.</param>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        public virtual DeleteRequest Delete(string contactId, string resourceName) => new DeleteRequest(_service, contactId, resourceName);
 
         /// <summary>
         /// Returns the peoples on the user's people list.
@@ -138,10 +74,10 @@ namespace iCloud.Dav.People.Resources
             /// <summary>
             /// Constructs a new List request.
             /// </summary>
-            public ListRequest(IClientService service, string resourceName) : base(service) => ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+            public ListRequest(IClientService service, string resourceName) : base(service) => ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the identityCard.list method.
+            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
@@ -196,30 +132,30 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns a people from the user's people list.
+        /// Returns a contact from the user's people list.
         /// </summary>
         public class GetRequest : PeopleBaseServiceRequest<Contact>
         {
             /// <summary>
             /// Constructs a new Get request.
             /// </summary>
-            public GetRequest(IClientService service, string uniqueId, string resourceName) : base(service)
+            public GetRequest(IClientService service, string contactId, string resourceName) : base(service)
             {
-                UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
-                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+                ContactId = contactId.ThrowIfNullOrEmpty(nameof(Contact.Id));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the identityCard.list method.
+            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// People identifier. To retrieve people IDs call the people.list method.
+            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
             /// </summary>
-            [RequestParameter("uniqueId", RequestParameterType.Path)]
-            public virtual string UniqueId { get; }
+            [RequestParameter("contactId", RequestParameterType.Path)]
+            public virtual string ContactId { get; }
 
             /// <inheritdoc/>
             public override string MethodName => "get";
@@ -228,7 +164,7 @@ namespace iCloud.Dav.People.Resources
             public override string HttpMethod => Constants.Get;
 
             /// <inheritdoc/>
-            public override string RestPath => "{resourceName}/{uniqueId}.vcf";
+            public override string RestPath => "{resourceName}/{contactId}.vcf";
 
             /// <inheritdoc/>
             protected override void InitParameters()
@@ -236,12 +172,75 @@ namespace iCloud.Dav.People.Resources
                 base.InitParameters();
 
                 RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
-                RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
+                RequestParameters.Add("contactId", new Parameter("contactId", "path", true));
             }
         }
 
         /// <summary>
-        /// Inserts an existing people into the user's people list.
+        /// Returns contacts from the user's people list.
+        /// </summary>
+        public class MultiGetRequest : PeopleBaseServiceRequest<ContactList>
+        {
+            private AddressBookMultiget _body;
+
+            /// <summary>
+            /// Constructs a new MultiGet request.
+            /// </summary>
+            public MultiGetRequest(IClientService service, string resourceName, string[] contactIds) : base(service)
+            {
+                ContactIds = contactIds.ThrowIfNull(nameof(contactIds));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            }
+
+            /// <summary>
+            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// </summary>
+            [RequestParameter("resourceName", RequestParameterType.Path)]
+            public virtual string ResourceName { get; }
+
+            /// <summary>
+            /// Contact identifiers. To retrieve contact IDs call the <see cref="List(string)"/> method.
+            /// </summary>
+            public virtual string[] ContactIds { get; }
+
+            /// <inheritdoc/>
+            public override string MethodName => "get";
+
+            /// <inheritdoc/>
+            public override string HttpMethod => Constants.Report;
+
+            /// <inheritdoc/>
+            public override string RestPath => "{resourceName}";
+
+            /// <inheritdoc/>
+            public override string Depth => "1";
+
+            /// <inheritdoc/>
+            protected override object GetBody()
+            {
+                if (_body == null)
+                {
+                    _body = new AddressBookMultiget();
+                }
+
+                _body.Href.Clear();
+                _body.Href.AddRange(ContactIds.Select(contactId =>
+                new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook), string.Concat(ResourceName, "/", contactId, ".vcf")).AbsolutePath));
+
+                return _body;
+            }
+
+            /// <inheritdoc/>
+            protected override void InitParameters()
+            {
+                base.InitParameters();
+
+                RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
+            }
+        }
+
+        /// <summary>
+        /// Inserts an existing contact into the user's people list.
         /// </summary>
         public class InsertRequest : PeopleBaseServiceRequest<VoidResponse>
         {
@@ -252,23 +251,23 @@ namespace iCloud.Dav.People.Resources
             /// </summary>
             public InsertRequest(IClientService service, Contact body, string resourceName) : base(service)
             {
-                Body = body.ThrowIfNull(nameof(body));
-                UniqueId = body.Id.ThrowIfNull(nameof(body.Id));
-                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+                Body = body.ThrowIfNull(nameof(Contact));
+                ContactId = body.Id.ThrowIfNull(nameof(Contact.Id));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
                 ETagAction = ETagAction.IfNoneMatch;
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the identityCard.list method.
+            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// People identifier.
+            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
             /// </summary>
-            [RequestParameter("uniqueId", RequestParameterType.Path)]
-            public virtual string UniqueId { get; }
+            [RequestParameter("contactId", RequestParameterType.Path)]
+            public virtual string ContactId { get; }
 
             /// <summary>
             /// Gets the body of this request.
@@ -282,7 +281,7 @@ namespace iCloud.Dav.People.Resources
             public override string HttpMethod => Constants.Put;
 
             /// <inheritdoc/>
-            public override string RestPath => "{resourceName}/{uniqueId}.vcf";
+            public override string RestPath => "{resourceName}/{contactId}.vcf";
 
             /// <inheritdoc/>
             public override string ContentType => Constants.TEXT_VCARD;
@@ -303,12 +302,12 @@ namespace iCloud.Dav.People.Resources
                 base.InitParameters();
 
                 RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
-                RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
+                RequestParameters.Add("contactId", new Parameter("contactId", "path", true));
             }
         }
 
         /// <summary>
-        /// Updates an existing people on the user's people list.
+        /// Updates an existing contact on the user's people list.
         /// </summary>
         public class UpdateRequest : PeopleBaseServiceRequest<VoidResponse>
         {
@@ -319,23 +318,23 @@ namespace iCloud.Dav.People.Resources
             /// </summary>
             public UpdateRequest(IClientService service, Contact body, string resourceName) : base(service)
             {
-                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
-                Body = body.ThrowIfNull(nameof(body));
-                UniqueId = body.Id.ThrowIfNullOrEmpty(nameof(body.Id));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+                Body = body.ThrowIfNull(nameof(Contact));
+                ContactId = body.Id.ThrowIfNullOrEmpty(nameof(Contact.Id));
                 ETagAction = ETagAction.IfMatch;
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the identityCard.list method.
+            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// People identifier. To retrieve people IDs call the people.list method.
+            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
             /// </summary>
-            [RequestParameter("uniqueId", RequestParameterType.Path)]
-            public virtual string UniqueId { get; }
+            [RequestParameter("contactId", RequestParameterType.Path)]
+            public virtual string ContactId { get; }
 
             /// <summary>
             /// Gets the body of this request.
@@ -349,7 +348,7 @@ namespace iCloud.Dav.People.Resources
             public override string HttpMethod => Constants.Put;
 
             /// <inheritdoc/>
-            public override string RestPath => "{resourceName}/{uniqueId}.vcf";
+            public override string RestPath => "{resourceName}/{contactId}.vcf";
 
             /// <inheritdoc/>
             public override string ContentType => Constants.TEXT_VCARD;
@@ -370,35 +369,35 @@ namespace iCloud.Dav.People.Resources
                 base.InitParameters();
 
                 RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
-                RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
+                RequestParameters.Add("contactId", new Parameter("contactId", "path", true));
             }
         }
 
         /// <summary>
-        /// Removes a people from the user's people list.
+        /// Removes a contact from the user's people list.
         /// </summary>
         public class DeleteRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             /// <summary>
             /// Constructs a new Delete request.
             /// </summary>
-            public DeleteRequest(IClientService service, string uniqueId, string resourceName) : base(service)
+            public DeleteRequest(IClientService service, string contactId, string resourceName) : base(service)
             {
-                UniqueId = uniqueId.ThrowIfNullOrEmpty(nameof(uniqueId));
-                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
+                ContactId = contactId.ThrowIfNullOrEmpty(nameof(Contact.Id));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the identityCard.list method.
+            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// People identifier. To retrieve people IDs call the people.list method.
+            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
             /// </summary>
-            [RequestParameter("uniqueId", RequestParameterType.Path)]
-            public virtual string UniqueId { get; }
+            [RequestParameter("contactId", RequestParameterType.Path)]
+            public virtual string ContactId { get; }
 
             /// <inheritdoc/>
             public override string MethodName => "delete";
@@ -407,7 +406,7 @@ namespace iCloud.Dav.People.Resources
             public override string HttpMethod => Constants.Delete;
 
             /// <inheritdoc/>
-            public override string RestPath => "{resourceName}/{uniqueId}.vcf";
+            public override string RestPath => "{resourceName}/{contactId}.vcf";
 
             /// <summary>Initializes Delete parameter list.</summary>
             protected override void InitParameters()
@@ -415,7 +414,7 @@ namespace iCloud.Dav.People.Resources
                 base.InitParameters();
 
                 RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
-                RequestParameters.Add("uniqueId", new Parameter("uniqueId", "path", true));
+                RequestParameters.Add("contactId", new Parameter("contactId", "path", true));
             }
         }
     }

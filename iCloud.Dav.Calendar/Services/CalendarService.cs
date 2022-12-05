@@ -18,7 +18,7 @@ namespace iCloud.Dav.Calendar.Services
             Events = new EventsResource(this);
             Reminders = new RemindersResource(this);
             Calendars = new CalendarListResource(this);
-            BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar);
+            BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar).ToString();
         }
 
         /// <inheritdoc/>

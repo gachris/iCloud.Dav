@@ -8,8 +8,8 @@ namespace iCloud.Dav.People.DataTypes.Mapping
 
         private static readonly TypeMapping<DateTypeInternal, DateType>[] _typeMappings = new[]
         {
-        Other,
-    };
+            Other,
+        };
 
         public static DateType GetType(DateTypeInternal typeInternal)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace iCloud.Dav.People.Utils
 {
@@ -42,7 +43,7 @@ namespace iCloud.Dav.People.Utils
             if (!typeof(T).IsEnum)
                 throw new ArgumentException();
 
-            return value.ToString()?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return value.ToString()?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToArray();
         }
     }
 }

@@ -118,14 +118,14 @@ namespace iCloud.Dav.Auth
         /// </summary>
         /// <param name="principal"></param>
         /// <returns>Principal home set url.</returns>
-        public string GetUri(PrincipalHomeSet principal)
+        public Uri GetUri(PrincipalHomeSet principal)
         {
             switch (principal)
             {
                 case PrincipalHomeSet.Calendar:
-                    return Token.CalendarPrincipal.CalendarHomeSet;
+                    return new Uri(Token.CalendarPrincipal.CalendarHomeSet);
                 case PrincipalHomeSet.AddressBook:
-                    return Token.PeoplePrincipal.AddressBookHomeSet;
+                    return new Uri(Token.PeoplePrincipal.AddressBookHomeSet);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(PrincipalHomeSet));
             }

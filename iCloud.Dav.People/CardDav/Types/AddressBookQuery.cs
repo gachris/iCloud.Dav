@@ -1,6 +1,5 @@
 ﻿using iCloud.Dav.Core.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
@@ -13,8 +12,6 @@ namespace iCloud.Dav.People.CardDav.Types
     {
         public Filters Filter { get; set; }
 
-        public bool RequestSyncToken { get; set; }
-
         public XmlSchema GetSchema() => new XmlSchema();
 
         public void ReadXml(XmlReader reader) => throw new NotSupportedException();
@@ -22,10 +19,7 @@ namespace iCloud.Dav.People.CardDav.Types
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("prop", "DAV:");
-
-            writer.WriteStartElement("allprop", "DAV:");
-            writer.WriteEndElement();
-
+            writer.WriteElementString("allprop", "DAV:", null);
             writer.WriteEndElement();
 
             if (!(Filter is null) && Filter.TextMatches.Any())
@@ -56,29 +50,5 @@ namespace iCloud.Dav.People.CardDav.Types
                 writer.WriteEndElement();
             }
         }
-    }
-
-    internal sealed class Filters
-    {
-        public string Name { get; set; }
-
-        public string Type { get; set; }
-
-        public bool IsNotDefined { get; set; }
-
-        public IList<TextMatch> TextMatches { get; }
-
-        public Filters() => TextMatches = new List<TextMatch>();
-    }
-
-    internal sealed class TextMatch
-    {
-        public string Collation { get; set; }
-
-        public string MatchType { get; set; }
-
-        public string SearchText { get; set; }
-
-        public string NegateCondition { get; set; }
     }
 }

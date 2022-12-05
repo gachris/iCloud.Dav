@@ -13,8 +13,9 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
         /// <inheritdoc/>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
-            return ((string)value).ToReminder();
+            return !CanConvertFrom(context, value.GetType())
+                ? throw GetConvertFromException(value) 
+                : (object)((string)value).ToReminder();
         }
     }
 }

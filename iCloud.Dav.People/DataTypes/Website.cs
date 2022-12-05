@@ -72,6 +72,7 @@ namespace iCloud.Dav.People.DataTypes
 
                 if (!(typeInternal is 0))
                 {
+                    Parameters.Remove("TYPE");
                     Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
                 else
@@ -79,9 +80,7 @@ namespace iCloud.Dav.People.DataTypes
                     Parameters.Remove("TYPE");
                 }
 
-                var typeFromInternal = WebsiteTypeMapping.GetType(typeInternal);
-
-                switch (typeFromInternal)
+                switch (value)
                 {
                     case WebsiteType.HomePage:
                         Label = new Label() { Value = HomePage };
@@ -107,13 +106,13 @@ namespace iCloud.Dav.People.DataTypes
             get => Properties.Get<Label>("X-ABLABEL");
             set
             {
-                if (value == null)
+                if (value == null && Label != null) 
                 {
                     Properties.Remove("X-ABLABEL");
-                    var typeInternal = WebsiteTypeMapping.GetType(WebsiteType.Other);
-                    Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
+                    Parameters.Remove("TYPE");
+                    Parameters.Set("TYPE", WebsiteTypeMapping.GetType(WebsiteType.Other).StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
-                else
+                else if (value != null)
                 {
                     Properties.Set("X-ABLABEL", value);
                     Parameters.Remove("TYPE");

@@ -1,6 +1,6 @@
 ﻿namespace iCloud.Dav.People.DataTypes
 {
-    public enum RelatedPeopleType
+    public enum RelatedNamesType
     {
         Father = 1,
         Mother = 2,
@@ -17,7 +17,7 @@
         Custom = 13,
     }
 
-    internal enum RelatedPeopleTypeInternal
+    internal enum RelatedNamesTypeInternal
     {
         /// <summary>Indicates an other related person type.</summary>
         Other = 1,

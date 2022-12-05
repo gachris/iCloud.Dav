@@ -2,16 +2,16 @@
 
 namespace iCloud.Dav.People.DataTypes.Mapping
 {
-    internal class RelatedPeopleTypeMapping
+    internal class RelatedNamesMapping
     {
-        public static readonly TypeMapping<RelatedPeopleTypeInternal, RelatedPeopleType> Other = new TypeMapping<RelatedPeopleTypeInternal, RelatedPeopleType>(RelatedPeopleTypeInternal.Other, RelatedPeopleType.Other);
+        public static readonly TypeMapping<RelatedNamesTypeInternal, RelatedNamesType> Other = new TypeMapping<RelatedNamesTypeInternal, RelatedNamesType>(RelatedNamesTypeInternal.Other, RelatedNamesType.Other);
 
-        private static readonly TypeMapping<RelatedPeopleTypeInternal, RelatedPeopleType>[] _typeMappings = new[]
+        private static readonly TypeMapping<RelatedNamesTypeInternal, RelatedNamesType>[] _typeMappings = new[]
         {
-        Other,
-    };
+            Other,
+        };
 
-        public static RelatedPeopleType GetType(RelatedPeopleTypeInternal typeInternal)
+        public static RelatedNamesType GetType(RelatedNamesTypeInternal typeInternal)
         {
             foreach (var typeMapping in _typeMappings)
             {
@@ -24,7 +24,7 @@ namespace iCloud.Dav.People.DataTypes.Mapping
             return 0;
         }
 
-        public static RelatedPeopleTypeInternal GetType(RelatedPeopleType type)
+        public static RelatedNamesTypeInternal GetType(RelatedNamesType type)
         {
             foreach (var typeMapping in _typeMappings)
             {

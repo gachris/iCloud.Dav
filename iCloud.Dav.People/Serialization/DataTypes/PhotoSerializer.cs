@@ -21,25 +21,33 @@ namespace iCloud.Dav.People.Serialization.DataTypes
 
         public override string SerializeToString(object obj)
         {
-            // if (photo is null) return new(Enumerable.Empty<CardProperty>());
+            if (!(obj is Photo photo))
+            {
+                return null;
+            }
 
-            // var value = photo.Url?.ToString() ?? Convert.ToBase64String(photo.Data ?? Array.Empty<byte>());
+            var value = photo.Url?.ToString() ?? Convert.ToBase64String(photo.Data ?? Array.Empty<byte>());
 
-            // if (string.IsNullOrEmpty(value)) return new(Enumerable.Empty<CardProperty>());
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
 
-            // var rectangle = string.Format(Constants.Contact.Photo.Subproperty.Value.ABClipRectFormat,
-            //                               photo.Rectangle.X,
-            //                               photo.Rectangle.Y,
-            //                               photo.Rectangle.Width,
-            //                               photo.Rectangle.Height);
+            var rectangle = string.Format("ABClipRect_{0}&{1}&{2}&{3}&{4}&==",
+                                          1,
+                                          photo.Rectangle.X,
+                                          photo.Rectangle.Y,
+                                          photo.Rectangle.Width,
+                                          photo.Rectangle.Height);
 
-            // var photoProperty = new CardProperty(Constants.Contact.Photo.Property.PHOTO, value);
-            // photoProperty.Subproperties.Add(Constants.Contact.Photo.Subproperty.X_ABCROP_RECTANGLE, rectangle);
-            // photoProperty.Subproperties.Add(Constants.Contact.Photo.Subproperty.VALUE, Constants.Contact.Photo.Subproperty.Value.URI.ToLower());
+            photo.Parameters.Set("X-ABCROP-RECTANGLE", rectangle);
 
-            // return new(new[] { photoProperty });
+            if (photo.Url != null)
+            {
+                photo.SetValueType("uri");
+            }
 
-            return string.Empty;
+            return Encode(photo, value);
         }
 
         public Photo Deserialize(string value)
@@ -66,7 +74,7 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             {
                 photo.Url = uri;
             }
-            else 
+            else
             {
                 try
                 {

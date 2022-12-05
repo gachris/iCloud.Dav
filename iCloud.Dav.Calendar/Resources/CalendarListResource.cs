@@ -75,7 +75,8 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Token obtained from the nextSyncToken field returned on the last page of results
             /// from the previous list request. It makes the result of this list request contain
-            /// only entries that have changed since then. Optional. The default is to return all entries.
+            /// only entries that have changed since then. All entries deleted since the previous
+            /// list request will always be in the result. Optional. The default is to return all entries.
             /// </summary>
             public virtual string SyncToken { get; set; }
 
@@ -155,7 +156,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Constructs a new Get request.
             /// </summary>
-            public GetRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            public GetRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
 
             /// <summary>
             /// Calendar identifier. To retrieve calendar IDs call the <see cref="List"/> method.
@@ -206,8 +207,8 @@ namespace iCloud.Dav.Calendar.Resources
             /// </summary>
             public InsertRequest(IClientService service, CalendarListEntry body) : base(service)
             {
-                Body = body.ThrowIfNull(nameof(body));
-                CalendarId = Body.Id.ThrowIfNull(nameof(Body.Id));
+                Body = body.ThrowIfNull(nameof(CalendarListEntry));
+                CalendarId = Body.Id.ThrowIfNull(nameof(CalendarListEntry.Id));
             }
 
             /// <summary>
@@ -238,7 +239,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body is null)
                 {
-                    var mkCalendar = new MkCalendar(Body.Summary.ThrowIfNull(nameof(Body.Summary)))
+                    var mkCalendar = new MkCalendar(Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)))
                     {
                         CalendarColor = Body.Color
                     };
@@ -280,7 +281,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// </summary>
             public UpdateRequest(IClientService service, CalendarListEntry body) : base(service)
             {
-                Body = body.ThrowIfNull(nameof(body));
+                Body = body.ThrowIfNull(nameof(CalendarListEntry));
                 CalendarId = body.Id.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
             }
 
@@ -309,7 +310,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropertyUpdate(Body.Summary.ThrowIfNull(nameof(Body.Summary)), Body.Color);
+                    _body = new PropertyUpdate(Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)), Body.Color);
                 }
                 return _body;
             }
@@ -331,7 +332,7 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Constructs a new Delete request.
             /// </summary>
-            public DeleteRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            public DeleteRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
 
             /// <summary>
             /// Calendar identifier. To retrieve calendar IDs call the <see cref="List"/> method.

@@ -12,7 +12,7 @@ namespace iCloud.Dav.People.Services
             People = new PeopleResource(this);
             ContactGroups = new ContactGroupsResource(this);
             IdentityCard = new IdentityCardResource(this);
-            BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook);
+            BasePath = initializer.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook).ToString();
         }
 
         public override string Name => "people";

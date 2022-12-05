@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using vCard.Net;
-using vCard.Net.CardComponents;
 using vCard.Net.Serialization;
 
 namespace iCloud.Dav.People.Serialization

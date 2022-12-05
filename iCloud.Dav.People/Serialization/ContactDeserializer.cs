@@ -137,6 +137,7 @@ namespace iCloud.Dav.People.Serialization
                     }
                 }
             }
+
             if (current != null)
             {
                 throw new SerializationException($"Unclosed component {current.Name}");

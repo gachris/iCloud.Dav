@@ -13,7 +13,9 @@ namespace iCloud.Dav.People.Serialization.Converters
         /// <inheritdoc/>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            return !CanConvertFrom(context, value.GetType()) ? throw GetConvertFromException(value) : (object)((string)value).DeserializeContact();
+            return !CanConvertFrom(context, value.GetType())
+                ? throw GetConvertFromException(value) 
+                : (object)((string)value).DeserializeContact();
         }
     }
 }

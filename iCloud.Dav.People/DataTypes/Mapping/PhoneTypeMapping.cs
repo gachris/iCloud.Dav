@@ -16,16 +16,16 @@ namespace iCloud.Dav.People.DataTypes.Mapping
 
         private static readonly TypeMapping<PhoneTypeInternal, PhoneType>[] _typeMappings = new[]
         {
-        iPhone,
-        Home,
-        Work,
-        Main,
-        HomeFax,
-        WorkFax,
-        Pager,
-        Other,
-        Mobile
-    };
+            iPhone,
+            Home,
+            Work,
+            Main,
+            HomeFax,
+            WorkFax,
+            Pager,
+            Other,
+            Mobile
+        };
 
         public static PhoneType GetType(PhoneTypeInternal typeInternal)
         {

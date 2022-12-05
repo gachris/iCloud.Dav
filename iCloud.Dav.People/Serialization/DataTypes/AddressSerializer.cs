@@ -34,43 +34,43 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             if (address.POBox != null && address.POBox.Length > 0)
             {
                 num = 1;
-                array[0] = address.POBox;
+                array[0] = address.POBox.Escape();
             }
 
             if (address.ExtendedAddress != null && address.ExtendedAddress.Length > 0)
             {
                 num = 2;
-                array[1] = address.ExtendedAddress;
+                array[1] = address.ExtendedAddress.Escape();
             }
 
             if (address.StreetAddress != null && address.StreetAddress.Length > 0)
             {
                 num = 3;
-                array[2] = address.StreetAddress;
+                array[2] = address.StreetAddress.Escape()   ;
             }
 
             if (address.Locality != null && address.Locality.Length > 0)
             {
                 num = 4;
-                array[3] = address.Locality;
+                array[3] = address.Locality.Escape();
             }
 
             if (address.Region != null && address.Region.Length > 0)
             {
                 num = 5;
-                array[4] = address.Region;
+                array[4] = address.Region.Escape();
             }
 
             if (address.PostalCode != null && address.PostalCode.Length > 0)
             {
                 num = 6;
-                array[5] = address.PostalCode;
+                array[5] = address.PostalCode.Escape();
             }
 
             if (address.Country != null && address.Country.Length > 0)
             {
                 num = 7;
-                array[6] = address.Country;
+                array[6] = address.Country.Escape();
             }
 
             return num == 0 ? null : Encode(address, string.Join(";", array, 0, num));

@@ -149,7 +149,7 @@ namespace iCloud.Dav.Core
             /// <see cref="ConfigurableHttpClient" /> and
             /// <see cref="ConfigurableMessageHandler" />.
             /// </summary>
-            public IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; }
+            public IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; set; }
 
             /// <summary>
             /// Get or sets the exponential back-off policy used by the service. Default value is
@@ -179,9 +179,8 @@ namespace iCloud.Dav.Core
             public uint MaxUrlLength { get; set; }
 
             /// <summary>Constructs a new initializer with default values.</summary>
-            public Initializer(IConfigurableHttpClientCredentialInitializer httpClientInitializer)
+            public Initializer()
             {
-                HttpClientInitializer = httpClientInitializer;
                 Serializer = new XmlObjectSerializer();
                 DefaultExponentialBackOffPolicy = ExponentialBackOffPolicy.UnsuccessfulResponse503;
                 MaxUrlLength = 2048U;

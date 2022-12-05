@@ -13,10 +13,14 @@ namespace iCloud.Dav.People.DataTypes
     {
         public virtual bool IsPreferred { get; set; }
 
-        public virtual string ServiceType
+        public virtual InstantMessageServiceType ServiceType
         {
-            get => Parameters.Get("X-SERVICE-TYPE");
-            set => Parameters.Set("X-SERVICE-TYPE", value);
+            get
+            {
+                _ = Parameters.Get("X-SERVICE-TYPE").TryParse<InstantMessageServiceType>(out var serviceType);
+                return serviceType;
+            }
+            set => Parameters.Set("X-SERVICE-TYPE", value.StringArrayFlags().Select(x => x.ToLowerInvariant()));
         }
 
         public virtual string UserName { get; set; }
@@ -61,6 +65,7 @@ namespace iCloud.Dav.People.DataTypes
 
                 if (!(typeInternal is 0))
                 {
+                    Parameters.Remove("TYPE");
                     Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
                 else
@@ -68,9 +73,7 @@ namespace iCloud.Dav.People.DataTypes
                     Parameters.Remove("TYPE");
                 }
 
-                var typeFromInternal = InstantMessageTypeMapping.GetType(typeInternal);
-
-                switch (typeFromInternal)
+                switch (value)
                 {
                     case InstantMessageType.Custom:
                         Label = new Label() { Value = Label?.Value };
@@ -87,13 +90,13 @@ namespace iCloud.Dav.People.DataTypes
             get => Properties.Get<Label>("X-ABLABEL");
             set
             {
-                if (value == null)
+                if (value == null && Label != null)
                 {
                     Properties.Remove("X-ABLABEL");
-                    var typeInternal = InstantMessageTypeMapping.GetType(InstantMessageType.Other);
-                    Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
+                    Parameters.Remove("TYPE");
+                    Parameters.Set("TYPE", InstantMessageTypeMapping.GetType(InstantMessageType.Other).StringArrayFlags().Select(x => x.ToUpperInvariant()));
                 }
-                else
+                else if (value != null)
                 {
                     Properties.Set("X-ABLABEL", value);
                     Parameters.Remove("TYPE");

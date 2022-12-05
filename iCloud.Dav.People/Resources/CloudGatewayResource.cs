@@ -5,7 +5,7 @@ using System;
 namespace iCloud.Dav.People.Resources
 {
     /// <summary>
-    /// The "people" collection of methods.
+    /// The "Cloud Gateway" collection of methods.
     /// </summary>
     public class CloudGatewayResource
     {

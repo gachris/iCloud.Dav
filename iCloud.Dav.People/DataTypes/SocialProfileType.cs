@@ -4,7 +4,7 @@ namespace iCloud.Dav.People.DataTypes
 {
     /// <summary>Identifies the type of social profile type in a vCard.</summary>
     /// <seealso cref="SocialProfile" />
-    public enum ProfileType
+    public enum SocialProfileType
     {
         /// <summary>Indicates the twitter type.</summary>
         Twitter = 1,
@@ -25,7 +25,7 @@ namespace iCloud.Dav.People.DataTypes
     /// <summary>Identifies the type of social profile type in a vCard.</summary>
     /// <seealso cref="SocialProfile" />
     [Flags]
-    internal enum ProfileTypeInternal
+    internal enum SocialProfileTypeInternal
     {
         /// <summary>Indicates the twitter type.</summary>
         Twitter = 1,

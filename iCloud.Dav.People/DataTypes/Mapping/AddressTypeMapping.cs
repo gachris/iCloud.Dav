@@ -1,5 +1,4 @@
-﻿using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
+﻿using iCloud.Dav.People.Utils;
 
 namespace iCloud.Dav.People.DataTypes.Mapping
 {
@@ -11,10 +10,10 @@ namespace iCloud.Dav.People.DataTypes.Mapping
 
         private static readonly TypeMapping<AddressTypeInternal, AddressType>[] _typeMappings = new[]
         {
-        Home,
-        Work,
-        Other,
-    };
+            Home,
+            Work,
+            Other,
+        };
 
         public static AddressType GetType(AddressTypeInternal typeInternal)
         {

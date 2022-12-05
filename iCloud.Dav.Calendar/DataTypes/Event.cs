@@ -11,6 +11,10 @@ namespace iCloud.Dav.Calendar.DataTypes
     [TypeConverter(typeof(EventConverter))]
     public class Event : CalendarEvent, IDirectResponseSchema, IUrlPath
     {
+        /// <summary>
+        /// A value that uniquely identifies the Event. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+        /// </summary>
+        /// <remarks>The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/></remarks>
         public virtual string Id { get; set; }
 
         /// <inheritdoc/>

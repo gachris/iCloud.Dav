@@ -1,9 +1,13 @@
 ﻿using iCloud.Dav.Core;
+using vCard.Net.CardComponents;
 
 namespace iCloud.Dav.People.DataTypes
 {
     public class SyncCollectionItem : IDirectResponseSchema
     {
+        /// <summary>
+        /// A value that uniquely identifies the vCard. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+        /// </summary>
         public string Id { get; set; }
 
         /// <summary>
@@ -13,7 +17,7 @@ namespace iCloud.Dav.People.DataTypes
 
         /// <summary>
         /// Whether this object has been deleted from the list. Read-only.
-        /// Optional. The default is False.
+        /// The default is null.
         /// </summary>
         public virtual bool? Deleted { get; set; }
     }
