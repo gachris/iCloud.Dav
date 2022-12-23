@@ -1,6 +1,5 @@
 ﻿using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,6 +26,7 @@ namespace iCloud.Dav.People.Serialization.Converters
             {
                 Kind = "resources",
                 ETag = collectionResponse?.Etag,
+                MeCard = Path.GetFileNameWithoutExtension(collectionResponse.MeCard?.Value?.TrimEnd('/')), 
                 NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
                 Items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToIdentityCard).ToList(),
             };
@@ -43,7 +43,7 @@ namespace iCloud.Dav.People.Serialization.Converters
             return identityCardList;
         }
 
-        public static IdentityCard ToIdentityCard(Response response)
+        private static IdentityCard ToIdentityCard(Response response)
         {
             return new IdentityCard()
             {

@@ -36,5 +36,10 @@ namespace iCloud.Dav.People.DataTypes
         /// Type of the collection ("people#resource").
         /// </summary>
         public virtual string Kind { get; set; }
+
+        /// <summary>
+        /// Me card of the collection.
+        /// </summary>
+        public virtual string MeCard { get; set; }
     }
 }

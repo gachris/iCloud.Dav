@@ -69,7 +69,12 @@ namespace iCloud.Dav.Calendar.CalDav.Types
             response.Ctag = !(getctag is null) ? new Attribute(getctag.Name.LocalName, getctag.Name.NamespaceName, getctag.Value) : null;
             response.DisplayName = propElements?.FirstOrDefault(x => x.Name.LocalName == "displayname")?.Value;
             response.CalendarColor = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-color")?.Value;
-            response.CalendarOrder = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-order")?.Value;
+            var orderValue = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-order")?.Value;
+            if (!string.IsNullOrEmpty(orderValue))
+            {
+                int.TryParse(orderValue, out var order);
+                response.CalendarOrder = order;
+            }
             response.Etag = propElements?.FirstOrDefault(x => x.Name.LocalName == "getetag")?.Value;
             response.SyncToken = propElements?.FirstOrDefault(x => x.Name.LocalName == "sync-token")?.Value;
             response.CalendarTimeZone = propElements?.FirstOrDefault(x => x.Name.LocalName == "calendar-timezone")?.Value;
@@ -82,6 +87,11 @@ namespace iCloud.Dav.Calendar.CalDav.Types
             response.SupportedReportSet.AddRange(reports);
             response.SupportedCalendarComponentSet.AddRange(calendar_components);
             response.ResourceType.AddRange(resourcetype);
+
+            if (response.CalendarColor?.Length == 9)
+            {
+                response.CalendarColor = response.CalendarColor.Remove(7, 2);
+            }
 
             return response;
         }

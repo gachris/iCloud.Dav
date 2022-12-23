@@ -24,6 +24,11 @@ namespace iCloud.Dav.People.Resources
         public IdentityCardResource(IClientService service) => _service = service;
 
         /// <summary>
+        /// Returns the next sync token on the user's identity card list.
+        /// </summary>
+        public virtual GetSyncTokenRequest GetSyncToken(string resourceName) => new GetSyncTokenRequest(_service, resourceName);
+
+        /// <summary>
         /// Returns the changes on the user's identity card list.
         /// </summary>
         public virtual SyncCollectionRequest SyncCollection(string resourceName) => new SyncCollectionRequest(_service, resourceName);
@@ -46,6 +51,59 @@ namespace iCloud.Dav.People.Resources
         public virtual SetMeCardRequest SetMeCard(string resourceName, string contactId) => new SetMeCardRequest(_service, resourceName, contactId);
 
         /// <summary>
+        /// Returns the next sync token on the user's identity card list.
+        /// </summary>
+        public class GetSyncTokenRequest : PeopleBaseServiceRequest<SyncToken>
+        {
+            private PropFind _body;
+
+            /// <summary>
+            /// Constructs a new Sync Collection request.
+            /// </summary>
+            public GetSyncTokenRequest(IClientService service, string resourceName) : base(service)
+            {
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            }
+
+            /// <summary>
+            /// Resource Name. To retrieve resource names call the <see cref="List"/> method.
+            /// </summary>
+            [RequestParameter("resourceName", RequestParameterType.Path)]
+            public virtual string ResourceName { get; }
+
+            /// <inheritdoc/>
+            public override string MethodName => "get";
+
+            /// <inheritdoc/>
+            public override string HttpMethod => Constants.Propfind;
+
+            /// <inheritdoc/>
+            public override string RestPath => "{resourceName}";
+
+            /// <inheritdoc/>
+            public override string Depth => "0";
+
+            /// <inheritdoc/>
+            protected override object GetBody()
+            {
+                if (_body == null)
+                {
+                    _body = new PropFind();
+                }
+
+                return _body;
+            }
+
+            /// <inheritdoc/>
+            protected override void InitParameters()
+            {
+                base.InitParameters();
+
+                RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
+            }
+        }
+
+        /// <summary>
         /// Returns the changes on the user's identity card list.
         /// </summary>
         public class SyncCollectionRequest : PeopleBaseServiceRequest<SyncCollectionList>
@@ -57,7 +115,6 @@ namespace iCloud.Dav.People.Resources
             /// </summary>
             public SyncCollectionRequest(IClientService service, string resourceName) : base(service)
             {
-                SyncLevel = "1";
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
             }
 
@@ -74,8 +131,6 @@ namespace iCloud.Dav.People.Resources
             /// list request will always be in the result. Optional. The default is to return all entries.
             /// </summary>
             public virtual string SyncToken { get; set; }
-
-            public virtual string SyncLevel { get; set; }
 
             /// <inheritdoc/>
             public override string MethodName => "list";
@@ -98,7 +153,7 @@ namespace iCloud.Dav.People.Resources
                 }
 
                 _body.SyncToken = SyncToken;
-                _body.SyncLevel = SyncLevel;
+                _body.SyncLevel = "1";
 
                 return _body;
             }
@@ -126,6 +181,14 @@ namespace iCloud.Dav.People.Resources
             {
             }
 
+            /// <summary>
+            /// Token obtained from the nextSyncToken field returned on the last page of results
+            /// from the previous list request. It makes the result of this list request contain
+            /// only entries that have changed since then. All entries deleted since the previous
+            /// list request will always be in the result. Optional. The default is to return all entries.
+            /// </summary>
+            public virtual string SyncToken { get; set; }
+
             /// <inheritdoc/>
             public override string MethodName => "list";
 
@@ -141,6 +204,15 @@ namespace iCloud.Dav.People.Resources
             /// <inheritdoc/>
             protected override object GetBody()
             {
+                //if (_body == null)
+                //{
+                //    _body = new SyncCollection();
+                //}
+
+                //_body.SyncToken = SyncToken;
+                //_body.SyncLevel = "1";
+
+                //return _body;
                 if (_body == null)
                 {
                     _body = new PropFind();

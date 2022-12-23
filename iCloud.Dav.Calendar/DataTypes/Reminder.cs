@@ -39,6 +39,12 @@ namespace iCloud.Dav.Calendar.DataTypes
                 // Create a new UID for the component
                 Id = Uid = Guid.NewGuid().ToString();
             }
+            if (Calendar is null)
+            {
+                var calendar = new Ical.Net.Calendar();
+                calendar.Todos.Add(this);
+                Parent = calendar;
+            }
         }
     }
 }

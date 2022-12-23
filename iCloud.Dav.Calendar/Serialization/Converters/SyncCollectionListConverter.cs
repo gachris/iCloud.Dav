@@ -19,14 +19,15 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
         {
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
-            var responses = ((MultiStatus)value).Responses;
+            var multiStatus = (MultiStatus)value;
+            var responses = multiStatus.Responses;
             var collectionResponse = responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection") ||
                                                                    x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true || 
                                                                    !Path.HasExtension(x.Href.TrimEnd('/')));
 
             return new SyncCollectionList()
             {
-                NextSyncToken = collectionResponse?.SyncToken,
+                NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
                 ETag = collectionResponse?.Etag,
                 Items = responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToSyncCollectionItem).ToList()
             };

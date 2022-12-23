@@ -26,7 +26,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
 
         public string SyncToken { get; set; }
 
-        public string CalendarOrder { get; set; }
+        public int CalendarOrder { get; set; }
 
         public Status Status { get; set; }
 

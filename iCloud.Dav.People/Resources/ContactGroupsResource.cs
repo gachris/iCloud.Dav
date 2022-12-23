@@ -5,6 +5,8 @@ using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.Utils;
+using System;
+using System.Linq;
 
 namespace iCloud.Dav.People.Resources
 {
@@ -35,6 +37,13 @@ namespace iCloud.Dav.People.Resources
         /// <param name="contactGroupId">Contact Group identifier. To retrieve contact group IDs call the <see cref="List(string)"/> method.</param>
         /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
         public virtual GetRequest Get(string contactGroupId, string resourceName) => new GetRequest(_service, contactGroupId, resourceName);
+
+        /// <summary>
+        /// Returns events on the specified calendar.
+        /// </summary>
+        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactGroupIds">Contact Group identifiers. To retrieve contact group IDs call the <see cref="List(string)"/> method.</param>
+        public virtual MultiGetRequest MultiGet(string resourceName, string[] contactGroupIds) => new MultiGetRequest(_service, resourceName, contactGroupIds);
 
         /// <summary>
         /// Inserts Contact Group into the user's contact group list.
@@ -165,6 +174,69 @@ namespace iCloud.Dav.People.Resources
 
                 RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
                 RequestParameters.Add("contactGroupId", new Parameter("contactGroupId", "path", true));
+            }
+        }
+
+        /// <summary>
+        /// Returns contacts from the user's people list.
+        /// </summary>
+        public class MultiGetRequest : PeopleBaseServiceRequest<ContactGroupList>
+        {
+            private AddressBookMultiget _body;
+
+            /// <summary>
+            /// Constructs a new MultiGet request.
+            /// </summary>
+            public MultiGetRequest(IClientService service, string resourceName, string[] contactGroupIds) : base(service)
+            {
+                ContactGroupIds = contactGroupIds.ThrowIfNull(nameof(contactGroupIds));
+                ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            }
+
+            /// <summary>
+            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// </summary>
+            [RequestParameter("resourceName", RequestParameterType.Path)]
+            public virtual string ResourceName { get; }
+
+            /// <summary>
+            /// Contact Group identifiers. To retrieve contact group IDs call the <see cref="List(string)"/> method.
+            /// </summary>
+            public virtual string[] ContactGroupIds { get; }
+
+            /// <inheritdoc/>
+            public override string MethodName => "get";
+
+            /// <inheritdoc/>
+            public override string HttpMethod => Constants.Report;
+
+            /// <inheritdoc/>
+            public override string RestPath => "{resourceName}";
+
+            /// <inheritdoc/>
+            public override string Depth => "1";
+
+            /// <inheritdoc/>
+            protected override object GetBody()
+            {
+                if (_body == null)
+                {
+                    _body = new AddressBookMultiget();
+                }
+
+                _body.Href.Clear();
+                _body.Href.AddRange(ContactGroupIds.Select(contactId =>
+                new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook), string.Concat(ResourceName, "/", contactId, ".vcf")).AbsolutePath));
+
+                return _body;
+            }
+
+            /// <inheritdoc/>
+            protected override void InitParameters()
+            {
+                base.InitParameters();
+
+                RequestParameters.Add("resourceName", new Parameter("resourceName", "path", true));
             }
         }
 

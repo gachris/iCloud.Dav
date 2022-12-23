@@ -1,8 +1,6 @@
 ﻿using iCloud.Dav.People.DataTypes;
 using System;
 using System.Collections.Generic;
-using vCard.Net;
-using vCard.Net.DataTypes;
 
 namespace iCloud.Dav.People.Serialization
 {
@@ -22,16 +20,16 @@ namespace iCloud.Dav.People.Serialization
             AddPropertyMapping("ADR", typeof(Address), true);
             AddPropertyMapping("EMAIL", typeof(Email), true);
             AddPropertyMapping("TEL", typeof(Phone), true);
-            AddPropertyMapping("ORG", typeof(Organization), false);
+            AddPropertyMapping("ORG", typeof(vCard.Net.DataTypes.Organization), false);
             AddPropertyMapping("PHOTO", typeof(Photo), false);
             AddPropertyMapping("URL", typeof(Website), true);
-            AddPropertyMapping("REV", typeof(IDateTime), false);
-            AddPropertyMapping("BDAY", typeof(IDateTime), false);
-            AddPropertyMapping("N", typeof(Name), false);
+            AddPropertyMapping("REV", typeof(vCard.Net.DataTypes.IDateTime), false);
+            AddPropertyMapping("BDAY", typeof(vCard.Net.DataTypes.IDateTime), false);
+            AddPropertyMapping("N", typeof(vCard.Net.DataTypes.Name), false);
             AddPropertyMapping("X-ABDATE", typeof(Date), true);
             AddPropertyMapping("X-ABRELATEDNAMES", typeof(RelatedNames), true);
             AddPropertyMapping("X-SOCIALPROFILE", typeof(SocialProfile), true);
-            AddPropertyMapping("X-ADDRESSBOOKSERVER-KIND", typeof(Kind), false);
+            AddPropertyMapping("X-ADDRESSBOOKSERVER-KIND", typeof(vCard.Net.DataTypes.Kind), false);
             AddPropertyMapping("X-ABLABEL", typeof(Label), true);
             AddPropertyMapping("X-ABADR", typeof(X_ABAddress), true);
             AddPropertyMapping("IMPP", typeof(InstantMessage), true);
@@ -79,7 +77,7 @@ namespace iCloud.Dav.People.Serialization
 
         public virtual bool GetPropertyAllowsMultipleValues(object obj)
         {
-            var p = obj as ICardProperty;
+            var p = obj as vCard.Net.ICardProperty;
             return !string.IsNullOrWhiteSpace(p?.Name)
                 && _propertyMap.TryGetValue(p.Name, out var m)
                 && m.AllowsMultipleValuesPerProperty;
@@ -87,7 +85,7 @@ namespace iCloud.Dav.People.Serialization
 
         public virtual Type GetPropertyMapping(object obj)
         {
-            var p = obj as ICardProperty;
+            var p = obj as vCard.Net.ICardProperty;
             return p?.Name == null
                 ? null
                 : !_propertyMap.TryGetValue(p.Name, out var m)

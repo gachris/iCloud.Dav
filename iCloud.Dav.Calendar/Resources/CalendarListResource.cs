@@ -24,9 +24,15 @@ namespace iCloud.Dav.Calendar.Resources
         public CalendarListResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns changes on the user's calendar list.
+        /// Returns the next sync token the specified calendar.
         /// </summary>
-        public virtual SyncCollectionRequest SyncCollection(string calendarId) => new SyncCollectionRequest(_service);
+        public virtual GetSyncTokenRequest GetSyncToken(string calendarId) => new GetSyncTokenRequest(_service, calendarId);
+
+        /// <summary>
+        /// Returns changes on the specified calendar.
+        /// </summary>
+        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
+        public virtual SyncCollectionRequest SyncCollection(string calendarId) => new SyncCollectionRequest(_service, calendarId);
 
         /// <summary>
         /// Returns the calendars on the user's calendar list.
@@ -58,7 +64,60 @@ namespace iCloud.Dav.Calendar.Resources
         public virtual DeleteRequest Delete(string calendarId) => new DeleteRequest(_service, calendarId);
 
         /// <summary>
-        /// Returns changes on the user's calendar list.
+        /// Returns the next sync token on the user's identity card list.
+        /// </summary>
+        public class GetSyncTokenRequest : CalendarBaseServiceRequest<SyncToken>
+        {
+            private PropFind _body;
+
+            /// <summary>
+            /// Constructs a new Sync Collection request.
+            /// </summary>
+            public GetSyncTokenRequest(IClientService service, string calendarId) : base(service)
+            {
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            }
+
+            /// <summary>
+            /// Resource Name. To retrieve resource names call the <see cref="List"/> method.
+            /// </summary>
+            [RequestParameter("calendarId", RequestParameterType.Path)]
+            public virtual string CalendarId { get; }
+
+            /// <inheritdoc/>
+            public override string MethodName => "get";
+
+            /// <inheritdoc/>
+            public override string HttpMethod => Constants.Propfind;
+
+            /// <inheritdoc/>
+            public override string RestPath => "{calendarId}";
+
+            /// <inheritdoc/>
+            public override string Depth => "0";
+
+            /// <inheritdoc/>
+            protected override object GetBody()
+            {
+                if (_body == null)
+                {
+                    _body = new PropFind();
+                }
+
+                return _body;
+            }
+
+            /// <inheritdoc/>
+            protected override void InitParameters()
+            {
+                base.InitParameters();
+
+                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            }
+        }
+
+        /// <summary>
+        /// Returns changes on the specified calendar.
         /// </summary>
         public class SyncCollectionRequest : CalendarBaseServiceRequest<SyncCollectionList>
         {
@@ -67,20 +126,24 @@ namespace iCloud.Dav.Calendar.Resources
             /// <summary>
             /// Constructs a new Sync Collection request.
             /// </summary>
-            public SyncCollectionRequest(IClientService service) : base(service)
+            public SyncCollectionRequest(IClientService service, string calendarId) : base(service)
             {
-                SyncLevel = "1";
+                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
             }
+
+            /// <summary>
+            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// </summary>
+            [RequestParameter("calendarId", RequestParameterType.Path)]
+            public virtual string CalendarId { get; }
 
             /// <summary>
             /// Token obtained from the nextSyncToken field returned on the last page of results
             /// from the previous list request. It makes the result of this list request contain
-            /// only entries that have changed since then. All entries deleted since the previous
+            /// only entries that have changed since then. All events deleted since the previous
             /// list request will always be in the result. Optional. The default is to return all entries.
             /// </summary>
             public virtual string SyncToken { get; set; }
-
-            public virtual string SyncLevel { get; set; }
 
             /// <inheritdoc/>
             public override string MethodName => "list";
@@ -89,7 +152,7 @@ namespace iCloud.Dav.Calendar.Resources
             public override string HttpMethod => Constants.Report;
 
             /// <inheritdoc/>
-            public override string RestPath => string.Empty;
+            public override string RestPath => "{calendarId}";
 
             /// <inheritdoc/>
             public override string Depth => "0";
@@ -103,9 +166,17 @@ namespace iCloud.Dav.Calendar.Resources
                 }
 
                 _body.SyncToken = SyncToken;
-                _body.SyncLevel = SyncLevel;
+                _body.SyncLevel = "1";
 
                 return _body;
+            }
+
+            /// <inheritdoc/>
+            protected override void InitParameters()
+            {
+                base.InitParameters();
+
+                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
             }
         }
 
@@ -114,7 +185,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// </summary>
         public class ListRequest : CalendarBaseServiceRequest<CalendarList>
         {
-            private object _body;
+            private SyncCollection _body;
 
             /// <summary>
             /// Constructs a new List request.
@@ -123,11 +194,19 @@ namespace iCloud.Dav.Calendar.Resources
             {
             }
 
+            /// <summary>
+            /// Token obtained from the nextSyncToken field returned on the last page of results
+            /// from the previous list request. It makes the result of this list request contain
+            /// only entries that have changed since then. All entries deleted since the previous
+            /// list request will always be in the result. Optional. The default is to return all entries.
+            /// </summary>
+            public virtual string SyncToken { get; set; }
+
             /// <inheritdoc/>
             public override string MethodName => "list";
 
             /// <inheritdoc/>
-            public override string HttpMethod => Constants.Propfind;
+            public override string HttpMethod => Constants.Report;
 
             /// <inheritdoc/>
             public override string RestPath => string.Empty;
@@ -140,8 +219,12 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropFind();
+                    _body = new SyncCollection();
                 }
+
+                _body.SyncToken = SyncToken;
+                _body.SyncLevel = "1";
+
                 return _body;
             }
         }
@@ -310,7 +393,7 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropertyUpdate(Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)), Body.Color);
+                    _body = new PropertyUpdate(Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)), Body.Color, Body.Order.ToString());
                 }
                 return _body;
             }

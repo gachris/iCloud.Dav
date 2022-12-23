@@ -257,10 +257,16 @@ namespace iCloud.Dav.People.DataTypes
 
         private void EnsureProperties()
         {
+            var id = Guid.NewGuid().ToString();
+            if (string.IsNullOrEmpty(Id))
+            {
+                // Create a new UID for the component
+                Id = id;
+            }
             if (string.IsNullOrEmpty(Uid))
             {
                 // Create a new UID for the component
-                Id = Uid = Guid.NewGuid().ToString();
+                Uid = id;
             }
         }
     }

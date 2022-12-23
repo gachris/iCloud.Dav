@@ -25,6 +25,12 @@ namespace iCloud.Dav.Calendar.Utils
                 Order = response.CalendarOrder,
             };
 
+            if (response.Status == Status.NotFound)
+            {
+                calendarListEntry.Deleted = true;
+                return calendarListEntry;
+            }
+
             if (!string.IsNullOrEmpty(response.CalendarTimeZone))
             {
                 var byteArray = Encoding.UTF8.GetBytes(response.CalendarTimeZone);
@@ -66,18 +72,14 @@ namespace iCloud.Dav.Calendar.Utils
 
         public static string SerializeToString(this Event calendarEvent)
         {
-            var calendar = new Ical.Net.Calendar();
             var calendarSerializer = new CalendarSerializer();
-            calendar.Events.Add(calendarEvent);
-            return calendarSerializer.SerializeToString(calendar);
+            return calendarSerializer.SerializeToString(calendarEvent.Calendar);
         }
 
-        public static string SerializeToString(this Reminder calendarReminder)
+        public static string SerializeToString(this Reminder reminder)
         {
-            var calendar = new Ical.Net.Calendar();
             var calendarSerializer = new CalendarSerializer();
-            calendar.Todos.Add(calendarReminder);
-            return calendarSerializer.SerializeToString(calendar);
+            return calendarSerializer.SerializeToString(reminder.Calendar);
         }
 
         public static string ToFilterTime(this DateTime? dateTime)

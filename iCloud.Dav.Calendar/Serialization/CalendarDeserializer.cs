@@ -39,12 +39,12 @@ namespace iCloud.Dav.Calendar.Serialization
 
         public IEnumerable<ICalendarComponent> Deserialize(TextReader reader)
         {
+            SerializationContext context = new SerializationContext();
+            Stack<ICalendarComponent> stack = new Stack<ICalendarComponent>();
             ICalendarComponent current = null;
-            var context = new SerializationContext();
-            var stack = new Stack<ICalendarComponent>();
-            foreach (var contentLine in GetContentLines(reader))
+            foreach (string contentLine in GetContentLines(reader))
             {
-                var calendarProperty = ParseContentLine(context, contentLine);
+                CalendarProperty calendarProperty = ParseContentLine(context, contentLine);
                 if (string.Equals(calendarProperty.Name, "BEGIN", StringComparison.OrdinalIgnoreCase))
                 {
                     stack.Push(current);
@@ -66,7 +66,7 @@ namespace iCloud.Dav.Calendar.Serialization
                     }
 
                     SerializationUtil.OnDeserialized(current);
-                    var calendarComponent = current;
+                    ICalendarComponent calendarComponent = current;
                     current = stack.Pop();
                     if (current == null)
                     {

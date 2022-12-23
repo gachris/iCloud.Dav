@@ -22,12 +22,11 @@
 		<None Remove="iCloud.dav.People_SignAssembly_Key.snk" />
 	</ItemGroup>
 
-	<!--<ItemGroup>
-	  <PackageReference Include="vCard.Net" Version="1.0.0-alpha" />
-	</ItemGroup>-->
+	<ItemGroup>
+	  <PackageReference Include="vCard.Net" Version="1.0.1-alpha" />
+	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\vCard.Net\vCard.Net\vCard.Net.csproj" />
 		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
 	</ItemGroup>
 

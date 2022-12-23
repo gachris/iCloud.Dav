@@ -1,7 +1,10 @@
-﻿using iCloud.Dav.People.Utils;
+﻿using iCloud.Dav.People.DataTypes;
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace iCloud.Dav.People.Serialization.Converters
 {
@@ -15,7 +18,18 @@ namespace iCloud.Dav.People.Serialization.Converters
         {
             return !CanConvertFrom(context, value.GetType())
                 ? throw GetConvertFromException(value) 
-                : (object)((string)value).DeserializeContact();
+                : DeserializeContact((string)value);
+        }
+
+        private static Contact DeserializeContact(string data)
+        {
+            if (data.Contains("X-ADDRESSBOOKSERVER-KIND:group")) return null;
+
+            var bytes = Encoding.UTF8.GetBytes(data);
+            using (var stream = new MemoryStream(bytes))
+            {
+                return ContactDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).First();
+            }
         }
     }
 }

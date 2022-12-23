@@ -20,20 +20,20 @@ namespace iCloud.Dav.People.Resources
         public CloudGatewayResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns contact photo from gateway.
+        /// Returns a file from gateway.
         /// </summary>
-        /// <param name="uri">Uri to retrieve contact photo.</param>
-        public virtual GetContactPhotoRequest GetContactPhoto(Uri uri) => new GetContactPhotoRequest(_service, uri);
+        /// <param name="uri">Uri to retrieve the file.</param>
+        public virtual GetRequest Get(Uri uri) => new GetRequest(_service, uri);
 
         /// <summary>
-        /// Returns contact photo from gateway.
+        /// Returns a file from gateway.
         /// </summary>
-        public class GetContactPhotoRequest : PeopleBaseServiceRequest<byte[]>
+        public class GetRequest : PeopleBaseServiceRequest<byte[]>
         {
             /// <summary>
             /// Constructs a new Get request.
             /// </summary>
-            public GetContactPhotoRequest(IClientService service, Uri uri) : base(service) => RestPath = uri.AbsolutePath;
+            public GetRequest(IClientService service, Uri uri) : base(service) => RestPath = uri.AbsolutePath;
 
             /// <inheritdoc/>
             public override string MethodName => "get";

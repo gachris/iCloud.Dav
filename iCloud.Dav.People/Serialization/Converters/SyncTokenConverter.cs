@@ -1,7 +1,6 @@
 ﻿using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -9,7 +8,7 @@ using System.Linq;
 
 namespace iCloud.Dav.People.Serialization.Converters
 {
-    internal sealed class SyncCollectionListConverter : TypeConverter
+    internal sealed class SyncTokenConverter : TypeConverter
     {
         /// <inheritdoc/>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
@@ -24,20 +23,10 @@ namespace iCloud.Dav.People.Serialization.Converters
                                                                                || x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true
                                                                                || !Path.HasExtension(x.Href.TrimEnd('/')));
 
-            return new SyncCollectionList()
+            return new SyncToken()
             {
-                NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                Items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToSyncCollectionItem).ToList()
-            };
-        }
-
-        private static SyncCollectionItem ToSyncCollectionItem(Response response)
-        {
-            return new SyncCollectionItem()
-            {
-                Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
-                ETag = response.Etag,
-                Deleted = response.Status == Status.NotFound ? true : (bool?)null
+                ETag = collectionResponse.Etag,
+                NextSyncToken = collectionResponse.SyncToken
             };
         }
     }

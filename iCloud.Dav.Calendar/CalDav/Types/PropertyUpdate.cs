@@ -12,10 +12,13 @@ namespace iCloud.Dav.Calendar.CalDav.Types
 
         public string CalendarColor { get; }
 
-        public PropertyUpdate(string displayName, string calendarColor)
+        public string Order { get; }
+
+        public PropertyUpdate(string displayName, string calendarColor, string order)
         {
             DisplayName = displayName;
             CalendarColor = calendarColor;
+            Order = order;
         }
 
         public XmlSchema GetSchema() => new XmlSchema();
@@ -27,15 +30,16 @@ namespace iCloud.Dav.Calendar.CalDav.Types
             writer.WriteStartElement("set", "DAV:");
             writer.WriteStartElement("prop", "DAV:");
 
-            writer.WriteStartElement("displayname", "DAV:");
-            writer.WriteString(DisplayName);
-            writer.WriteEndElement();
+            writer.WriteElementString("displayname", "DAV:", DisplayName);
 
             if (!string.IsNullOrEmpty(CalendarColor))
             {
-                writer.WriteStartElement("calendar-color", "http://apple.com/ns/ical/");
-                writer.WriteString(CalendarColor);
-                writer.WriteEndElement();
+                writer.WriteElementString("calendar-color", "http://apple.com/ns/ical/", CalendarColor);
+            }
+
+            if (!string.IsNullOrEmpty(Order))
+            {
+                writer.WriteElementString("calendar-order", "http://apple.com/ns/ical/", Order);
             }
 
             writer.WriteEndElement();

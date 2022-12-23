@@ -1,5 +1,4 @@
-﻿using iCloud.Dav.Core;
-using iCloud.Dav.Core.Serialization;
+﻿using iCloud.Dav.Core.Serialization;
 using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Serialization.Converters;
 using System.Collections.Generic;
@@ -10,13 +9,8 @@ namespace iCloud.Dav.People.DataTypes
     /// <inheritdoc/>
     [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(SyncCollectionListConverter))]
-    public class SyncCollectionList : IDirectResponseSchema
+    public class SyncCollectionList
     {
-        /// <summary>
-        /// ETag of the collection.
-        /// </summary>
-        public virtual string ETag { get; set; }
-
         /// <summary>
         /// Calendars that are present on the user's calendar list.
         /// </summary>

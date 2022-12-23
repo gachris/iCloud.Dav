@@ -68,12 +68,14 @@ namespace iCloud.Dav.Calendar.DataTypes
         /// <summary>
         /// Order of the calendar. Optional.
         /// </summary>
-        public string Order { get; set; }
+        public int Order { get; set; }
 
         /// <summary>
         /// Type of the collection ("calendar#calendarList").
         /// </summary>
         public virtual string Kind { get; set; }
+
+        public bool? Deleted { get; set; }
 
         public CalendarListEntry()
         {

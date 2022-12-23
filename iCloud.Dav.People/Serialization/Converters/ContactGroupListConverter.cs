@@ -1,12 +1,12 @@
 ﻿using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace iCloud.Dav.People.Serialization.Converters
 {
@@ -22,22 +22,25 @@ namespace iCloud.Dav.People.Serialization.Converters
 
             var multiStatus = (MultiStatus)value;
             var addressbook = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true || !Path.HasExtension(x.Href.TrimEnd('/')));
+            var responses = multiStatus.Responses.Where(response => response.AddressData.Value.Contains("X-ADDRESSBOOKSERVER-KIND:group"));
 
             return new ContactGroupList()
             {
                 Kind = "groups",
-                ETag = addressbook?.Etag,
-                NextSyncToken = addressbook?.SyncToken ?? multiStatus.SyncToken,
-                Items = multiStatus.Responses.Except(new HashSet<Response>() { addressbook }).Select(ToContactGroup).ToList()
+                Items = responses.Except(new HashSet<Response>() { addressbook }).Select(ToContactGroup).ToList()
             };
         }
 
-        public static ContactGroup ToContactGroup(Response response)
+        private static ContactGroup ToContactGroup(Response response)
         {
-            var contactGroup = response.AddressData.Value.DeserializeContactGroup();
-            contactGroup.ETag = response.Etag;
-            contactGroup.Id = Path.GetFileNameWithoutExtension(response.Href);
-            return contactGroup;
+            var bytes = Encoding.UTF8.GetBytes(response.AddressData.Value);
+            using (var stream = new MemoryStream(bytes))
+            {
+                var contactGroup = ContactGroupDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).First();
+                contactGroup.ETag = response.Etag;
+                contactGroup.Id = Path.GetFileNameWithoutExtension(response.Href);
+                return contactGroup;
+            }
         }
     }
 }

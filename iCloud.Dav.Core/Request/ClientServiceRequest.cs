@@ -134,7 +134,7 @@ namespace iCloud.Dav.Core.Request
                 return await _service.DeserializeResponse<TResponse>(response).ConfigureAwait(false);
             }
             var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
-            var errorResponse = new ErrorResponse(response.ReasonPhrase, response.StatusCode, requestError, response.RequestMessage?.RequestUri?.AbsoluteUri);
+            var errorResponse = new ErrorResponse(response.ReasonPhrase, response.StatusCode, response.RequestMessage?.RequestUri?.AbsoluteUri, requestError);
             throw new ICloudApiException(_service.Name, errorResponse.ToString());
         }
 
