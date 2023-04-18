@@ -3,22 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ICalVCard.1.0.0", "ICalVCard.1.0.0", "{8BA09AA0-4A52-4B5E-9AC7-F84E215432C2}"
-	ProjectSection(SolutionItems) = preProject
-		Reference\ICalVCard.1.0.0\ICalVCard.dll = Reference\ICalVCard.1.0.0\ICalVCard.dll
-		Reference\ICalVCard.1.0.0\ICalVCard.xml = Reference\ICalVCard.1.0.0\ICalVCard.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ical.Net.2.3.0", "Ical.Net.2.3.0", "{FF4B02C5-D25F-40AF-BAE8-89F1FBDC8238}"
-	ProjectSection(SolutionItems) = preProject
-		Reference\Ical.Net.2.3.0\antlr.runtime.dll = Reference\Ical.Net.2.3.0\antlr.runtime.dll
-		Reference\Ical.Net.2.3.0\antlr.runtime.xml = Reference\Ical.Net.2.3.0\antlr.runtime.xml
-		Reference\Ical.Net.2.3.0\Ical.Net.Collections.dll = Reference\Ical.Net.2.3.0\Ical.Net.Collections.dll
-		Reference\Ical.Net.2.3.0\Ical.Net.dll = Reference\Ical.Net.2.3.0\Ical.Net.dll
-		Reference\Ical.Net.2.3.0\Ical.Net.xml = Reference\Ical.Net.2.3.0\Ical.Net.xml
-		Reference\Ical.Net.2.3.0\NodaTime.dll = Reference\Ical.Net.2.3.0\NodaTime.dll
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Auth", "iCloud.Dav.Auth\iCloud.Dav.Auth.csproj", "{729FB11E-E019-451B-B67D-7E5F2EEC04E9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar", "iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj", "{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}"
