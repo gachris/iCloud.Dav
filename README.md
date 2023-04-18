@@ -28,21 +28,52 @@ To use iCloud.Dav in your .NET project, you need to add a reference to either th
 
 Here are examples of how to use iCloud.Dav:
 
+### Authentication
+```cs
+using iCloud.Dav.Auth;
+using iCloud.Dav.Auth.Store;
+using iCloud.Dav.Core;
+using System.Net;
+
+var networkCredential = new NetworkCredential("icloud-email", "app-specific-password");
+
+var dataStore = new FileDataStore("folder-to-store-data");
+
+var userCredential = await AuthorizationBroker.AuthorizeAsync("folder-to-store-user-credentials", networkCredential, dataStore, CancellationToken.None);
+
+var initializer = new BaseClientService.Initializer()
+{
+    HttpClientInitializer = userCredential,
+};
+```
+
 ### Calendars
 ```cs
-...
+using iCloud.Dav.Calendar;
+
+var calendarService = new CalendarService(initializer);
 ```
 
 ### Contacts
 ```cs
-...
+using iCloud.Dav.People;
+
+var peopleService = new PeopleService(initializer);
 ```
 
 ### Reminders
 ```cs
-...
+using iCloud.Dav.Calendar;
+
+var calendarService = new CalendarService(initializer);
 ```
 
+### Gateway
+```cs
+using iCloud.Dav.People;
+
+var cloudGatewayService = new CloudGatewayService(initializer);
+```
 ## Contributing
 Contributions to iCloud.Dav are welcome! If you want to contribute to the project, please fork the repository and create a pull request with your changes.
 
