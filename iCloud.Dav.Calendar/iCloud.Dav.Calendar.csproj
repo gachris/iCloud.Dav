@@ -15,11 +15,21 @@
 		<Description>Package for accessing calendars of the iCloud provider with the CalDav protocol.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;1591;NU1605</NoWarn>
-		<Version>3.0.0-alpha</Version>
+		<Version>3.0.0</Version>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>icloud calendars events reminders</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="iCloud.dav.Calendar_SignAssembly_Key.snk" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>
