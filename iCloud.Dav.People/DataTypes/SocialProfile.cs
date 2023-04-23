@@ -67,11 +67,33 @@ namespace iCloud.Dav.People.DataTypes
 
                 switch (value)
                 {
-                    case SocialProfileType.Custom:
-                        Label = new Label() { Value = Label?.Value };
-                        break;
-                    default:
+                    case SocialProfileType.Twitter:
                         Label = null;
+                        Url = string.Format(Twitter, UserName);
+                        break;
+                    case SocialProfileType.Facebook:
+                        Url = string.Format(Facebook, UserName);
+                        Label = null;
+                        break;
+                    case SocialProfileType.LinkedIn:
+                        Url = string.Format(LinkedIn, UserName);
+                        Label = null;
+                        break;
+                    case SocialProfileType.Flickr:
+                        Url = string.Format(Flickr, UserName);
+                        Label = null;
+                        break;
+                    case SocialProfileType.Myspace:
+                        Url = string.Format(Myspace, UserName);
+                        Label = null;
+                        break;
+                    case SocialProfileType.SinaWeibo:
+                        Url = string.Format(SinaWeibo, UserName);
+                        Label = null;
+                        break;
+                    case SocialProfileType.Custom:
+                        Url = string.Format(Custom, UserName);
+                        Label = new Label() { Value = Label?.Value };
                         break;
                 }
             }
@@ -82,7 +104,7 @@ namespace iCloud.Dav.People.DataTypes
             get => Properties.Get<Label>("X-ABLABEL");
             set
             {
-                if (value == null && Label != null) 
+                if (value == null && Label != null)
                 {
                     Properties.Remove("X-ABLABEL");
                     Parameters.Remove("TYPE");
@@ -100,7 +122,35 @@ namespace iCloud.Dav.People.DataTypes
         public virtual string UserName
         {
             get => Parameters.Get("X-USER");
-            set => Parameters.Set("X-USER", value);
+            set
+            {
+                Parameters.Set("X-USER", value);
+
+                switch (Type)
+                {
+                    case SocialProfileType.Twitter:
+                        Url = string.Format(Twitter, UserName);
+                        break;
+                    case SocialProfileType.Facebook:
+                        Url = string.Format(Facebook, UserName);
+                        break;
+                    case SocialProfileType.LinkedIn:
+                        Url = string.Format(LinkedIn, UserName);
+                        break;
+                    case SocialProfileType.Flickr:
+                        Url = string.Format(Flickr, UserName);
+                        break;
+                    case SocialProfileType.Myspace:
+                        Url = string.Format(Myspace, UserName);
+                        break;
+                    case SocialProfileType.SinaWeibo:
+                        Url = string.Format(SinaWeibo, UserName);
+                        break;
+                    case SocialProfileType.Custom:
+                        Url = string.Format(Custom, UserName);
+                        break;
+                }
+            }
         }
 
         /// <summary>The URL of the X-SOCIALPROFILE site.</summary>
