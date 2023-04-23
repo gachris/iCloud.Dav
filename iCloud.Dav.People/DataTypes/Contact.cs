@@ -156,8 +156,8 @@ namespace iCloud.Dav.People.DataTypes
         /// </summary>
         public virtual string ShowAs
         {
-            get => Properties.Get<string>("X-ABShowAs");
-            set => Properties.Set("X-ABShowAs", value);
+            get => Properties.Get<string>("X-ABSHOWAS");
+            set => Properties.Set("X-ABSHOWAS", value);
         }
 
         /// <summary>
