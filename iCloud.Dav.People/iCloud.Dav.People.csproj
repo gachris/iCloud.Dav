@@ -6,9 +6,9 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>iCloud.Dav.People_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
-		<RepositoryUrl>https://github.com/gachris/iCloud.Dav/tree/master/iCloud.Dav.People</RepositoryUrl>
+		<RepositoryUrl>https://github.com/gachris/iCloud.Dav</RepositoryUrl>
 		<Authors>gachris</Authors>
-		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav/tree/master/iCloud.Dav.People</PackageProjectUrl>
 		<Copyright>Copyright © 2022.</Copyright>
 		<PackageId>iCloud.Dav.People</PackageId>
 		<Product>iCloud.Dav.People</Product>
