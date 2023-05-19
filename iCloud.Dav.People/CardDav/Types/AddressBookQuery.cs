@@ -10,6 +10,8 @@ namespace iCloud.Dav.People.CardDav.Types
     [XmlRoot(ElementName = "addressbook-query", Namespace = "urn:ietf:params:xml:ns:carddav")]
     internal sealed class AddressBookQuery : IXmlSerializable
     {
+        public const int MaxResults = 50000;
+
         public Filters Filter { get; set; }
 
         public XmlSchema GetSchema() => new XmlSchema();
@@ -49,6 +51,10 @@ namespace iCloud.Dav.People.CardDav.Types
                 writer.WriteEndElement();
                 writer.WriteEndElement();
             }
+
+            writer.WriteStartElement("limit", "urn:ietf:params:xml:ns:carddav");
+            writer.WriteElementString("nresults", "urn:ietf:params:xml:ns:carddav", (MaxResults + 1).ToString());
+            writer.WriteEndElement();
         }
     }
 }
