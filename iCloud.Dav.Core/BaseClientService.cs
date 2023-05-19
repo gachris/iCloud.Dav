@@ -10,27 +10,44 @@ using System.Threading.Tasks;
 
 namespace iCloud.Dav.Core
 {
+    /// <summary>
+    /// An abstract base class that provides a common set of functionality for all client services that interact with remote APIs.
+    /// Implements the IClientService interface and includes functionality for handling HTTP requests and responses, serializing
+    /// and deserializing data, and managing HTTP client configuration settings.
+    /// </summary>
     public abstract class BaseClientService : IClientService, IDisposable
     {
-        /// <summary>The class logger.</summary>
+        /// <summary>
+        /// The class logger.
+        /// </summary>
         private static readonly ILogger Logger = ApplicationContext.Logger.ForType<BaseClientService>();
 
-        /// <summary>The default maximum allowed length of a URL string for GET requests.</summary>
+        /// <summary>
+        /// The default maximum allowed length of a URL string for GET requests.
+        /// </summary>
         public const uint DefaultMaxUrlLength = 2048;
 
+        /// <inheritdoc/>
         public ConfigurableHttpClient HttpClient { get; private set; }
 
+        /// <inheritdoc/>
         public IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; private set; }
 
+        /// <inheritdoc/>
         public string ApplicationName { get; private set; }
 
+        /// <inheritdoc/>
         public ISerializer Serializer { get; private set; }
 
+        /// <inheritdoc/>
         public abstract string Name { get; }
 
+        /// <inheritdoc/>
         public abstract string BasePath { get; }
 
-        /// <summary>Constructs a new base client with the specified initializer.</summary>
+        /// <summary>
+        /// Constructs a new base client with the specified initializer.
+        /// </summary>
         protected BaseClientService(Initializer initializer)
         {
             Serializer = initializer.Serializer;
@@ -63,12 +80,13 @@ namespace iCloud.Dav.Core
         /// </summary>
         protected virtual BackOffHandler CreateBackOffHandler() => new BackOffHandler(new ExponentialBackOff());
 
+        /// <inheritdoc/>
         public void SetRequestSerailizedContent(HttpRequestMessage request, object body) => request.SetRequestSerailizedContent(this, body);
 
+        /// <inheritdoc/>
         public virtual string SerializeObject(object obj) => !(obj is string) ? Serializer.Serialize(obj) : (string)obj;
 
-        public virtual async Task<string> DeserializeResponse(HttpResponseMessage response) => await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
+        /// <inheritdoc/>
         public virtual async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
         {
             var responseContentString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -124,8 +142,10 @@ namespace iCloud.Dav.Core
             return (T)obj;
         }
 
+        /// <inheritdoc/>
         public virtual async Task<string> DeserializeError(HttpResponseMessage response) => await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
+        /// <inheritdoc/>
         public virtual void Dispose()
         {
             GC.SuppressFinalize(this);
@@ -135,7 +155,9 @@ namespace iCloud.Dav.Core
             HttpClient.Dispose();
         }
 
-        /// <summary>An initializer class for the client service.</summary>
+        /// <summary>
+        /// An initializer class for the client service.
+        /// </summary>
         public class Initializer
         {
             /// <summary>
@@ -178,7 +200,9 @@ namespace iCloud.Dav.Core
             /// </summary>
             public uint MaxUrlLength { get; set; }
 
-            /// <summary>Constructs a new initializer with default values.</summary>
+            /// <summary>
+            /// Constructs a new initializer with default values.
+            /// </summary>
             public Initializer()
             {
                 Serializer = new XmlObjectSerializer();

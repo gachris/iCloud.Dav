@@ -2,10 +2,14 @@
 
 namespace iCloud.Dav.Core
 {
-    /// <summary>Logic for validating a parameter.</summary>
+    /// <summary>
+    /// Logic for validating a parameter.
+    /// </summary>
     public static class ParameterValidator
     {
-        /// <summary>Validates a parameter value against the methods regex.</summary>
+        /// <summary>
+        /// Validates a parameter value against the methods regex.
+        /// </summary>
         public static bool ValidateRegex(IParameter param, string paramValue)
         {
             if (!string.IsNullOrEmpty(param.Pattern))
@@ -13,7 +17,9 @@ namespace iCloud.Dav.Core
             return true;
         }
 
-        /// <summary>Validates if a parameter is valid.</summary>
+        /// <summary>
+        /// Validates if a parameter is valid.
+        /// </summary>
         public static bool ValidateParameter(IParameter parameter, string value)
         {
             if (string.IsNullOrEmpty(value))

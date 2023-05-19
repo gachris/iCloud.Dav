@@ -4,12 +4,17 @@ using System.Net.Http;
 
 namespace iCloud.Dav.Core
 {
-    /// <summary>The default implementation of the HTTP client factory.</summary>
+    /// <summary>
+    /// The default implementation of the HTTP client factory.
+    /// </summary>
     public class HttpClientFactory : IHttpClientFactory
     {
-        /// <summary>The class logger.</summary>
+        /// <summary>
+        /// The class logger.
+        /// </summary>
         private static readonly ILogger _logger = ApplicationContext.Logger.ForType<HttpClientFactory>();
 
+        /// <inheritdoc/>
         public ConfigurableHttpClient CreateHttpClient(CreateHttpClientArgs args)
         {
             var httpClient = new ConfigurableHttpClient(new ConfigurableMessageHandler(CreateHandler(args))
@@ -20,7 +25,9 @@ namespace iCloud.Dav.Core
             return httpClient;
         }
 
-        /// <summary>Creates a HTTP message handler. Override this method to mock a message handler.</summary>
+        /// <summary>
+        /// Creates a HTTP message handler. Override this method to mock a message handler.
+        /// </summary>
         protected virtual HttpMessageHandler CreateHandler(CreateHttpClientArgs args)
         {
             var httpClientHandler = new HttpClientHandler();

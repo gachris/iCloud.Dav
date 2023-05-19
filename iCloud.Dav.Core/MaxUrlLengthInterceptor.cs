@@ -20,9 +20,12 @@ namespace iCloud.Dav.Core
     {
         private readonly uint _maxUrlLength;
 
-        /// <summary>Constructs a new Max URL length interceptor with the given max length.</summary>
+        /// <summary>
+        /// Constructs a new Max URL length interceptor with the given max length.
+        /// </summary>
         public MaxUrlLengthInterceptor(uint maxUrlLength) => _maxUrlLength = maxUrlLength;
 
+        /// <inheritdoc/>
         public Task InterceptAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             if (request.Method != HttpMethod.Get || request.RequestUri?.AbsoluteUri.Length <= _maxUrlLength)

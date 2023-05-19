@@ -2,6 +2,7 @@
 
 namespace iCloud.Dav.Core
 {
+    /// <inheritdoc/>
     public class ConfigurableHttpClient : HttpClient
     {
         /// <summary>Gets the configurable message handler.</summary>

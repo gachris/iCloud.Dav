@@ -10,10 +10,14 @@ namespace iCloud.Dav.Core
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class RequestParameterAttribute : Attribute
     {
-        /// <summary>Gets the name of the parameter.</summary>
+        /// <summary>
+        /// Gets the name of the parameter.
+        /// </summary>
         public string Name { get; }
 
-        /// <summary>Gets the type of the parameter, Path or Query.</summary>
+        /// <summary>
+        /// Gets the type of the parameter, Path or Query.
+        /// </summary>
         public RequestParameterType Type { get; }
 
         /// <summary>

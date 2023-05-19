@@ -2,7 +2,9 @@
 
 namespace iCloud.Dav.Core
 {
-    /// <summary>Exception handler is invoked when an exception is thrown during a HTTP request.</summary>
+    /// <summary>
+    /// Exception handler is invoked when an exception is thrown during a HTTP request.
+    /// </summary>
     public interface IHttpExceptionHandler
     {
         /// <summary>

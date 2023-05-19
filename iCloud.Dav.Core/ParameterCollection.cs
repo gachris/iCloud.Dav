@@ -5,23 +5,33 @@ using System.Collections.Generic;
 
 namespace iCloud.Dav.Core
 {
-    /// <summary>A collection of parameters (key value pairs). May contain duplicate keys.</summary>
+    /// <summary>
+    /// A collection of parameters (key value pairs). May contain duplicate keys.
+    /// </summary>
     public class ParameterCollection : List<KeyValuePair<string, string>>
     {
-        /// <summary>Constructs a new parameter collection.</summary>
+        /// <summary>
+        /// Constructs a new parameter collection.
+        /// </summary>
         public ParameterCollection()
         {
         }
 
-        /// <summary>Constructs a new parameter collection from the given collection.</summary>
+        /// <summary>
+        /// Constructs a new parameter collection from the given collection.
+        /// </summary>
         public ParameterCollection(IEnumerable<KeyValuePair<string, string>> collection) : base(collection)
         {
         }
 
-        /// <summary>Adds a single parameter to this collection.</summary>
+        /// <summary>
+        /// Adds a single parameter to this collection.
+        /// </summary>
         public void Add(string key, string value) => Add(new KeyValuePair<string, string>(key, value));
 
-        /// <summary>Returns <c>true</c> if this parameter is set within the collection.</summary>
+        /// <summary>
+        /// Returns <c>true</c> if this parameter is set within the collection.
+        /// </summary>
         public bool ContainsKey(string key)
         {
             key.ThrowIfNullOrEmpty(nameof(key));

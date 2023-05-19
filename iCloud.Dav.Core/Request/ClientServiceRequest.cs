@@ -17,15 +17,21 @@ namespace iCloud.Dav.Core.Request
     /// <typeparam name="TResponse">The type of the response object</typeparam>
     public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TResponse>, IClientServiceRequest
     {
-        /// <summary>The class logger.</summary>
+        /// <summary>
+        /// The class logger.
+        /// </summary>
         private static readonly ILogger _logger = ApplicationContext.Logger.ForType<ClientServiceRequest<TResponse>>();
 
         private readonly Dictionary<string, IParameter> _requestParameters = new Dictionary<string, IParameter>();
 
-        /// <summary>The service on which this request will be executed.</summary>
+        /// <summary>
+        /// The service on which this request will be executed.
+        /// </summary>
         private readonly IClientService _service;
 
-        /// <summary>Defines whether the E-Tag will be used in a specified way or be ignored.</summary>
+        /// <summary>
+        /// Defines whether the E-Tag will be used in a specified way or be ignored.
+        /// </summary>
         public ETagAction ETagAction { get; set; }
 
         /// <inheritdoc/>
@@ -43,8 +49,10 @@ namespace iCloud.Dav.Core.Request
         /// <inheritdoc/>
         public virtual string ContentType { get; }
 
+        /// <inheritdoc/>
         public IDictionary<string, IParameter> RequestParameters => _requestParameters;
 
+        /// <inheritdoc/>
         public IClientService Service => _service;
 
         /// <summary>Creates a new service request.</summary>
@@ -62,6 +70,7 @@ namespace iCloud.Dav.Core.Request
         {
         }
 
+        /// <inheritdoc/>
         public TResponse Execute()
         {
             try
@@ -79,6 +88,7 @@ namespace iCloud.Dav.Core.Request
             }
         }
 
+        /// <inheritdoc/>
         public Stream ExecuteAsStream()
         {
             try
@@ -95,8 +105,10 @@ namespace iCloud.Dav.Core.Request
             }
         }
 
+        /// <inheritdoc/>
         public async Task<TResponse> ExecuteAsync() => await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
 
+        /// <inheritdoc/>
         public async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
         {
             TResponse response;
@@ -108,8 +120,10 @@ namespace iCloud.Dav.Core.Request
             return response;
         }
 
+        /// <inheritdoc/>
         public async Task<Stream> ExecuteAsStreamAsync() => await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
 
+        /// <inheritdoc/>
         public async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
         {
             var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
@@ -138,6 +152,7 @@ namespace iCloud.Dav.Core.Request
             throw new ICloudApiException(_service.Name, errorResponse.ToString());
         }
 
+        /// <inheritdoc/>
         public HttpRequestMessage CreateRequest()
         {
             var request = CreateBuilder().CreateRequest();

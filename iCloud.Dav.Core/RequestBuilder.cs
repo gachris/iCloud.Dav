@@ -9,31 +9,41 @@ using System.Text.RegularExpressions;
 
 namespace iCloud.Dav.Core
 {
-    /// <summary>Utility class for building a URI using <see cref="BuildUri" /> or a HTTP request using
-    /// <see cref="CreateRequest" /> from the query and path parameters of a REST call.</summary>
+    /// <summary>
+    /// Utility class for building a URI using <see cref="BuildUri" /> or a HTTP request using
+    /// <see cref="CreateRequest" /> from the query and path parameters of a REST call.
+    /// </summary>
     public class RequestBuilder
     {
         private static readonly ILogger Logger = ApplicationContext.Logger.ForType<RequestBuilder>();
 
-        /// <summary>Pattern to get the groups that are part of the path.</summary>
+        /// <summary>
+        /// Pattern to get the groups that are part of the path.
+        /// </summary>
         private static readonly Regex PathParametersPattern = new Regex("{[^{}]*}*");
 
-        /// <summary>Supported HTTP methods.</summary>
+        /// <summary>
+        /// Supported HTTP methods.
+        /// </summary>
         private static readonly IEnumerable<string> SupportedMethods = new List<string>()
-    {
-        "GET",
-        "PUT",
-        "DELETE",
-        "PROPFIND",
-        "PROPPATCH",
-        "REPORT",
-        "MKCALENDAR"
-    };
+        {
+            "GET",
+            "PUT",
+            "DELETE",
+            "PROPFIND",
+            "PROPPATCH",
+            "REPORT",
+            "MKCALENDAR"
+        };
 
-        /// <summary>The HTTP method used for this request.</summary>
+        /// <summary>
+        /// The HTTP method used for this request.
+        /// </summary>
         private string _method = "GET";
 
-        /// <summary>Operator list that can appear in the path argument.</summary>
+        /// <summary>
+        /// Operator list that can appear in the path argument.
+        /// </summary>
         private const string OPERATORS = "+#./;?&|!@=";
 
         /// <summary>
@@ -48,7 +58,9 @@ namespace iCloud.Dav.Core
         /// </summary>
         private List<KeyValuePair<string, string>> QueryParameters { get; set; }
 
-        /// <summary>The base URI for this request (usually applies to the service itself).</summary>
+        /// <summary>
+        /// The base URI for this request (usually applies to the service itself).
+        /// </summary>
         public Uri BaseUri { get; }
 
         /// <summary>
@@ -57,7 +69,9 @@ namespace iCloud.Dav.Core
         /// </summary>
         public string Path { get; }
 
-        /// <summary>The HTTP method used for this request (such as GET, PUT, POST, etc...).</summary>
+        /// <summary>
+        /// The HTTP method used for this request (such as GET, PUT, POST, etc...).
+        /// </summary>
         /// <remarks>The default Value is <see cref="Constants.Get" />.</remarks>
         public string Method
         {
@@ -71,8 +85,6 @@ namespace iCloud.Dav.Core
         }
 
         /// <summary>Construct a new request builder.</summary>
-        ///  
-        ///             TODO(peleyal): Consider using the Factory pattern here.
         public RequestBuilder(Uri baseUri, string path, string method)
         {
             BaseUri = baseUri;
@@ -82,7 +94,9 @@ namespace iCloud.Dav.Core
             QueryParameters = new List<KeyValuePair<string, string>>();
         }
 
-        /// <summary>Constructs a Uri as defined by the parts of this request builder.</summary>
+        /// <summary>
+        /// Constructs a Uri as defined by the parts of this request builder.
+        /// </summary>
         public Uri BuildUri()
         {
             var stringBuilder = BuildRestPath();
@@ -100,10 +114,9 @@ namespace iCloud.Dav.Core
         }
 
         /// <summary>
-        /// Builds the REST path string builder based on <see cref="PathParameters" /> and the URI template spec
-        /// http://tools.ietf.org/html/rfc6570.
+        /// Builds the REST path string builder based on <see cref="PathParameters" />.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The REST path.</returns>
         private StringBuilder BuildRestPath()
         {
             if (string.IsNullOrEmpty(Path))
@@ -117,7 +130,7 @@ namespace iCloud.Dav.Core
                 string text = item.ToString();
                 string text2 = text.Substring(1, text.Length - 2);
                 string text3 = string.Empty;
-                if ("+#./;?&|!@=".Contains(text2[0].ToString()))
+                if (OPERATORS.Contains(text2[0].ToString()))
                 {
                     text3 = text2[0].ToString();
                     text2 = text2.Substring(1);
@@ -238,7 +251,9 @@ namespace iCloud.Dav.Core
             return stringBuilder;
         }
 
-        /// <summary>Adds a parameter value.</summary>
+        /// <summary>
+        /// Adds a parameter value.
+        /// </summary>
         /// <param name="type">Type of the parameter (must be 'Path' or 'Query').</param>
         /// <param name="name">Parameter name.</param>
         /// <param name="value">Parameter value.</param>
@@ -259,7 +274,9 @@ namespace iCloud.Dav.Core
                 PathParameters[name].Add(value);
         }
 
-        /// <summary>Creates a new HTTP request message.</summary>
+        /// <summary>
+        /// Creates a new HTTP request message.
+        /// </summary>
         public HttpRequestMessage CreateRequest() => new HttpRequestMessage(new HttpMethod(Method), BuildUri().ToString());
     }
 }

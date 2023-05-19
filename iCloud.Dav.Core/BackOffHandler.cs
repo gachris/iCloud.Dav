@@ -51,6 +51,7 @@ namespace iCloud.Dav.Core
             HandleUnsuccessfulResponseFunc = initializer.HandleUnsuccessfulResponseFunc;
         }
 
+        /// <inheritdoc/>
         public virtual async Task<bool> HandleResponseAsync(HandleUnsuccessfulResponseArgs args)
         {
             if (HandleUnsuccessfulResponseFunc != null && HandleUnsuccessfulResponseFunc(args.Response))
@@ -58,6 +59,7 @@ namespace iCloud.Dav.Core
             return false;
         }
 
+        /// <inheritdoc/>
         public virtual async Task<bool> HandleExceptionAsync(HandleExceptionArgs args)
         {
             if (HandleExceptionFunc != null && HandleExceptionFunc(args.Exception))
@@ -129,7 +131,9 @@ namespace iCloud.Dav.Core
             /// </summary>
             public Func<Exception, bool> HandleExceptionFunc { get; set; }
 
-            /// <summary>Constructs a new initializer by the given back-off.</summary>
+            /// <summary>
+            /// Constructs a new initializer by the given back-off.
+            /// </summary>
             public Initializer(IBackOff backOff)
             {
                 BackOff = backOff;

@@ -8,10 +8,14 @@ namespace iCloud.Dav.Core
     /// </summary>
     public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
     {
-        /// <summary>Gets or sets the used back-off policy.</summary>
+        /// <summary>
+        /// Gets or sets the used back-off policy.
+        /// </summary>
         private ExponentialBackOffPolicy Policy { get; set; }
 
-        /// <summary>Gets or sets the back-off handler creation function.</summary>
+        /// <summary>
+        /// Gets or sets the back-off handler creation function.
+        /// </summary>
         private Func<BackOffHandler> CreateBackOff { get; set; }
 
         /// <summary>
@@ -23,6 +27,7 @@ namespace iCloud.Dav.Core
             CreateBackOff = createBackOff;
         }
 
+        /// <inheritdoc/>
         public void Initialize(ConfigurableHttpClient httpClient)
         {
             BackOffHandler backOffHandler = CreateBackOff();

@@ -9,12 +9,18 @@ namespace iCloud.Dav.Core
     /// </summary>
     public class ExponentialBackOff : IBackOff
     {
-        /// <summary>The random instance which generates a random number to add the to next back-off.</summary>
-        private readonly Random _random = new Random();
-        /// <summary>The maximum allowed number of retries.</summary>
-        private const int MaxAllowedNumRetries = 20;
         private readonly TimeSpan _deltaBackOff;
         private readonly int _maxNumOfRetries;
+
+        /// <summary>
+        /// The random instance which generates a random number to add the to next back-off.
+        /// </summary>
+        private readonly Random _random = new Random();
+
+        /// <summary>
+        /// The maximum allowed number of retries.
+        /// </summary>
+        private const int MaxAllowedNumRetries = 20;
 
         /// <summary>
         /// Gets the delta time span used to generate a random milliseconds to add to the next back-off.
@@ -24,25 +30,32 @@ namespace iCloud.Dav.Core
         /// </summary>
         public TimeSpan DeltaBackOff => _deltaBackOff;
 
-        /// <summary>Gets the maximum number of retries. Default value is <c>10</c>.</summary>
+        /// <summary>
+        /// Gets the maximum number of retries. Default value is <c>10</c>.
+        /// </summary>
         public int MaxNumOfRetries => _maxNumOfRetries;
 
-        /// <summary>Constructs a new exponential back-off with default values.</summary>
+        /// <summary>
+        /// Constructs a new exponential back-off with default values.
+        /// </summary>
         public ExponentialBackOff() : this(TimeSpan.FromMilliseconds(250.0), 10)
         {
         }
 
-        /// <summary>Constructs a new exponential back-off with the given delta and maximum retries.</summary>
+        /// <summary>
+        /// Constructs a new exponential back-off with the given delta and maximum retries.
+        /// </summary>
         public ExponentialBackOff(TimeSpan deltaBackOff, int maximumNumOfRetries = 10)
         {
             if (deltaBackOff < TimeSpan.Zero || deltaBackOff > TimeSpan.FromSeconds(1.0))
                 throw new ArgumentOutOfRangeException(nameof(deltaBackOff));
-            if (maximumNumOfRetries < 0 || maximumNumOfRetries > 20)
+            if (maximumNumOfRetries < 0 || maximumNumOfRetries > MaxAllowedNumRetries)
                 throw new ArgumentOutOfRangeException(nameof(deltaBackOff));
             _deltaBackOff = deltaBackOff;
             _maxNumOfRetries = maximumNumOfRetries;
         }
 
+        /// <inheritdoc/>
         public TimeSpan GetNextBackOff(int currentRetry)
         {
             if (currentRetry <= 0)

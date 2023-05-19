@@ -2,7 +2,9 @@
 
 namespace iCloud.Dav.Core
 {
-    /// <summary>Strategy interface to control back-off between retry attempts.</summary>
+    /// <summary>
+    /// Strategy interface to control back-off between retry attempts.
+    /// </summary>
     public interface IBackOff
     {
         /// <summary>
@@ -11,7 +13,9 @@ namespace iCloud.Dav.Core
         /// </summary>
         TimeSpan GetNextBackOff(int currentRetry);
 
-        /// <summary>Gets the maximum number of retries.</summary>
+        /// <summary>
+        /// Gets the maximum number of retries.
+        /// </summary>
         int MaxNumOfRetries { get; }
     }
 }

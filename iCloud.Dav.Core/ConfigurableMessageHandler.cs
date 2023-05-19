@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace iCloud.Dav.Core
 {
+    /// <inheritdoc/>
     public class ConfigurableMessageHandler : DelegatingHandler
     {
         /// <summary>The class logger.</summary>
@@ -48,8 +49,6 @@ namespace iCloud.Dav.Core
         /// <remarks>
         /// Since version 1.10, <see cref="AddUnsuccessfulResponseHandler(IHttpUnsuccessfulResponseHandler)" /> and
         /// <see cref="RemoveUnsuccessfulResponseHandler(IHttpUnsuccessfulResponseHandler)" /> were added in order to keep this class thread-safe.
-        /// More information is available on
-        /// <a href="https://github.com/ICloud/ICloud-api-dotnet-client/issues/592">#592</a>.
         /// </remarks>
         /// </summary>
         [Obsolete("Use AddUnsuccessfulResponseHandler or RemoveUnsuccessfulResponseHandler instead.")]
@@ -73,8 +72,7 @@ namespace iCloud.Dav.Core
         /// Gets a list of <see cref="IHttpExceptionHandler" />s.
         /// <remarks>
         /// Since version 1.10, <see cref="AddExceptionHandler(IHttpExceptionHandler)" /> and <see cref="RemoveExceptionHandler(IHttpExceptionHandler)" /> were added
-        /// in order to keep this class thread-safe.  More information is available on
-        /// <a href="https://github.com/ICloud/iCloud-api-dotnet-client/issues/592">#592</a>.
+        /// in order to keep this class thread-safe.
         /// </remarks>
         /// </summary>
         [Obsolete("Use AddExceptionHandler or RemoveExceptionHandler instead.")]
@@ -98,8 +96,7 @@ namespace iCloud.Dav.Core
         /// Gets a list of <see cref="IHttpExecuteInterceptor" />s.
         /// <remarks>
         /// Since version 1.10, <see cref="AddExecuteInterceptor(IHttpExecuteInterceptor)" /> and <see cref="RemoveExecuteInterceptor(IHttpExecuteInterceptor)" /> were
-        /// added in order to keep this class thread-safe.  More information is available on
-        /// <a href="https://github.com/ICloud/ICloud-api-dotnet-client/issues/592">#592</a>.
+        /// added in order to keep this class thread-safe.
         /// </remarks>
         /// </summary>
         [Obsolete("Use AddExecuteInterceptor or RemoveExecuteInterceptor instead.")]
@@ -144,7 +141,7 @@ namespace iCloud.Dav.Core
 
         /// <summary>
         /// Gets or sets the number of redirects that will be allowed to execute. The default value is <c>10</c>.
-        /// See <see cref="P:ICloud.Api.Http.ConfigurableMessageHandler.NumTries" /> for more information.
+        /// See <see cref="ConfigurableMessageHandler.NumTries" /> for more information.
         /// </summary>
         public int NumRedirects
         {
@@ -169,8 +166,6 @@ namespace iCloud.Dav.Core
         /// <summary>Gets or sets the application name which will be used on the User-Agent header.</summary>
         public string ApplicationName { get; set; }
 
-        public static ILogger Logger => _logger;
-
         /// <summary>Constructs a new configurable message handler.</summary>
         public ConfigurableMessageHandler(HttpMessageHandler httpMessageHandler) : base(httpMessageHandler)
         {
@@ -187,7 +182,7 @@ namespace iCloud.Dav.Core
         {
             Exception lastException;
             var response = default(HttpResponseMessage);
-            var loggable = IsLoggingEnabled && Logger.IsDebugEnabled;
+            var loggable = IsLoggingEnabled && _logger.IsDebugEnabled;
             var triesRemaining = NumTries;
             var redirectRemaining = NumRedirects;
             request.Headers.Add("User-Agent", (ApplicationName == null ? "" : ApplicationName + " ") + UserAgentSuffix);
@@ -237,19 +232,19 @@ namespace iCloud.Dav.Core
                     }
                     if (!flag1)
                     {
-                        Logger.Error(lastException, "Exception was thrown while executing a HTTP request and it wasn't handled");
+                        _logger.Error(lastException, "Exception was thrown while executing a HTTP request and it wasn't handled");
                         throw lastException;
                     }
                     if (loggable)
                     {
                         if (lastException is null)
                         {
-                            Logger.Debug("Exception {0} was thrown, but it was handled by an exception handler");
+                            _logger.Debug("Exception {0} was thrown, but it was handled by an exception handler");
 
                         }
                         else
                         {
-                            Logger.Debug("Exception {0} was thrown, but it was handled by an exception handler", lastException.Message);
+                            _logger.Debug("Exception {0} was thrown, but it was handled by an exception handler", lastException.Message);
                         }
                     }
                 }
@@ -284,33 +279,33 @@ namespace iCloud.Dav.Core
                             {
                                 if (response.Headers.Location is null)
                                 {
-                                    Logger.Debug("Redirect response was handled successfully. Redirect to {0}");
+                                    _logger.Debug("Redirect response was handled successfully. Redirect to {0}");
                                 }
                                 else
                                 {
-                                    Logger.Debug("Redirect response was handled successfully. Redirect to {0}", response.Headers.Location);
+                                    _logger.Debug("Redirect response was handled successfully. Redirect to {0}", response.Headers.Location);
                                 }
                             }
                         }
                         else
                         {
                             if (loggable)
-                                Logger.Debug("An abnormal response wasn't handled. Status code is {0}", response.StatusCode);
+                                _logger.Debug("An abnormal response wasn't handled. Status code is {0}", response.StatusCode);
                             triesRemaining = 0;
                         }
                     }
                     else if (loggable)
-                        Logger.Debug("An abnormal response was handled by an unsuccessful response handler. Status Code is {0}", response.StatusCode);
+                        _logger.Debug("An abnormal response was handled by an unsuccessful response handler. Status Code is {0}", response.StatusCode);
                 }
             }
             while (triesRemaining > 0);
             if (response == null)
             {
-                Logger.Error(lastException, "Exception was thrown while executing a HTTP request");
+                _logger.Error(lastException, "Exception was thrown while executing a HTTP request");
                 throw lastException;
             }
             if (!response.IsSuccessStatusCode)
-                Logger.Debug("Abnormal response is being returned. Status Code is {0}", response.StatusCode);
+                _logger.Debug("Abnormal response is being returned. Status Code is {0}", response.StatusCode);
             return response;
         }
 

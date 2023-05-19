@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace iCloud.Dav.Core.Utils
 {
+    /// <summary>
+    /// A collection of utility methods for the ICloud.Api library.
+    /// </summary>
     public static class Utilities
     {
         /// <summary>Returns the version of the core library.</summary>
@@ -39,7 +42,9 @@ namespace iCloud.Dav.Core.Utils
         /// A ICloud.Api utility method for throwing an <see cref="ArgumentNullException" /> if the string is
         /// <c>null</c> or empty.
         /// </summary>
-        /// <returns>The original string.</returns>
+        /// <returns>
+        /// The original string.
+        /// </returns>
         public static string ThrowIfNullOrEmpty(this string str, string paramName)
         {
             if (string.IsNullOrEmpty(str))
@@ -47,7 +52,9 @@ namespace iCloud.Dav.Core.Utils
             return str;
         }
 
-        /// <summary>Returns <c>true</c> in case the enumerable is <c>null</c> or empty.</summary>
+        /// <summary>
+        /// Returns <c>true</c> in case the enumerable is <c>null</c> or empty.
+        /// </summary>
         internal static bool IsNullOrEmpty<T>(this IEnumerable<T> coll)
         {
             if (coll != null) return !coll.Any();
@@ -81,7 +88,9 @@ namespace iCloud.Dav.Core.Utils
             return o.ToString();
         }
 
-        /// <summary>Converts the input date into a RFC3339 string (http://www.ietf.org/rfc/rfc3339.txt).</summary>
+        /// <summary>
+        /// Converts the input date into a RFC3339 string (http://www.ietf.org/rfc/rfc3339.txt).
+        /// </summary>
         internal static string ConvertToRFC3339(DateTime date)
         {
             if (date.Kind == DateTimeKind.Unspecified)
