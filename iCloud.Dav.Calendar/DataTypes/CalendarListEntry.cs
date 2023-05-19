@@ -10,30 +10,30 @@ using System.ComponentModel;
 namespace iCloud.Dav.Calendar.DataTypes
 {
     /// <summary>
-    /// Represents a calendar component, a component with a unique id,
-    /// which can be used to uniquely identify the component.    
+    /// Represents a calendar list entry, which is an entry on the user's calendar list containing information
+    /// about a specific calendar, including its unique ID, summary, description, color, and timezone.
     /// </summary>
     [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(CalendarConverter))]
     public class CalendarListEntry : IDirectResponseSchema
     {
         /// <summary>
-        /// Id of the calendar.
+        /// The unique identifier of the calendar.
         /// </summary>
         public virtual string Id { get; set; }
 
         /// <summary>
-        /// Summary of the calendar.
+        /// A summary of the calendar.
         /// </summary>
         public virtual string Summary { get; set; }
 
         /// <summary>
-        /// Description of the calendar. Optional.
+        /// A description of the calendar, if available.
         /// </summary>
         public virtual string Description { get; set; }
 
         /// <summary>
-        /// Color of the calendar. Optional.
+        /// The color of the calendar, if set.
         /// </summary>
         public virtual string Color { get; set; }
 
@@ -41,12 +41,12 @@ namespace iCloud.Dav.Calendar.DataTypes
         public virtual string ETag { get; set; }
 
         /// <summary>
-        /// Id of the calendar.
+        /// The current synchronization tag for the calendar list entry.
         /// </summary>
         public virtual string CTag { get; set; }
 
         /// <summary>
-        /// A collection of privilege for the calendar.
+        /// A collection of privileges for the calendar.
         /// </summary>
         public virtual List<string> Privileges { get; }
 
@@ -61,22 +61,28 @@ namespace iCloud.Dav.Calendar.DataTypes
         public virtual List<string> SupportedCalendarComponents { get; }
 
         /// <summary>
-        /// TimeZone of the calendar. Optional.
+        /// The time zone of the calendar, if set.
         /// </summary>
         public virtual VTimeZone TimeZone { get; set; }
 
         /// <summary>
-        /// Order of the calendar. Optional.
+        /// The order of the calendar in the user's calendar list.
         /// </summary>
         public int Order { get; set; }
 
         /// <summary>
-        /// Type of the collection ("calendar#calendarList").
+        /// The type of the calendar list entry.
         /// </summary>
         public virtual string Kind { get; set; }
 
+        /// <summary>
+        /// Indicates whether the calendar list entry has been deleted.
+        /// </summary>
         public bool? Deleted { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CalendarListEntry"/> class.
+        /// </summary>
         public CalendarListEntry()
         {
             Privileges = new List<string>();
@@ -85,11 +91,14 @@ namespace iCloud.Dav.Calendar.DataTypes
             EnsureProperties();
         }
 
+        /// <summary>
+        /// Ensures that the properties of the calendar list entry are set.
+        /// </summary>
         private void EnsureProperties()
         {
             if (string.IsNullOrEmpty(Id))
             {
-                // Create a new ID for the component
+                // Generate a new ID for the calendar list entry.
                 Id = Guid.NewGuid().ToString();
             }
         }

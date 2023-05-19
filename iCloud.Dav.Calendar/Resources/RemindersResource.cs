@@ -11,88 +11,92 @@ using System.Linq;
 namespace iCloud.Dav.Calendar.Resources
 {
     /// <summary>
-    /// The reminders collection of methods.
+    /// Represents a resource on iCloud for accessing iCloud reminders for the authenticated user.
     /// </summary>
     public class RemindersResource
     {
-        /// <summary>
-        /// The service which this resource belongs to.
-        /// </summary>
         private readonly IClientService _service;
 
         /// <summary>
-        /// Constructs a new resource.
+        /// Initializes a new instance of the <see cref="RemindersResource"/> class.
         /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
         public RemindersResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns reminders on the specified calendar.
+        /// Creates a new <see cref="ListRequest"/> instance for retrieving the list of reminders.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <returns>A new <see cref="ListRequest"/> instance for retrieving the list of reminders.</returns>
         public virtual ListRequest List(string calendarId) => new ListRequest(_service, calendarId);
 
         /// <summary>
-        /// Returns a reminder.
+        /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific reminder by ID.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="reminderId">Reminder identifier. To retrieve reminder IDs call the <see cref="List"/> method.</param>
+        /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="reminderId">The ID of the reminder to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific reminder by ID.</returns>
         public virtual GetRequest Get(string calendarId, string reminderId) => new GetRequest(_service, calendarId, reminderId);
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Creates a new <see cref="MultiGetRequest"/> instance for retrieving multiple reminders by ID.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="reminderIds">Reminder identifierss. To retrieve reminder IDs call the <see cref="List"/> method.</param>
+        /// <param name="calendarId">The ID of the calendar where the reminders are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="reminderIds">The IDs of the reminders to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple reminders by ID.</returns>
         public virtual MultiGetRequest MultiGet(string calendarId, params string[] reminderIds) => new MultiGetRequest(_service, calendarId, reminderIds);
 
         /// <summary>
-        /// Creates a reminder.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="body">The body of the request.</param>
+        /// Creates a new <see cref="InsertRequest"/> instance that can insert a new reminder.
+        /// </summary>            
+        /// <param name="body">The reminder to insert.</param>
+        /// <param name="calendarId">The ID of the calendar where the reminder will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <returns>A new <see cref="InsertRequest"/> instance that can insert a new reminder.</returns>
         public virtual InsertRequest Insert(Reminder body, string calendarId) => new InsertRequest(_service, body, calendarId);
 
         /// <summary>
-        /// Updates a reminder.
+        /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing reminder.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="body">The body of the request.</param>
+        /// <param name="body">The body of the request containing the updated reminder information.</param>
+        /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing reminder.</returns>
         public virtual UpdateRequest Update(Reminder body, string calendarId) => new UpdateRequest(_service, body, calendarId);
 
         /// <summary>
-        /// Deletes a reminder.
+        /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing reminder by ID.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="reminderId">Reminder identifier. To retrieve reminder IDs call the <see cref="List"/> method.</param>
+        /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="reminderId">The ID of the reminder to delete. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing reminder by ID.</returns>
         public virtual DeleteRequest Delete(string calendarId, string reminderId) => new DeleteRequest(_service, calendarId, reminderId);
 
         /// <summary>
-        /// Returns reminders on the specified calendar.
+        /// Represents a request to retrieve a list of reminders from iCloud.
         /// </summary>
         public class ListRequest : CalendarBaseServiceRequest<Reminders>
         {
             private CalendarQuery _body;
 
             /// <summary>
-            /// Constructs a new List request.
+            /// Initializes a new instance of the <see cref="ListRequest"/> class.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
             public ListRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Upper bound (exclusive) for an reminder's start time to filter by. Optional. The default is not to
-            /// filter by start time. Milliseconds may be provided but are ignored. If timeMin is set, timeMax must be greater than timeMin.
+            /// Gets or sets the maximum time of the reminders to retrieve.
             /// </summary>
             public virtual DateTime? TimeMax { get; set; }
 
             /// <summary>
-            /// Lower bound (exclusive) for an reminder's end time to filter by. Optional. The default is not to
-            /// filter by end time. Milliseconds may be provided but are ignored. If timeMax is set, timeMin must be smaller than timeMax.
+            /// Gets or sets the minimum time of the reminders to retrieve.
             /// </summary>
             public virtual DateTime? TimeMin { get; set; }
 
@@ -136,13 +140,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Returns a reminder.
+        /// Represents a request to get a single reminder by ID from iCloud.
         /// </summary>
         public class GetRequest : CalendarBaseServiceRequest<Reminder>
         {
             /// <summary>
-            /// Constructs a new Get request.
+            /// Constructs a new <see cref="GetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+            /// <param name="reminderId">The ID of the reminder to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
             public GetRequest(IClientService service, string calendarId, string reminderId) : base(service)
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
@@ -150,13 +157,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Reminder identifier. To retrieve reminder IDs call the <see cref="List"/> method.
+            /// Gets the reminder ID.
             /// </summary>
             [RequestParameter("reminderId", RequestParameterType.Path)]
             public virtual string ReminderId { get; }
@@ -184,15 +191,18 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Returns reminders on the specified calendar.
+        /// Represents a request to retrieve multiple iCloud reminders by ID.
         /// </summary>
         public class MultiGetRequest : CalendarBaseServiceRequest<Reminders>
         {
             private CalendarMultiget _body;
 
             /// <summary>
-            /// Constructs a new Multi Get request.
+            /// Constructs a new <see cref="MultiGetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar where the reminders are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+            /// <param name="reminderIds">The IDs of the reminders to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
             public MultiGetRequest(IClientService service, string calendarId, params string[] reminderIds) : base(service)
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
@@ -200,13 +210,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Reminder identifiers. To retrieve reminder IDs call the <see cref="List"/> method.
+            /// Gets the reminder IDs.
             /// </summary>
             public virtual string[] ReminderIds { get; }
 
@@ -247,13 +257,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Creates a reminder.
+        /// Represents a request to insert a reminder into iCloud.
         /// </summary>
         public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Insert request.
+            /// Constructs a new <see cref="InsertRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="body">The reminder to insert.</param>
+            /// <param name="calendarId">The ID of the calendar where the reminder will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
             public InsertRequest(IClientService service, Reminder body, string calendarId) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(Reminder));
@@ -262,16 +275,16 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Reminder identifier.
-            /// </summary>
-            [RequestParameter("reminderId", RequestParameterType.Path)]
-            public virtual string ReminderId { get; }
-
-            /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
+
+            /// <summary>
+            /// Gets the reminder ID.
+            /// </summary>
+            [RequestParameter("reminderId", RequestParameterType.Path)]
+            public virtual string ReminderId { get; }
 
             /// <summary>
             /// Gets the body of this request.
@@ -304,13 +317,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Updates a reminder.
+        /// Represents a request to update an existing reminder in iCloud.
         /// </summary>
         public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Update request.
+            /// Constructs a new <see cref="UpdateRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>  
+            /// <param name="body">The body of the request containing the updated reminder information.</param>
+            /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
             public UpdateRequest(IClientService service, Reminder body, string calendarId) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(Reminder));
@@ -319,13 +335,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Reminder identifier. To retrieve reminder IDs call the <see cref="List"/> method.
+            /// Gets the reminder ID.
             /// </summary>
             [RequestParameter("reminderId", RequestParameterType.Path)]
             public virtual string ReminderId { get; }
@@ -361,13 +377,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Deletes a reminder.
+        /// Represents a request to delete a reminder from iCloud.
         /// </summary>
         public class DeleteRequest : CalendarBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Delete request.
+            /// Constructs a new <see cref="DeleteRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+            /// <param name="reminderId">The ID of the reminder to delete. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
             public DeleteRequest(IClientService service, string calendarId, string reminderId) : base(service)
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
@@ -375,13 +394,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Reminder identifier. To retrieve reminder IDs call the <see cref="List"/> method.
+            /// Gets the reminder ID.
             /// </summary>
             [RequestParameter("reminderId", RequestParameterType.Path)]
             public virtual string ReminderId { get; }

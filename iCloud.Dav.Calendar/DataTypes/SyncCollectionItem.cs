@@ -3,6 +3,9 @@ using iCloud.Dav.Core;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {
+    /// <summary>
+    /// Represents an item in a sync collection.
+    /// </summary>
     public class SyncCollectionItem : IDirectResponseSchema
     {
         /// <summary>

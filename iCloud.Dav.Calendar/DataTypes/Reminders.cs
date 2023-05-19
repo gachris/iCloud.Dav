@@ -7,17 +7,18 @@ using System.ComponentModel;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {
+    /// <summary>
+    /// Represents a collection of reminders.
+    /// </summary>
     [TypeConverter(typeof(ReminderListConverter))]
     [XmlDeserializeType(typeof(MultiStatus))]
     public class Reminders : IDirectResponseSchema
     {
-        /// <summary>
-        /// ETag of the collection.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual string ETag { get; set; }
 
         /// <summary>
-        /// List of events on the calendar.
+        /// List of reminders in the collection.
         /// </summary>
         public virtual IList<Reminder> Items { get; set; }
 

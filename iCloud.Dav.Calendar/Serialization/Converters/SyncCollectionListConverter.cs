@@ -39,7 +39,7 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
             {
                 Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
                 ETag = response.Etag,
-                Deleted = response.Status == Status.NotFound ? true : (bool?)null
+                Deleted = response.Status == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
             };
         }
     }

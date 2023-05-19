@@ -7,23 +7,25 @@ using System.ComponentModel;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Represents a list of <see cref="CalendarListEntry"/> objects.
+    /// </summary>
     [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(CalendarListConverter))]
     public class CalendarList : IDirectResponseSchema
     {
         /// <summary>
-        /// ETag of the collection.
+        /// Gets or sets the ETag of the collection.
         /// </summary>
         public virtual string ETag { get; set; }
 
         /// <summary>
-        /// Calendars that are present on the user's calendar list.
+        /// Gets or sets the list of CalendarListEntry.
         /// </summary>
         public virtual IList<CalendarListEntry> Items { get; set; }
 
         /// <summary>
-        /// Token used at a later point in time to retrieve only the entries that have changed
+        /// Gets or sets the token used at a later point in time to retrieve only the entries that have changed
         /// since this result was returned.
         /// </summary>
         public virtual string NextSyncToken { get; set; }

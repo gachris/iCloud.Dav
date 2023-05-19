@@ -7,29 +7,29 @@ using System.ComponentModel;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Represents a collection of events on a calendar.
+    /// </summary>
     [TypeConverter(typeof(EventListConverter))]
     [XmlDeserializeType(typeof(MultiStatus))]
     public class Events : IDirectResponseSchema
     {
-        /// <summary>
-        /// ETag of the collection.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual string ETag { get; set; }
 
         /// <summary>
-        /// List of events on the calendar.
+        /// Gets or sets the list of events on the calendar.
         /// </summary>
         public virtual IList<Event> Items { get; set; }
 
         /// <summary>
-        /// Token used to access the next page of this result. Omitted if no further results
+        /// Gets or sets the token used to access the next page of this result. Omitted if no further results
         /// are available, in which case nextSyncToken is provided.
         /// </summary>
         public virtual string NextSyncToken { get; set; }
 
         /// <summary>
-        /// Type of the collection ("calendar#events").
+        /// Gets or sets the type of the collection ("#events").
         /// </summary>
         public virtual string Kind { get; set; }
     }

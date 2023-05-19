@@ -11,15 +11,28 @@ using System.Text.RegularExpressions;
 
 namespace iCloud.Dav.Calendar.Serialization
 {
+    /// <summary>
+    /// Deserializer for calendar components.
+    /// </summary>
     public class CalendarDeserializer
     {
-        public static readonly CalendarDeserializer Default = new CalendarDeserializer(new ExtendedDataTypeMapper(), new SerializerFactory(), new ExtendedCalendarComponentFactory());
         private static readonly Regex _contentLineRegex = new Regex(BuildContentLineRegex(), RegexOptions.Compiled);
 
         private readonly ExtendedDataTypeMapper _dataTypeMapper;
         private readonly ISerializerFactory _serializerFactory;
         private readonly CalendarComponentFactory _componentFactory;
 
+        /// <summary>
+        /// Gets the default instance of the <see cref="CalendarDeserializer"/> class.
+        /// </summary>
+        public static readonly CalendarDeserializer Default = new CalendarDeserializer(new ExtendedDataTypeMapper(), new SerializerFactory(), new ExtendedCalendarComponentFactory());
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="CalendarDeserializer"/> class.
+        /// </summary>
+        /// <param name="dataTypeMapper">The data type mapper to use for deserialization.</param>
+        /// <param name="serializerFactory">The serializer factory to use for deserialization.</param>
+        /// <param name="componentFactory">The calendar component factory to use for deserialization.</param>
         internal CalendarDeserializer(ExtendedDataTypeMapper dataTypeMapper, ISerializerFactory serializerFactory, CalendarComponentFactory componentFactory)
         {
             _dataTypeMapper = dataTypeMapper;
@@ -37,6 +50,11 @@ namespace iCloud.Dav.Calendar.Serialization
             return "^" + text4 + "(;" + text3 + ")*:" + text5 + "$";
         }
 
+        /// <summary>
+        /// Deserializes a <see cref="TextReader"/> containing calendar data data into a sequence of <see cref="ICalendarComponent"/> objects.
+        /// </summary>
+        /// <param name="reader">The <see cref="TextReader"/> containing the calendar data.</param>
+        /// <returns>A sequence of <see cref="ICalendarComponent"/> objects.</returns>
         public IEnumerable<ICalendarComponent> Deserialize(TextReader reader)
         {
             SerializationContext context = new SerializationContext();

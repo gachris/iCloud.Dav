@@ -1,11 +1,12 @@
 ﻿using iCloud.Dav.Calendar.CalDav.Types;
+using iCloud.Dav.Calendar.DataTypes;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace iCloud.Dav.Calendar.DataTypes
+namespace iCloud.Dav.Calendar.Serialization.Converters
 {
     internal sealed class SyncTokenConverter : TypeConverter
     {
@@ -29,5 +30,4 @@ namespace iCloud.Dav.Calendar.DataTypes
             };
         }
     }
-
 }

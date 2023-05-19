@@ -11,88 +11,92 @@ using System.Linq;
 namespace iCloud.Dav.Calendar.Resources
 {
     /// <summary>
-    /// The events collection of methods.
+    /// Represents a resource on iCloud for accessing iCloud events for the authenticated user.
     /// </summary>
     public class EventsResource
     {
-        /// <summary>
-        /// The service which this resource belongs to.
-        /// </summary>
         private readonly IClientService _service;
 
         /// <summary>
-        /// Constructs a new resource.
+        /// Initializes a new instance of the <see cref="EventsResource"/> class.
         /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
         public EventsResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Creates a new <see cref="ListRequest"/> instance for retrieving the list of events.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <returns>A new <see cref="ListRequest"/> instance for retrieving the list of events.</returns>
         public virtual ListRequest List(string calendarId) => new ListRequest(_service, calendarId);
 
         /// <summary>
-        /// Returns an event.
+        /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific event by ID.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventId">Event identifier. To retrieve event IDs call the <see cref="List"/> method.</param>
+        /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="eventId">The ID of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific event by ID.</returns>
         public virtual GetRequest Get(string calendarId, string eventId) => new GetRequest(_service, calendarId, eventId);
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Creates a new <see cref="MultiGetRequest"/> instance for retrieving multiple events by ID.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventIds">Event identifiers. To retrieve event IDs call the <see cref="List"/> method.</param>
+        /// <param name="calendarId">The ID of the calendar where the events are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="eventIds">The IDs of the events to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple events by ID.</returns>
         public virtual MultiGetRequest MultiGet(string calendarId, params string[] eventIds) => new MultiGetRequest(_service, calendarId, eventIds);
 
         /// <summary>
-        /// Creates an event.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="body">The body of the request.</param>
+        /// Creates a new <see cref="InsertRequest"/> instance that can insert a new event.
+        /// </summary>            
+        /// <param name="body">The event to insert.</param>
+        /// <param name="calendarId">The ID of the calendar where the event will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <returns>A new <see cref="InsertRequest"/> instance that can insert a new event.</returns>
         public virtual InsertRequest Insert(Event body, string calendarId) => new InsertRequest(_service, body, calendarId);
 
         /// <summary>
-        /// Updates an event.
+        /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing event.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="body">The body of the request.</param>
+        /// <param name="body">The body of the request containing the updated event information.</param>
+        /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing event.</returns>
         public virtual UpdateRequest Update(Event body, string calendarId) => new UpdateRequest(_service, body, calendarId);
 
         /// <summary>
-        /// Deletes an event.
+        /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing event by ID.
         /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventId">Event identifier.</param>
+        /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="eventId">The ID of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing event by ID.</returns>
         public virtual DeleteRequest Delete(string calendarId, string eventId) => new DeleteRequest(_service, calendarId, eventId);
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Represents a request to retrieve a list of events from iCloud.
         /// </summary>
         public class ListRequest : CalendarBaseServiceRequest<Events>
         {
             private CalendarQuery _body;
 
             /// <summary>
-            /// Constructs a new List request.
+            /// Initializes a new instance of the <see cref="ListRequest"/> class.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
             public ListRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Upper bound (exclusive) for an event's start time to filter by. Optional. The default is not to
-            /// filter by start time. Milliseconds may be provided but are ignored. If timeMin is set, timeMax must be greater than timeMin.
+            /// Gets or sets the maximum time of the events to retrieve.
             /// </summary>
             public virtual DateTime? TimeMax { get; set; }
 
             /// <summary>
-            /// Lower bound (exclusive) for an event's end time to filter by. Optional. The default is not to
-            /// filter by end time. Milliseconds may be provided but are ignored. If timeMax is set, timeMin must be smaller than timeMax.
+            /// Gets or sets the minimum time of the events to retrieve.
             /// </summary>
             public virtual DateTime? TimeMin { get; set; }
 
@@ -136,13 +140,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Returns an event.
+        /// Represents a request to get a single event by ID from iCloud.
         /// </summary>
         public class GetRequest : CalendarBaseServiceRequest<Event>
         {
             /// <summary>
-            /// Constructs a new Get request.
+            /// Constructs a new <see cref="GetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+            /// <param name="eventId">The ID of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
             public GetRequest(IClientService service, string calendarId, string eventId) : base(service)
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
@@ -150,13 +157,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Event identifier. To retrieve event IDs call the <see cref="List"/> method.
+            /// Gets the event ID.
             /// </summary>
             [RequestParameter("eventId", RequestParameterType.Path)]
             public virtual string EventId { get; }
@@ -184,15 +191,18 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Represents a request to retrieve multiple iCloud events by ID.
         /// </summary>
         public class MultiGetRequest : CalendarBaseServiceRequest<Events>
         {
             private CalendarMultiget _body;
 
             /// <summary>
-            /// Constructs a new MultiGet request.
+            /// Constructs a new <see cref="MultiGetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar where the events are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+            /// <param name="eventIds">The IDs of the events to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
             public MultiGetRequest(IClientService service, string calendarId, params string[] eventIds) : base(service)
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
@@ -200,13 +210,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Event identifiers. To retrieve event IDs call the <see cref="List"/> method.
+            /// Gets the event IDs.
             /// </summary>
             public virtual string[] EventIds { get; }
 
@@ -247,13 +257,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Creates an event.
+        /// Represents a request to insert a event into iCloud.
         /// </summary>
         public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Insert request.
+            /// Constructs a new <see cref="InsertRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="body">The event to insert.</param>
+            /// <param name="calendarId">The ID of the calendar where the event will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
             public InsertRequest(IClientService service, Event body, string calendarId) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(Event));
@@ -268,7 +281,7 @@ namespace iCloud.Dav.Calendar.Resources
             public virtual string EventId { get; }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the event ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
@@ -304,13 +317,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Updates an event.
+        /// Represents a request to update an existing event in iCloud.
         /// </summary>
         public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Update request.
+            /// Constructs a new <see cref="UpdateRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>  
+            /// <param name="body">The body of the request containing the updated event information.</param>
+            /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
             public UpdateRequest(IClientService service, Event body, string calendarId) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(Event));
@@ -319,13 +335,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Event identifier. To retrieve event IDs call the <see cref="List"/> method.
+            /// Gets the event ID.
             /// </summary>
             [RequestParameter("eventId", RequestParameterType.Path)]
             public virtual string EventId { get; }
@@ -361,13 +377,16 @@ namespace iCloud.Dav.Calendar.Resources
         }
 
         /// <summary>
-        /// Deletes an event.
+        /// Represents a request to delete a event from iCloud.
         /// </summary>
         public class DeleteRequest : CalendarBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Delete request.
+            /// Constructs a new <see cref="DeleteRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+            /// <param name="eventId">The ID of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
             public DeleteRequest(IClientService service, string calendarId, string eventId) : base(service)
             {
                 CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
@@ -375,13 +394,13 @@ namespace iCloud.Dav.Calendar.Resources
             }
 
             /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
+            /// Gets the calendar ID.
             /// </summary>
             [RequestParameter("calendarId", RequestParameterType.Path)]
             public virtual string CalendarId { get; }
 
             /// <summary>
-            /// Event identifier. To retrieve event IDs call the <see cref="List"/> method.
+            /// Gets the event ID.
             /// </summary>
             [RequestParameter("eventId", RequestParameterType.Path)]
             public virtual string EventId { get; }

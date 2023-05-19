@@ -7,7 +7,9 @@ using System.ComponentModel;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// A list of SyncCollectionItem objects.
+    /// </summary>
     [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(SyncCollectionListConverter))]
     public class SyncCollectionList : IDirectResponseSchema
@@ -18,7 +20,7 @@ namespace iCloud.Dav.Calendar.DataTypes
         public virtual string ETag { get; set; }
 
         /// <summary>
-        /// Calendars that are present on the user's calendar list.
+        /// The list of SyncCollectionItem objects.
         /// </summary>
         public virtual IList<SyncCollectionItem> Items { get; set; }
 
