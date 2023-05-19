@@ -1,5 +1,6 @@
 ﻿using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,8 @@ namespace iCloud.Dav.People.Serialization.Converters
 {
     internal sealed class IdentityCardListConverter : TypeConverter
     {
+        private const string ResourcesKind = "resources";
+
         /// <inheritdoc/>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
 
@@ -20,13 +23,13 @@ namespace iCloud.Dav.People.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection") || !Path.HasExtension(x.Href.TrimEnd('/')));
+            var collectionResponse = multiStatus.Responses.FirstOrDefault(response => response.IsCollection());
 
             var identityCardList = new IdentityCardList()
             {
-                Kind = "resources",
+                Kind = ResourcesKind,
                 ETag = collectionResponse?.Etag,
-                MeCard = Path.GetFileNameWithoutExtension(collectionResponse.MeCard?.Value?.TrimEnd('/')), 
+                MeCard = Path.GetFileNameWithoutExtension(collectionResponse.MeCard?.Value?.TrimEnd('/')),
                 NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
                 Items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToIdentityCard).ToList(),
             };

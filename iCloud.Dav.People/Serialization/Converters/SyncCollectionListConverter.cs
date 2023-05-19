@@ -1,5 +1,6 @@
 ﻿using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,14 +21,12 @@ namespace iCloud.Dav.People.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection")
-                                                                               || x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true
-                                                                               || !Path.HasExtension(x.Href.TrimEnd('/')));
+            var syncCollectionListResponse = multiStatus.Responses.FirstOrDefault(response => response.IsCollection() || response.IsAddressbook());
 
             return new SyncCollectionList()
             {
-                NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                Items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToSyncCollectionItem).ToList()
+                NextSyncToken = syncCollectionListResponse?.SyncToken ?? multiStatus.SyncToken,
+                Items = multiStatus.Responses.Except(new HashSet<Response>() { syncCollectionListResponse }).Select(ToSyncCollectionItem).ToList()
             };
         }
 
@@ -37,7 +36,7 @@ namespace iCloud.Dav.People.Serialization.Converters
             {
                 Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
                 ETag = response.Etag,
-                Deleted = response.Status == Status.NotFound ? true : (bool?)null
+                Deleted = response.Status == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
             };
         }
     }

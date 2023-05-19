@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 
 namespace iCloud.Dav.Calendar.CalDav.Types
 {
@@ -28,7 +29,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
 
         public int CalendarOrder { get; set; }
 
-        public Status Status { get; set; }
+        public HttpStatusCode Status { get; set; }
 
         public string CalendarTimeZone { get;  set; }
 

@@ -10,6 +10,8 @@ namespace iCloud.Dav.People.Serialization.Converters
 {
     internal sealed class ContactGroupConverter : TypeConverter
     {
+        private const string GroupKind = "X-ADDRESSBOOKSERVER-KIND:group";
+
         /// <inheritdoc/>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);
 
@@ -23,7 +25,7 @@ namespace iCloud.Dav.People.Serialization.Converters
 
         private static ContactGroup DeserializeContactGroup(string data)
         {
-            if (!data.Contains("X-ADDRESSBOOKSERVER-KIND:group")) return null;
+            if (!data.Contains(GroupKind)) return null;
 
             var bytes = Encoding.UTF8.GetBytes(data);
             using (var stream = new MemoryStream(bytes))

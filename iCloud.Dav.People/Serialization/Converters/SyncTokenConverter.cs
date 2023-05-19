@@ -1,5 +1,6 @@
 ﻿using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Utils;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -19,14 +20,12 @@ namespace iCloud.Dav.People.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection")
-                                                                               || x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true
-                                                                               || !Path.HasExtension(x.Href.TrimEnd('/')));
+            var syncTokenResponse = multiStatus.Responses.FirstOrDefault(response => response.IsCollection() || response.IsAddressbook());
 
             return new SyncToken()
             {
-                ETag = collectionResponse.Etag,
-                NextSyncToken = collectionResponse.SyncToken
+                ETag = syncTokenResponse.Etag,
+                NextSyncToken = syncTokenResponse.SyncToken
             };
         }
     }

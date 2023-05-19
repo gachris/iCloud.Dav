@@ -25,7 +25,7 @@ namespace iCloud.Dav.Calendar.Utils
                 Order = response.CalendarOrder,
             };
 
-            if (response.Status == Status.NotFound)
+            if (response.Status == System.Net.HttpStatusCode.NotFound)
             {
                 calendarListEntry.Deleted = true;
                 return calendarListEntry;

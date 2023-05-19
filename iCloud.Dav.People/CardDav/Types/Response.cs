@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace iCloud.Dav.People.CardDav.Types
 {
@@ -7,7 +8,7 @@ namespace iCloud.Dav.People.CardDav.Types
     {
         public string Href { get; set; }
 
-        public Status Status { get; set; }
+        public HttpStatusCode Status { get; set; }
 
         public string Contentlength { get; set; }
 

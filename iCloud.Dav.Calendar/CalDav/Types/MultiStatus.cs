@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -37,15 +38,36 @@ namespace iCloud.Dav.Calendar.CalDav.Types
             var response = new Response
             {
                 Href = xResponse.Elements().First(x => x.Name.LocalName == "href").Value,
-                Status = xResponse.Elements().FirstOrDefault(x => x.Name.LocalName == "status")?.Value == "HTTP/1.1 404 Not Found" ? Status.NotFound : Status.OK
             };
 
-            if (response.Status == Status.NotFound)
+            var status = xResponse.Elements().FirstOrDefault(x => x.Name.LocalName == "status")?.Value;
+            XElement propstat = null;
+
+            if (string.IsNullOrEmpty(status))
+            {
+                propstat = xResponse.Elements().FirstOrDefault(x => x.Name.LocalName == "propstat");
+                status = propstat?.Elements().FirstOrDefault(x => x.Name.LocalName == "status")?.Value;
+            }
+
+            var statusParts = status.Split(' ');
+            var statusCodeString = statusParts.Length > 2 ? status.Substring(status.IndexOf(statusParts[2])) : null;
+            if (Enum.TryParse(statusCodeString, out HttpStatusCode statusCode))
+            {
+                response.Status = statusCode;
+            }
+            else
+            {
+                // Handle invalid status string
+
+                response.Status = HttpStatusCode.NotFound;
+            }
+
+            if (response.Status != HttpStatusCode.OK)
             {
                 return response;
             }
 
-            var propstat = xResponse.Elements().First(x => x.Name.LocalName == "propstat");
+            propstat = propstat ?? xResponse.Elements().First(x => x.Name.LocalName == "propstat");
             var prop = propstat.Elements().FirstOrDefault(x => x.Name.LocalName == "prop");
             var propElements = prop?.Elements();
             var privilege = propElements?.FirstOrDefault(x => x.Name.LocalName == "current-user-privilege-set")?.Elements().Where(x => x.Name.LocalName == "privilege");
