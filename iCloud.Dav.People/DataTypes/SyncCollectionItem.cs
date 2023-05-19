@@ -3,6 +3,9 @@ using vCard.Net.CardComponents;
 
 namespace iCloud.Dav.People.DataTypes
 {
+    /// <summary>
+    /// Represents an item in a sync collection.
+    /// </summary>
     public class SyncCollectionItem : IDirectResponseSchema
     {
         /// <summary>

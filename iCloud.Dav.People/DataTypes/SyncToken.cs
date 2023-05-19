@@ -6,7 +6,9 @@ using System.ComponentModel;
 
 namespace iCloud.Dav.People.DataTypes
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Represents a synchronization token used to retrieve only the entries that have changed since a previous sync.
+    /// </summary>
     [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(SyncTokenConverter))]
     public class SyncToken : IDirectResponseSchema
@@ -15,8 +17,7 @@ namespace iCloud.Dav.People.DataTypes
         public string ETag { get; set; }
 
         /// <summary>
-        /// Token used to retrieve only the entries that have changed
-        /// since this result was returned.
+        /// Token used to retrieve only the entries that have changed since this result was returned.
         /// </summary>
         public virtual string NextSyncToken { get; set; }
     }

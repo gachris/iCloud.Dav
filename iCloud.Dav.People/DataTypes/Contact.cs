@@ -10,21 +10,33 @@ using vCard.Net.DataTypes;
 
 namespace iCloud.Dav.People.DataTypes
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// A class that represents a vCard contact object.
+    /// </summary>
     [TypeConverter(typeof(ContactConverter))]
     public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the e-tag associated with this contact.
+        /// </summary>
+        /// <remarks>
+        /// Will be set by the service deserialization method,
+        /// or the by xml response parser if implemented on service.
+        /// </remarks>
         public virtual string ETag { get; set; }
 
         /// <summary>
-        /// A value that uniquely identifies the vCard. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+        /// Gets or sets the id associated with this contact.
         /// </summary>
-        /// <remarks>The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/></remarks>
+        /// <remarks>
+        /// A value that uniquely identifies the vCard. 
+        /// It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+        /// The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/>
+        /// </remarks>
         public virtual string Id { get; set; }
 
         /// <summary>
-        /// The name of the product that generated the vCard.
+        /// Gets or sets the product identifier associated with this contact.
         /// </summary>
         public virtual string ProductId
         {
@@ -33,7 +45,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The revision date of the vCard.
+        /// Gets or sets the revision date associated with this contact.
         /// </summary>
         /// <remarks>
         ///     The revision date is not automatically updated by the
@@ -47,7 +59,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The formatted name of the vCard.
+        /// Gets or sets formatted name associated with this contact.
         /// </summary>
         /// <remarks>
         ///     This property allows the name of the vCard to be
@@ -62,7 +74,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The name of the vCard.
+        /// Gets or sets the name associated with this contact.
         /// </summary>
         public virtual Name N
         {
@@ -71,7 +83,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The kind of the vCard.
+        /// Gets or sets the kind associated with this contact.
         /// </summary>
         public Kind Kind
         {
@@ -80,7 +92,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The phonetic last name of the vCard.
+        /// Gets or sets the phonetic last name associated with this contact.
         /// </summary>
         public virtual string PhoneticLastName
         {
@@ -89,7 +101,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The phonetic first name of the vCard.
+        /// Gets or sets the phonetic first name associated with this contact.
         /// </summary>
         public virtual string PhoneticFirstName
         {
@@ -98,7 +110,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The nickname of the vCard.
+        /// Gets or sets the nickname associated with this contact.
         /// </summary>
         public virtual string Nickname
         {
@@ -107,7 +119,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The job title of the vCard.
+        /// Gets or sets the title associated with this contact.
         /// </summary>
         public virtual string Title
         {
@@ -116,7 +128,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The phonetic ORG of the vCard.
+        /// Gets or sets the phonetic representation organization name associated with this contact.
         /// </summary>
         public virtual string PhoneticOrganization
         {
@@ -125,7 +137,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The ORG of the vCard.
+        /// Gets or sets the organization associated with this contact.
         /// </summary>
         public virtual Organization Organization
         {
@@ -134,7 +146,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The birthdate of the vCard.
+        /// Gets or sets the birthdate associated with this contact.
         /// </summary>
         public virtual IDateTime Birthdate
         {
@@ -143,7 +155,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// Notes or comments of the vCard.
+        /// Gets or sets the notes associated with the contact.
         /// </summary>
         public virtual string Notes
         {
@@ -152,7 +164,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The organization or company of the vCard.
+        /// Gets or sets the show as associated with this contact.
         /// </summary>
         public virtual string ShowAs
         {
@@ -161,7 +173,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// The photo of the vCard.
+        /// Gets or sets the photo associated with this contact.
         /// </summary>
         public virtual Photo Photo
         {
@@ -170,9 +182,8 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="Website" /> objects for the vCard.
+        /// Gets or sets the list of websites associated with this contact.
         /// </summary>
-        /// <seealso cref="Website" />
         public virtual IList<Website> Websites
         {
             get => Properties.GetMany<Website>("URL");
@@ -180,7 +191,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="Phone" /> objects for the vCard.
+        /// Gets or sets the list of phone numbers associated with this contact.
         /// </summary>
         public virtual IList<Phone> Telephones
         {
@@ -189,7 +200,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="SocialProfile" /> objects for the vCard.
+        /// Gets or sets the list of social profiles associated with this contact.
         /// </summary>
         public virtual IList<SocialProfile> SocialProfiles
         {
@@ -198,7 +209,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="Address" /> objects for the vCard.
+        /// Gets or sets the list of addresses associated with this contact.
         /// </summary>
         public virtual IList<Address> Addresses
         {
@@ -207,7 +218,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="DataTypes.RelatedNames" /> objects for the vCard.
+        /// Gets or sets the list of related names associated with this contact.
         /// </summary>
         public virtual IList<RelatedNames> RelatedNames
         {
@@ -216,7 +227,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="Date" /> objects for the vCard.
+        /// Gets or sets the list of dates associated with this contact.
         /// </summary>
         public virtual IList<Date> Dates
         {
@@ -225,7 +236,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="Email" /> objects for the vCard.
+        /// Gets or sets the list of email addresses associated with this contact.
         /// </summary>
         public virtual IList<Email> Emails
         {
@@ -234,7 +245,7 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// A collection of <see cref="InstantMessage" /> objects for the vCard.
+        /// Gets or sets the list of instant messaging accounts associated with this contact.
         /// </summary>
         public virtual IList<InstantMessage> InstantMessages
         {
@@ -242,12 +253,19 @@ namespace iCloud.Dav.People.DataTypes
             set => Properties.Set("IMPP", value);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Contact"/> class.
+        /// </summary>
         public Contact()
         {
             Name = Components.VCARD;
             EnsureProperties();
         }
 
+        /// <summary>
+        /// Method that is called after the object is deserialized. It ensures that the object has all required properties.
+        /// </summary>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
         protected override void OnDeserialized(StreamingContext context)
         {
             base.OnDeserialized(context);
@@ -255,6 +273,9 @@ namespace iCloud.Dav.People.DataTypes
             EnsureProperties();
         }
 
+        /// <summary>
+        /// Ensures contact properties.
+        /// </summary>
         private void EnsureProperties()
         {
             var id = Guid.NewGuid().ToString();

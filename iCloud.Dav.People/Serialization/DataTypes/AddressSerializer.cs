@@ -8,20 +8,41 @@ using System.Text.RegularExpressions;
 
 namespace iCloud.Dav.People.Serialization.DataTypes
 {
+    /// <summary>
+    /// Serializes and deserializes an <see cref="Address"/> object to and from a string representation, according to the vCard specification.
+    /// </summary>
     public class AddressSerializer : StringSerializer
     {
+        /// <summary>
+        /// Regular expression pattern used to split a semicolon-separated list of Address values
+        /// </summary>
         private static readonly Regex _reSplitSemiColon = new Regex("(?:^[;])|(?<=(?:[^\\\\]))[;]");
 
-        public AddressSerializer()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddressSerializer"/> class.
+        /// </summary>
+        public AddressSerializer() : base()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddressSerializer"/> class with the given <see cref="SerializationContext"/>.
+        /// </summary>
+        /// <param name="ctx">The <see cref="SerializationContext"/> to use.</param>
         public AddressSerializer(SerializationContext ctx) : base(ctx)
         {
         }
 
+        /// <summary>
+        /// Gets the Type that this <see cref="AddressSerializer"/> can serialize and deserialize, which is <see cref="Address"/>.
+        /// </summary>
         public override Type TargetType => typeof(Address);
 
+        /// <summary>
+        /// Converts an <see cref="Address"/> object to a semicolon-separated string representation.
+        /// </summary>
+        /// <param name="obj">The <see cref="Address"/> object to be serialized.</param>
+        /// <returns>A semicolon-separated string representation of the <see cref="Address"/> object.</returns>
         public override string SerializeToString(object obj)
         {
             if (!(obj is Address address))
@@ -76,6 +97,11 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             return num == 0 ? null : Encode(address, string.Join(";", array, 0, num));
         }
 
+        /// <summary>
+        /// Converts a semicolon-separated string representation of an <see cref="Address"/> object to an <see cref="Address"/> object.
+        /// </summary>
+        /// <param name="value">The semicolon-separated string representation of the <see cref="Address"/> object to be deserialized.</param>
+        /// <returns>An <see cref="Address"/> object.</returns>
         public Address Deserialize(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -138,6 +164,11 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             return address;
         }
 
+        /// <summary>
+        /// This method deserializes an <see cref="Address"/> object from the given <see cref="TextReader"/>.
+        /// </summary>
+        /// <param name="tr">The <see cref="TextReader"/> to deserialize the <see cref="Address"/> object from.</param>
+        /// <returns>An <see cref="Address"/> object.</returns>
         public override object Deserialize(TextReader tr) => Deserialize(tr.ReadToEnd());
     }
 }

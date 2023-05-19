@@ -6,13 +6,15 @@ using System.ComponentModel;
 
 namespace iCloud.Dav.People.DataTypes
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// A list of SyncCollectionItem objects.
+    /// </summary>
     [XmlDeserializeType(typeof(MultiStatus))]
     [TypeConverter(typeof(SyncCollectionListConverter))]
     public class SyncCollectionList
     {
         /// <summary>
-        /// Calendars that are present on the user's calendar list.
+        /// The list of SyncCollectionItem objects.
         /// </summary>
         public virtual IList<SyncCollectionItem> Items { get; set; }
 

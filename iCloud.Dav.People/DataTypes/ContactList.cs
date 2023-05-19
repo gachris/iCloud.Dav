@@ -7,21 +7,23 @@ using System.ComponentModel;
 namespace iCloud.Dav.People.DataTypes
 {
     /// <summary>
-    /// Represents a strongly typed list of objects that can be accessed by index. Provides
-    /// methods to search, sort, and manipulate lists.
-    /// </summary>   
+    /// Represents a list of <see cref="Contact"/> objects.
+    /// </summary>
     [TypeConverter(typeof(ContactListConverter))]
     [XmlDeserializeType(typeof(MultiStatus))]
     public class ContactList
     {
         /// <summary>
-        /// The list of people that the requestor is connected to.
+        /// Gets or sets the list of contacts.
         /// </summary>
         public virtual IList<Contact> Items { get; set; }
 
         /// <summary>
-        /// Type of the collection ("people#contacts").
+        /// Gets or sets the type of the collection.
         /// </summary>
+        /// <remarks>
+        /// The value is always "contacts".
+        /// </remarks>
         public virtual string Kind { get; set; }
     }
 }

@@ -7,14 +7,32 @@ using vCard.Net.Serialization;
 
 namespace iCloud.Dav.People.Serialization
 {
+    /// <summary>
+    /// Serializes a <see cref="CardParameter"/> to a string representation, according to the vCard specification.
+    /// </summary>
     public class ParameterSerializer : SerializerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParameterSerializer"/> class.
+        /// </summary>
         public ParameterSerializer() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParameterSerializer"/> class with the specified <see cref="SerializationContext"/>.
+        /// </summary>
+        /// <param name="ctx">The <see cref="SerializationContext"/>.</param>
         public ParameterSerializer(SerializationContext ctx) : base(ctx) { }
 
+        /// <summary>
+        /// Gets the Type that this <see cref="ParameterSerializer"/> can serialize and deserialize, which is <see cref="CardParameter"/>.
+        /// </summary>
         public override Type TargetType => typeof(CardParameter);
 
+        /// <summary>
+        /// Converts a <see cref="CardParameter"/> to a string representation.
+        /// </summary>
+        /// <param name="obj">The <see cref="CardParameter"/> object to be serialized.</param>
+        /// <returns>A string representation of the <see cref="CardParameter"/> object.</returns>
         public override string SerializeToString(object obj)
         {
             if (!(obj is CardParameter p))
@@ -57,6 +75,11 @@ namespace iCloud.Dav.People.Serialization
             return builder.ToString();
         }
 
+        /// <summary>
+        /// This method is not implemented for the <see cref="ParameterSerializer"/> class.
+        /// </summary>
+        /// <param name="tr">The <see cref="TextReader"/>.</param>
+        /// <returns>null</returns>
         public override object Deserialize(TextReader tr) => null;
     }
 }

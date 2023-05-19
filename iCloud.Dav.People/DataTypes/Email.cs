@@ -11,30 +11,28 @@ using vCard.Net.DataTypes;
 namespace iCloud.Dav.People.DataTypes
 {
     /// <summary>
-    ///     An email address in a <see cref="Contact" />.
+    /// Represents an email value that can be associated with a contact.
     /// </summary>
-    /// <remarks>
-    ///     Most Person email addresses are Internet email addresses.  However,
-    ///     the Person specification allows other email address formats,
-    ///     such as CompuServe and X400.  Unless otherwise specified, an
-    ///     address is assumed to be an Internet address.
-    /// </remarks>
-    /// <seealso cref="EmailType" />
-    [Serializable]
     public class Email : EncodableDataType, IRelatedDataType
     {
-        public const string School = "_$!<School>!$_";
-
-        public virtual bool IsPreferred { get; set; }
-
-        /// <summary>The email address.</summary>
-        /// <remarks>
-        ///     The format of the email address is not validated by the class.
-        /// </remarks>
-        public virtual string Address { get; set; }
+        #region Fields/Consts
 
         /// <summary>
-        /// The email address type.
+        /// A constant string representing the school email type.
+        /// </summary>
+        public const string School = "_$!<School>!$_";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the email is preferred.
+        /// </summary>
+        public virtual bool IsPreferred { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of email.
         /// </summary>
         public virtual EmailType Type
         {
@@ -99,12 +97,15 @@ namespace iCloud.Dav.People.DataTypes
             }
         }
 
+        /// <summary>
+        /// Gets or sets the label of the email.
+        /// </summary>
         public virtual Label Label
         {
             get => Properties.Get<Label>("X-ABLABEL");
             set
             {
-                if (value == null && Label != null) 
+                if (value == null && Label != null)
                 {
                     Properties.Remove("X-ABLABEL");
                     Parameters.Remove("TYPE");
@@ -119,37 +120,92 @@ namespace iCloud.Dav.People.DataTypes
         }
 
         /// <summary>
-        /// Returns a list of properties that are associated with the TEL object.
+        /// Gets or sets the address of the email.
+        /// </summary>
+        public virtual string Address { get; set; }
+
+        /// <summary>
+        /// Gets the list of properties associated with the email.
         /// </summary>
         public virtual CardDataTypePropertyList Properties { get; protected set; }
 
+        #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Email"/> class.
+        /// </summary>
         public Email()
         {
             Initialize();
             Type = EmailType.Other;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Email"/> class with a string value.
+        /// </summary>
+        /// <param name="value">The value of the email.</param>
         public Email(string value)
         {
             Initialize();
             Type = EmailType.Other;
 
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(value)) return;
 
             var serializer = new EmailSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
         }
 
+        #region Methods
+
+        /// <summary>
+        /// Initializes the properties of the email.
+        /// </summary>
         private void Initialize() => Properties = new CardDataTypePropertyList();
 
+        /// <summary>
+        /// This method is called during deserialization of the object, before the object is deserialized.
+        /// </summary>
+        /// <param name="context">The streaming context for the deserialization.</param>
         protected override void OnDeserializing(StreamingContext context)
         {
             base.OnDeserializing(context);
 
             Initialize();
         }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Email)obj));
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
+        protected bool Equals(Email obj)
+        {
+            return string.Equals(Address, obj.Address, StringComparison.OrdinalIgnoreCase) &&
+                   Equals(Type, obj.Type) &&
+                   Equals(Label, obj.Label) &&
+                   Equals(IsPreferred, obj.IsPreferred);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (Address != null ? Address.ToLowerInvariant().GetHashCode() : 0);
+                hash = hash * 23 + Type.GetHashCode();
+                hash = hash * 23 + (Label != null ? Label.GetHashCode() : 0);
+                hash = hash * 23 + IsPreferred.GetHashCode();
+                return hash;
+            }
+        }
+
+        #endregion
     }
 }

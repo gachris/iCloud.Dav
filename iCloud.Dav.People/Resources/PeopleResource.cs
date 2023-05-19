@@ -11,73 +11,81 @@ using System.Linq;
 namespace iCloud.Dav.People.Resources
 {
     /// <summary>
-    /// The "People" collection of methods.
+    /// Represents a resource on iCloud for accessing iCloud contacts for the authenticated user.
     /// </summary>
     public class PeopleResource
     {
-        /// <summary>
-        /// The service which this resource belongs to.
-        /// </summary>
         private readonly IClientService _service;
 
         /// <summary>
-        /// Constructs a new resource.
+        /// Initializes a new instance of the <see cref="PeopleResource"/> class.
         /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
         public PeopleResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns the peoples on the user's people list.
+        /// Creates a new <see cref="ListRequest"/> instance for retrieving the list of contact.
         /// </summary>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="resourceName">The name of the resource to retrieve the list from. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="ListRequest"/> instance for retrieving the list of contact.</returns>
         public virtual ListRequest List(string resourceName) => new ListRequest(_service, resourceName);
 
         /// <summary>
-        /// Returns a contact from the user's people list.
+        /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific contact by ID.
         /// </summary>
-        /// <param name="contactId">Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactId">The ID of the contact to retrieve. To retrieve contact IDs, call the <see cref="List"/> method.</param>
+        /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific contact by ID.</returns>
         public virtual GetRequest Get(string contactId, string resourceName) => new GetRequest(_service, contactId, resourceName);
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Creates a new <see cref="MultiGetRequest"/> instance for retrieving multiple contacts by ID.
         /// </summary>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
-        /// <param name="contactIds">Contact identifiers. To retrieve contact IDs call the <see cref="List(string)"/> method.</param>
+        /// <param name="resourceName">The name of the resource where the contacts are located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactIds">The IDs of the contacts to retrieve. To retrieve contact IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple contacts by ID.</returns>
         public virtual MultiGetRequest MultiGet(string resourceName, string[] contactIds) => new MultiGetRequest(_service, resourceName, contactIds);
 
-        /// <summary>Inserts an existing contact into the user's people list.</summary>
-        /// <param name="body">The body of the request.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <summary>
+        /// Creates a new <see cref="InsertRequest"/> instance that can insert a new contact.
+        /// </summary>            
+        /// <param name="body">The contact to insert.</param>
+        /// <param name="resourceName">The name of the resource where the contact will be stored. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="InsertRequest"/> instance that can insert a new contact.</returns>
         public virtual InsertRequest Insert(Contact body, string resourceName) => new InsertRequest(_service, body, resourceName);
 
         /// <summary>
-        /// Updates an existing contact on the user's people list.
+        /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing contact.
         /// </summary>
-        /// <param name="body">The body of the request.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="body">The body of the request containing the updated contact information.</param>
+        /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing contact.</returns>
         public virtual UpdateRequest Update(Contact body, string resourceName) => new UpdateRequest(_service, body, resourceName);
 
         /// <summary>
-        /// Removes a contact from the user's people list.
+        /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing contact by ID.
         /// </summary>
-        /// <param name="contactId">Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactId">The ID of the contact to delete. To retrieve contact IDs, call the <see cref="List"/> method.</param>
+        /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing contact by ID.</returns>
         public virtual DeleteRequest Delete(string contactId, string resourceName) => new DeleteRequest(_service, contactId, resourceName);
 
         /// <summary>
-        /// Returns the peoples on the user's people list.
+        /// Represents a request to retrieve a list of contacts from iCloud.
         /// </summary>
         public class ListRequest : PeopleBaseServiceRequest<ContactList>
         {
             private object _body;
 
             /// <summary>
-            /// Constructs a new List request.
+            /// Constructs a new <see cref="ListRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="resourceName">The name of the resource to retrieve the list from. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public ListRequest(IClientService service, string resourceName) : base(service) => ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
@@ -132,13 +140,16 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns a contact from the user's people list.
+        /// Represents a request to get a single contact by ID from iCloud.
         /// </summary>
         public class GetRequest : PeopleBaseServiceRequest<Contact>
         {
             /// <summary>
-            /// Constructs a new Get request.
+            /// Constructs a new <see cref="GetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="contactId">The ID of the contact to retrieve. To retrieve contact IDs, call the <see cref="List"/> method.</param>
+            /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public GetRequest(IClientService service, string contactId, string resourceName) : base(service)
             {
                 ContactId = contactId.ThrowIfNullOrEmpty(nameof(Contact.Id));
@@ -146,13 +157,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact ID.
             /// </summary>
             [RequestParameter("contactId", RequestParameterType.Path)]
             public virtual string ContactId { get; }
@@ -177,15 +188,18 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns contacts from the user's people list.
+        /// Represents a request to retrieve multiple iCloud contacts by ID.
         /// </summary>
         public class MultiGetRequest : PeopleBaseServiceRequest<ContactList>
         {
             private AddressBookMultiget _body;
 
             /// <summary>
-            /// Constructs a new MultiGet request.
+            /// Constructs a new <see cref="MultiGetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="resourceName">The name of the resource where the contacts are located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+            /// <param name="contactIds">The IDs of the contacts to retrieve. To retrieve contact IDs, call the <see cref="List"/> method.</param>
             public MultiGetRequest(IClientService service, string resourceName, string[] contactIds) : base(service)
             {
                 ContactIds = contactIds.ThrowIfNull(nameof(contactIds));
@@ -193,13 +207,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact identifiers. To retrieve contact IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact IDs.
             /// </summary>
             public virtual string[] ContactIds { get; }
 
@@ -224,8 +238,10 @@ namespace iCloud.Dav.People.Resources
                 }
 
                 _body.Href.Clear();
-                _body.Href.AddRange(ContactIds.Select(contactId =>
-                new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook), string.Concat(ResourceName, "/", contactId, ".vcf")).AbsolutePath));
+
+                var hrefs = ContactIds.Select(contactId => new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook), string.Concat(ResourceName, "/", contactId, ".vcf")).AbsolutePath);
+
+                _body.Href.AddRange(hrefs);
 
                 return _body;
             }
@@ -240,15 +256,18 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Inserts an existing contact into the user's people list.
+        /// Represents a request to insert a contact into iCloud.
         /// </summary>
         public class InsertRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             private object _body;
 
             /// <summary>
-            /// Constructs a new Insert request.
+            /// Constructs a new <see cref="InsertRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="body">The contact to insert.</param>
+            /// <param name="resourceName">The name of the resource where the contact will be stored. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public InsertRequest(IClientService service, Contact body, string resourceName) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(Contact));
@@ -258,13 +277,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact ID.
             /// </summary>
             [RequestParameter("contactId", RequestParameterType.Path)]
             public virtual string ContactId { get; }
@@ -307,15 +326,18 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Updates an existing contact on the user's people list.
+        /// Represents a request to update an existing contact in iCloud.
         /// </summary>
         public class UpdateRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             private object _body;
 
             /// <summary>
-            /// Constructs a new Update request.
+            /// Constructs a new <see cref="UpdateRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="body">The body of the request containing the updated contact information.</param>
+            /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public UpdateRequest(IClientService service, Contact body, string resourceName) : base(service)
             {
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
@@ -325,13 +347,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact ID.
             /// </summary>
             [RequestParameter("contactId", RequestParameterType.Path)]
             public virtual string ContactId { get; }
@@ -374,13 +396,16 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Removes a contact from the user's people list.
+        /// Represents a request to delete a contact from iCloud.
         /// </summary>
         public class DeleteRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Delete request.
+            /// Constructs a new <see cref="DeleteRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="contactId">The identifier of the contact to delete. To retrieve contact IDs, call the <see cref="List"/> method.</param>
+            /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public DeleteRequest(IClientService service, string contactId, string resourceName) : base(service)
             {
                 ContactId = contactId.ThrowIfNullOrEmpty(nameof(Contact.Id));
@@ -388,13 +413,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact identifier. To retrieve contact IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact IDs.
             /// </summary>
             [RequestParameter("contactId", RequestParameterType.Path)]
             public virtual string ContactId { get; }

@@ -9,64 +9,71 @@ using System;
 namespace iCloud.Dav.People.Resources
 {
     /// <summary>
-    /// The "Identity Card" collection of methods.
+    /// Represents a resource on iCloud for accessing card resources for the authenticated user.
     /// </summary>
     public class IdentityCardResource
     {
-        /// <summary>
-        /// The service which this resource belongs to.
-        /// </summary>
         private readonly IClientService _service;
 
         /// <summary>
-        /// Constructs a new resource.
+        /// Initializes a new instance of the <see cref="IdentityCardResource"/> class.
         /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
         public IdentityCardResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns the next sync token on the user's identity card list.
+        /// Creates a new <see cref="GetSyncTokenRequest"/> instance for retrieving the next sync token for the contacts or contact groups on iCloud.
         /// </summary>
+        /// <param name="resourceName">The name of the resource where the contacts or contact groups are stored. To retrieve resource names, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="GetSyncTokenRequest"/> instance for retrieving the next sync token for the contacts or contact groups on iCloud.</returns>
         public virtual GetSyncTokenRequest GetSyncToken(string resourceName) => new GetSyncTokenRequest(_service, resourceName);
 
         /// <summary>
-        /// Returns the changes on the user's identity card list.
+        /// Creates a new <see cref="SyncCollectionRequest"/> instance for retrieving changes from the last sync token associated with the specified resource name.
         /// </summary>
+        /// <param name="resourceName">The name of the resource where the contacts or contact groups are stored. To retrieve resource names, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="SyncCollectionRequest"/> instance for retrieving changes from the last sync token associated with the specified resource name.</returns>
         public virtual SyncCollectionRequest SyncCollection(string resourceName) => new SyncCollectionRequest(_service, resourceName);
 
         /// <summary>
-        /// Returns the identity cards on the user's identity card list.
+        /// Creates a new <see cref="ListRequest"/> instance for retrieving the list of resource names.
         /// </summary>
+        /// <returns>A new <see cref="ListRequest"/> instance for retrieving the list of resource names.</returns>
         public virtual ListRequest List() => new ListRequest(_service);
 
         /// <summary>
-        /// Returns me-card.
+        /// Creates a new <see cref="GetMeCardRequest"/> instance for retrieving me-card value.
         /// </summary>
+        /// <returns>A new <see cref="GetMeCardRequest"/> instance for retrieving me-card value.</returns>
         public virtual GetMeCardRequest GetMeCard() => new GetMeCardRequest(_service);
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Creates a new <see cref="SetMeCardRequest"/> instance that can update the me-card property.
         /// </summary>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="List"/> method.</param>
-        /// <param name="contactId">Contact identifier. To retrieve contact IDs call the <see cref="PeopleResource.List(string)"/> method.</param>
+        /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="List"/> method.</param>
+        /// <param name="contactId">The ID of the contact to set as me-card. To retrieve contact IDs, call the <see cref="PeopleResource.List"/> method.</param>
+        /// <returns>A new <see cref="SetMeCardRequest"/> instance that can update the me-card property.</returns>
         public virtual SetMeCardRequest SetMeCard(string resourceName, string contactId) => new SetMeCardRequest(_service, resourceName, contactId);
 
         /// <summary>
-        /// Returns the next sync token on the user's identity card list.
+        /// Represents a request to get next sync token for the contacts or contact groups on iCloud.
         /// </summary>
         public class GetSyncTokenRequest : PeopleBaseServiceRequest<SyncToken>
         {
             private PropFind _body;
 
             /// <summary>
-            /// Constructs a new Sync Collection request.
+            /// Initializes a new instance of the <see cref="GetSyncTokenRequest"/> class.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="resourceName">The name of the resource where the contacts or contact groups are stored. To retrieve resource names, call the <see cref="List"/> method.</param>
             public GetSyncTokenRequest(IClientService service, string resourceName) : base(service)
             {
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
@@ -104,31 +111,30 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns the changes on the user's identity card list.
+        /// Represents a request to synchronize a collection of contacts or contact groups on iCloud.
         /// </summary>
         public class SyncCollectionRequest : PeopleBaseServiceRequest<SyncCollectionList>
         {
             private SyncCollection _body;
 
             /// <summary>
-            /// Constructs a new Sync Collection request.
+            /// Initializes a new instance of the <see cref="SyncCollectionRequest"/> class.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="resourceName">The name of the resource where the contacts or contact groups are stored. To retrieve resource names, call the <see cref="List"/> method.</param>
             public SyncCollectionRequest(IClientService service, string resourceName) : base(service)
             {
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Token obtained from the nextSyncToken field returned on the last page of results
-            /// from the previous list request. It makes the result of this list request contain
-            /// only entries that have changed since then. All cards deleted since the previous
-            /// list request will always be in the result. Optional. The default is to return all entries.
+            /// Gets or sets the synchronization token.
             /// </summary>
             public virtual string SyncToken { get; set; }
 
@@ -168,26 +174,19 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns the identity cards on the user's identity card list.
+        /// Represents a request to retrieve a list of resource names from iCloud.
         /// </summary>
         public class ListRequest : PeopleBaseServiceRequest<IdentityCardList>
         {
             private object _body;
 
             /// <summary>
-            /// Constructs a new Get request.
+            /// Constructs a new <see cref="ListRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
             public ListRequest(IClientService service) : base(service)
             {
             }
-
-            /// <summary>
-            /// Token obtained from the nextSyncToken field returned on the last page of results
-            /// from the previous list request. It makes the result of this list request contain
-            /// only entries that have changed since then. All entries deleted since the previous
-            /// list request will always be in the result. Optional. The default is to return all entries.
-            /// </summary>
-            public virtual string SyncToken { get; set; }
 
             /// <inheritdoc/>
             public override string MethodName => "list";
@@ -204,15 +203,6 @@ namespace iCloud.Dav.People.Resources
             /// <inheritdoc/>
             protected override object GetBody()
             {
-                //if (_body == null)
-                //{
-                //    _body = new SyncCollection();
-                //}
-
-                //_body.SyncToken = SyncToken;
-                //_body.SyncLevel = "1";
-
-                //return _body;
                 if (_body == null)
                 {
                     _body = new PropFind();
@@ -222,15 +212,16 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns me-card from the user's people list.
+        /// Represents a request to retrieve me-card value.
         /// </summary>
         public class GetMeCardRequest : PeopleBaseServiceRequest<MeCard>
         {
             private PropFind _body;
 
             /// <summary>
-            /// Constructs a new MultiGet request.
+            /// Constructs a new <see cref="GetMeCardRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
             public GetMeCardRequest(IClientService service) : base(service)
             {
             }
@@ -256,29 +247,32 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Updates me-card on the user's people list.
+        /// Represents a request to update me-card property.
         /// </summary>
         public class SetMeCardRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             private PropertyUpdate _body;
 
             /// <summary>
-            /// Constructs a new SetMeCard request.
+            /// Constructs a new <see cref="SetMeCardRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="List"/> method.</param>
+            /// <param name="contactId">The ID of the contact to set as me-card. To retrieve contact IDs, call the <see cref="PeopleResource.List"/> method.</param>
             public SetMeCardRequest(IClientService service, string resourceName, string contactId) : base(service)
             {
                 ContactId = contactId.ThrowIfNull(nameof(contactId));
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
             }
-
+            
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact identifier. To retrieve contact IDs call the <see cref="PeopleResource.List(string)"/> method.
+            /// Gets the contact ID.
             /// </summary>
             public virtual string ContactId { get; }
 

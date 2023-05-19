@@ -5,34 +5,35 @@ using System;
 namespace iCloud.Dav.People.Resources
 {
     /// <summary>
-    /// The "Cloud Gateway" collection of methods.
+    /// Represents a resource on iCloud for accessing iCloud Drive files for the authenticated user.
     /// </summary>
     public class CloudGatewayResource
     {
-        /// <summary>
-        /// The service which this resource belongs to.
-        /// </summary>
         private readonly IClientService _service;
 
         /// <summary>
-        /// Constructs a new resource.
+        /// Constructs a new <see cref="CloudGatewayResource"/> instance.
         /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
         public CloudGatewayResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns a file from gateway.
+        /// Creates a new <see cref="GetRequest"/> instance for retrieving the content of a specified iCloud Drive file.
         /// </summary>
-        /// <param name="uri">Uri to retrieve the file.</param>
+        /// <param name="uri">The URI of the iCloud Drive file to retrieve.</param>
+        /// <returns>A new <see cref="GetRequest"/> instance for retrieving the content of the specified iCloud Drive file.</returns>
         public virtual GetRequest Get(Uri uri) => new GetRequest(_service, uri);
 
         /// <summary>
-        /// Returns a file from gateway.
+        /// Represents a request to retrieve the content of an iCloud Drive file.
         /// </summary>
         public class GetRequest : PeopleBaseServiceRequest<byte[]>
         {
             /// <summary>
-            /// Constructs a new Get request.
+            /// Constructs a new <see cref="GetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="uri">The URI of the iCloud Drive file to retrieve.</param>
             public GetRequest(IClientService service, Uri uri) : base(service) => RestPath = uri.AbsolutePath;
 
             /// <inheritdoc/>

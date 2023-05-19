@@ -10,20 +10,11 @@ using vCard.Net.Serialization;
 
 namespace iCloud.Dav.People.Serialization
 {
+    /// <summary>
+    /// Deserializer for vCard contact groups.
+    /// </summary>
     public class ContactGroupDeserializer
     {
-        internal ContactGroupDeserializer(
-          ContactGroupDataTypeMapper dataTypeMapper,
-          ISerializerFactory serializerFactory)
-        {
-            _dataTypeMapper = dataTypeMapper;
-            _serializerFactory = serializerFactory;
-        }
-
-        public static readonly ContactGroupDeserializer Default = new ContactGroupDeserializer(
-            new ContactGroupDataTypeMapper(),
-            new ExtendedSerializerFactory());
-
         private const string _nameGroup = "name";
         private const string _valueGroup = "value";
         private const string _paramNameGroup = "paramName";
@@ -33,6 +24,24 @@ namespace iCloud.Dav.People.Serialization
 
         private readonly ContactGroupDataTypeMapper _dataTypeMapper;
         private readonly ISerializerFactory _serializerFactory;
+
+        /// <summary>
+        /// Gets the default instance of the <see cref="ContactGroupDeserializer"/> class.
+        /// </summary>
+        public static readonly ContactGroupDeserializer Default = new ContactGroupDeserializer(
+            new ContactGroupDataTypeMapper(),
+            new ExtendedSerializerFactory());
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ContactGroupDeserializer"/> class.
+        /// </summary>
+        /// <param name="dataTypeMapper">The data type mapper to use for deserialization.</param>
+        /// <param name="serializerFactory">The serializer factory to use for deserialization.</param>
+        internal ContactGroupDeserializer(ContactGroupDataTypeMapper dataTypeMapper, ISerializerFactory serializerFactory)
+        {
+            _dataTypeMapper = dataTypeMapper;
+            _serializerFactory = serializerFactory;
+        }
 
         private static string BuildContentLineRegex()
         {
@@ -66,6 +75,11 @@ namespace iCloud.Dav.People.Serialization
             return contentLine;
         }
 
+        /// <summary>
+        /// Deserializes a <see cref="TextReader"/> containing vCard data into a sequence of <see cref="ContactGroup"/> objects.
+        /// </summary>
+        /// <param name="tr">The <see cref="TextReader"/> containing the vCard data.</param>
+        /// <returns>A sequence of <see cref="ContactGroup"/> objects.</returns>
         public IEnumerable<ContactGroup> Deserialize(TextReader tr)
         {
             var context = new SerializationContext();

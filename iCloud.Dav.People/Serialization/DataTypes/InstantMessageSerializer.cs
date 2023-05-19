@@ -2,21 +2,40 @@
 using System;
 using System.IO;
 using vCard.Net.Serialization;
+using vCard.Net.Serialization.DataTypes;
 
 namespace iCloud.Dav.People.Serialization.DataTypes
 {
-    public class InstantMessageSerializer : vCard.Net.Serialization.DataTypes.EncodableDataTypeSerializer
+    /// <summary>
+    /// Serializes and deserializes a <see cref="InstantMessage"/> object to and from a string representation, according to the vCard specification.
+    /// </summary>
+    public class InstantMessageSerializer : EncodableDataTypeSerializer
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstantMessageSerializer"/> class.
+        /// </summary>
         public InstantMessageSerializer() : base()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstantMessageSerializer"/> class with the given <see cref="SerializationContext"/>.
+        /// </summary>
+        /// <param name="ctx">The <see cref="SerializationContext"/> to use.</param>
         public InstantMessageSerializer(SerializationContext ctx) : base(ctx)
         {
         }
 
+        /// <summary>
+        /// Gets the Type that this <see cref="InstantMessageSerializer"/> can serialize and deserialize, which is <see cref="InstantMessage"/>.
+        /// </summary>
         public override Type TargetType => typeof(InstantMessage);
 
+        /// <summary>
+        /// Converts a <see cref="InstantMessage"/> object to a string representation.
+        /// </summary>
+        /// <param name="obj">The <see cref="InstantMessage"/> object to be serialized.</param>
+        /// <returns>A string representation of the <see cref="InstantMessage"/> object.</returns>
         public override string SerializeToString(object obj)
         {
             if (!(obj is InstantMessage instantMessage))
@@ -57,6 +76,11 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             return Encode(instantMessage, value);
         }
 
+        /// <summary>
+        /// Converts a string representation of a <see cref="InstantMessage"/> object to a <see cref="InstantMessage"/> object.
+        /// </summary>
+        /// <param name="value">The string representation of the <see cref="InstantMessage"/> object to be deserialized.</param>
+        /// <returns>A <see cref="InstantMessage"/> object.</returns>
         public InstantMessage Deserialize(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -110,6 +134,11 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             return instantMessage;
         }
 
+        /// <summary>
+        /// This method deserializes a <see cref="InstantMessage"/> object from the given <see cref="TextReader"/>.
+        /// </summary>
+        /// <param name="tr">The <see cref="TextReader"/> to deserialize the <see cref="InstantMessage"/> object from.</param>
+        /// <returns>A <see cref="InstantMessage"/> object.</returns>
         public override object Deserialize(TextReader tr) => Deserialize(tr.ReadToEnd());
     }
 }

@@ -2,36 +2,66 @@
 
 namespace iCloud.Dav.People.DataTypes
 {
-    /// <summary>Identifies the type of email address in a Person.</summary>
-    /// <seealso cref="Email" />
+    /// <summary>
+    /// Enumerates the types of email addresses that can be used in a person's contact information.
+    /// </summary>
     public enum EmailType
     {
-        /// <summary>Indicates a home email address type.</summary>
+        /// <summary>
+        /// Indicates a home email address type.
+        /// </summary>
         Home = 1,
-        /// <summary>Indicates a work email address type.</summary>
+
+        /// <summary>
+        /// Indicates a work email address type.
+        /// </summary>
         Work = 2,
-        /// <summary>Indicates an school email address type.</summary>
+
+        /// <summary>
+        /// Indicates a school email address type.
+        /// </summary>
         School = 3,
-        /// <summary>Indicates an other email address type.</summary>
+
+        /// <summary>
+        /// Indicates an other email address type.
+        /// </summary>
         Other = 4,
-        /// <summary>Indicates an internet unknown type.</summary>
-        Custom = 5,
+
+        /// <summary>
+        /// Indicates an unknown or custom email address type.
+        /// </summary>
+        Custom = 5
     }
 
-    /// <summary>Identifies the type of email address in a Person.</summary>
-    /// <seealso cref="Email" />
+    /// <summary>
+    /// Enumerates the internal types of email addresses that can be used in a person's contact information.
+    /// </summary>
     [Flags]
     internal enum EmailTypeInternal
     {
-        /// <summary>Indicates an internet email address type.</summary>
+        /// <summary>
+        /// Indicates an internet email address type.
+        /// </summary>
         Internet = 1,
-        /// <summary>Indicates a home email address type.</summary>
+
+        /// <summary>
+        /// Indicates a home email address type.
+        /// </summary>
         Home = 2,
-        /// <summary>Indicates a work email address type.</summary>
+
+        /// <summary>
+        /// Indicates a work email address type.
+        /// </summary>
         Work = 4,
-        /// <summary>Indicates an other email address type.</summary>
+
+        /// <summary>
+        /// Indicates an other email address type.
+        /// </summary>
         Other = 8,
-        /// <summary>Indicates an other pref address type.</summary>
+
+        /// <summary>
+        /// Indicates a preferred email address type.
+        /// </summary>
         Pref = 16
     }
 }

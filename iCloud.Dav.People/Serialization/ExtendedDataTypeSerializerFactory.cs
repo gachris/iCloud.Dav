@@ -1,14 +1,23 @@
 ﻿using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Serialization.DataTypes;
 using System;
+using vCard.Net.DataTypes;
 using vCard.Net.Serialization;
+using vCard.Net.Serialization.DataTypes;
 
 namespace iCloud.Dav.People.Serialization
 {
-    /// <inheritdoc/>
-    public class ExtendedDataTypeSerializerFactory : DataTypeSerializerFactory, ISerializerFactory
+    /// <summary>
+    /// Factory class for creating serializers for extended vCard data types.
+    /// </summary>
+    internal class ExtendedDataTypeSerializerFactory : DataTypeSerializerFactory, ISerializerFactory
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Builds a serializer for the specified object type and serialization context.
+        /// </summary>
+        /// <param name="objectType">The type of object to serialize or deserialize.</param>
+        /// <param name="ctx">The serialization context.</param>
+        /// <returns>A serializer for the specified object type and serialization context.</returns>
         public override ISerializer Build(Type objectType, SerializationContext ctx)
         {
             ISerializer s = null;
@@ -57,9 +66,9 @@ namespace iCloud.Dav.People.Serialization
             {
                 s = new X_ABAddressSerializer(ctx);
             }
-            else if (typeof(vCard.Net.DataTypes.IDateTime).IsAssignableFrom(objectType))
+            else if (typeof(IDateTime).IsAssignableFrom(objectType))
             {
-                s = new vCard.Net.Serialization.DataTypes.DateTimeSerializer(ctx);
+                s = new DateTimeSerializer(ctx);
             }
 
             return s ?? base.Build(objectType, ctx);

@@ -7,18 +7,36 @@ using vCard.Net.Serialization.DataTypes;
 
 namespace iCloud.Dav.People.Serialization.DataTypes
 {
+    /// <summary>
+    /// Serializes and deserializes a <see cref="Photo"/> object to and from a string representation, according to the vCard specification.
+    /// </summary>
     public class PhotoSerializer : EncodableDataTypeSerializer
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhotoSerializer"/> class.
+        /// </summary>
         public PhotoSerializer()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhotoSerializer"/> class with the given <see cref="SerializationContext"/>.
+        /// </summary>
+        /// <param name="ctx">The <see cref="SerializationContext"/> to use.</param>
         public PhotoSerializer(SerializationContext ctx) : base(ctx)
         {
         }
 
+        /// <summary>
+        /// Gets the Type that this <see cref="PhotoSerializer"/> can serialize and deserialize, which is <see cref="Photo"/>.
+        /// </summary>
         public override Type TargetType => typeof(Photo);
 
+        /// <summary>
+        /// Converts a <see cref="Photo"/> object to a string representation.
+        /// </summary>
+        /// <param name="obj">The <see cref="Photo"/> object to be serialized.</param>
+        /// <returns>A string representation of the <see cref="Photo"/> object.</returns>
         public override string SerializeToString(object obj)
         {
             if (!(obj is Photo photo))
@@ -50,6 +68,11 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             return Encode(photo, value);
         }
 
+        /// <summary>
+        /// Converts a string representation of a <see cref="Photo"/> object to a <see cref="Photo"/> object.
+        /// </summary>
+        /// <param name="value">The string representation of the <see cref="Photo"/> object to be deserialized.</param>
+        /// <returns>A <see cref="Photo"/> object.</returns>
         public Photo Deserialize(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -107,6 +130,11 @@ namespace iCloud.Dav.People.Serialization.DataTypes
             return photo;
         }
 
+        /// <summary>
+        /// This method deserializes a <see cref="Photo"/> object from the given <see cref="TextReader"/>.
+        /// </summary>
+        /// <param name="tr">The <see cref="TextReader"/> to deserialize the <see cref="Photo"/> object from.</param>
+        /// <returns>A <see cref="Photo"/> object.</returns>
         public override object Deserialize(TextReader tr) => Deserialize(tr.ReadToEnd());
     }
 }

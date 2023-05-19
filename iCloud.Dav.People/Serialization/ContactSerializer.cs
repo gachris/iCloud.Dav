@@ -1,4 +1,5 @@
 ﻿using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,22 +11,40 @@ using vCard.Net.Serialization;
 
 namespace iCloud.Dav.People.Serialization
 {
+    /// <summary>
+    /// Serializer for the <see cref="Contact"/> class.
+    /// </summary>
     public class ContactSerializer : ComponentSerializer
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContactSerializer"/> class.
+        /// </summary>
         public ContactSerializer()
         {
             SetService(new ContactDataTypeMapper());
             SetService(new ExtendedSerializerFactory());
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContactSerializer"/> class with the given <see cref="SerializationContext"/>.
+        /// </summary>
+        /// <param name="ctx">The <see cref="SerializationContext"/> to use.</param>
         public ContactSerializer(SerializationContext ctx) : base(ctx)
         {
             SetService(new ContactDataTypeMapper());
             SetService(new ExtendedSerializerFactory());
         }
 
+        /// <summary>
+        /// Gets the Type that this <see cref="ContactSerializer"/> can serialize and deserialize, which is <see cref="Contact"/>.
+        /// </summary>
         public override Type TargetType => typeof(Contact);
 
+        /// <summary>
+        /// Serialize a <see cref="Contact"/> object to a string.
+        /// </summary>
+        /// <param name="obj">The <see cref="Contact"/> object to serialize.</param>
+        /// <returns>The serialized string.</returns>
         public override string SerializeToString(object obj)
         {
             if (!(obj is Contact c))
@@ -144,12 +163,29 @@ namespace iCloud.Dav.People.Serialization
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Deserializes a vCard component from a string.
+        /// </summary>
+        /// <param name="tr">The text reader to use for deserialization.</param>
+        /// <returns>Always null.</returns>
         public override object Deserialize(TextReader tr) => null;
 
+        /// <summary>
+        /// Compares two ICardProperty objects based on their name, in a case-insensitive way.
+        /// </summary>
         public class PropertyComparer : IComparer<ICardProperty>
         {
+            /// <summary>
+            /// The default instance of PropertyComparer.
+            /// </summary>
             public static PropertyComparer Default = new PropertyComparer();
 
+            /// <summary>
+            /// Compares two ICardProperty objects based on their name, in a case-insensitive way.
+            /// </summary>
+            /// <param name="x">The first ICardProperty to compare.</param>
+            /// <param name="y">The second ICardProperty to compare.</param>
+            /// <returns>-1 if x is null, 1 if y is null, or the result of a case-insensitive string comparison of their names.</returns>
             public int Compare(ICardProperty x, ICardProperty y)
             {
                 if (x == y)
@@ -161,36 +197,6 @@ namespace iCloud.Dav.People.Serialization
                     : y == null
                     ? 1
                     : string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-    }
-
-    internal static class TextUtil
-    {
-        /// <summary> Folds lines at 75 characters, and prepends the next line with a space per RFC https://tools.ietf.org/html/rfc5545#section-3.1 </summary>
-        public static string FoldLines(string incoming)
-        {
-            //The spec says nothing about trimming, but it seems reasonable...
-            var trimmed = incoming.Trim();
-            if (trimmed.Length <= 75)
-            {
-                return trimmed + SerializationConstants.LineBreak;
-            }
-
-            const int takeLimit = 74;
-
-            var firstLine = trimmed.Substring(0, takeLimit);
-            var remainder = trimmed.Substring(takeLimit, trimmed.Length - takeLimit);
-
-            var chunkedRemainder = string.Join(SerializationConstants.LineBreak + " ", Chunk(remainder));
-            return firstLine + SerializationConstants.LineBreak + " " + chunkedRemainder + SerializationConstants.LineBreak;
-        }
-
-        public static IEnumerable<string> Chunk(string str, int chunkSize = 73)
-        {
-            for (var index = 0; index < str.Length; index += chunkSize)
-            {
-                yield return str.Substring(index, Math.Min(chunkSize, str.Length - index));
             }
         }
     }

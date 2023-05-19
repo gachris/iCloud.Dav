@@ -11,75 +11,81 @@ using System.Linq;
 namespace iCloud.Dav.People.Resources
 {
     /// <summary>
-    /// The "Contact Groups" collection of methods.
+    /// Represents a resource on iCloud for accessing contact groups for the authenticated user.
     /// </summary>
     public class ContactGroupsResource
     {
-        /// <summary>
-        /// The service which this resource belongs to.
-        /// </summary>
         private readonly IClientService _service;
 
         /// <summary>
-        /// Constructs a new resource.
+        /// Initializes a new instance of the <see cref="ContactGroupsResource"/> class.
         /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
         public ContactGroupsResource(IClientService service) => _service = service;
 
         /// <summary>
-        /// Returns the contact groups on the user's contact group list.
+        /// Creates a new <see cref="ListRequest"/> instance for retrieving the list of contact group.
         /// </summary>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="resourceName">The name of the resource to retrieve the list from. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="ListRequest"/> instance for retrieving the list of contact group.</returns>
         public virtual ListRequest List(string resourceName) => new ListRequest(_service, resourceName);
 
         /// <summary>
-        /// Returns a contact group from the user's contact group list.
+        /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific contact group by ID.
         /// </summary>
-        /// <param name="contactGroupId">Contact Group identifier. To retrieve contact group IDs call the <see cref="List(string)"/> method.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactGroupId">The ID of the contact group to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+        /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific contact group by ID.</returns>
         public virtual GetRequest Get(string contactGroupId, string resourceName) => new GetRequest(_service, contactGroupId, resourceName);
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Creates a new <see cref="MultiGetRequest"/> instance for retrieving multiple contact groups by ID.
         /// </summary>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
-        /// <param name="contactGroupIds">Contact Group identifiers. To retrieve contact group IDs call the <see cref="List(string)"/> method.</param>
+        /// <param name="resourceName">The name of the resource where the contact groups are located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactGroupIds">The IDs of the contact groups to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+        /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple contact groups by ID.</returns>
         public virtual MultiGetRequest MultiGet(string resourceName, string[] contactGroupIds) => new MultiGetRequest(_service, resourceName, contactGroupIds);
 
         /// <summary>
-        /// Inserts Contact Group into the user's contact group list.
-        /// </summary>
-        /// <param name="body">The body of the request.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// Creates a new <see cref="InsertRequest"/> instance that can insert a new contact group.
+        /// </summary>            
+        /// <param name="body">The contact group to insert.</param>
+        /// <param name="resourceName">The name of the resource where the contact group will be stored. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="InsertRequest"/> instance that can insert a new contact group.</returns>
         public virtual InsertRequest Insert(ContactGroup body, string resourceName) => new InsertRequest(_service, body, resourceName);
 
         /// <summary>
-        /// Updates an existing contact group on the user's contact group list.
+        /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing contact group.
         /// </summary>
-        /// <param name="body">The body of the request.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="body">The body of the request containing the updated contact group information.</param>
+        /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing contact group.</returns>
         public virtual UpdateRequest Update(ContactGroup body, string resourceName) => new UpdateRequest(_service, body, resourceName);
 
         /// <summary>
-        /// Removes a contact group from the user's contact group list.
+        /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing contact group by ID.
         /// </summary>
-        /// <param name="contactGroupId">Contact Group identifier. To retrieve contact group IDs call the <see cref="List(string)"/> method.</param>
-        /// <param name="resourceName">Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <param name="contactGroupId">The ID of the contact group to delete. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+        /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+        /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing contact group by ID.</returns>
         public virtual DeleteRequest Delete(string contactGroupId, string resourceName) => new DeleteRequest(_service, contactGroupId, resourceName);
 
         /// <summary>
-        /// Returns the contact groups on the user's contact group list.
+        /// Represents a request to retrieve a list of contact groups from iCloud.
         /// </summary>
         public class ListRequest : PeopleBaseServiceRequest<ContactGroupList>
         {
             private object _body;
 
             /// <summary>
-            /// Constructs a new List request.
+            /// Constructs a new <see cref="ListRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="resourceName">The name of the resource to retrieve the list from. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public ListRequest(IClientService service, string resourceName) : base(service) => ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
@@ -133,13 +139,16 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns a contact group from the user's contact group list.
+        /// Represents a request to get a single contact group by ID from iCloud.
         /// </summary>
         public class GetRequest : PeopleBaseServiceRequest<ContactGroup>
         {
             /// <summary>
-            /// Constructs a new Get request.
+            /// Constructs a new <see cref="GetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="contactGroupId">The ID of the contact group to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+            /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public GetRequest(IClientService service, string contactGroupId, string resourceName) : base(service)
             {
                 ContactGroupId = contactGroupId.ThrowIfNullOrEmpty(nameof(ContactGroup.Id));
@@ -147,13 +156,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact Group identifier. To retrieve contact group IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact group ID.
             /// </summary>
             [RequestParameter("contactGroupId", RequestParameterType.Path)]
             public virtual string ContactGroupId { get; }
@@ -178,15 +187,18 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Returns contacts from the user's people list.
+        /// Represents a request to retrieve multiple iCloud contact groups by ID.
         /// </summary>
         public class MultiGetRequest : PeopleBaseServiceRequest<ContactGroupList>
         {
             private AddressBookMultiget _body;
 
             /// <summary>
-            /// Constructs a new MultiGet request.
+            /// Constructs a new <see cref="MultiGetRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="resourceName">The name of the resource where the contact groups are located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
+            /// <param name="contactGroupIds">The IDs of the contact groups to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
             public MultiGetRequest(IClientService service, string resourceName, string[] contactGroupIds) : base(service)
             {
                 ContactGroupIds = contactGroupIds.ThrowIfNull(nameof(contactGroupIds));
@@ -194,13 +206,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact Group identifiers. To retrieve contact group IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact group IDs.
             /// </summary>
             public virtual string[] ContactGroupIds { get; }
 
@@ -241,15 +253,18 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Inserts an existing contact group into the user's contact group list.
+        /// Represents a request to insert a contact group into iCloud.
         /// </summary>
         public class InsertRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             private object _body;
 
             /// <summary>
-            /// Constructs a new Insert request.
+            /// Constructs a new <see cref="InsertRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="body">The contact group to insert.</param>
+            /// <param name="resourceName">The name of the resource where the contact group will be stored. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public InsertRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
             {
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
@@ -259,13 +274,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact Group identifier. To retrieve contact group IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact group ID.
             /// </summary>
             [RequestParameter("contactGroupId", RequestParameterType.Path)]
             public virtual string ContactGroupId { get; }
@@ -308,15 +323,18 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Updates an existing contact group on the user's contact group list.
+        /// Represents a request to update an existing contact group in iCloud.
         /// </summary>
         public class UpdateRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             private object _body;
 
             /// <summary>
-            /// Constructs a new Update request.
+            /// Constructs a new <see cref="UpdateRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="body">The body of the request containing the updated contact group information.</param>
+            /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public UpdateRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
             {
                 Body = body.ThrowIfNull(nameof(ContactGroup));
@@ -326,13 +344,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact Group identifier. To retrieve contact group IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact group ID.
             /// </summary>
             [RequestParameter("contactGroupId", RequestParameterType.Path)]
             public virtual string ContactGroupId { get; }
@@ -375,13 +393,16 @@ namespace iCloud.Dav.People.Resources
         }
 
         /// <summary>
-        /// Removes a contact group from the user's contact group list.
+        /// Represents a request to delete a contact group from iCloud.
         /// </summary>
         public class DeleteRequest : PeopleBaseServiceRequest<VoidResponse>
         {
             /// <summary>
-            /// Constructs a new Delete request.
+            /// Constructs a new <see cref="DeleteRequest"/> instance.
             /// </summary>
+            /// <param name="service">The client service used for making requests.</param>
+            /// <param name="contactGroupId">The identifier of the contact group to delete. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+            /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
             public DeleteRequest(IClientService service, string contactGroupId, string resourceName) : base(service)
             {
                 ContactGroupId = contactGroupId.ThrowIfNullOrEmpty(nameof(ContactGroup.Id));
@@ -389,13 +410,13 @@ namespace iCloud.Dav.People.Resources
             }
 
             /// <summary>
-            /// Resource Name. To retrieve resource names call the <see cref="IdentityCardResource.List"/> method.
+            /// Gets the resource name.
             /// </summary>
             [RequestParameter("resourceName", RequestParameterType.Path)]
             public virtual string ResourceName { get; }
 
             /// <summary>
-            /// Contact Group identifier. To retrieve contact group IDs call the <see cref="List(string)"/> method.
+            /// Gets the contact group ID.
             /// </summary>
             [RequestParameter("contactGroupId", RequestParameterType.Path)]
             public virtual string ContactGroupId { get; }
