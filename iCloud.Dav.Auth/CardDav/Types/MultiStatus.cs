@@ -9,15 +9,27 @@ using System.Xml.Serialization;
 
 namespace iCloud.Dav.Auth.CardDav.Types
 {
+    /// <summary>
+    /// Represents a multi-status response in the DAV: namespace. This class is used to deserialize the response from
+    /// a WebDAV server.
+    /// </summary>
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
     internal sealed class MultiStatus : IXmlSerializable
     {
+        /// <summary>
+        /// Gets a list of <see cref="Response"/> objects representing the responses in this multi-status response.
+        /// </summary>
         public List<Response> Responses { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultiStatus"/> class.
+        /// </summary>
         public MultiStatus() => Responses = new List<Response>();
 
+        /// <inheritdoc />
         public XmlSchema GetSchema() => new XmlSchema();
 
+        /// <inheritdoc />
         public void ReadXml(XmlReader reader)
         {
             var xDocument = XDocument.Load(reader.ReadSubtree());
@@ -27,6 +39,11 @@ namespace iCloud.Dav.Auth.CardDav.Types
             Responses.AddRange(xResponses.Select(GetResponse));
         }
 
+        /// <summary>
+        /// Deserializes a <see cref="Response"/> object from the specified <see cref="XElement"/>.
+        /// </summary>
+        /// <param name="xResponse">The <see cref="XElement"/> containing the response data.</param>
+        /// <returns>A new <see cref="Response"/> object representing the response.</returns>
         public static Response GetResponse(XElement xResponse)
         {
             var href = xResponse.Elements().First(x => x.Name.LocalName == "href").Value;
@@ -63,6 +80,7 @@ namespace iCloud.Dav.Auth.CardDav.Types
                        calendar_user_address);
         }
 
+        /// <inheritdoc/>
         public void WriteXml(XmlWriter writer) => throw new NotSupportedException();
     }
 }

@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 
 namespace iCloud.Dav.Auth.Store
 {
-    /// <summary>FileDataStore</summary>
+    /// <summary>
+    /// Implements the <see cref="IDataStore"/> interface by persisting data to the file system.
+    /// </summary>
     public class FileDataStore : IDataStore
     {
         private const string XdgDataHomeSubdirectory = "icloud-filedatastore";
         private readonly string _folderPath;
-        /// <summary>Gets the full folder path.</summary>
-        /// 
+       
+        /// <summary>
+        /// Gets the full folder path.
+        /// </summary>
         public string FolderPath => _folderPath;
 
         /// <summary>

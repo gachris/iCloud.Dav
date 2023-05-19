@@ -2,7 +2,9 @@
 
 namespace iCloud.Dav.Auth.Store
 {
-    /// <summary>IDataStore</summary>
+    /// <summary>
+    /// An interface representing a data store that can be used to store and retrieve objects of various types.
+    /// </summary>
     public interface IDataStore
     {
         /// <summary>
