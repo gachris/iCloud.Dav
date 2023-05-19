@@ -14,7 +14,6 @@
 		<Product>iCloud.Dav.Calendar</Product>
 		<Description>Package for accessing calendars of the iCloud provider with the CalDav protocol.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<NoWarn>1701;1702;1591;NU1605</NoWarn>
 		<Version>3.0.0</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryType>git</RepositoryType>
@@ -33,8 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ical.Net" Version="4.2.0" Condition="'$(TargetFramework)'=='netstandard2.1' Or '$(TargetFramework)'=='net5.0' Or '$(TargetFramework)'=='net6.0' Or '$(TargetFramework)'=='net7.0'" />
-		<PackageReference Include="Ical.Net" Version="4.1.11" Condition="'$(TargetFramework)'=='net461' Or '$(TargetFramework)'=='net462' Or '$(TargetFramework)'=='net47' Or '$(TargetFramework)'=='net471' Or '$(TargetFramework)'=='net472' Or '$(TargetFramework)'=='net48' Or '$(TargetFramework)'=='netcoreapp3.1'" />
+		<PackageReference Include="Ical.Net" Version="4.2.0" Condition="'$(TargetFramework)'=='netstandard2.1' Or '$(TargetFramework)'=='netcoreapp3.1' Or '$(TargetFramework)'=='net5.0' Or '$(TargetFramework)'=='net6.0' Or '$(TargetFramework)'=='net7.0'" />
+		<PackageReference Include="Ical.Net" Version="4.1.11" Condition="'$(TargetFramework)'=='net461' Or '$(TargetFramework)'=='net462' Or '$(TargetFramework)'=='net47' Or '$(TargetFramework)'=='net471' Or '$(TargetFramework)'=='net472' Or '$(TargetFramework)'=='net48'" />
 	</ItemGroup>
 
 	<ItemGroup>
