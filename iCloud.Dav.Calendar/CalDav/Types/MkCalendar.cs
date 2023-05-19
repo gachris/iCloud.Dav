@@ -15,6 +15,8 @@ namespace iCloud.Dav.Calendar.CalDav.Types
 
         public string CalendarColor { get; set; }
 
+        public string Order { get; set; }
+
         public List<string> SupportedCalendarComponents { get; }
 
         public string CalendarTimeZone { get; set; }
@@ -34,15 +36,16 @@ namespace iCloud.Dav.Calendar.CalDav.Types
             writer.WriteStartElement("set", "DAV:");
             writer.WriteStartElement("prop", "DAV:");
 
-            writer.WriteStartElement("displayname", "DAV:");
-            writer.WriteString(DisplayName);
-            writer.WriteEndElement();
+            writer.WriteElementString("displayname", "DAV:", DisplayName);
 
             if (!string.IsNullOrEmpty(CalendarColor))
             {
-                writer.WriteStartElement("calendar-color", "http://apple.com/ns/ical/");
-                writer.WriteString(CalendarColor);
-                writer.WriteEndElement();
+                writer.WriteElementString("calendar-color", "http://apple.com/ns/ical/", CalendarColor);
+            }
+
+            if (!string.IsNullOrEmpty(Order))
+            {
+                writer.WriteElementString("calendar-order", "http://apple.com/ns/ical/", Order);
             }
 
             if (SupportedCalendarComponents.Any())
@@ -59,9 +62,7 @@ namespace iCloud.Dav.Calendar.CalDav.Types
 
             if (!string.IsNullOrEmpty(CalendarTimeZone))
             {
-                writer.WriteStartElement("calendar-timezone", "urn:ietf:params:xml:ns:caldav");
-                writer.WriteString(CalendarTimeZone);
-                writer.WriteEndElement();
+                writer.WriteElementString("calendar-timezone", "urn:ietf:params:xml:ns:caldav", CalendarTimeZone);
             }
 
             writer.WriteEndElement();

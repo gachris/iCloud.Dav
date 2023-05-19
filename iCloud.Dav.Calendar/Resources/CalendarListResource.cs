@@ -335,7 +335,8 @@ namespace iCloud.Dav.Calendar.Resources
                 {
                     var mkCalendar = new MkCalendar(Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)))
                     {
-                        CalendarColor = Body.Color
+                        CalendarColor = Body.Color,
+                        Order = Body.Order.ToString()
                     };
 
                     if (Body.TimeZone != null)
