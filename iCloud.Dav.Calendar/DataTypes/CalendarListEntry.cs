@@ -1,8 +1,8 @@
 ﻿using Ical.Net.CalendarComponents;
-using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.Serialization.Converters;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Serialization;
+using iCloud.Dav.Core.WebDav.Cal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,6 +35,9 @@ namespace iCloud.Dav.Calendar.DataTypes
         /// <summary>
         /// The color of the calendar, if set.
         /// </summary>
+        /// <remarks>
+        /// The color should be specified in RGB format (#RRGGBB).
+        /// </remarks>
         public virtual string Color { get; set; }
 
         /// <inheritdoc/>

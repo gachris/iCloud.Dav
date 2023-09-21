@@ -1,10 +1,10 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.DataTypes;
+﻿using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Extensions;
+using iCloud.Dav.Core.WebDav.Cal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 namespace iCloud.Dav.Calendar.Serialization.Converters
@@ -20,28 +20,33 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var responses = multiStatus.Responses;
-            var collectionResponse = responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection") ||
-                                                                   x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true || 
-                                                                   !Path.HasExtension(x.Href.TrimEnd('/')));
+            var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection() || x.IsCalendar());
+            var propStat = response?.GetSuccessPropStat();
+            var items = multiStatus.Responses.Except(new HashSet<Response>() { response })
+                                             .Select(ToSyncCollectionItem)
+                                             .ToList();
 
             return new SyncCollectionList()
             {
-                NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                ETag = collectionResponse?.Etag,
-                Items = responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToSyncCollectionItem).ToList()
+                NextSyncToken = propStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
+                ETag = propStat?.Prop.GetETag.Value,
+                Items = items
             };
         }
 
         private static SyncCollectionItem ToSyncCollectionItem(Response response)
         {
+            if (response is null)
+                throw new ArgumentNullException(nameof(response));
+
+            var propStat = response.GetSuccessPropStat();
+
             return new SyncCollectionItem()
             {
-                Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
-                ETag = response.Etag,
-                Deleted = response.Status == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
+                Id = response.Href.ExtractId(),
+                ETag = propStat?.Prop.GetETag.Value,
+                Deleted = response.StatusCode == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
             };
         }
     }
-
 }

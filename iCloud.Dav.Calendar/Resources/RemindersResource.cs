@@ -1,11 +1,12 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.DataTypes;
+﻿using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.Request;
-using iCloud.Dav.Calendar.Utils;
 using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
-using iCloud.Dav.Core.Utils;
+using iCloud.Dav.Core.WebDav.Cal;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace iCloud.Dav.Calendar.Resources
@@ -115,17 +116,52 @@ namespace iCloud.Dav.Calendar.Resources
             /// <inheritdoc/>
             protected override object GetBody()
             {
-                if (_body is null)
-                {
-                    _body = new CalendarQuery() { CompFilter = new CompFilter("VCALENDAR") };
-                    _body.CompFilter.Child = new CompFilter("VTODO");
-                }
-
                 var timeMin = TimeMin.ToFilterTime();
                 var timeMax = TimeMax.ToFilterTime();
 
-                if (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
-                    _body.CompFilter.Child.TimeRange = new TimeRange(timeMin, timeMax);
+                _body = new CalendarQuery()
+                {
+                    Filter = new Filter(),
+                    Prop = new Prop()
+                    {
+                        CalendarColor = new CalendarColor(),
+                        CalendarData = new CalendarData(),
+                        CalendarDescription = new CalendarDescription(),
+                        CalendarHomeSet = new CalendarHomeSet(),
+                        CalendarOrder = new CalendarOrder(),
+                        CalendarTimezone = new CalendarTimezone(),
+                        CurrentUserPrincipal = new CurrentUserPrincipal(),
+                        CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                        DisplayName = new DisplayName(),
+                        GetCTag = new GetCTag(),
+                        GetETag = new GetETag(),
+                        ResourceType = new ResourceType(),
+                        SupportedReportSet = new SupportedReportSet(),
+                        SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                        SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                        SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken()
+                    }
+                };
+
+                _body.Filter.Root = new CompFilter()
+                {
+                    Name = "VCALENDAR",
+                    Children = new List<IFilter>()
+                    {
+                        new CompFilter()
+                        {
+                            Name = "VTODO",
+                            Children = (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax)) ? new List<IFilter>()
+                            {
+                                new TimeRange()
+                                {
+                                    Start = timeMin,
+                                    End = timeMax
+                                }
+                            } : null
+                        }
+                    }
+                };
 
                 return _body;
             }
@@ -237,14 +273,40 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new CalendarMultiget();
+                    _body = new CalendarMultiget()
+                    {
+                        Prop = new Prop()
+                        {
+                            CalendarColor = new CalendarColor(),
+                            CalendarData = new CalendarData(),
+                            CalendarDescription = new CalendarDescription(),
+                            CalendarHomeSet = new CalendarHomeSet(),
+                            CalendarOrder = new CalendarOrder(),
+                            CalendarTimezone = new CalendarTimezone(),
+                            CurrentUserPrincipal = new CurrentUserPrincipal(),
+                            CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                            DisplayName = new DisplayName(),
+                            GetCTag = new GetCTag(),
+                            GetETag = new GetETag(),
+                            ResourceType = new ResourceType(),
+                            SupportedReportSet = new SupportedReportSet(),
+                            SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                            SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                            SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken()
+                        }
+                    };
                 }
 
-                _body.Href.Clear();
-                _body.Href.AddRange(ReminderIds.Select(reminderId =>
-                new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar), string.Concat(CalendarId, "/", reminderId, ".ics")).AbsolutePath));
+                _body.Hrefs = ReminderIds.Select(reminderId => new Href() { Value = GetFullHref(reminderId) }).ToArray();
 
                 return _body;
+
+                string GetFullHref(string reminderId)
+                {
+                    var baseUri = Service.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar);
+                    var relativeUri = string.Concat(CalendarId, "/", reminderId, ".ics");
+                    return new Uri(baseUri, relativeUri).AbsolutePath;
+                }
             }
 
             /// <inheritdoc/>

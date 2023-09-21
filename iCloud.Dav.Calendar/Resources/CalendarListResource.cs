@@ -1,10 +1,12 @@
 ﻿using Ical.Net.Serialization;
-using iCloud.Dav.Calendar.CalDav.Types;
 using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.Request;
 using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
-using iCloud.Dav.Core.Utils;
+using iCloud.Dav.Core.WebDav.Cal;
+using System.Linq;
 
 namespace iCloud.Dav.Calendar.Resources
 {
@@ -72,7 +74,7 @@ namespace iCloud.Dav.Calendar.Resources
         /// <summary>
         /// Represents a request to get next sync token for specific calendar on iCloud.
         /// </summary>
-        public class GetSyncTokenRequest : CalendarBaseServiceRequest<SyncToken>
+        public class GetSyncTokenRequest : CalendarBaseServiceRequest<DataTypes.SyncToken>
         {
             private PropFind _body;
 
@@ -109,7 +111,28 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropFind();
+                    _body = new PropFind()
+                    {
+                        Prop = new Prop()
+                        {
+                            CalendarColor = new CalendarColor(),
+                            CalendarData = new CalendarData(),
+                            CalendarDescription = new CalendarDescription(),
+                            CalendarHomeSet = new CalendarHomeSet(),
+                            CalendarOrder = new CalendarOrder(),
+                            CalendarTimezone = new CalendarTimezone(),
+                            CurrentUserPrincipal = new CurrentUserPrincipal(),
+                            CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                            DisplayName = new DisplayName(),
+                            GetCTag = new GetCTag(),
+                            GetETag = new GetETag(),
+                            ResourceType = new ResourceType(),
+                            SupportedReportSet = new SupportedReportSet(),
+                            SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                            SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                            SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken()
+                        }
+                    };
                 }
 
                 return _body;
@@ -170,11 +193,31 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new SyncCollection();
+                    _body = new SyncCollection()
+                    {
+                        SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken() { Value = SyncToken },
+                        SyncLevel = new SyncLevel() { Value = "1" },
+                        Prop = new Prop()
+                        {
+                            CalendarColor = new CalendarColor(),
+                            CalendarData = new CalendarData(),
+                            CalendarDescription = new CalendarDescription(),
+                            CalendarHomeSet = new CalendarHomeSet(),
+                            CalendarOrder = new CalendarOrder(),
+                            CalendarTimezone = new CalendarTimezone(),
+                            CurrentUserPrincipal = new CurrentUserPrincipal(),
+                            CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                            DisplayName = new DisplayName(),
+                            GetCTag = new GetCTag(),
+                            GetETag = new GetETag(),
+                            ResourceType = new ResourceType(),
+                            SupportedReportSet = new SupportedReportSet(),
+                            SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                            SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                            SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken()
+                        }
+                    };
                 }
-
-                _body.SyncToken = SyncToken;
-                _body.SyncLevel = "1";
 
                 return _body;
             }
@@ -226,11 +269,31 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new SyncCollection();
+                    _body = new SyncCollection()
+                    {
+                        SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken() { Value = SyncToken },
+                        SyncLevel = new SyncLevel() { Value = "1" },
+                        Prop = new Prop()
+                        {
+                            CalendarColor = new CalendarColor(),
+                            CalendarData = new CalendarData(),
+                            CalendarDescription = new CalendarDescription(),
+                            CalendarHomeSet = new CalendarHomeSet(),
+                            CalendarOrder = new CalendarOrder(),
+                            CalendarTimezone = new CalendarTimezone(),
+                            CurrentUserPrincipal = new CurrentUserPrincipal(),
+                            CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                            DisplayName = new DisplayName(),
+                            GetCTag = new GetCTag(),
+                            GetETag = new GetETag(),
+                            ResourceType = new ResourceType(),
+                            SupportedReportSet = new SupportedReportSet(),
+                            SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                            SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                            SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken()
+                        }
+                    };
                 }
-
-                _body.SyncToken = SyncToken;
-                _body.SyncLevel = "1";
 
                 return _body;
             }
@@ -270,7 +333,28 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropFind();
+                    _body = new PropFind()
+                    {
+                        Prop = new Prop()
+                        {
+                            CalendarColor = new CalendarColor(),
+                            CalendarData = new CalendarData(),
+                            CalendarDescription = new CalendarDescription(),
+                            CalendarHomeSet = new CalendarHomeSet(),
+                            CalendarOrder = new CalendarOrder(),
+                            CalendarTimezone = new CalendarTimezone(),
+                            CurrentUserPrincipal = new CurrentUserPrincipal(),
+                            CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                            DisplayName = new DisplayName(),
+                            GetCTag = new GetCTag(),
+                            GetETag = new GetETag(),
+                            ResourceType = new ResourceType(),
+                            SupportedReportSet = new SupportedReportSet(),
+                            SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                            SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                            SyncToken = new iCloud.Dav.Core.WebDav.Cal.SyncToken()
+                        }
+                    };
                 }
                 return _body;
             }
@@ -333,10 +417,14 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body is null)
                 {
-                    var mkCalendar = new MkCalendar(Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)))
+                    var mkCalendar = new MkCalendar()
                     {
-                        CalendarColor = Body.Color,
-                        Order = Body.Order.ToString()
+                        Prop = new Prop()
+                        {
+                            DisplayName = new DisplayName() { Value = Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)) },
+                            CalendarColor = new CalendarColor() { Value = Body.Color.FromRgb() },
+                            CalendarOrder = new CalendarOrder() { Value = Body.Order.ToString() }
+                        }
                     };
 
                     if (Body.TimeZone != null)
@@ -344,10 +432,13 @@ namespace iCloud.Dav.Calendar.Resources
                         var calendar = new Ical.Net.Calendar();
                         var calendarSerializer = new CalendarSerializer();
                         calendar.TimeZones.Add(Body.TimeZone);
-                        mkCalendar.CalendarTimeZone = calendarSerializer.SerializeToString(calendar);
+                        mkCalendar.Prop.CalendarTimezone = new CalendarTimezone() { Value = calendarSerializer.SerializeToString(calendar) };
                     }
 
-                    mkCalendar.SupportedCalendarComponents.AddRange(Body.SupportedCalendarComponents);
+                    mkCalendar.Prop.SupportedCalendarComponentSet = new SupportedCalendarComponentSet()
+                    {
+                        Comp = Body.SupportedCalendarComponents.Select(compName => new Comp() { Name = compName }).ToArray()
+                    };
 
                     _body = mkCalendar;
                 }
@@ -407,7 +498,15 @@ namespace iCloud.Dav.Calendar.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropertyUpdate(Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)), Body.Color, Body.Order.ToString());
+                    _body = new PropertyUpdate()
+                    {
+                        Prop = new Prop()
+                        {
+                            DisplayName = new DisplayName() { Value = Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)) },
+                            CalendarColor = new CalendarColor() { Value = Body.Color.FromRgb() },
+                            CalendarOrder = new CalendarOrder() { Value = Body.Order.ToString() }
+                        }
+                    };
                 }
                 return _body;
             }

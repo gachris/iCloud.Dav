@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Calendar.Utils;
+﻿using iCloud.Dav.Calendar.Extensions;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -13,9 +13,10 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
         /// <inheritdoc/>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            return !CanConvertFrom(context, value.GetType())
-                ? throw GetConvertFromException(value) 
-                : (object)((string)value).ToReminder();
+            if (!CanConvertFrom(context, value.GetType()))
+                throw GetConvertFromException(value);
+
+            return ((string)value).ToReminder();
         }
     }
 }

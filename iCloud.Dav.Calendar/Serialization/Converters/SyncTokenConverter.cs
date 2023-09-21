@@ -1,9 +1,8 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.DataTypes;
+﻿using iCloud.Dav.Calendar.Extensions;
+using iCloud.Dav.Core.WebDav.Cal;
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 namespace iCloud.Dav.Calendar.Serialization.Converters
@@ -19,14 +18,17 @@ namespace iCloud.Dav.Calendar.Serialization.Converters
             if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection"
-                                                                               || x.ResourceType?.Any(resourceType => resourceType.Name == "calendar") == true
-                                                                               || !Path.HasExtension(x.Href.TrimEnd('/')));
+            var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection() || x.IsCalendar());
 
-            return new SyncToken()
+            if (response is null)
+                throw new ArgumentNullException(nameof(response));
+            if (!(response.GetSuccessPropStat() is PropStat propStat))
+                throw new ArgumentNullException(nameof(propStat));
+
+            return new DataTypes.SyncToken()
             {
-                ETag = collectionResponse.Etag,
-                NextSyncToken = collectionResponse.SyncToken
+                ETag = propStat.Prop.GetETag.Value,
+                NextSyncToken = propStat.Prop.SyncToken.Value
             };
         }
     }

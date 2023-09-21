@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.Serialization.Converters;
+﻿using iCloud.Dav.Calendar.Serialization.Converters;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel;
+using iCloud.Dav.Core.WebDav.Cal;
 
 namespace iCloud.Dav.Calendar.DataTypes
 {

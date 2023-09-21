@@ -1,0 +1,33 @@
+﻿using Ical.Net.Serialization;
+using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Serialization;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace iCloud.Dav.Calendar.Extensions
+{
+    internal static class EventExtensions
+    {
+        private static readonly CalendarSerializer Serializer = new CalendarSerializer();
+
+        public static Event ToEvent(this string data)
+        {
+            var byteArray = Encoding.UTF8.GetBytes(data);
+            using (var stream = new MemoryStream(byteArray))
+            {
+                using (var streamReader = new StreamReader(stream, Encoding.UTF8))
+                {
+                    var calendars = CalendarDeserializer.Default.Deserialize(streamReader).OfType<Ical.Net.Calendar>().ToList();
+                    var calendarEvent = calendars.First().Events.OfType<Event>().First();
+                    return calendarEvent;
+                }
+            }
+        }
+
+        public static string SerializeToString(this Event calendarEvent)
+        {
+            return Serializer.SerializeToString(calendarEvent.Calendar);
+        }
+    }
+}
