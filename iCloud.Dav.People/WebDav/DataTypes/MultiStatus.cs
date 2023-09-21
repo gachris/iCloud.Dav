@@ -65,8 +65,6 @@ namespace iCloud.Dav.Core.WebDav.Card
             }
 
             Responses = responsesList.ToArray();
-
-            reader.Close();
         }
 
         /// <summary>

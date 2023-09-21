@@ -13,7 +13,7 @@ namespace iCloud.Dav.People.Extensions
 
         public static ContactGroup ToContactGroup(this string data)
         {
-            if (data.Contains(WebDavExtensions.GroupKind))
+            if (!data.Contains(WebDavExtensions.GroupKind))
                 throw new ArgumentException("Value cannot be converted to a Contact Group.");
 
             var bytes = Encoding.UTF8.GetBytes(data);

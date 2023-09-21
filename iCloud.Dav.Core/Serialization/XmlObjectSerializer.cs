@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
 namespace iCloud.Dav.Core.Serialization
 {
@@ -11,7 +11,7 @@ namespace iCloud.Dav.Core.Serialization
     {
         #region Fields/Consts
 
-        private static XmlSerializer _xmlSerializer;
+        private static DataContractSerializer _xmlSerializer;
         private static readonly XmlObjectSerializer _instance = new XmlObjectSerializer();
 
         #endregion
@@ -37,8 +37,8 @@ namespace iCloud.Dav.Core.Serialization
         /// <param name="target">The target stream into which to serialize the object.</param>
         public void Serialize(object obj, Stream target)
         {
-            _xmlSerializer = new XmlSerializer(obj.GetType());
-            _xmlSerializer.Serialize(target, obj);
+            _xmlSerializer = new DataContractSerializer(obj.GetType());
+            _xmlSerializer.WriteObject(target, obj);
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace iCloud.Dav.Core.Serialization
             {
                 using (var reader = new StreamReader(memoryStream))
                 {
-                    _xmlSerializer = new XmlSerializer(obj.GetType());
-                    _xmlSerializer.Serialize(memoryStream, obj);
+                    _xmlSerializer = new DataContractSerializer(obj.GetType());
+                    _xmlSerializer.WriteObject(memoryStream, obj);
                     memoryStream.Position = 0;
                     return reader.ReadToEnd();
                 }
@@ -81,9 +81,8 @@ namespace iCloud.Dav.Core.Serialization
                 var data = System.Text.Encoding.UTF8.GetBytes(input);
                 stream.Write(data, 0, data.Length);
                 stream.Position = 0;
-                _xmlSerializer = new XmlSerializer(type);
-                var result = _xmlSerializer.Deserialize(stream);
-                return result;
+                _xmlSerializer = new DataContractSerializer(type);
+                return _xmlSerializer.ReadObject(stream);
             }
         }
 
@@ -95,9 +94,8 @@ namespace iCloud.Dav.Core.Serialization
         /// <returns>The deserialized object of type T.</returns>
         public T Deserialize<T>(Stream stream)
         {
-            _xmlSerializer = new XmlSerializer(typeof(T));
-            var result = _xmlSerializer.Deserialize(stream);
-            return (T)result;
+            _xmlSerializer = new DataContractSerializer(typeof(T));
+            return (T)_xmlSerializer.ReadObject(stream);
         }
     }
 }

@@ -55,8 +55,6 @@ namespace iCloud.Dav.Auth.WebDav.DataTypes.Card
             }
 
             Responses = responsesList.ToArray();
-
-            reader.Close();
         }
 
         /// <summary>
