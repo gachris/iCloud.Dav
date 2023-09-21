@@ -5,7 +5,7 @@ using System;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class SubscriptionUrl : IXmlSerializable
+    internal class SubscriptionUrl : IXmlSerializable
     {
         #region Properties
 

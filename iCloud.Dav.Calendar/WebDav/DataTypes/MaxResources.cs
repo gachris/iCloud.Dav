@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class MaxResources : IXmlSerializable
+    internal class MaxResources : IXmlSerializable
     {
         #region Properties
 

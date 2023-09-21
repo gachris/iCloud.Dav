@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents an ETag value retrieved from a WebDAV operation.
     /// </summary>
-    public class GetETag : IXmlSerializable
+    internal class GetETag : IXmlSerializable
     {
         #region Properties
 

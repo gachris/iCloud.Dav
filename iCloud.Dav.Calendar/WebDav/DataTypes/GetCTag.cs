@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents an CTag value retrieved from a WebDAV operation.
     /// </summary>
-    public class GetCTag : IXmlSerializable
+    internal class GetCTag : IXmlSerializable
     {
         #region Properties
 

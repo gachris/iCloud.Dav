@@ -5,7 +5,7 @@ using System;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class DefaultAlarmVEventDatetime : IXmlSerializable
+    internal class DefaultAlarmVEventDatetime : IXmlSerializable
     {
         #region Properties
 

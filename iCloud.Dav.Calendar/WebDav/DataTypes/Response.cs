@@ -11,7 +11,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a response in the <see cref="MultiStatus"/> response.
     /// </summary>
-    public class Response : IXmlSerializable
+    internal class Response : IXmlSerializable
     {
         #region Properties
 
@@ -31,7 +31,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
         public string Status { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="Card.Error"/> object representing the error in the response.
+        /// Gets or sets the <see cref="Cal.Error"/> object representing the error in the response.
         /// </summary>
         public Error Error { get; set; }
 

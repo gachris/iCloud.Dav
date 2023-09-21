@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents the pushkey associated with a prop.
     /// </summary>
-    public class QuotaAvailableBytes : IXmlSerializable
+    internal class QuotaAvailableBytes : IXmlSerializable
     {
         #region Properties
 

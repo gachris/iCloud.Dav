@@ -8,7 +8,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a resource type used in CalDAV queries in the CalDAV namespace.
     /// </summary>
-    public class Privilege : IXmlSerializable
+    internal class Privilege : IXmlSerializable
     {
         #region Properties
 

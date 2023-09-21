@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class BulkRequests : IXmlSerializable
+    internal class BulkRequests : IXmlSerializable
     {
         #region Properties
 
@@ -66,7 +66,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
         #endregion
     }
 
-    public class BulkRequest : IXmlSerializable
+    internal class BulkRequest : IXmlSerializable
     {
         #region Properties
 
@@ -131,7 +131,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
         #endregion
     }
 
-    public class Supported : IXmlSerializable
+    internal class Supported : IXmlSerializable
     {
         #region Properties
 

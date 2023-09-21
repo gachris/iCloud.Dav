@@ -10,7 +10,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a component filter used in CalDAV operations.
     /// </summary>
-    public class CompFilter : IXmlSerializable, IFilter
+    internal class CompFilter : IXmlSerializable, IFilter
     {
         #region Properties
 

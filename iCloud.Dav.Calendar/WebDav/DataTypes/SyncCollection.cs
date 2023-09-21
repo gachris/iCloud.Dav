@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// Represents a sync collection in the DAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "sync-collection", Namespace = "DAV:")]
-    public class SyncCollection : IXmlSerializable
+    internal class SyncCollection : IXmlSerializable
     {
         #region Properties
 

@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a owner property with the "DAV:" namespace.
     /// </summary>
-    public class Owner : IXmlSerializable
+    internal class Owner : IXmlSerializable
     {
         #region Properties
 

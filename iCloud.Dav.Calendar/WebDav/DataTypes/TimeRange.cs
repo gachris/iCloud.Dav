@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a time range in the CalDAV namespace.
     /// </summary>
-    public class TimeRange : IXmlSerializable, IFilter
+    internal class TimeRange : IXmlSerializable, IFilter
     {
         #region Properties
 

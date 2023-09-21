@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents an calendar-color value retrieved from a WebDAV operation.
     /// </summary>
-    public class CalendarColor : IXmlSerializable
+    internal class CalendarColor : IXmlSerializable
     {
         #region Properties
 

@@ -5,7 +5,7 @@ using System;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class CalendarFreeBusySet : IXmlSerializable
+    internal class CalendarFreeBusySet : IXmlSerializable
     {
         #region Properties
 

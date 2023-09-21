@@ -5,7 +5,7 @@ using System;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class RefreshInterval : IXmlSerializable
+    internal class RefreshInterval : IXmlSerializable
     {
         #region Properties
 

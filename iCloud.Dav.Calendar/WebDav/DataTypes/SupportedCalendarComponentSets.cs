@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class SupportedCalendarComponentSets : IXmlSerializable
+    internal class SupportedCalendarComponentSets : IXmlSerializable
     {
         #region Properties
 

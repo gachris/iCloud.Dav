@@ -10,7 +10,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// Represents a calendar multiget in the CalDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "calendar-multiget", Namespace = "urn:ietf:params:xml:ns:caldav")]
-    public class CalendarMultiget : IXmlSerializable
+    internal class CalendarMultiget : IXmlSerializable
     {
         #region Properties
 

@@ -8,7 +8,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a calendar component in the CalDAV namespace.
     /// </summary>
-    public class Comp : IXmlSerializable
+    internal class Comp : IXmlSerializable
     {
         #region Properties
 

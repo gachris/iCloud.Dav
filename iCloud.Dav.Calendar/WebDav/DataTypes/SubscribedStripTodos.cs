@@ -5,7 +5,7 @@ using System;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class SubscribedStripTodos : IXmlSerializable
+    internal class SubscribedStripTodos : IXmlSerializable
     {
         #region Properties
 

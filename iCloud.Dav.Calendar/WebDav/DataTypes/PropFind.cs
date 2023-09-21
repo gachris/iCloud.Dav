@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// Represents a propfind in the CalDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-    public class PropFind : IXmlSerializable
+    internal class PropFind : IXmlSerializable
     {
         #region Properties
 

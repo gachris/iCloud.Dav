@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents an calendar-timezone value retrieved from a WebDAV operation.
     /// </summary>
-    public class CalendarTimezone : IXmlSerializable
+    internal class CalendarTimezone : IXmlSerializable
     {
         #region Properties
 

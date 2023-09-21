@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents an displayname value retrieved from a WebDAV operation.
     /// </summary>
-    public class DisplayName : IXmlSerializable
+    internal class DisplayName : IXmlSerializable
     {
         #region Properties
 

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class PushTransports : IXmlSerializable
+    internal class PushTransports : IXmlSerializable
     {
         #region Properties
 

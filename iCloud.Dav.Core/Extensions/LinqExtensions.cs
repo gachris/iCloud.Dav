@@ -8,7 +8,7 @@ namespace iCloud.Dav.Core.Extensions
     /// <summary>
     /// Provides extension methods for working with LINQ and collections.
     /// </summary>
-    public static class LinqExtensions
+    internal static class LinqExtensions
     {
         /// <summary>
         /// Performs the specified action on each element in the enumerable that is of type <typeparamref name="T"/>.

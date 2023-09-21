@@ -6,7 +6,7 @@ using System.Text;
 
 namespace iCloud.Dav.Calendar.Extensions
 {
-    public static class VTimeZoneExtensions
+    internal static class VTimeZoneExtensions
     {
         public static VTimeZone ToVTimeZone(this string data)
         {

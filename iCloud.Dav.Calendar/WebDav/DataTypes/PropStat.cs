@@ -10,7 +10,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents the property status in the <see cref="Response"/>.
     /// </summary>
-    public class PropStat : IXmlSerializable
+    internal class PropStat : IXmlSerializable
     {
         #region Properties
 

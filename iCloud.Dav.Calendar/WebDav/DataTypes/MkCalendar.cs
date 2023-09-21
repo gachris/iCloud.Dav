@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// Represents a calendar creation request in the CalDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "mkcalendar", Namespace = "urn:ietf:params:xml:ns:caldav")]
-    public class MkCalendar : IXmlSerializable
+    internal class MkCalendar : IXmlSerializable
     {
         #region Properties
 

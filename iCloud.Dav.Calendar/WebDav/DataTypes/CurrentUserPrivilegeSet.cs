@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents the current user's privilege set in the CalDAV namespace.
     /// </summary>
-    public class CurrentUserPrivilegeSet : IXmlSerializable
+    internal class CurrentUserPrivilegeSet : IXmlSerializable
     {
         #region Properties
 

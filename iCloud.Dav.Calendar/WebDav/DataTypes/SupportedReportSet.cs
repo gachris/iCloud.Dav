@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a collection of supported reports in the DAV namespace.
     /// </summary>
-    public class SupportedReportSet : IXmlSerializable
+    internal class SupportedReportSet : IXmlSerializable
     {
         #region Properties
 

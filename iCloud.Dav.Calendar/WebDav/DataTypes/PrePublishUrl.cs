@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a pre-publish-url property with the "DAV:" namespace.
     /// </summary>
-    public class PrePublishUrl : IXmlSerializable
+    internal class PrePublishUrl : IXmlSerializable
     {
         #region Properties
 

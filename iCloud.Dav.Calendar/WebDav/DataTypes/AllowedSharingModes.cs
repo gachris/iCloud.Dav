@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class AllowedSharingModes : IXmlSerializable
+    internal class AllowedSharingModes : IXmlSerializable
     {
         #region Properties
 

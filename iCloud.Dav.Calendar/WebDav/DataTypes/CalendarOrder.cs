@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents an calendar-order value retrieved from a WebDAV operation.
     /// </summary>
-    public class CalendarOrder : IXmlSerializable
+    internal class CalendarOrder : IXmlSerializable
     {
         #region Properties
 

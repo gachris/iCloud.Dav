@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a calendar-home-set property with the "urn:ietf:params:xml:ns:caldav" namespace.
     /// </summary>
-    public class CalendarHomeSet
+    internal class CalendarHomeSet
     {
         #region Properties
 

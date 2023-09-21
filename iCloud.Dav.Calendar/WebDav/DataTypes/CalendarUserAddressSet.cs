@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// <summary>
     /// Represents a set of calendar user addresses in the context of CalDAV operations.
     /// </summary>
-    public class CalendarUserAddressSet : IXmlSerializable
+    internal class CalendarUserAddressSet : IXmlSerializable
     {
         #region Properties
 

@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// Represents a calendar query in the CalDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "calendar-query", Namespace = "urn:ietf:params:xml:ns:caldav")]
-    public class CalendarQuery : IXmlSerializable
+    internal class CalendarQuery : IXmlSerializable
     {
         #region Properties
 

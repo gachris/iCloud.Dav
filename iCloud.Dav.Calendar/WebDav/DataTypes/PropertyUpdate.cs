@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Cal
     /// Represents a property update request in the DAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "propertyupdate", Namespace = "DAV:")]
-    public class PropertyUpdate : IXmlSerializable
+    internal class PropertyUpdate : IXmlSerializable
     {
         #region Properties
 

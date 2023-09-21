@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace iCloud.Dav.Core.WebDav.Cal
 {
-    public class ScheduleCalendarTransp : IXmlSerializable
+    internal class ScheduleCalendarTransp : IXmlSerializable
     {
         #region Properties
 
