@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.People.Utils;
+﻿using iCloud.Dav.People.Extensions;
 
 namespace iCloud.Dav.People.DataTypes.Mapping
 {

@@ -1,11 +1,10 @@
-﻿using iCloud.Dav.People.CardDav.Types;
+﻿using iCloud.Dav.Core.WebDav.Card;
 using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
+using iCloud.Dav.People.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 namespace iCloud.Dav.People.Serialization.Converters
@@ -20,26 +19,37 @@ namespace iCloud.Dav.People.Serialization.Converters
         /// <inheritdoc/>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+            if (!CanConvertFrom(context, value.GetType()))
+                throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(response => response.IsCollection());
+            var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection());
+            var propsStat = response?.GetSuccessPropStat();
+            var items = multiStatus.Responses.Except(new HashSet<Response>() { response }).Select(ToIdentityCard).ToList();
 
             var identityCardList = new IdentityCardList()
             {
                 Kind = ResourcesKind,
-                ETag = collectionResponse?.Etag,
-                MeCard = Path.GetFileNameWithoutExtension(collectionResponse.MeCard?.Value?.TrimEnd('/')),
-                NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                Items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToIdentityCard).ToList(),
+                Items = items,
             };
+
+            if (propsStat != null)
+            {
+                identityCardList.ETag = propsStat.Prop.GetETag.Value;
+                identityCardList.MeCard = propsStat.Prop.MeCard?.Href.ExtractId();
+                identityCardList.NextSyncToken = propsStat.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value;
+            }
+            else
+            {
+                identityCardList.NextSyncToken = multiStatus.SyncToken?.Value;
+            }
 
             if (!identityCardList.Items.Any())
             {
                 identityCardList.Items.Add(new IdentityCard()
                 {
-                    ETag = collectionResponse?.Etag,
-                    NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
+                    ETag = propsStat?.Prop.GetETag.Value,
+                    NextSyncToken = propsStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
                 });
             }
 
@@ -48,11 +58,16 @@ namespace iCloud.Dav.People.Serialization.Converters
 
         private static IdentityCard ToIdentityCard(Response response)
         {
+            if (response is null)
+                throw new ArgumentNullException(nameof(response));
+            if (!(response.GetSuccessPropStat() is PropStat propStat))
+                throw new ArgumentNullException(nameof(propStat));
+
             return new IdentityCard()
             {
-                ResourceName = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
-                ETag = response.Etag,
-                NextSyncToken = response.SyncToken
+                ResourceName = response.Href.ExtractId(),
+                ETag = propStat.Prop.GetETag.Value,
+                NextSyncToken = propStat.Prop.SyncToken?.Value
             };
         }
     }

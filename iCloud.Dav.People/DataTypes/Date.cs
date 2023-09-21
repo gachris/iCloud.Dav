@@ -1,4 +1,5 @@
 ﻿using iCloud.Dav.People.DataTypes.Mapping;
+using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
 using iCloud.Dav.People.Utils;
 using System;

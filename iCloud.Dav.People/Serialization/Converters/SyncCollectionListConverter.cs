@@ -1,11 +1,10 @@
-﻿using iCloud.Dav.People.CardDav.Types;
+﻿using iCloud.Dav.Core.WebDav.Card;
 using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
+using iCloud.Dav.People.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 namespace iCloud.Dav.People.Serialization.Converters
@@ -18,27 +17,34 @@ namespace iCloud.Dav.People.Serialization.Converters
         /// <inheritdoc/>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+            if (!CanConvertFrom(context, value.GetType()))
+                throw GetConvertFromException(value);
 
             var multiStatus = (MultiStatus)value;
-            var syncCollectionListResponse = multiStatus.Responses.FirstOrDefault(response => response.IsCollection() || response.IsAddressbook());
+            var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection() || x.IsAddressbook());
+            var propsStat = response?.GetSuccessPropStat();
+            var items = multiStatus.Responses.Except(new HashSet<Response>() { response }).Select(ToSyncCollectionItem).ToList();
 
             return new SyncCollectionList()
             {
-                NextSyncToken = syncCollectionListResponse?.SyncToken ?? multiStatus.SyncToken,
-                Items = multiStatus.Responses.Except(new HashSet<Response>() { syncCollectionListResponse }).Select(ToSyncCollectionItem).ToList()
+                NextSyncToken = propsStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
+                Items = items
             };
         }
 
         private static SyncCollectionItem ToSyncCollectionItem(Response response)
         {
+            if (response is null)
+                throw new ArgumentNullException(nameof(response));
+
+            var propStat = response.GetSuccessPropStat();
+
             return new SyncCollectionItem()
             {
-                Id = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
-                ETag = response.Etag,
-                Deleted = response.Status == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
+                Id = response.Href.ExtractId(),
+                ETag = propStat?.Prop.GetETag.Value,
+                Deleted = response.StatusCode == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
             };
         }
     }
-
 }

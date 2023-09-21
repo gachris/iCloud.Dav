@@ -1,10 +1,10 @@
 ﻿using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
-using iCloud.Dav.Core.Utils;
-using iCloud.Dav.People.CardDav.Types;
+using iCloud.Dav.Core.WebDav.Card;
 using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Requests;
-using iCloud.Dav.People.Utils;
 using System;
 using System.Linq;
 
@@ -107,23 +107,35 @@ namespace iCloud.Dav.People.Resources
             {
                 if (_body is null)
                 {
-                    var addressBookQuery = new AddressBookQuery
+                    var propFilter = new PropFilter()
                     {
-                        Filter = new Filters
+                        Name = "X-ADDRESSBOOKSERVER-KIND",
+                        IsNotDefined = true,
+                        TextMatches = new TextMatch[]
                         {
-                            Type = "anyof",
-                            Name = "X-ADDRESSBOOKSERVER-KIND",
-                            IsNotDefined = true,
+                            new TextMatch
+                            {
+                                Collation = "i;unicode-casemap",
+                                NegateCondition = "yes",
+                                MatchType = "equals",
+                                SearchText = "group"
+                            }
                         }
                     };
 
-                    addressBookQuery.Filter.TextMatches.Add(new TextMatch
+                    var addressBookQuery = new AddressbookQuery
                     {
-                        Collation = "i;unicode-casemap",
-                        NegateCondition = "yes",
-                        MatchType = "equals",
-                        SearchText = "group"
-                    });
+                        Prop = new Prop(),
+                        Filter = new Filters
+                        {
+                            Test = "anyof",
+                            PropFilters = new PropFilter[] { propFilter }
+                        },
+                        Limit = new Limit()
+                        {
+                            NResults = 50001
+                        }
+                    };
 
                     _body = addressBookQuery;
                 }
@@ -192,7 +204,7 @@ namespace iCloud.Dav.People.Resources
         /// </summary>
         public class MultiGetRequest : PeopleBaseServiceRequest<ContactList>
         {
-            private AddressBookMultiget _body;
+            private AddressbookMultiget _body;
 
             /// <summary>
             /// Constructs a new <see cref="MultiGetRequest"/> instance.
@@ -234,16 +246,19 @@ namespace iCloud.Dav.People.Resources
             {
                 if (_body == null)
                 {
-                    _body = new AddressBookMultiget();
+                    _body = new AddressbookMultiget() { Prop = new Prop() };
                 }
 
-                _body.Href.Clear();
-
-                var hrefs = ContactIds.Select(contactId => new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook), string.Concat(ResourceName, "/", contactId, ".vcf")).AbsolutePath);
-
-                _body.Href.AddRange(hrefs);
+                _body.Hrefs = ContactIds.Select(contactId => new Href() { Value = GetFullHref(contactId) }).ToArray();
 
                 return _body;
+
+                string GetFullHref(string contactId)
+                {
+                    var baseUri = Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook);
+                    var relativeUri = string.Concat(ResourceName, "/", contactId, ".vcf");
+                    return new Uri(baseUri, relativeUri).AbsolutePath;
+                }
             }
 
             /// <inheritdoc/>

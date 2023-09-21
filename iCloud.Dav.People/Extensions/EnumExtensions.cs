@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace iCloud.Dav.People.Utils
+namespace iCloud.Dav.People.Extensions
 {
     internal static class EnumExtensions
     {

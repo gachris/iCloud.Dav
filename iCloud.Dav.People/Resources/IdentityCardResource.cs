@@ -1,7 +1,7 @@
 ﻿using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
-using iCloud.Dav.Core.Utils;
-using iCloud.Dav.People.CardDav.Types;
+using iCloud.Dav.Core.WebDav.Card;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Requests;
 using System;
@@ -58,7 +58,7 @@ namespace iCloud.Dav.People.Resources
         /// <summary>
         /// Represents a request to get next sync token for the contacts or contact groups on iCloud.
         /// </summary>
-        public class GetSyncTokenRequest : PeopleBaseServiceRequest<SyncToken>
+        public class GetSyncTokenRequest : PeopleBaseServiceRequest<DataTypes.SyncToken>
         {
             private PropFind _body;
 
@@ -95,7 +95,14 @@ namespace iCloud.Dav.People.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropFind();
+                    _body = new PropFind()
+                    {
+                        Prop = new Prop()
+                        {
+                            SyncToken = new Core.WebDav.Card.SyncToken(),
+                            GetETag = new GetETag()
+                        }
+                    };
                 }
 
                 return _body;
@@ -155,11 +162,11 @@ namespace iCloud.Dav.People.Resources
             {
                 if (_body == null)
                 {
-                    _body = new SyncCollection();
+                    _body = new SyncCollection() { Prop = new Prop() };
                 }
 
-                _body.SyncToken = SyncToken;
-                _body.SyncLevel = "1";
+                _body.SyncToken = new Core.WebDav.Card.SyncToken() { Value = SyncToken };
+                _body.SyncLevel = new SyncLevel() { Value = "1" };
 
                 return _body;
             }
@@ -205,7 +212,10 @@ namespace iCloud.Dav.People.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropFind();
+                    _body = new PropFind()
+                    {
+                        Prop = new Prop()
+                    };
                 }
                 return _body;
             }
@@ -214,7 +224,7 @@ namespace iCloud.Dav.People.Resources
         /// <summary>
         /// Represents a request to retrieve me-card value.
         /// </summary>
-        public class GetMeCardRequest : PeopleBaseServiceRequest<MeCard>
+        public class GetMeCardRequest : PeopleBaseServiceRequest<DataTypes.MeCard>
         {
             private PropFind _body;
 
@@ -240,7 +250,13 @@ namespace iCloud.Dav.People.Resources
             {
                 if (_body == null)
                 {
-                    _body = new PropFind();
+                    _body = new PropFind()
+                    {
+                        Prop = new Prop()
+                        {
+                            MeCard = new Core.WebDav.Card.MeCard()
+                        }
+                    };
                 }
                 return _body;
             }
@@ -264,7 +280,7 @@ namespace iCloud.Dav.People.Resources
                 ContactId = contactId.ThrowIfNull(nameof(contactId));
                 ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
             }
-            
+
             /// <summary>
             /// Gets the resource name.
             /// </summary>
@@ -291,7 +307,16 @@ namespace iCloud.Dav.People.Resources
                 if (_body == null)
                 {
                     var hrefUri = new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook), string.Concat(ResourceName, "/", ContactId, ".vcf"));
-                    _body = new PropertyUpdate(hrefUri.AbsolutePath);
+                    _body = new PropertyUpdate()
+                    {
+                        Prop = new Prop()
+                        {
+                            MeCard = new Core.WebDav.Card.MeCard()
+                            {
+                                Href = new Href() { Value = hrefUri.AbsolutePath }
+                            }
+                        }
+                    };
                 }
                 return _body;
             }

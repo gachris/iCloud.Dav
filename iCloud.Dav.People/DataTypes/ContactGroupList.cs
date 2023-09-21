@@ -1,5 +1,5 @@
 ﻿using iCloud.Dav.Core.Serialization;
-using iCloud.Dav.People.CardDav.Types;
+using iCloud.Dav.Core.WebDav.Card;
 using iCloud.Dav.People.Serialization.Converters;
 using System.Collections.Generic;
 using System.ComponentModel;
