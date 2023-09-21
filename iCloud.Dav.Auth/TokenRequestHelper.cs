@@ -1,7 +1,6 @@
-﻿using iCloud.Dav.Auth.CardDav.Types;
-using iCloud.Dav.Core;
+﻿using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Serialization;
-using iCloud.Dav.Core.Utils;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -32,41 +31,79 @@ namespace iCloud.Dav.Auth
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {code}");
             httpClient.DefaultRequestHeaders.Add("Depth", "0");
 
-            var peopleServer = await httpClient.GetServer(iCloudContactsBaseUrl, cancellationToken);
-            var calendarServer = await httpClient.GetServer(iCloudCalendarBaseUrl, cancellationToken);
+            var peopleServer = await httpClient.GetCardDavServer(iCloudContactsBaseUrl, cancellationToken);
+            var calendarServer = await httpClient.GetCalDavServer(iCloudCalendarBaseUrl, cancellationToken);
             var peoplePrincipal = await httpClient.GetPeoplePrincipal(peopleServer.Url, cancellationToken);
             var calendarPrincipal = await httpClient.GetCalendarPrincipal(calendarServer.Url, cancellationToken);
 
             return new Token(calendarServer, calendarPrincipal, peopleServer, peoplePrincipal, code, clock.Now);
         }
 
-        private static async Task<DavServer> GetServer(this ConfigurableHttpClient httpClient, string url, CancellationToken cancellationToken)
+        private static async Task<DavServer> GetCalDavServer(this ConfigurableHttpClient httpClient, string url, CancellationToken cancellationToken)
         {
-            var userPrincipalRequest = new PropFind() { CurrentUserPrincipal = true };
-            var multistatus = await httpClient.SendPropFindRequest(url, userPrincipalRequest, cancellationToken);
-            var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(MultiStatus));
-            var id = multistatusResponse.CurrentUserPrincipal.Split('/')[1];
-            return new DavServer(id, string.Concat(url, multistatusResponse.CurrentUserPrincipal));
+            var propFind = new WebDav.DataTypes.Cal.PropFind()
+            {
+                Prop = new WebDav.DataTypes.Cal.Prop()
+                {
+                    CurrentUserPrincipal = new WebDav.DataTypes.Cal.CurrentUserPrincipal()
+                }
+            };
+            var multistatus = await httpClient.SendCalDavPropFindRequest(url, propFind, cancellationToken);
+            var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(WebDav.DataTypes.Cal.MultiStatus));
+            var id = multistatusResponse.PropStat[0].Prop.CurrentUserPrincipal.Href.Value.Split('/')[1];
+            return new DavServer(id, string.Concat(url, multistatusResponse.PropStat[0].Prop.CurrentUserPrincipal.Href.Value));
+        }
+
+        private static async Task<DavServer> GetCardDavServer(this ConfigurableHttpClient httpClient, string url, CancellationToken cancellationToken)
+        {
+            var propFind = new WebDav.DataTypes.Card.PropFind()
+            {
+                Prop = new WebDav.DataTypes.Card.Prop()
+                {
+                    CurrentUserPrincipal = new WebDav.DataTypes.Card.CurrentUserPrincipal()
+                }
+            };
+            var multistatus = await httpClient.SendCardDavPropFindRequest(url, propFind, cancellationToken);
+            var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(WebDav.DataTypes.Card.MultiStatus));
+            var id = multistatusResponse.PropStat[0].Prop.CurrentUserPrincipal.Href.Value.Split('/')[1];
+            return new DavServer(id, string.Concat(url, multistatusResponse.PropStat[0].Prop.CurrentUserPrincipal.Href.Value));
         }
 
         private static async Task<CalendarPrincipal> GetCalendarPrincipal(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
         {
-            var principalRequest = new PropFind() { CurrentUserPrincipal = true, CalendarHomeSet = true, CalendarUserAddressSet = true, DisplayName = true };
-            var multistatus = await httpClient.SendPropFindRequest(requestUri, principalRequest, cancellationToken);
-            var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(MultiStatus));
-            var calendarUserAddressSets = multistatusResponse.CalendarUserAddressSet.Select(url => new CalendarUserAddressSet(url.Value, url.Preferred));
-            return new CalendarPrincipal(multistatusResponse.CurrentUserPrincipal, multistatusResponse.CalendarHomeSet, multistatusResponse.DisplayName, calendarUserAddressSets);
+            var propFind = new WebDav.DataTypes.Cal.PropFind()
+            {
+                Prop = new WebDav.DataTypes.Cal.Prop()
+                {
+                    CurrentUserPrincipal = new WebDav.DataTypes.Cal.CurrentUserPrincipal(),
+                    DisplayName = new WebDav.DataTypes.Cal.DisplayName(),
+                    CalendarHomeSet = new WebDav.DataTypes.Cal.CalendarHomeSet(),
+                    CalendarUserAddressSet = new WebDav.DataTypes.Cal.CalendarUserAddressSet()
+                }
+            };
+            var multistatus = await httpClient.SendCalDavPropFindRequest(requestUri, propFind, cancellationToken);
+            var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(WebDav.DataTypes.Cal.MultiStatus));
+            var calendarUserAddressSets = multistatusResponse.PropStat[0].Prop.CalendarUserAddressSet.Values.Select(url => new CalendarUserAddressSet(url.Value, url.Preferred));
+            return new CalendarPrincipal(multistatusResponse.PropStat[0].Prop.CurrentUserPrincipal.Href.Value, multistatusResponse.PropStat[0].Prop.CalendarHomeSet.Href.Value, multistatusResponse.PropStat[0].Prop.DisplayName?.Value, calendarUserAddressSets);
         }
 
         private static async Task<PeoplePrincipal> GetPeoplePrincipal(this ConfigurableHttpClient httpClient, string requestUri, CancellationToken cancellationToken)
         {
-            var principalRequest = new PropFind() { CurrentUserPrincipal = true, AddressBookHomeSet = true, DisplayName = true };
-            var multistatus = await httpClient.SendPropFindRequest(requestUri, principalRequest, cancellationToken);
-            var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(MultiStatus));
-            return new PeoplePrincipal(multistatusResponse.CurrentUserPrincipal, multistatusResponse.AddressBookHomeSet, multistatusResponse.DisplayName);
+            var propFind = new WebDav.DataTypes.Card.PropFind()
+            {
+                Prop = new WebDav.DataTypes.Card.Prop()
+                {
+                    CurrentUserPrincipal = new WebDav.DataTypes.Card.CurrentUserPrincipal(),
+                    DisplayName = new WebDav.DataTypes.Card.DisplayName(),
+                    AddressbookHomeSet = new WebDav.DataTypes.Card.AddressbookHomeSet()
+                }
+            };
+            var multistatus = await httpClient.SendCardDavPropFindRequest(requestUri, propFind, cancellationToken);
+            var multistatusResponse = multistatus.Responses.FirstOrDefault().ThrowIfNull(nameof(WebDav.DataTypes.Card.MultiStatus));
+            return new PeoplePrincipal(multistatusResponse.PropStat[0].Prop.CurrentUserPrincipal.Href.Value, multistatusResponse.PropStat[0].Prop.AddressbookHomeSet.Href.Value, multistatusResponse.PropStat[0].Prop.DisplayName?.Value);
         }
 
-        private static async Task<MultiStatus> SendPropFindRequest(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)
+        private static async Task<WebDav.DataTypes.Cal.MultiStatus> SendCalDavPropFindRequest(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)
         {
             var content = XmlObjectSerializer.Instance.Serialize(request);
             var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(Constants.Propfind), requestUri)
@@ -75,12 +112,23 @@ namespace iCloud.Dav.Auth
             }, cancellationToken).ConfigureAwait(false);
 
             var input = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new TokenException(new ErrorResponse(response.ReasonPhrase, response.StatusCode, requestUri, input));
-            }
+            return !response.IsSuccessStatusCode
+                ? throw new TokenException(new ErrorResponse(response.ReasonPhrase, response.StatusCode, requestUri, input))
+                : XmlObjectSerializer.Instance.Deserialize<WebDav.DataTypes.Cal.MultiStatus>(input);
+        }
 
-            return XmlObjectSerializer.Instance.Deserialize<MultiStatus>(input);
+        private static async Task<WebDav.DataTypes.Card.MultiStatus> SendCardDavPropFindRequest(this ConfigurableHttpClient httpClient, string requestUri, object request, CancellationToken cancellationToken)
+        {
+            var content = XmlObjectSerializer.Instance.Serialize(request);
+            var response = await httpClient.SendAsync(new HttpRequestMessage(new HttpMethod(Constants.Propfind), requestUri)
+            {
+                Content = new StringContent(content),
+            }, cancellationToken).ConfigureAwait(false);
+
+            var input = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return !response.IsSuccessStatusCode
+                ? throw new TokenException(new ErrorResponse(response.ReasonPhrase, response.StatusCode, requestUri, input))
+                : XmlObjectSerializer.Instance.Deserialize<WebDav.DataTypes.Card.MultiStatus>(input);
         }
     }
 }

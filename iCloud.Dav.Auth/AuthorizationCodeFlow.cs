@@ -1,7 +1,7 @@
 ﻿using iCloud.Dav.Auth.Store;
 using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Logger;
-using iCloud.Dav.Core.Utils;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
