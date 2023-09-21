@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a addressbook-home-set property with the "urn:ietf:params:xml:ns:carddav" namespace.
     /// </summary>
-    public class AddressbookHomeSet : IXmlSerializable
+    internal class AddressbookHomeSet : IXmlSerializable
     {
         #region Properties
 

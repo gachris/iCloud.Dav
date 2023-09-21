@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// Represents an address book query in the CardDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "addressbook-query", Namespace = "urn:ietf:params:xml:ns:carddav")]
-    public class AddressbookQuery : IXmlSerializable
+    internal class AddressbookQuery : IXmlSerializable
     {
         #region Properties
 

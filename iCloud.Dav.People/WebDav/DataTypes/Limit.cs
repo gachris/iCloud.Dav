@@ -8,7 +8,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a limit for CardDAV queries in the CardDAV namespace.
     /// </summary>
-    public class Limit : IXmlSerializable
+    internal class Limit : IXmlSerializable
     {
         #region Properties
 

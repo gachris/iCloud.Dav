@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a resource type used in CardDAV queries in the CardDAV namespace.
     /// </summary>
-    public class ResourceType : IXmlSerializable
+    internal class ResourceType : IXmlSerializable
     {
         #region Properties
 

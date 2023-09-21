@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// Represents an error 
     /// Represents a guardian-restricted in the context of the <see cref="Prop"/>.
     /// </summary>
-    public class GuardianRestricted : IXmlSerializable
+    internal class GuardianRestricted : IXmlSerializable
     {
         #region Properties
 

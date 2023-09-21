@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// Represents a property update in the CardDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "propertyupdate", Namespace = "DAV:")]
-    public class PropertyUpdate : IXmlSerializable
+    internal class PropertyUpdate : IXmlSerializable
     {
         #region Properties
 

@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents an creationdate value retrieved from a WebDAV operation.
     /// </summary>
-    public class CreationDate : IXmlSerializable
+    internal class CreationDate : IXmlSerializable
     {
         #region Properties
 

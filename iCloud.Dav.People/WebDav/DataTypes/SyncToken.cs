@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a synchronization token for WebDAV operations.
     /// </summary>
-    public class SyncToken : IXmlSerializable
+    internal class SyncToken : IXmlSerializable
     {
         #region Properties
 

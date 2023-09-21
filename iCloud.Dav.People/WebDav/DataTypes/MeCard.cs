@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a MeCard property with the "DAV:" namespace.
     /// </summary>
-    public class MeCard : IXmlSerializable
+    internal class MeCard : IXmlSerializable
     {
         #region Properties
 

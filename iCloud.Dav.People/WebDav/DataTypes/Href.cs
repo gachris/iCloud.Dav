@@ -8,7 +8,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a hyperlink reference (href) in the context of CalDAV operations.
     /// </summary>
-    public class Href : IXmlSerializable
+    internal class Href : IXmlSerializable
     {
         #region Properties
 

@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents an address-data value retrieved from a WebDAV operation.
     /// </summary>
-    public class AddressData : IXmlSerializable
+    internal class AddressData : IXmlSerializable
     {
         #region Properties
 

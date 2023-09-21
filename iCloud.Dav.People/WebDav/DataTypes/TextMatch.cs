@@ -8,7 +8,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a text match condition used in CardDAV queries.
     /// </summary>
-    public class TextMatch : IXmlSerializable
+    internal class TextMatch : IXmlSerializable
     {
         #region Properties
 

@@ -11,7 +11,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// a WebDAV server.
     /// </summary>
     [XmlRoot(ElementName = "multistatus", Namespace = "DAV:")]
-    public class MultiStatus : IXmlSerializable
+    internal class MultiStatus : IXmlSerializable
     {
         #region Properties
 

@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a current-user-principal property with the "DAV:" namespace.
     /// </summary>
-    public class CurrentUserPrincipal : IXmlSerializable
+    internal class CurrentUserPrincipal : IXmlSerializable
     {
         #region Properties
 

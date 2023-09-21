@@ -8,7 +8,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a filter used in CardDAV queries in the CardDAV namespace.
     /// </summary>
-    public class Filters : IXmlSerializable
+    internal class Filters : IXmlSerializable
     {
         #region Properties
 

@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents an getlastmodified value retrieved from a WebDAV operation.
     /// </summary>
-    public class GetLastModified : IXmlSerializable
+    internal class GetLastModified : IXmlSerializable
     {
         #region Properties
 

@@ -10,7 +10,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// Represents an address book multiget request in the CardDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "addressbook-multiget", Namespace = "urn:ietf:params:xml:ns:carddav")]
-    public class AddressbookMultiget : IXmlSerializable
+    internal class AddressbookMultiget : IXmlSerializable
     {
         #region Properties
 

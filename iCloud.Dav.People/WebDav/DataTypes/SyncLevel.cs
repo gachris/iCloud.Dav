@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a synchronization level for WebDAV operations.
     /// </summary>
-    public class SyncLevel : IXmlSerializable
+    internal class SyncLevel : IXmlSerializable
     {
         #region Properties
 

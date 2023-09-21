@@ -11,7 +11,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents a response in the <see cref="MultiStatus"/> response.
     /// </summary>
-    public class Response : IXmlSerializable
+    internal class Response : IXmlSerializable
     {
         #region Properties
 

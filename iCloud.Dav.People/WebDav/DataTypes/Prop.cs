@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents the properties associated with a response.
     /// </summary>
-    public class Prop : IXmlSerializable
+    internal class Prop : IXmlSerializable
     {
         #region Properties
 

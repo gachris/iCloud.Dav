@@ -7,7 +7,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents an getcontentlength value retrieved from a WebDAV operation.
     /// </summary>
-    public class GetContentLength : IXmlSerializable
+    internal class GetContentLength : IXmlSerializable
     {
         #region Properties
 

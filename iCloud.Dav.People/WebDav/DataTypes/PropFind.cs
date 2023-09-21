@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// Represents a propfind request in the CardDAV namespace.
     /// </summary>
     [XmlRoot(ElementName = "propfind", Namespace = "DAV:")]
-    public class PropFind : IXmlSerializable
+    internal class PropFind : IXmlSerializable
     {
         #region Properties
 

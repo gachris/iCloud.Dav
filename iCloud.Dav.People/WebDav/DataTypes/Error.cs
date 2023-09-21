@@ -9,7 +9,7 @@ namespace iCloud.Dav.Core.WebDav.Card
     /// <summary>
     /// Represents an error in the context of the <see cref="Response"/>.
     /// </summary>
-    public class Error : IXmlSerializable
+    internal class Error : IXmlSerializable
     {
         #region Properties
 
