@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace iCloud.Dav.Core.Utils
+namespace iCloud.Dav.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for working with LINQ and collections.

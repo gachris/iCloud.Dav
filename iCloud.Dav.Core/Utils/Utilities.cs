@@ -1,70 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace iCloud.Dav.Core.Utils
 {
-    /// <summary>
-    /// A collection of utility methods for the ICloud.Api library.
-    /// </summary>
-    public static class Utilities
+    internal static class Utilities
     {
-        /// <summary>Returns the version of the core library.</summary>
+        /// <summary>
+        /// Returns the version of the core library.
+        /// </summary>
         public static string GetLibraryVersion() => Regex.Match(input: typeof(Utilities).Assembly.FullName ?? string.Empty, "Version=([\\d\\.]+)").Groups[1].ToString();
 
-        /// <summary>
-        /// A ICloud.Api utility method for throwing an <see cref="ArgumentNullException" /> if the object is
-        /// <c>null</c>.
-        /// </summary>
-        public static T ThrowIfNull<T>(this T? obj, string paramName) where T : struct
-        {
-            if (obj == null)
-                throw new ArgumentNullException(paramName);
-            return (T)obj;
-        }
-
-        /// <summary>
-        /// A ICloud.Api utility method for throwing an <see cref="ArgumentNullException" /> if the object is
-        /// <c>null</c>.
-        /// </summary>
-        public static T ThrowIfNull<T>(this T obj, string paramName) where T : class
-        {
-            if (obj == null)
-                throw new ArgumentNullException(paramName);
-            return obj;
-        }
-
-        /// <summary>
-        /// A ICloud.Api utility method for throwing an <see cref="ArgumentNullException" /> if the string is
-        /// <c>null</c> or empty.
-        /// </summary>
-        /// <returns>
-        /// The original string.
-        /// </returns>
-        public static string ThrowIfNullOrEmpty(this string str, string paramName)
-        {
-            if (string.IsNullOrEmpty(str))
-                throw new ArgumentException("Parameter was empty", paramName);
-            return str;
-        }
-
-        /// <summary>
-        /// Returns <c>true</c> in case the enumerable is <c>null</c> or empty.
-        /// </summary>
-        internal static bool IsNullOrEmpty<T>(this IEnumerable<T> coll)
-        {
-            if (coll != null) return !coll.Any();
-            return true;
-        }
-
-        /// <summary>
-        /// A ICloud.Api utility method for returning the first matching custom attribute (or <c>null</c>) of the specified member.
-        /// </summary>
-        public static T GetCustomAttribute<T>(this MemberInfo info) where T : Attribute
+        public static T GetCustomAttribute<T>(MemberInfo info) where T : Attribute
         {
             var customAttributes = info.GetCustomAttributes(typeof(T), false);
             if (customAttributes.Length != 0) return (T)customAttributes[0];
@@ -80,7 +29,8 @@ namespace iCloud.Dav.Core.Utils
             if (o == null) return null;
             if (o.GetType().IsEnum && o.ToString() is string text)
             {
-                var customAttribute = o.GetType().GetField(text)?.GetCustomAttribute<DescriptionAttribute>();
+                var field = o.GetType().GetField(text);
+                var customAttribute = field is null ? null : GetCustomAttribute<DescriptionAttribute>(field);
                 if (customAttribute == null) return o.ToString();
                 return customAttribute.Description;
             }
@@ -91,7 +41,7 @@ namespace iCloud.Dav.Core.Utils
         /// <summary>
         /// Converts the input date into a RFC3339 string (http://www.ietf.org/rfc/rfc3339.txt).
         /// </summary>
-        internal static string ConvertToRFC3339(DateTime date)
+        public static string ConvertToRFC3339(DateTime date)
         {
             if (date.Kind == DateTimeKind.Unspecified)
                 date = date.ToUniversalTime();

@@ -1,7 +1,7 @@
-﻿using iCloud.Dav.Core.Logger;
+﻿using iCloud.Dav.Core.Extensions;
+using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.Core.Serialization;
-using iCloud.Dav.Core.Utils;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -81,7 +81,7 @@ namespace iCloud.Dav.Core
         protected virtual BackOffHandler CreateBackOffHandler() => new BackOffHandler(new ExponentialBackOff());
 
         /// <inheritdoc/>
-        public void SetRequestSerailizedContent(HttpRequestMessage request, object body) => request.SetRequestSerailizedContent(this, body);
+        public void SetRequestSerailizedContent(HttpRequestMessage request, object body) => request.SetRequestSerializedContent(this, body);
 
         /// <inheritdoc/>
         public virtual string SerializeObject(object obj) => !(obj is string) ? Serializer.Serialize(obj) : (string)obj;

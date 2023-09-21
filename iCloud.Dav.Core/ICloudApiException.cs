@@ -1,4 +1,4 @@
-﻿using iCloud.Dav.Core.Utils;
+﻿using iCloud.Dav.Core.Extensions;
 using System;
 
 namespace iCloud.Dav.Core

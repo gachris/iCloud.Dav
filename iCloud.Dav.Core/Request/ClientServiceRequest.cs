@@ -1,4 +1,5 @@
-﻿using iCloud.Dav.Core.Logger;
+﻿using iCloud.Dav.Core.Extensions;
+using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -158,7 +159,7 @@ namespace iCloud.Dav.Core.Request
             var request = CreateBuilder().CreateRequest();
             var body = GetBody();
             request.SetHttpRequestDepth(Depth);
-            request.SetRequestSerailizedContent(_service, body, ContentType);
+            request.SetRequestSerializedContent(_service, body, ContentType);
             AddETag(request);
             return request;
         }
