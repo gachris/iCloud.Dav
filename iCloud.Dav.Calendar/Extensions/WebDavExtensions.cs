@@ -67,23 +67,25 @@ namespace iCloud.Dav.Calendar.Extensions
 
         public static CalendarListEntry ToCalendar(this Response response)
         {
-            var propStat = response.GetSuccessPropStat();
-
-            int.TryParse(propStat.Prop.CalendarOrder?.Value, out var order);
-
             var calendarListEntry = new CalendarListEntry()
             {
                 Id = response.Href.ExtractId(),
-                ETag = propStat.Prop.GetETag.Value,
-                CTag = propStat.Prop.GetCTag.Value,
-                Color = propStat.Prop.CalendarColor?.Value.ToRgb(),
-                Summary = propStat.Prop.DisplayName?.Value,
-                Description = propStat.Prop.CalendarDescription?.Value,
-                Order = order,
-                TimeZone = propStat.Prop.CalendarTimezone?.Value.ToVTimeZone(),
-                Deleted = response.StatusCode == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
+                Deleted = response.StatusCode == HttpStatusCode.NotFound ? true : (bool?)null
             };
 
+            if (calendarListEntry.Deleted == true)
+                return calendarListEntry;
+
+            var propStat = response.GetSuccessPropStat();
+            int.TryParse(propStat.Prop.CalendarOrder?.Value, out var order);
+
+            calendarListEntry.ETag = propStat.Prop.GetETag.Value;
+            calendarListEntry.CTag = propStat.Prop.GetCTag.Value;
+            calendarListEntry.Color = propStat.Prop.CalendarColor?.Value.ToRgb();
+            calendarListEntry.Summary = propStat.Prop.DisplayName?.Value;
+            calendarListEntry.Description = propStat.Prop.CalendarDescription?.Value;
+            calendarListEntry.Order = order;
+            calendarListEntry.TimeZone = propStat.Prop.CalendarTimezone?.Value.ToVTimeZone();
             calendarListEntry.Privileges.AddRange(propStat.Prop.CurrentUserPrivilegeSet?.Privilege?.Select(privilege => privilege.Name) ?? Array.Empty<string>());
             calendarListEntry.SupportedReports.AddRange(propStat.Prop.SupportedReportSet?.SupportedReport?.Select(supportedReport => supportedReport.Report.Name) ?? Array.Empty<string>());
             calendarListEntry.SupportedCalendarComponents.AddRange(propStat.Prop.SupportedCalendarComponentSet?.Comp?.Select(comp => comp.Name) ?? Array.Empty<string>());
