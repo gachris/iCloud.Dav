@@ -39,7 +39,7 @@ var networkCredential = new NetworkCredential("icloud-email", "app-specific-pass
 
 var dataStore = new FileDataStore("folder-to-store-data");
 
-var userCredential = await AuthorizationBroker.AuthorizeAsync("folder-to-store-user-credentials", networkCredential, dataStore, CancellationToken.None);
+var userCredential = await AuthorizationBroker.AuthorizeAsync("file-to-store-user-credentials", networkCredential, dataStore, CancellationToken.None);
 
 var initializer = new BaseClientService.Initializer()
 {

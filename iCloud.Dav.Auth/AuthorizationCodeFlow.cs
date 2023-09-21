@@ -130,7 +130,9 @@ namespace iCloud.Dav.Auth
             throw tokenException;
         }
 
-        /// <summary>Despose.</summary>
+        /// <summary>
+        /// Dispose.
+        /// </summary>
         public void Dispose()
         {
             GC.SuppressFinalize(this);

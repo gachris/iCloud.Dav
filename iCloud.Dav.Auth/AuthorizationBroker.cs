@@ -6,32 +6,33 @@ using System.Threading.Tasks;
 namespace iCloud.Dav.Auth
 {
     /// <summary>
-    /// Authorization Broker.
+    /// Represents an Authorization Broker for handling Basic Authentication.
     /// </summary>
     public class AuthorizationBroker
     {
-        /// <summary>The folder which is used by the <see cref="FileDataStore" />.</summary>
+        /// <summary>
+        /// The folder name used for storing credentials.
+        /// </summary>
         /// <remarks>
-        /// The reason that this is not 'private const' is that a user can change it and store the credentials in a
-        /// different location.
+        /// This is not marked as 'private const' to allow users to customize the storage location.
         /// </remarks>
         public const string Folder = "iCloudAuthentication";
 
         /// <summary>
-        /// Authorize async.
+        /// Authorizes a user asynchronously using Basic Authentication.
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="networdCredentials"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="dataStore"></param>
-        /// <returns>User credential</returns>
-        public static async Task<UserCredential> AuthorizeAsync(string user, NetworkCredential networdCredentials, IDataStore dataStore = null, CancellationToken cancellationToken = default)
+        /// <param name="user">The user's identifier.</param>
+        /// <param name="networkCredentials">The user's network credentials (username and password).</param>
+        /// <param name="dataStore">Optional: A custom data store (defaults to a <see cref="FileDataStore"/>).</param>
+        /// <param name="cancellationToken">Optional: A cancellation token to cancel the operation.</param>
+        /// <returns>The user's credentials upon successful authorization.</returns>
+        public static async Task<UserCredential> AuthorizeAsync(string user, NetworkCredential networkCredentials, IDataStore dataStore = null, CancellationToken cancellationToken = default)
         {
             var initializer = new AuthorizationCodeFlow.Initializer(dataStore ?? new FileDataStore(Folder, false));
             var authorizationCodeFlow = new AuthorizationCodeFlow(initializer);
             var codeReceiver = new CodeReceiver();
             var authorizationCodeInstalledApp = new AuthorizationCodeInstalledApp(authorizationCodeFlow, codeReceiver);
-            return await authorizationCodeInstalledApp.AuthorizeAsync(user, networdCredentials, cancellationToken).ConfigureAwait(false);
+            return await authorizationCodeInstalledApp.AuthorizeAsync(user, networkCredentials, cancellationToken).ConfigureAwait(false);
         }
     }
 }
