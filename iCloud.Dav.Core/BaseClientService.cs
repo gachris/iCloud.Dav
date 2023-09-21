@@ -81,7 +81,7 @@ namespace iCloud.Dav.Core
         protected virtual BackOffHandler CreateBackOffHandler() => new BackOffHandler(new ExponentialBackOff());
 
         /// <inheritdoc/>
-        public void SetRequestSerailizedContent(HttpRequestMessage request, object body) => request.SetRequestSerializedContent(this, body);
+        public void SetRequestSerializedContent(HttpRequestMessage request, object body) => request.SetRequestSerializedContent(this, body);
 
         /// <inheritdoc/>
         public virtual string SerializeObject(object obj) => !(obj is string) ? Serializer.Serialize(obj) : (string)obj;

@@ -41,7 +41,7 @@ namespace iCloud.Dav.Core
         /// Sets the content of the request by the given body and the this service's configuration.
         /// The body object is serialized by the Serializer
         /// </summary>
-        void SetRequestSerailizedContent(HttpRequestMessage request, object body);
+        void SetRequestSerializedContent(HttpRequestMessage request, object body);
 
         /// <summary>
         /// Gets the Serializer used by this service.
