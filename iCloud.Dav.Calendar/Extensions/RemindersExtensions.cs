@@ -9,8 +9,6 @@ namespace iCloud.Dav.Calendar.Extensions
 {
     internal static class RemindersExtensions
     {
-        private static readonly CalendarSerializer CalendarSerializer = new CalendarSerializer();
-
         public static Reminder ToReminder(this string data)
         {
             var byteArray = Encoding.UTF8.GetBytes(data);
@@ -27,7 +25,8 @@ namespace iCloud.Dav.Calendar.Extensions
 
         public static string SerializeToString(this Reminder reminder)
         {
-            return CalendarSerializer.SerializeToString(reminder.Calendar);
+            var serializer = new CalendarSerializer();
+            return serializer.SerializeToString(reminder.Calendar);
         }
     }
 }

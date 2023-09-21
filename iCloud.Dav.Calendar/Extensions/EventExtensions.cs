@@ -9,8 +9,6 @@ namespace iCloud.Dav.Calendar.Extensions
 {
     internal static class EventExtensions
     {
-        private static readonly CalendarSerializer Serializer = new CalendarSerializer();
-
         public static Event ToEvent(this string data)
         {
             var byteArray = Encoding.UTF8.GetBytes(data);
@@ -27,7 +25,8 @@ namespace iCloud.Dav.Calendar.Extensions
 
         public static string SerializeToString(this Event calendarEvent)
         {
-            return Serializer.SerializeToString(calendarEvent.Calendar);
+            var serializer = new CalendarSerializer();
+            return serializer.SerializeToString(calendarEvent.Calendar);
         }
     }
 }

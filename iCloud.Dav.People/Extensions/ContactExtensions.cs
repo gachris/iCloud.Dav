@@ -9,8 +9,6 @@ namespace iCloud.Dav.People.Extensions
 {
     internal static class ContactExtensions
     {
-        private static readonly ContactSerializer Serializer = new ContactSerializer();
-
         public static Contact ToContact(this string data)
         {
             if (data.Contains(WebDavExtensions.GroupKind))
@@ -28,7 +26,8 @@ namespace iCloud.Dav.People.Extensions
 
         public static string SerializeToString(this Contact data)
         {
-            return Serializer.SerializeToString(data);
+            var serializer = new ContactSerializer();
+            return serializer.SerializeToString(data);
         }
     }
 }
