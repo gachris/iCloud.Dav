@@ -79,8 +79,8 @@ internal static class WebDavExtensions
         var propStat = response.GetSuccessPropStat();
         int.TryParse(propStat.Prop.CalendarOrder?.Value, out var order);
 
-        calendarListEntry.ETag = propStat.Prop.GetETag.Value;
-        calendarListEntry.CTag = propStat.Prop.GetCTag.Value;
+        calendarListEntry.ETag = propStat.Prop.GetETag?.Value;
+        calendarListEntry.CTag = propStat.Prop.GetCTag?.Value;
         calendarListEntry.Color = propStat.Prop.CalendarColor?.Value.ToRgb();
         calendarListEntry.Summary = propStat.Prop.DisplayName?.Value;
         calendarListEntry.Description = propStat.Prop.CalendarDescription?.Value;

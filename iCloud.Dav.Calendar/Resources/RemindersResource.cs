@@ -76,14 +76,17 @@ public class RemindersResource
     /// </summary>
     public class ListRequest : CalendarBaseServiceRequest<Reminders>
     {
-        private CalendarQuery _body;
+        private object _body;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListRequest"/> class.
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        public ListRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+        public ListRequest(IClientService service, string calendarId) : base(service)
+        {
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+        }
 
         /// <summary>
         /// Gets the calendar ID.
@@ -119,7 +122,7 @@ public class RemindersResource
             var timeMin = TimeMin.ToFilterTime();
             var timeMax = TimeMax.ToFilterTime();
 
-            _body = new CalendarQuery()
+            _body ??= new CalendarQuery()
             {
                 Filter = new Filter(),
                 Prop = new Prop()
@@ -143,7 +146,7 @@ public class RemindersResource
                 }
             };
 
-            _body.Filter.Root = new CompFilter()
+            ((CalendarQuery)_body).Filter.Root = new CompFilter()
             {
                 Name = "VCALENDAR",
                 Children = new List<IFilter>()
@@ -271,33 +274,29 @@ public class RemindersResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            _body ??= new CalendarMultiget()
             {
-                _body = new CalendarMultiget()
+                Prop = new Prop()
                 {
-                    Prop = new Prop()
-                    {
-                        CalendarColor = new CalendarColor(),
-                        CalendarData = new CalendarData(),
-                        CalendarDescription = new CalendarDescription(),
-                        CalendarHomeSet = new CalendarHomeSet(),
-                        CalendarOrder = new CalendarOrder(),
-                        CalendarTimezone = new CalendarTimezone(),
-                        CurrentUserPrincipal = new CurrentUserPrincipal(),
-                        CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
-                        DisplayName = new DisplayName(),
-                        GetCTag = new GetCTag(),
-                        GetETag = new GetETag(),
-                        ResourceType = new ResourceType(),
-                        SupportedReportSet = new SupportedReportSet(),
-                        SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
-                        SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
-                        SyncToken = new WebDav.DataTypes.SyncToken()
-                    }
-                };
-            }
-
-            _body.Hrefs = ReminderIds.Select(reminderId => new Href() { Value = GetFullHref(reminderId) }).ToArray();
+                    CalendarColor = new CalendarColor(),
+                    CalendarData = new CalendarData(),
+                    CalendarDescription = new CalendarDescription(),
+                    CalendarHomeSet = new CalendarHomeSet(),
+                    CalendarOrder = new CalendarOrder(),
+                    CalendarTimezone = new CalendarTimezone(),
+                    CurrentUserPrincipal = new CurrentUserPrincipal(),
+                    CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                    DisplayName = new DisplayName(),
+                    GetCTag = new GetCTag(),
+                    GetETag = new GetETag(),
+                    ResourceType = new ResourceType(),
+                    SupportedReportSet = new SupportedReportSet(),
+                    SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                    SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                    SyncToken = new WebDav.DataTypes.SyncToken()
+                },
+                Hrefs = ReminderIds.Select(reminderId => new Href() { Value = GetFullHref(reminderId) }).ToArray()
+            };
 
             return _body;
 
@@ -323,6 +322,8 @@ public class RemindersResource
     /// </summary>
     public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
     {
+        private object _body;
+
         /// <summary>
         /// Constructs a new <see cref="InsertRequest"/> instance.
         /// </summary>
@@ -366,7 +367,7 @@ public class RemindersResource
         public override string ContentType => Constants.TEXT_CALENDAR;
 
         /// <inheritdoc/>
-        protected override object GetBody() => Body.SerializeToString();
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <inheritdoc/>
         protected override void InitParameters()
@@ -383,6 +384,8 @@ public class RemindersResource
     /// </summary>
     public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
     {
+        private object _body;
+
         /// <summary>
         /// Constructs a new <see cref="UpdateRequest"/> instance.
         /// </summary>
@@ -426,7 +429,7 @@ public class RemindersResource
         public override string ContentType => Constants.TEXT_CALENDAR;
 
         /// <inheritdoc/>
-        protected override object GetBody() => Body.SerializeToString();
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <inheritdoc/>
         protected override void InitParameters()

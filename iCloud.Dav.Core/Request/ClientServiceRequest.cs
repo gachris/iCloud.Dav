@@ -176,9 +176,6 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         return requestBuilder;
     }
 
-    /// <summary>Generates the right URL for this request.</summary>
-    protected string GenerateRequestUri() => CreateBuilder().BuildUri().ToString();
-
     ///<summary>Returns the body of the request.</summary>
     protected virtual object GetBody() => default;
 

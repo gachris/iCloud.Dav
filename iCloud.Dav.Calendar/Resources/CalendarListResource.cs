@@ -24,11 +24,23 @@ public class CalendarListResource
     public CalendarListResource(IClientService service) => _service = service;
 
     /// <summary>
+    /// Creates a new <see cref="GetSyncTokenRequest"/> instance for retrieving the next sync token for calendars resource on iCloud.
+    /// </summary>
+    /// <returns>A new <see cref="GetSyncTokenRequest"/> instance for retrieving the next sync token for calendars resource on iCloud.</returns>
+    public virtual GetSyncTokenRequest GetSyncToken() => new GetSyncTokenRequest(_service);
+
+    /// <summary>
     /// Creates a new <see cref="GetSyncTokenRequest"/> instance for retrieving the next sync token for specific calendar on iCloud.
     /// </summary>
     /// <param name="calendarId">The ID of the calendar. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="GetSyncTokenRequest"/> instance for retrieving the next sync token for specific calendar on iCloud.</returns>
     public virtual GetSyncTokenRequest GetSyncToken(string calendarId) => new GetSyncTokenRequest(_service, calendarId);
+
+    /// <summary>
+    /// Creates a new <see cref="SyncCollectionRequest"/> instance for retrieving changes from the last sync token associated with the calendars resource.
+    /// </summary>
+    /// <returns>A new <see cref="SyncCollectionRequest"/> instance for retrieving changes from the last sync token associated with the calendars resource.</returns>
+    public virtual SyncCollectionRequest SyncCollection() => new SyncCollectionRequest(_service);
 
     /// <summary>
     /// Creates a new <see cref="SyncCollectionRequest"/> instance for retrieving changes from the last sync token associated with the specified calendar.
@@ -76,16 +88,16 @@ public class CalendarListResource
     /// </summary>
     public class GetSyncTokenRequest : CalendarBaseServiceRequest<DataTypes.SyncToken>
     {
-        private PropFind _body;
+        private object _body;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetSyncTokenRequest"/> class.
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
-        public GetSyncTokenRequest(IClientService service, string calendarId) : base(service)
+        public GetSyncTokenRequest(IClientService service, string calendarId = null) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            CalendarId = calendarId;
         }
 
         /// <summary>
@@ -101,7 +113,7 @@ public class CalendarListResource
         public override string HttpMethod => Constants.Propfind;
 
         /// <inheritdoc/>
-        public override string RestPath => "{calendarId}";
+        public override string RestPath => string.IsNullOrEmpty(CalendarId) ? null : "{calendarId}";
 
         /// <inheritdoc/>
         public override string Depth => "0";
@@ -109,31 +121,14 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            _body ??= new PropFind()
             {
-                _body = new PropFind()
+                Prop = new Prop()
                 {
-                    Prop = new Prop()
-                    {
-                        CalendarColor = new CalendarColor(),
-                        CalendarData = new CalendarData(),
-                        CalendarDescription = new CalendarDescription(),
-                        CalendarHomeSet = new CalendarHomeSet(),
-                        CalendarOrder = new CalendarOrder(),
-                        CalendarTimezone = new CalendarTimezone(),
-                        CurrentUserPrincipal = new CurrentUserPrincipal(),
-                        CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
-                        DisplayName = new DisplayName(),
-                        GetCTag = new GetCTag(),
-                        GetETag = new GetETag(),
-                        ResourceType = new ResourceType(),
-                        SupportedReportSet = new SupportedReportSet(),
-                        SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
-                        SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
-                        SyncToken = new WebDav.DataTypes.SyncToken()
-                    }
-                };
-            }
+                    GetETag = new GetETag(),
+                    SyncToken = new WebDav.DataTypes.SyncToken()
+                }
+            };
 
             return _body;
         }
@@ -143,7 +138,7 @@ public class CalendarListResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", false));
         }
     }
 
@@ -152,16 +147,16 @@ public class CalendarListResource
     /// </summary>
     public class SyncCollectionRequest : CalendarBaseServiceRequest<SyncCollectionList>
     {
-        private SyncCollection _body;
+        private object _body;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListRequest"/> class.
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
-        public SyncCollectionRequest(IClientService service, string calendarId) : base(service)
+        public SyncCollectionRequest(IClientService service, string calendarId = null) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            CalendarId = calendarId;
         }
 
         /// <summary>
@@ -183,7 +178,7 @@ public class CalendarListResource
         public override string HttpMethod => Constants.Report;
 
         /// <inheritdoc/>
-        public override string RestPath => "{calendarId}";
+        public override string RestPath => string.IsNullOrEmpty(CalendarId) ? null : "{calendarId}";
 
         /// <inheritdoc/>
         public override string Depth => "0";
@@ -191,33 +186,30 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            _body ??= new SyncCollection()
             {
-                _body = new SyncCollection()
+                SyncToken = new WebDav.DataTypes.SyncToken() { Value = SyncToken },
+                SyncLevel = new SyncLevel() { Value = "1" },
+                Prop = new Prop()
                 {
-                    SyncToken = new WebDav.DataTypes.SyncToken() { Value = SyncToken },
-                    SyncLevel = new SyncLevel() { Value = "1" },
-                    Prop = new Prop()
-                    {
-                        CalendarColor = new CalendarColor(),
-                        CalendarData = new CalendarData(),
-                        CalendarDescription = new CalendarDescription(),
-                        CalendarHomeSet = new CalendarHomeSet(),
-                        CalendarOrder = new CalendarOrder(),
-                        CalendarTimezone = new CalendarTimezone(),
-                        CurrentUserPrincipal = new CurrentUserPrincipal(),
-                        CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
-                        DisplayName = new DisplayName(),
-                        GetCTag = new GetCTag(),
-                        GetETag = new GetETag(),
-                        ResourceType = new ResourceType(),
-                        SupportedReportSet = new SupportedReportSet(),
-                        SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
-                        SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
-                        SyncToken = new WebDav.DataTypes.SyncToken()
-                    }
-                };
-            }
+                    CalendarColor = new CalendarColor(),
+                    CalendarData = new CalendarData(),
+                    CalendarDescription = new CalendarDescription(),
+                    CalendarHomeSet = new CalendarHomeSet(),
+                    CalendarOrder = new CalendarOrder(),
+                    CalendarTimezone = new CalendarTimezone(),
+                    CurrentUserPrincipal = new CurrentUserPrincipal(),
+                    CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                    DisplayName = new DisplayName(),
+                    GetCTag = new GetCTag(),
+                    GetETag = new GetETag(),
+                    ResourceType = new ResourceType(),
+                    SupportedReportSet = new SupportedReportSet(),
+                    SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                    SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                    SyncToken = new WebDav.DataTypes.SyncToken()
+                }
+            };
 
             return _body;
         }
@@ -227,7 +219,7 @@ public class CalendarListResource
         {
             base.InitParameters();
 
-            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", false));
         }
     }
 
@@ -236,7 +228,7 @@ public class CalendarListResource
     /// </summary>
     public class ListRequest : CalendarBaseServiceRequest<CalendarList>
     {
-        private SyncCollection _body;
+        private object _body;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListRequest"/> class.
@@ -256,7 +248,7 @@ public class CalendarListResource
         public override string MethodName => "list";
 
         /// <inheritdoc/>
-        public override string HttpMethod => Constants.Report;
+        public override string HttpMethod => string.IsNullOrEmpty(SyncToken) ? Constants.Propfind : Constants.Report;
 
         /// <inheritdoc/>
         public override string RestPath => string.Empty;
@@ -267,31 +259,37 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            var prop = new Prop()
+            {
+                CalendarColor = new CalendarColor(),
+                CalendarData = new CalendarData(),
+                CalendarDescription = new CalendarDescription(),
+                CalendarHomeSet = new CalendarHomeSet(),
+                CalendarOrder = new CalendarOrder(),
+                CalendarTimezone = new CalendarTimezone(),
+                CurrentUserPrincipal = new CurrentUserPrincipal(),
+                CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                DisplayName = new DisplayName(),
+                GetCTag = new GetCTag(),
+                GetETag = new GetETag(),
+                ResourceType = new ResourceType(),
+                SupportedReportSet = new SupportedReportSet(),
+                SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                SyncToken = new WebDav.DataTypes.SyncToken()
+            };
+
+            if (string.IsNullOrEmpty(SyncToken))
+            {
+                _body = new PropFind() { Prop = prop };
+            }
+            else
             {
                 _body = new SyncCollection()
                 {
                     SyncToken = new WebDav.DataTypes.SyncToken() { Value = SyncToken },
                     SyncLevel = new SyncLevel() { Value = "1" },
-                    Prop = new Prop()
-                    {
-                        CalendarColor = new CalendarColor(),
-                        CalendarData = new CalendarData(),
-                        CalendarDescription = new CalendarDescription(),
-                        CalendarHomeSet = new CalendarHomeSet(),
-                        CalendarOrder = new CalendarOrder(),
-                        CalendarTimezone = new CalendarTimezone(),
-                        CurrentUserPrincipal = new CurrentUserPrincipal(),
-                        CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
-                        DisplayName = new DisplayName(),
-                        GetCTag = new GetCTag(),
-                        GetETag = new GetETag(),
-                        ResourceType = new ResourceType(),
-                        SupportedReportSet = new SupportedReportSet(),
-                        SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
-                        SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
-                        SyncToken = new WebDav.DataTypes.SyncToken()
-                    }
+                    Prop = prop
                 };
             }
 
@@ -311,7 +309,10 @@ public class CalendarListResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar to retrieve. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
-        public GetRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+        public GetRequest(IClientService service, string calendarId) : base(service)
+        {
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+        }
 
         /// <summary>
         /// Gets the calendar ID.
@@ -331,31 +332,28 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            _body ??= new PropFind()
             {
-                _body = new PropFind()
+                Prop = new Prop()
                 {
-                    Prop = new Prop()
-                    {
-                        CalendarColor = new CalendarColor(),
-                        CalendarData = new CalendarData(),
-                        CalendarDescription = new CalendarDescription(),
-                        CalendarHomeSet = new CalendarHomeSet(),
-                        CalendarOrder = new CalendarOrder(),
-                        CalendarTimezone = new CalendarTimezone(),
-                        CurrentUserPrincipal = new CurrentUserPrincipal(),
-                        CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
-                        DisplayName = new DisplayName(),
-                        GetCTag = new GetCTag(),
-                        GetETag = new GetETag(),
-                        ResourceType = new ResourceType(),
-                        SupportedReportSet = new SupportedReportSet(),
-                        SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
-                        SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
-                        SyncToken = new WebDav.DataTypes.SyncToken()
-                    }
-                };
-            }
+                    CalendarColor = new CalendarColor(),
+                    CalendarData = new CalendarData(),
+                    CalendarDescription = new CalendarDescription(),
+                    CalendarHomeSet = new CalendarHomeSet(),
+                    CalendarOrder = new CalendarOrder(),
+                    CalendarTimezone = new CalendarTimezone(),
+                    CurrentUserPrincipal = new CurrentUserPrincipal(),
+                    CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                    DisplayName = new DisplayName(),
+                    GetCTag = new GetCTag(),
+                    GetETag = new GetETag(),
+                    ResourceType = new ResourceType(),
+                    SupportedReportSet = new SupportedReportSet(),
+                    SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                    SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                    SyncToken = new WebDav.DataTypes.SyncToken()
+                }
+            };
             return _body;
         }
 
@@ -496,18 +494,16 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            _body ??= new PropertyUpdate()
             {
-                _body = new PropertyUpdate()
+                Prop = new Prop()
                 {
-                    Prop = new Prop()
-                    {
-                        DisplayName = new DisplayName() { Value = Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)) },
-                        CalendarColor = new CalendarColor() { Value = Body.Color.FromRgb() },
-                        CalendarOrder = new CalendarOrder() { Value = Body.Order.ToString() }
-                    }
-                };
-            }
+                    DisplayName = new DisplayName() { Value = Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)) },
+                    CalendarColor = new CalendarColor() { Value = Body.Color.FromRgb() },
+                    CalendarOrder = new CalendarOrder() { Value = Body.Order.ToString() }
+                }
+            };
+
             return _body;
         }
 

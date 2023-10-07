@@ -26,7 +26,7 @@ internal sealed class SyncTokenConverter : TypeConverter
             ? throw new ArgumentNullException(nameof(propStat))
             : (object)new DataTypes.SyncToken()
             {
-                ETag = propStat.Prop.GetETag.Value,
+                ETag = propStat.Prop.GetETag?.Value,
                 NextSyncToken = propStat.Prop.SyncToken.Value
             };
     }
