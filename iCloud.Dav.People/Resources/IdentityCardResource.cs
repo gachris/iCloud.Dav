@@ -2,9 +2,9 @@
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.WebDav.DataTypes;
-using System;
 
 namespace iCloud.Dav.People.Resources;
 
@@ -60,7 +60,7 @@ public class IdentityCardResource
     /// </summary>
     public class GetSyncTokenRequest : PeopleBaseServiceRequest<DataTypes.SyncToken>
     {
-        private PropFind _body;
+        private object _body;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetSyncTokenRequest"/> class.
@@ -93,19 +93,14 @@ public class IdentityCardResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            return _body ??= new PropFind()
             {
-                _body = new PropFind()
+                Prop = new Prop()
                 {
-                    Prop = new Prop()
-                    {
-                        SyncToken = new WebDav.DataTypes.SyncToken(),
-                        GetETag = new GetETag()
-                    }
-                };
-            }
-
-            return _body;
+                    SyncToken = new WebDav.DataTypes.SyncToken(),
+                    GetETag = new GetETag()
+                }
+            };
         }
 
         /// <inheritdoc/>
@@ -122,7 +117,7 @@ public class IdentityCardResource
     /// </summary>
     public class SyncCollectionRequest : PeopleBaseServiceRequest<SyncCollectionList>
     {
-        private SyncCollection _body;
+        private object _body;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncCollectionRequest"/> class.
@@ -160,13 +155,10 @@ public class IdentityCardResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
-            {
-                _body = new SyncCollection() { Prop = new Prop() };
-            }
+            _body ??= new SyncCollection() { Prop = new Prop() };
 
-            _body.SyncToken = new WebDav.DataTypes.SyncToken() { Value = SyncToken };
-            _body.SyncLevel = new SyncLevel() { Value = "1" };
+            ((SyncCollection)_body).SyncToken = new WebDav.DataTypes.SyncToken() { Value = SyncToken };
+            ((SyncCollection)_body).SyncLevel = new SyncLevel() { Value = "1" };
 
             return _body;
         }
@@ -210,14 +202,10 @@ public class IdentityCardResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            return _body ??= new PropFind()
             {
-                _body = new PropFind()
-                {
-                    Prop = new Prop()
-                };
-            }
-            return _body;
+                Prop = new Prop()
+            };
         }
     }
 
@@ -226,7 +214,7 @@ public class IdentityCardResource
     /// </summary>
     public class GetMeCardRequest : PeopleBaseServiceRequest<DataTypes.MeCard>
     {
-        private PropFind _body;
+        private object _body;
 
         /// <summary>
         /// Constructs a new <see cref="GetMeCardRequest"/> instance.
@@ -248,17 +236,13 @@ public class IdentityCardResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            return _body ??= new PropFind()
             {
-                _body = new PropFind()
+                Prop = new Prop()
                 {
-                    Prop = new Prop()
-                    {
-                        MeCard = new WebDav.DataTypes.MeCard()
-                    }
-                };
-            }
-            return _body;
+                    MeCard = new WebDav.DataTypes.MeCard()
+                }
+            };
         }
     }
 
@@ -267,7 +251,7 @@ public class IdentityCardResource
     /// </summary>
     public class SetMeCardRequest : PeopleBaseServiceRequest<VoidResponse>
     {
-        private PropertyUpdate _body;
+        private object _body;
 
         /// <summary>
         /// Constructs a new <see cref="SetMeCardRequest"/> instance.
@@ -304,21 +288,16 @@ public class IdentityCardResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            return _body ??= new PropertyUpdate()
             {
-                var hrefUri = new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook), string.Concat(ResourceName, "/", ContactId, ".vcf"));
-                _body = new PropertyUpdate()
+                Prop = new Prop()
                 {
-                    Prop = new Prop()
+                    MeCard = new WebDav.DataTypes.MeCard()
                     {
-                        MeCard = new WebDav.DataTypes.MeCard()
-                        {
-                            Href = new Href() { Value = hrefUri.AbsolutePath }
-                        }
+                        Href = new Href() { Value = Service.HttpClientInitializer.GetAddressBookFullHref(ResourceName, ContactId) }
                     }
-                };
-            }
-            return _body;
+                }
+            };
         }
 
         /// <inheritdoc/>

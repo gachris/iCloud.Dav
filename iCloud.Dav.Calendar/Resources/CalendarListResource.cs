@@ -121,7 +121,7 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            _body ??= new PropFind()
+            return _body ??= new PropFind()
             {
                 Prop = new Prop()
                 {
@@ -129,8 +129,6 @@ public class CalendarListResource
                     SyncToken = new WebDav.DataTypes.SyncToken()
                 }
             };
-
-            return _body;
         }
 
         /// <inheritdoc/>
@@ -186,7 +184,7 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            _body ??= new SyncCollection()
+            return _body ??= new SyncCollection()
             {
                 SyncToken = new WebDav.DataTypes.SyncToken() { Value = SyncToken },
                 SyncLevel = new SyncLevel() { Value = "1" },
@@ -210,8 +208,6 @@ public class CalendarListResource
                     SyncToken = new WebDav.DataTypes.SyncToken()
                 }
             };
-
-            return _body;
         }
 
         /// <inheritdoc/>
@@ -332,7 +328,7 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            _body ??= new PropFind()
+            return _body ??= new PropFind()
             {
                 Prop = new Prop()
                 {
@@ -354,7 +350,6 @@ public class CalendarListResource
                     SyncToken = new WebDav.DataTypes.SyncToken()
                 }
             };
-            return _body;
         }
 
         /// <inheritdoc/>
@@ -494,7 +489,7 @@ public class CalendarListResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            _body ??= new PropertyUpdate()
+            return _body ??= new PropertyUpdate()
             {
                 Prop = new Prop()
                 {
@@ -503,8 +498,6 @@ public class CalendarListResource
                     CalendarOrder = new CalendarOrder() { Value = Body.Order.ToString() }
                 }
             };
-
-            return _body;
         }
 
         /// <inheritdoc/>

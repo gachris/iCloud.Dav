@@ -5,7 +5,6 @@ using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.WebDav.DataTypes;
-using System;
 using System.Linq;
 
 namespace iCloud.Dav.People.Resources;
@@ -105,41 +104,31 @@ public class ContactGroupsResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body is null)
+            return _body ??= new AddressbookQuery
             {
-                var propFilter = new PropFilter()
+                Prop = new Prop(),
+                Filter = new Filters
                 {
-                    Name = "X-ADDRESSBOOKSERVER-KIND",
-                    TextMatches = new TextMatch[]
+                    Test = "anyof",
+                    PropFilters = [new PropFilter()
                     {
-                        new TextMatch
-                        {
-                            Collation = "i;unicode-casemap",
-                            NegateCondition = "no",
-                            MatchType = "equals",
-                            SearchText = "group"
-                        }
-                    }
-                };
-
-                var addressBookQuery = new AddressbookQuery
+                        Name = "X-ADDRESSBOOKSERVER-KIND",
+                        TextMatches = [
+                            new TextMatch
+                            {
+                                Collation = "i;unicode-casemap",
+                                NegateCondition = "no",
+                                MatchType = "equals",
+                                SearchText = "group"
+                            }
+                            ]
+                    }]
+                },
+                Limit = new Limit()
                 {
-                    Prop = new Prop(),
-                    Filter = new Filters
-                    {
-                        Test = "anyof",
-                        PropFilters = new PropFilter[] { propFilter }
-                    },
-                    Limit = new Limit()
-                    {
-                        NResults = 50001
-                    }
-                };
-
-                _body = addressBookQuery;
-            }
-
-            return _body;
+                    NResults = 50001
+                }
+            };
         }
 
         /// <inheritdoc/>
@@ -204,7 +193,7 @@ public class ContactGroupsResource
     /// </summary>
     public class MultiGetRequest : PeopleBaseServiceRequest<ContactGroupList>
     {
-        private AddressbookMultiget _body;
+        private object _body;
 
         /// <summary>
         /// Constructs a new <see cref="MultiGetRequest"/> instance.
@@ -244,21 +233,11 @@ public class ContactGroupsResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            return _body ??= new AddressbookMultiget()
             {
-                _body = new AddressbookMultiget() { Prop = new Prop() };
-            }
-
-            _body.Hrefs = ContactGroupIds.Select(contactGroupId => new Href() { Value = GetFullHref(contactGroupId) }).ToArray();
-
-            return _body;
-
-            string GetFullHref(string contactGroupId)
-            {
-                var baseUri = Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook);
-                var relativeUri = string.Concat(ResourceName, "/", contactGroupId, ".vcf");
-                return new Uri(baseUri, relativeUri).AbsolutePath;
-            }
+                Prop = new Prop(),
+                Hrefs = ContactGroupIds.Select(contactGroupId => new Href() { Value = Service.HttpClientInitializer.GetAddressBookFullHref(ResourceName, contactGroupId) }).ToArray()
+            };
         }
 
         /// <inheritdoc/>
@@ -321,14 +300,7 @@ public class ContactGroupsResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody()
-        {
-            if (_body == null)
-            {
-                _body = Body.SerializeToString();
-            }
-            return _body;
-        }
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <inheritdoc/>
         protected override void InitParameters()
@@ -391,14 +363,7 @@ public class ContactGroupsResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody()
-        {
-            if (_body == null)
-            {
-                _body = Body.SerializeToString();
-            }
-            return _body;
-        }
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <inheritdoc/>
         protected override void InitParameters()

@@ -274,7 +274,7 @@ public class RemindersResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            _body ??= new CalendarMultiget()
+            return _body ??= new CalendarMultiget()
             {
                 Prop = new Prop()
                 {
@@ -295,17 +295,8 @@ public class RemindersResource
                     SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
                     SyncToken = new WebDav.DataTypes.SyncToken()
                 },
-                Hrefs = ReminderIds.Select(reminderId => new Href() { Value = GetFullHref(reminderId) }).ToArray()
+                Hrefs = ReminderIds.Select(reminderId => new Href() { Value = Service.HttpClientInitializer.GetCalendarFullHref(CalendarId, reminderId) }).ToArray()
             };
-
-            return _body;
-
-            string GetFullHref(string reminderId)
-            {
-                var baseUri = Service.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar);
-                var relativeUri = string.Concat(CalendarId, "/", reminderId, ".ics");
-                return new Uri(baseUri, relativeUri).AbsolutePath;
-            }
         }
 
         /// <inheritdoc/>

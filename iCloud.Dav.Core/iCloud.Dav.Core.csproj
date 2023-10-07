@@ -36,4 +36,8 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
+	<Target Name="CopyPackage" AfterTargets="Pack" Condition=" '$(Configuration)' == 'Release'">
+		<Exec Command="xcopy /Y &quot;$(ProjectDir)bin\Release\*.*&quot; &quot;C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\&quot;" />
+	</Target>
+	
 </Project>

@@ -36,4 +36,8 @@
 		<ProjectReference Include="..\iCloud.dav.Core\iCloud.Dav.Core.csproj" />
 	</ItemGroup>
 
+	<Target Name="CopyPackage" AfterTargets="Pack" Condition=" '$(Configuration)' == 'Release'">
+		<Exec Command="xcopy /Y &quot;$(ProjectDir)bin\Release\*.*&quot; &quot;C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\&quot;" />
+	</Target>
+
 </Project>

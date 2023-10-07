@@ -275,7 +275,7 @@ public class EventsResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            _body ??= new CalendarMultiget()
+            return _body ??= new CalendarMultiget()
             {
                 Prop = new Prop()
                 {
@@ -296,17 +296,8 @@ public class EventsResource
                     SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
                     SyncToken = new WebDav.DataTypes.SyncToken()
                 },
-                Hrefs = EventIds.Select(eventId => new Href() { Value = GetFullHref(eventId) }).ToArray()
+                Hrefs = EventIds.Select(eventId => new Href() { Value = Service.HttpClientInitializer.GetCalendarFullHref(CalendarId, eventId)).ToArray()
             };
-
-            return _body;
-
-            string GetFullHref(string eventId)
-            {
-                var baseUri = Service.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar);
-                var relativeUri = string.Concat(CalendarId, "/", eventId, ".ics");
-                return new Uri(baseUri, relativeUri).AbsolutePath;
-            }
         }
 
         /// <inheritdoc/>

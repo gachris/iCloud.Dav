@@ -105,41 +105,32 @@ public class PeopleResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body is null)
+            return _body ??= new AddressbookQuery
             {
-                var propFilter = new PropFilter()
+                Prop = new Prop(),
+                Filter = new Filters
                 {
-                    Name = "X-ADDRESSBOOKSERVER-KIND",
-                    IsNotDefined = true,
-                    TextMatches = new TextMatch[]
+                    Test = "anyof",
+                    PropFilters = [new PropFilter()
                     {
-                        new TextMatch
-                        {
-                            Collation = "i;unicode-casemap",
-                            NegateCondition = "yes",
-                            MatchType = "equals",
-                            SearchText = "group"
-                        }
-                    }
-                };
-
-                var addressBookQuery = new AddressbookQuery
+                        Name = "X-ADDRESSBOOKSERVER-KIND",
+                        IsNotDefined = true,
+                        TextMatches = [
+                            new TextMatch
+                            {
+                                Collation = "i;unicode-casemap",
+                                NegateCondition = "yes",
+                                MatchType = "equals",
+                                SearchText = "group"
+                            }
+                            ]
+                    }]
+                },
+                Limit = new Limit()
                 {
-                    Prop = new Prop(),
-                    Filter = new Filters
-                    {
-                        Test = "anyof",
-                        PropFilters = new PropFilter[] { propFilter }
-                    },
-                    Limit = new Limit()
-                    {
-                        NResults = 50001
-                    }
-                };
-
-                _body = addressBookQuery;
-            }
-            return _body;
+                    NResults = 50001
+                }
+            };
         }
 
         /// <inheritdoc/>
@@ -204,7 +195,7 @@ public class PeopleResource
     /// </summary>
     public class MultiGetRequest : PeopleBaseServiceRequest<ContactList>
     {
-        private AddressbookMultiget _body;
+        private object _body;
 
         /// <summary>
         /// Constructs a new <see cref="MultiGetRequest"/> instance.
@@ -244,21 +235,11 @@ public class PeopleResource
         /// <inheritdoc/>
         protected override object GetBody()
         {
-            if (_body == null)
+            return _body ??= new AddressbookMultiget()
             {
-                _body = new AddressbookMultiget() { Prop = new Prop() };
-            }
-
-            _body.Hrefs = ContactIds.Select(contactId => new Href() { Value = GetFullHref(contactId) }).ToArray();
-
-            return _body;
-
-            string GetFullHref(string contactId)
-            {
-                var baseUri = Service.HttpClientInitializer.GetUri(PrincipalHomeSet.AddressBook);
-                var relativeUri = string.Concat(ResourceName, "/", contactId, ".vcf");
-                return new Uri(baseUri, relativeUri).AbsolutePath;
-            }
+                Prop = new Prop(),
+                Hrefs = ContactIds.Select(contactId => new Href() { Value = Service.HttpClientInitializer.GetAddressBookFullHref(ResourceName, contactId) }).ToArray()
+            };
         }
 
         /// <inheritdoc/>
@@ -321,14 +302,7 @@ public class PeopleResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody()
-        {
-            if (_body == null)
-            {
-                _body = Body.SerializeToString();
-            }
-            return _body;
-        }
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <inheritdoc/>
         protected override void InitParameters()
@@ -391,14 +365,7 @@ public class PeopleResource
         public override string ContentType => Constants.TEXT_VCARD;
 
         /// <inheritdoc/>
-        protected override object GetBody()
-        {
-            if (_body == null)
-            {
-                _body = Body.SerializeToString();
-            }
-            return _body;
-        }
+        protected override object GetBody() => _body ??= Body.SerializeToString();
 
         /// <summary>Initializes Update parameter list.</summary>
         protected override void InitParameters()
