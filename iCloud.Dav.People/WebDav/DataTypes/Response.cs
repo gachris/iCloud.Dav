@@ -31,7 +31,7 @@ internal class Response : IXmlSerializable
     public string Status { get; set; }
 
     /// <summary>
-    /// Gets or sets the <see cref="Card.Error"/> object representing the error in the response.
+    /// Gets or sets the <see cref="DataTypes.Error"/> object representing the error in the response.
     /// </summary>
     public Error Error { get; set; }
 

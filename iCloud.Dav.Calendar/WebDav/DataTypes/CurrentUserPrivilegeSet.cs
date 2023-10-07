@@ -13,7 +13,7 @@ internal class CurrentUserPrivilegeSet : IXmlSerializable
     #region Properties
 
     /// <summary>
-    /// Gets or sets an array of <see cref="Cal.Privilege"/> objects representing the privileges associated with the property.
+    /// Gets or sets an array of <see cref="DataTypes.Privilege"/> objects representing the privileges associated with the property.
     /// </summary>
     public Privilege[] Privilege { get; set; }
 
