@@ -2,19 +2,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace iCloud.Dav.Core
+namespace iCloud.Dav.Core;
+
+/// <summary>
+/// HTTP request execute interceptor to intercept a <see cref="HttpRequestMessage" /> before it has
+/// been sent. Sample usage is attaching "Authorization" header to a request.
+/// </summary>
+public interface IHttpExecuteInterceptor
 {
     /// <summary>
-    /// HTTP request execute interceptor to intercept a <see cref="HttpRequestMessage" /> before it has
-    /// been sent. Sample usage is attaching "Authorization" header to a request.
+    /// <summary>Invoked before the request is being sent.</summary>
     /// </summary>
-    public interface IHttpExecuteInterceptor
-    {
-        /// <summary>
-        /// <summary>Invoked before the request is being sent.</summary>
-        /// </summary>
-        /// <param name="request">The HTTP request message.</param>
-        /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
-        Task InterceptAsync(HttpRequestMessage request, CancellationToken cancellationToken);
-    }
+    /// <param name="request">The HTTP request message.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+    Task InterceptAsync(HttpRequestMessage request, CancellationToken cancellationToken);
 }

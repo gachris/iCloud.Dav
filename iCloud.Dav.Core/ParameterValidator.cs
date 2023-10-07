@@ -1,30 +1,25 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace iCloud.Dav.Core
+namespace iCloud.Dav.Core;
+
+/// <summary>
+/// Logic for validating a parameter.
+/// </summary>
+public static class ParameterValidator
 {
     /// <summary>
-    /// Logic for validating a parameter.
+    /// Validates a parameter value against the methods regex.
     /// </summary>
-    public static class ParameterValidator
+    public static bool ValidateRegex(IParameter param, string paramValue)
     {
-        /// <summary>
-        /// Validates a parameter value against the methods regex.
-        /// </summary>
-        public static bool ValidateRegex(IParameter param, string paramValue)
-        {
-            if (!string.IsNullOrEmpty(param.Pattern))
-                return new Regex(param.Pattern).IsMatch(paramValue);
-            return true;
-        }
+        return !string.IsNullOrEmpty(param.Pattern) ? new Regex(param.Pattern).IsMatch(paramValue) : true;
+    }
 
-        /// <summary>
-        /// Validates if a parameter is valid.
-        /// </summary>
-        public static bool ValidateParameter(IParameter parameter, string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                return !parameter.IsRequired;
-            return ValidateRegex(parameter, value);
-        }
+    /// <summary>
+    /// Validates if a parameter is valid.
+    /// </summary>
+    public static bool ValidateParameter(IParameter parameter, string value)
+    {
+        return string.IsNullOrEmpty(value) ? !parameter.IsRequired : ValidateRegex(parameter, value);
     }
 }

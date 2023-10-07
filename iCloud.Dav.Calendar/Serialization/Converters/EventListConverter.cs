@@ -1,53 +1,52 @@
 ﻿using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Extensions;
+using iCloud.Dav.Calendar.WebDav.DataTypes;
 using iCloud.Dav.Core.Extensions;
-using iCloud.Dav.Core.WebDav.Cal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace iCloud.Dav.Calendar.Serialization.Converters
+namespace iCloud.Dav.Calendar.Serialization.Converters;
+
+internal sealed class EventListConverter : TypeConverter
 {
-    internal sealed class EventListConverter : TypeConverter
+    private const string EventsKind = "events";
+
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        private const string EventsKind = "events";
+        if (!CanConvertFrom(context, value.GetType()))
+            throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        var multiStatus = (MultiStatus)value;
+        var response = multiStatus.Responses.FirstOrDefault(x => x.IsCalendar());
+        var items = multiStatus.Responses.Except(new HashSet<Response>() { response })
+                                         .Select(ToEvent)
+                                         .ToList();
+        var propsStat = response?.GetSuccessPropStat();
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        return new Events()
         {
-            if (!CanConvertFrom(context, value.GetType()))
-                throw GetConvertFromException(value);
+            Kind = EventsKind,
+            ETag = propsStat?.Prop.GetETag.Value,
+            NextSyncToken = propsStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
+            Items = items
+        };
+    }
 
-            var multiStatus = (MultiStatus)value;
-            var response = multiStatus.Responses.FirstOrDefault(x => x.IsCalendar());
-            var items = multiStatus.Responses.Except(new HashSet<Response>() { response })
-                                             .Select(ToEvent)
-                                             .ToList();
-            var propsStat = response?.GetSuccessPropStat();
+    private static Event ToEvent(Response response)
+    {
+        response.ThrowIfNull(nameof(response));
+        var propStat = response.GetSuccessPropStat().ThrowIfNull(nameof(PropStat));
 
-            return new Events()
-            {
-                Kind = EventsKind,
-                ETag = propsStat?.Prop.GetETag.Value,
-                NextSyncToken = propsStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
-                Items = items
-            };
-        }
-
-        private static Event ToEvent(Response response)
-        {
-            response.ThrowIfNull(nameof(response));
-            var propStat = response.GetSuccessPropStat().ThrowIfNull(nameof(PropStat));
-
-            var calendarEvent = propStat.Prop.CalendarData.Value.ToEvent();
-            calendarEvent.ETag = propStat.Prop.GetETag.Value;
-            calendarEvent.Id = response.Href.ExtractId();
-            return calendarEvent;
-        }
+        var calendarEvent = propStat.Prop.CalendarData.Value.ToEvent();
+        calendarEvent.ETag = propStat.Prop.GetETag.Value;
+        calendarEvent.Id = response.Href.ExtractId();
+        return calendarEvent;
     }
 }

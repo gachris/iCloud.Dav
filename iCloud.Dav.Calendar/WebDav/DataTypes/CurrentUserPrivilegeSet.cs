@@ -1,73 +1,71 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
 using System.Xml;
-using System.Collections.Generic;
 using System.Xml.Schema;
-using System;
+using System.Xml.Serialization;
 
-namespace iCloud.Dav.Core.WebDav.Cal
+namespace iCloud.Dav.Calendar.WebDav.DataTypes;
+
+/// <summary>
+/// Represents the current user's privilege set in the CalDAV namespace.
+/// </summary>
+internal class CurrentUserPrivilegeSet : IXmlSerializable
 {
+    #region Properties
+
     /// <summary>
-    /// Represents the current user's privilege set in the CalDAV namespace.
+    /// Gets or sets an array of <see cref="Cal.Privilege"/> objects representing the privileges associated with the property.
     /// </summary>
-    internal class CurrentUserPrivilegeSet : IXmlSerializable
+    public Privilege[] Privilege { get; set; }
+
+    #endregion
+
+    #region IXmlSerializable Implementation
+
+    /// <summary>
+    /// Gets the XML schema for this object.
+    /// </summary>
+    /// <returns>An <see cref="XmlSchema"/> object.</returns>
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    /// <summary>
+    /// Reads the XML representation of the resource type.
+    /// </summary>
+    /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
+    public void ReadXml(XmlReader reader)
     {
-        #region Properties
+        if (!reader.IsStartElement("current-user-privilege-set")) return;
 
-        /// <summary>
-        /// Gets or sets an array of <see cref="Cal.Privilege"/> objects representing the privileges associated with the property.
-        /// </summary>
-        public Privilege[] Privilege { get; set; }
+        var privileges = new List<Privilege>();
 
-        #endregion
-
-        #region IXmlSerializable Implementation
-
-        /// <summary>
-        /// Gets the XML schema for this object.
-        /// </summary>
-        /// <returns>An <see cref="XmlSchema"/> object.</returns>
-        public XmlSchema GetSchema() => new XmlSchema();
-
-        /// <summary>
-        /// Reads the XML representation of the resource type.
-        /// </summary>
-        /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
-        public void ReadXml(XmlReader reader)
+        while (reader.Read())
         {
-            if (!reader.IsStartElement("current-user-privilege-set")) return;
-
-            var privileges = new List<Privilege>();
-
-            while (reader.Read())
+            if (reader.IsStartElement("privilege"))
             {
-                if (reader.IsStartElement("privilege"))
-                {
-                    if (reader.IsEmptyElement) continue;
+                if (reader.IsEmptyElement) continue;
 
-                    var privilege = new Privilege();
-                    privilege.ReadXml(reader);
+                var privilege = new Privilege();
+                privilege.ReadXml(reader);
 
-                    privileges.Add(privilege);
-                }
-
-                if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "current-user-privilege-set")
-                {
-                    break;
-                }
+                privileges.Add(privilege);
             }
 
-            Privilege = privileges.ToArray();
+            if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "current-user-privilege-set")
+            {
+                break;
+            }
         }
 
-        /// <summary>
-        /// Writes the XML representation of the property update.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteElementString("current-user-privilege-set", "DAV:", null);
-        }
-
-        #endregion
+        Privilege = privileges.ToArray();
     }
+
+    /// <summary>
+    /// Writes the XML representation of the property update.
+    /// </summary>
+    /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
+    public void WriteXml(XmlWriter writer)
+    {
+        writer.WriteElementString("current-user-privilege-set", "DAV:", null);
+    }
+
+    #endregion
 }

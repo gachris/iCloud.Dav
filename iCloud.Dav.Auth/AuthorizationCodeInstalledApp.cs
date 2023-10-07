@@ -4,47 +4,46 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace iCloud.Dav.Auth
+namespace iCloud.Dav.Auth;
+
+/// <summary>
+/// Thread-safe authorization code flow for an installed application that persists end-user credentials.
+/// </summary>
+public class AuthorizationCodeInstalledApp : IAuthorizationCodeInstalledApp
 {
+    private static readonly ILogger Logger = ApplicationContext.Logger.ForType<AuthorizationCodeInstalledApp>();
+    private readonly IAuthorizationCodeFlow _flow;
+    private readonly ICodeReceiver _codeReceiver;
+
     /// <summary>
-    /// Thread-safe authorization code flow for an installed application that persists end-user credentials.
+    /// Constructs a new authorization code installed application with the given flow and code receiver.
     /// </summary>
-    public class AuthorizationCodeInstalledApp : IAuthorizationCodeInstalledApp
+    public AuthorizationCodeInstalledApp(IAuthorizationCodeFlow flow, ICodeReceiver codeReceiver)
     {
-        private static readonly ILogger Logger = ApplicationContext.Logger.ForType<AuthorizationCodeInstalledApp>();
-        private readonly IAuthorizationCodeFlow _flow;
-        private readonly ICodeReceiver _codeReceiver;
+        _flow = flow;
+        _codeReceiver = codeReceiver;
+    }
 
-        /// <summary>
-        /// Constructs a new authorization code installed application with the given flow and code receiver.
-        /// </summary>
-        public AuthorizationCodeInstalledApp(IAuthorizationCodeFlow flow, ICodeReceiver codeReceiver)
+    /// <summary>Gets the authorization code flow.</summary>
+    public IAuthorizationCodeFlow Flow => _flow;
+
+    /// <summary>Gets the code receiver which is responsible for receiving the authorization code.</summary>
+    public ICodeReceiver CodeReceiver => _codeReceiver;
+
+    /// <summary>Asynchronously authorizes the installed application to access user's protected data.</summary>
+    /// <param name="userId">User identifier</param>
+    /// <param name="networkCredential">User Credentials</param>
+    /// <param name="taskCancellationToken">Cancellation token to cancel an operation</param>
+    /// <returns>The user's credential</returns>
+    public async Task<UserCredential> AuthorizeAsync(string userId, NetworkCredential networkCredential, CancellationToken taskCancellationToken)
+    {
+        var token = await Flow.LoadTokenAsync(userId, taskCancellationToken).ConfigureAwait(false);
+        if (token == null)
         {
-            _flow = flow;
-            _codeReceiver = codeReceiver;
+            var authorizationCode = CodeReceiver.ReceiveCode(networkCredential);
+            AuthorizationCodeInstalledApp.Logger.Debug("Received \"{0}\" code", authorizationCode);
+            token = await Flow.ExchangeCodeForTokenAsync(userId, authorizationCode, taskCancellationToken).ConfigureAwait(false);
         }
-
-        /// <summary>Gets the authorization code flow.</summary>
-        public IAuthorizationCodeFlow Flow => _flow;
-
-        /// <summary>Gets the code receiver which is responsible for receiving the authorization code.</summary>
-        public ICodeReceiver CodeReceiver => _codeReceiver;
-
-        /// <summary>Asynchronously authorizes the installed application to access user's protected data.</summary>
-        /// <param name="userId">User identifier</param>
-        /// <param name="networkCredential">User Credentials</param>
-        /// <param name="taskCancellationToken">Cancellation token to cancel an operation</param>
-        /// <returns>The user's credential</returns>
-        public async Task<UserCredential> AuthorizeAsync(string userId, NetworkCredential networkCredential, CancellationToken taskCancellationToken)
-        {
-            var token = await Flow.LoadTokenAsync(userId, taskCancellationToken).ConfigureAwait(false);
-            if (token == null)
-            {
-                var authorizationCode = CodeReceiver.ReceiveCode(networkCredential);
-                AuthorizationCodeInstalledApp.Logger.Debug("Received \"{0}\" code", authorizationCode);
-                token = await Flow.ExchangeCodeForTokenAsync(userId, authorizationCode, taskCancellationToken).ConfigureAwait(false);
-            }
-            return new UserCredential(_flow, userId, token);
-        }
+        return new UserCredential(_flow, userId, token);
     }
 }

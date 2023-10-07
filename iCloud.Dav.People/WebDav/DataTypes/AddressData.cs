@@ -2,51 +2,50 @@
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Core.WebDav.Card
+namespace iCloud.Dav.People.WebDav.DataTypes;
+
+/// <summary>
+/// Represents an address-data value retrieved from a WebDAV operation.
+/// </summary>
+internal class AddressData : IXmlSerializable
 {
+    #region Properties
+
     /// <summary>
-    /// Represents an address-data value retrieved from a WebDAV operation.
+    /// Gets or sets the value of the address-data.
     /// </summary>
-    internal class AddressData : IXmlSerializable
+    public string Value { get; set; }
+
+    #endregion
+
+    #region IXmlSerializable Implementation
+
+    /// <summary>
+    /// Gets the XML schema for this object.
+    /// </summary>
+    /// <returns>An <see cref="XmlSchema"/> object.</returns>
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    /// <summary>
+    /// Reads the XML representation of the multi-status response.
+    /// </summary>
+    /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
+    public void ReadXml(XmlReader reader)
     {
-        #region Properties
+        if (!reader.IsStartElement("address-data", "urn:ietf:params:xml:ns:carddav")) return;
 
-        /// <summary>
-        /// Gets or sets the value of the address-data.
-        /// </summary>
-        public string Value { get; set; }
-
-        #endregion
-
-        #region IXmlSerializable Implementation
-
-        /// <summary>
-        /// Gets the XML schema for this object.
-        /// </summary>
-        /// <returns>An <see cref="XmlSchema"/> object.</returns>
-        public XmlSchema GetSchema() => new XmlSchema();
-
-        /// <summary>
-        /// Reads the XML representation of the multi-status response.
-        /// </summary>
-        /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
-        public void ReadXml(XmlReader reader)
-        {
-            if (!reader.IsStartElement("address-data", "urn:ietf:params:xml:ns:carddav")) return;
-
-            reader.Read();
-            Value = reader.ReadContentAsString();
-        }
-
-        /// <summary>
-        /// Writes the XML representation of the property update.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteElementString("address-data", "urn:ietf:params:xml:ns:carddav", Value);
-        }
-
-        #endregion
+        reader.Read();
+        Value = reader.ReadContentAsString();
     }
+
+    /// <summary>
+    /// Writes the XML representation of the property update.
+    /// </summary>
+    /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
+    public void WriteXml(XmlWriter writer)
+    {
+        writer.WriteElementString("address-data", "urn:ietf:params:xml:ns:carddav", Value);
+    }
+
+    #endregion
 }

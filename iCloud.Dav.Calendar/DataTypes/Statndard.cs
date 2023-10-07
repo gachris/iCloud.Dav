@@ -1,17 +1,16 @@
 ﻿using Ical.Net.CalendarComponents;
 
-namespace iCloud.Dav.Calendar.DataTypes
+namespace iCloud.Dav.Calendar.DataTypes;
+
+/// <summary>
+/// Represents a standard time zone component in an iCalendar file.
+/// </summary>
+public class Statndard : CalendarComponent
 {
     /// <summary>
-    /// Represents a standard time zone component in an iCalendar file.
+    /// Initializes a new instance of the <see cref="Statndard"/> class with the "STANDARD" component name.
     /// </summary>
-    public class Statndard : CalendarComponent
+    public Statndard() : base("STANDARD")
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Statndard"/> class with the "STANDARD" component name.
-        /// </summary>
-        public Statndard() : base("STANDARD")
-        {
-        }
     }
 }

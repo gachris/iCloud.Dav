@@ -1,51 +1,50 @@
 ﻿using iCloud.Dav.Core.Extensions;
-using iCloud.Dav.Core.WebDav.Card;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Extensions;
+using iCloud.Dav.People.WebDav.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace iCloud.Dav.People.Serialization.Converters
+namespace iCloud.Dav.People.Serialization.Converters;
+
+internal sealed class ContactListConverter : TypeConverter
 {
-    internal sealed class ContactListConverter : TypeConverter
+    private const string ContactsKind = "contacts";
+
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        private const string ContactsKind = "contacts";
+        if (!CanConvertFrom(context, value.GetType()))
+            throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        var multiStatus = (MultiStatus)value;
+        var response = multiStatus.Responses.FirstOrDefault(x => x.IsAddressbook());
+        var items = multiStatus.Responses.Where(x => x.IsOK() && !x.IsGroup())
+                                         .Except(new HashSet<Response>() { response })
+                                         .Select(ToContact)
+                                         .ToList();
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        return new ContactList()
         {
-            if (!CanConvertFrom(context, value.GetType()))
-                throw GetConvertFromException(value);
+            Kind = ContactsKind,
+            Items = items
+        };
+    }
 
-            var multiStatus = (MultiStatus)value;
-            var response = multiStatus.Responses.FirstOrDefault(x => x.IsAddressbook());
-            var items = multiStatus.Responses.Where(x => x.IsOK() && !x.IsGroup())
-                                             .Except(new HashSet<Response>() { response })
-                                             .Select(ToContact)
-                                             .ToList();
+    private static Contact ToContact(Response response)
+    {
+        response.ThrowIfNull(nameof(response));
+        var propStat = response.GetSuccessPropStat().ThrowIfNull(nameof(PropStat));
 
-            return new ContactList()
-            {
-                Kind = ContactsKind,
-                Items = items
-            };
-        }
-
-        private static Contact ToContact(Response response)
-        {
-            response.ThrowIfNull(nameof(response));
-            var propStat = response.GetSuccessPropStat().ThrowIfNull(nameof(PropStat));
-
-            var contact = propStat.Prop.AddressData.Value.ToContact();
-            contact.ETag = propStat.Prop.GetETag.Value;
-            contact.Id = response.Href.ExtractId();
-            return contact;
-        }
+        var contact = propStat.Prop.AddressData.Value.ToContact();
+        contact.ETag = propStat.Prop.GetETag.Value;
+        contact.Id = response.Href.ExtractId();
+        return contact;
     }
 }

@@ -1,15 +1,14 @@
-﻿namespace iCloud.Dav.People.DataTypes.Mapping
+﻿namespace iCloud.Dav.People.DataTypes.Mapping;
+
+internal class TypeMapping<TInternal, T>
 {
-    internal class TypeMapping<TInternal, T>
+    public TypeMapping(TInternal typeInternal, T type)
     {
-        public TypeMapping(TInternal typeInternal, T type)
-        {
-            TypeInternal = typeInternal;
-            Type = type;
-        }
-
-        public TInternal TypeInternal { get; }
-
-        public T Type { get; }
+        TypeInternal = typeInternal;
+        Type = type;
     }
+
+    public TInternal TypeInternal { get; }
+
+    public T Type { get; }
 }

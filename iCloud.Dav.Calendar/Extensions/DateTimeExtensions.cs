@@ -1,20 +1,17 @@
 ﻿using System;
 
-namespace iCloud.Dav.Calendar.Extensions
+namespace iCloud.Dav.Calendar.Extensions;
+
+internal static class DateTimeExtensions
 {
-    internal static class DateTimeExtensions
+    public static string ToFilterTime(this DateTime dateTime)
     {
-        public static string ToFilterTime(this DateTime dateTime)
-        {
-            var universalTime = dateTime.ToUniversalTime();
-            return universalTime.ToString("yyyyMMddTHHmmssZ");
-        }
+        var universalTime = dateTime.ToUniversalTime();
+        return universalTime.ToString("yyyyMMddTHHmmssZ");
+    }
 
-        public static string ToFilterTime(this DateTime? dateTime)
-        {
-            if (!dateTime.HasValue) return default;
-
-            return dateTime.Value.ToFilterTime();
-        }
+    public static string ToFilterTime(this DateTime? dateTime)
+    {
+        return !dateTime.HasValue ? default : dateTime.Value.ToFilterTime();
     }
 }

@@ -4,67 +4,66 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Core.WebDav.Cal
+namespace iCloud.Dav.Calendar.WebDav.DataTypes;
+
+/// <summary>
+/// Represents a resource type used in CalDAV queries in the CalDAV namespace.
+/// </summary>
+internal class ResourceType : IXmlSerializable
 {
+    #region Properties
+
     /// <summary>
-    /// Represents a resource type used in CalDAV queries in the CalDAV namespace.
+    /// Gets or sets an array of resource type names associated with the property.
     /// </summary>
-    internal class ResourceType : IXmlSerializable
+    public string[] Names { get; set; }
+
+    #endregion
+
+    #region IXmlSerializable Implementation
+
+    /// <summary>
+    /// Gets the XML schema for this object.
+    /// </summary>
+    /// <returns>An <see cref="XmlSchema"/> object.</returns>
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    /// <summary>
+    /// Reads the XML representation of the resource type.
+    /// </summary>
+    /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
+    public void ReadXml(XmlReader reader)
     {
-        #region Properties
+        if (!reader.IsStartElement("resourcetype")) return;
 
-        /// <summary>
-        /// Gets or sets an array of resource type names associated with the property.
-        /// </summary>
-        public string[] Names { get; set; }
+        var names = new List<string>();
 
-        #endregion
-
-        #region IXmlSerializable Implementation
-
-        /// <summary>
-        /// Gets the XML schema for this object.
-        /// </summary>
-        /// <returns>An <see cref="XmlSchema"/> object.</returns>
-        public XmlSchema GetSchema() => new XmlSchema();
-
-        /// <summary>
-        /// Reads the XML representation of the resource type.
-        /// </summary>
-        /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
-        public void ReadXml(XmlReader reader)
+        while (reader.Read())
         {
-            if (!reader.IsStartElement("resourcetype")) return;
-
-            var names = new List<string>();
-
-            while (reader.Read())
+            if (reader.NodeType == XmlNodeType.Element)
             {
-                if (reader.NodeType == XmlNodeType.Element)
-                {
-                    names.Add(reader.LocalName);
-                }
-
-                if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "resourcetype")
-                {
-                    break;
-                }
+                names.Add(reader.LocalName);
             }
 
-            Names = names.ToArray();
+            if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "resourcetype")
+            {
+                break;
+            }
         }
 
-        /// <summary>
-        /// Writes the XML representation of the object.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("resourcetype", "DAV:");
-            Names?.ToList().ForEach(n => writer.WriteElementString(n, "DAV:", null));
-            writer.WriteEndElement();
-        }
-
-        #endregion
+        Names = names.ToArray();
     }
+
+    /// <summary>
+    /// Writes the XML representation of the object.
+    /// </summary>
+    /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
+    public void WriteXml(XmlWriter writer)
+    {
+        writer.WriteStartElement("resourcetype", "DAV:");
+        Names?.ToList().ForEach(n => writer.WriteElementString(n, "DAV:", null));
+        writer.WriteEndElement();
+    }
+
+    #endregion
 }

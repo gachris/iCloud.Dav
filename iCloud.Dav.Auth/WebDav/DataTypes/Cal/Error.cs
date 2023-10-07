@@ -1,66 +1,65 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace iCloud.Dav.Auth.WebDav.DataTypes.Cal
+namespace iCloud.Dav.Auth.WebDav.DataTypes.Cal;
+
+/// <summary>
+/// Represents an error in the context of the <see cref="Response"/>.
+/// </summary>
+internal class Error : IXmlSerializable
 {
+    #region Properties
+
     /// <summary>
-    /// Represents an error in the context of the <see cref="Response"/>.
+    /// Gets or sets an array of error descriptions.
     /// </summary>
-    internal class Error : IXmlSerializable
+    public string[] Errors { get; set; }
+
+    #endregion
+
+    #region IXmlSerializable Implementation
+
+    /// <summary>
+    /// Gets the XML schema for this object.
+    /// </summary>
+    /// <returns>An <see cref="XmlSchema"/> object.</returns>
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    /// <summary>
+    /// Reads the XML representation of the error.
+    /// </summary>
+    /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
+    public void ReadXml(XmlReader reader)
     {
-        #region Properties
+        if (!reader.IsStartElement("error")) return;
 
-        /// <summary>
-        /// Gets or sets an array of error descriptions.
-        /// </summary>
-        public string[] Errors { get; set; }
+        var names = new List<string>();
 
-        #endregion
-
-        #region IXmlSerializable Implementation
-
-        /// <summary>
-        /// Gets the XML schema for this object.
-        /// </summary>
-        /// <returns>An <see cref="XmlSchema"/> object.</returns>
-        public XmlSchema GetSchema() => new XmlSchema();
-
-        /// <summary>
-        /// Reads the XML representation of the error.
-        /// </summary>
-        /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
-        public void ReadXml(XmlReader reader)
+        while (reader.Read())
         {
-            if (!reader.IsStartElement("error")) return;
-
-            var names = new List<string>();
-
-            while (reader.Read())
+            if (reader.NodeType == XmlNodeType.Element)
             {
-                if (reader.NodeType == XmlNodeType.Element)
-                {
-                    names.Add(reader.LocalName);
-                }
-
-                if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "error")
-                {
-                    break;
-                }
+                names.Add(reader.LocalName);
             }
 
-            Errors = names.ToArray();
+            if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "error")
+            {
+                break;
+            }
         }
 
-        /// <summary>
-        /// This method is not supported and will throw a <see cref="NotSupportedException"/>.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
-        /// <exception cref="NotSupportedException">This method is not supported.</exception>
-        public void WriteXml(XmlWriter writer) => throw new NotSupportedException();
-
-        #endregion
+        Errors = names.ToArray();
     }
+
+    /// <summary>
+    /// This method is not supported and will throw a <see cref="NotSupportedException"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
+    /// <exception cref="NotSupportedException">This method is not supported.</exception>
+    public void WriteXml(XmlWriter writer) => throw new NotSupportedException();
+
+    #endregion
 }

@@ -1,192 +1,191 @@
-﻿using System.Xml.Schema;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
-namespace iCloud.Dav.Core.WebDav.Cal
+namespace iCloud.Dav.Calendar.WebDav.DataTypes;
+
+internal class BulkRequests : IXmlSerializable
 {
-    internal class BulkRequests : IXmlSerializable
+    #region Properties
+
+    /// <summary>
+    /// Gets or sets an array of resource type names associated with the property.
+    /// </summary>
+    public BulkRequest[] Values { get; set; }
+
+    #endregion
+
+    #region IXmlSerializable Implementation
+
+    /// <summary>
+    /// Gets the XML schema for this object.
+    /// </summary>
+    /// <returns>An <see cref="XmlSchema"/> object.</returns>
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    /// <summary>
+    /// Reads the XML representation of the hyperlink reference.
+    /// </summary>
+    /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
+    public void ReadXml(XmlReader reader)
     {
-        #region Properties
+        if (!reader.IsStartElement("bulk-requests", "http://me.com/_namespace/")) return;
 
-        /// <summary>
-        /// Gets or sets an array of resource type names associated with the property.
-        /// </summary>
-        public BulkRequest[] Values { get; set; }
+        var bulkRequests = new List<BulkRequest>();
 
-        #endregion
-
-        #region IXmlSerializable Implementation
-
-        /// <summary>
-        /// Gets the XML schema for this object.
-        /// </summary>
-        /// <returns>An <see cref="XmlSchema"/> object.</returns>
-        public XmlSchema GetSchema() => new XmlSchema();
-
-        /// <summary>
-        /// Reads the XML representation of the hyperlink reference.
-        /// </summary>
-        /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
-        public void ReadXml(XmlReader reader)
+        while (reader.Read())
         {
-            if (!reader.IsStartElement("bulk-requests", "http://me.com/_namespace/")) return;
-
-            var bulkRequests = new List<BulkRequest>();
-
-            while (reader.Read())
+            if (reader.NodeType == XmlNodeType.Element)
             {
-                if (reader.NodeType == XmlNodeType.Element)
-                {
-                    BulkRequest bulkRequest = new BulkRequest();
-                    bulkRequest.ReadXml(reader);
+                BulkRequest bulkRequest = new BulkRequest();
+                bulkRequest.ReadXml(reader);
 
-                    bulkRequests.Add(bulkRequest);
-                }
-
-                if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "bulk-requests")
-                {
-                    break;
-                }
+                bulkRequests.Add(bulkRequest);
             }
 
-            Values = bulkRequests.ToArray();
-        }
-
-        /// <summary>
-        /// Writes the XML representation of the property update.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteElementString("bulk-requests", "http://me.com/_namespace/", null);
-        }
-
-        #endregion
-    }
-
-    internal class BulkRequest : IXmlSerializable
-    {
-        #region Properties
-
-        public string LocalName { get; set; }
-
-        public MaxSize MaxSize { get; set; }
-
-        public MaxResources MaxResources { get; set; }
-
-        public Supported Supported { get; set; }
-
-        #endregion
-
-        #region IXmlSerializable Implementation
-
-        /// <summary>
-        /// Gets the XML schema for this object.
-        /// </summary>
-        /// <returns>An <see cref="XmlSchema"/> object.</returns>
-        public XmlSchema GetSchema() => new XmlSchema();
-
-        /// <summary>
-        /// Reads the XML representation of the hyperlink reference.
-        /// </summary>
-        /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
-        public void ReadXml(XmlReader reader)
-        {
-            LocalName = reader.LocalName;
-
-            while (reader.Read())
+            if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "bulk-requests")
             {
-                if (reader.IsStartElement("max-size", "http://me.com/_namespace/") && reader.Depth == 6)
-                {
-                    MaxSize = new MaxSize();
-                    MaxSize.ReadXml(reader);
-                }
-                else if (reader.IsStartElement("max-resources", "http://me.com/_namespace/") && reader.Depth == 6)
-                {
-                    MaxResources = new MaxResources();
-                    MaxResources.ReadXml(reader);
-                }
-                else if (reader.IsStartElement("supported", "http://me.com/_namespace/") && reader.Depth == 6)
-                {
-                    Supported = new Supported();
-                    Supported.ReadXml(reader);
-                }
-                else if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == LocalName && reader.Depth == 5)
-                {
-                    break;
-                }
+                break;
             }
         }
 
-        /// <summary>
-        /// Writes the XML representation of the property update.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
-        public void WriteXml(XmlWriter writer)
-        {
-        }
-
-        #endregion
+        Values = bulkRequests.ToArray();
     }
 
-    internal class Supported : IXmlSerializable
+    /// <summary>
+    /// Writes the XML representation of the property update.
+    /// </summary>
+    /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
+    public void WriteXml(XmlWriter writer)
     {
-        #region Properties
+        writer.WriteElementString("bulk-requests", "http://me.com/_namespace/", null);
+    }
 
-        /// <summary>
-        /// Gets or sets an array of resource type names associated with the property.
-        /// </summary>
-        public string[] LocalNames { get; set; }
+    #endregion
+}
 
-        #endregion
+internal class BulkRequest : IXmlSerializable
+{
+    #region Properties
 
-        #region IXmlSerializable Implementation
+    public string LocalName { get; set; }
 
-        /// <summary>
-        /// Gets the XML schema for this object.
-        /// </summary>
-        /// <returns>An <see cref="XmlSchema"/> object.</returns>
-        public XmlSchema GetSchema() => new XmlSchema();
+    public MaxSize MaxSize { get; set; }
 
-        /// <summary>
-        /// Reads the XML representation of the resource type.
-        /// </summary>
-        /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
-        public void ReadXml(XmlReader reader)
+    public MaxResources MaxResources { get; set; }
+
+    public Supported Supported { get; set; }
+
+    #endregion
+
+    #region IXmlSerializable Implementation
+
+    /// <summary>
+    /// Gets the XML schema for this object.
+    /// </summary>
+    /// <returns>An <see cref="XmlSchema"/> object.</returns>
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    /// <summary>
+    /// Reads the XML representation of the hyperlink reference.
+    /// </summary>
+    /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
+    public void ReadXml(XmlReader reader)
+    {
+        LocalName = reader.LocalName;
+
+        while (reader.Read())
         {
-            if (!reader.IsStartElement("supported")) return;
-
-            var names = new List<string>();
-
-            while (reader.Read())
+            if (reader.IsStartElement("max-size", "http://me.com/_namespace/") && reader.Depth == 6)
             {
-                if (reader.NodeType == XmlNodeType.Element)
-                {
-                    names.Add(reader.LocalName);
-                }
+                MaxSize = new MaxSize();
+                MaxSize.ReadXml(reader);
+            }
+            else if (reader.IsStartElement("max-resources", "http://me.com/_namespace/") && reader.Depth == 6)
+            {
+                MaxResources = new MaxResources();
+                MaxResources.ReadXml(reader);
+            }
+            else if (reader.IsStartElement("supported", "http://me.com/_namespace/") && reader.Depth == 6)
+            {
+                Supported = new Supported();
+                Supported.ReadXml(reader);
+            }
+            else if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == LocalName && reader.Depth == 5)
+            {
+                break;
+            }
+        }
+    }
 
-                if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "supported")
-                {
-                    break;
-                }
+    /// <summary>
+    /// Writes the XML representation of the property update.
+    /// </summary>
+    /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
+    public void WriteXml(XmlWriter writer)
+    {
+    }
+
+    #endregion
+}
+
+internal class Supported : IXmlSerializable
+{
+    #region Properties
+
+    /// <summary>
+    /// Gets or sets an array of resource type names associated with the property.
+    /// </summary>
+    public string[] LocalNames { get; set; }
+
+    #endregion
+
+    #region IXmlSerializable Implementation
+
+    /// <summary>
+    /// Gets the XML schema for this object.
+    /// </summary>
+    /// <returns>An <see cref="XmlSchema"/> object.</returns>
+    public XmlSchema GetSchema() => new XmlSchema();
+
+    /// <summary>
+    /// Reads the XML representation of the resource type.
+    /// </summary>
+    /// <param name="reader">The <see cref="XmlReader"/> object to read from.</param>
+    public void ReadXml(XmlReader reader)
+    {
+        if (!reader.IsStartElement("supported")) return;
+
+        var names = new List<string>();
+
+        while (reader.Read())
+        {
+            if (reader.NodeType == XmlNodeType.Element)
+            {
+                names.Add(reader.LocalName);
             }
 
-            LocalNames = names.ToArray();
+            if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "supported")
+            {
+                break;
+            }
         }
 
-        /// <summary>
-        /// Writes the XML representation of the object.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("supported", "http://me.com/_namespace/");
-            LocalNames?.ToList().ForEach(n => writer.WriteElementString(n, "http://me.com/_namespace/", null));
-            writer.WriteEndElement();
-        }
-
-        #endregion
+        LocalNames = names.ToArray();
     }
+
+    /// <summary>
+    /// Writes the XML representation of the object.
+    /// </summary>
+    /// <param name="writer">The <see cref="XmlWriter"/> object to write to.</param>
+    public void WriteXml(XmlWriter writer)
+    {
+        writer.WriteStartElement("supported", "http://me.com/_namespace/");
+        LocalNames?.ToList().ForEach(n => writer.WriteElementString(n, "http://me.com/_namespace/", null));
+        writer.WriteEndElement();
+    }
+
+    #endregion
 }

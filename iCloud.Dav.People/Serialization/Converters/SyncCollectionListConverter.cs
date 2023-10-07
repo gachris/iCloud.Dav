@@ -1,50 +1,49 @@
-﻿using iCloud.Dav.Core.WebDav.Card;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Extensions;
+using iCloud.Dav.People.WebDav.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace iCloud.Dav.People.Serialization.Converters
+namespace iCloud.Dav.People.Serialization.Converters;
+
+internal sealed class SyncCollectionListConverter : TypeConverter
 {
-    internal sealed class SyncCollectionListConverter : TypeConverter
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        if (!CanConvertFrom(context, value.GetType()))
+            throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        var multiStatus = (MultiStatus)value;
+        var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection() || x.IsAddressbook());
+        var propsStat = response?.GetSuccessPropStat();
+        var items = multiStatus.Responses.Except(new HashSet<Response>() { response }).Select(ToSyncCollectionItem).ToList();
+
+        return new SyncCollectionList()
         {
-            if (!CanConvertFrom(context, value.GetType()))
-                throw GetConvertFromException(value);
+            NextSyncToken = propsStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
+            Items = items
+        };
+    }
 
-            var multiStatus = (MultiStatus)value;
-            var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection() || x.IsAddressbook());
-            var propsStat = response?.GetSuccessPropStat();
-            var items = multiStatus.Responses.Except(new HashSet<Response>() { response }).Select(ToSyncCollectionItem).ToList();
+    private static SyncCollectionItem ToSyncCollectionItem(Response response)
+    {
+        if (response is null)
+            throw new ArgumentNullException(nameof(response));
 
-            return new SyncCollectionList()
-            {
-                NextSyncToken = propsStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
-                Items = items
-            };
-        }
+        var propStat = response.GetSuccessPropStat();
 
-        private static SyncCollectionItem ToSyncCollectionItem(Response response)
+        return new SyncCollectionItem()
         {
-            if (response is null)
-                throw new ArgumentNullException(nameof(response));
-
-            var propStat = response.GetSuccessPropStat();
-
-            return new SyncCollectionItem()
-            {
-                Id = response.Href.ExtractId(),
-                ETag = propStat?.Prop.GetETag.Value,
-                Deleted = response.StatusCode == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
-            };
-        }
+            Id = response.Href.ExtractId(),
+            ETag = propStat?.Prop.GetETag.Value,
+            Deleted = response.StatusCode == System.Net.HttpStatusCode.NotFound ? true : (bool?)null
+        };
     }
 }

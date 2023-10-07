@@ -1,25 +1,24 @@
 ﻿using iCloud.Dav.Calendar.Extensions;
-using iCloud.Dav.Core.WebDav.Cal;
+using iCloud.Dav.Calendar.WebDav.DataTypes;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace iCloud.Dav.Calendar.Serialization.Converters
+namespace iCloud.Dav.Calendar.Serialization.Converters;
+
+internal sealed class CalendarConverter : TypeConverter
 {
-    internal sealed class CalendarConverter : TypeConverter
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        if (!CanConvertFrom(context, value.GetType()))
+            throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (!CanConvertFrom(context, value.GetType()))
-                throw GetConvertFromException(value);
-
-            var multiStatus = (MultiStatus)value;
-            return multiStatus.Responses.First().ToCalendar();
-        }
+        var multiStatus = (MultiStatus)value;
+        return multiStatus.Responses.First().ToCalendar();
     }
 }
