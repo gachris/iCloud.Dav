@@ -93,35 +93,28 @@ namespace iCloud.Dav.People.Serialization.DataTypes
                 return null;
             }
 
-            if (Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri))
+            if (Base64Helper.TryFromBase64String(value, out var data))
+            {
+                photo.Data = data;
+            }
+            else if (Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri))
             {
                 photo.Url = uri;
             }
-            else
-            {
-                try
-                {
-                    var bytes = Convert.FromBase64String(value);
-                    photo.Data = bytes;
-                }
-                catch
-                {
-                }
-            }
 
-            var x_abcrop_rectangle = photo.Parameters.Get("X-ABCROP-RECTANGLE");
+            var x_abCrop_rectangle = photo.Parameters.Get("X-ABCROP-RECTANGLE");
 
-            var rectangleSubproperty = x_abcrop_rectangle
+            var rectangleSubProperty = x_abCrop_rectangle
                     .Replace("ABClipRect_", string.Empty)
                     .Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
                     .Take(5)
                     .Select(property => Convert.ToInt32(property)).ToArray();
 
-            var dimension = rectangleSubproperty[0];
-            var x = rectangleSubproperty[1];
-            var y = rectangleSubproperty[2];
-            var width = rectangleSubproperty[3];
-            var height = rectangleSubproperty[4];
+            var dimension = rectangleSubProperty[0];
+            var x = rectangleSubProperty[1];
+            var y = rectangleSubProperty[2];
+            var width = rectangleSubProperty[3];
+            var height = rectangleSubProperty[4];
 
             var rectangle = new System.Drawing.Rectangle(x, y, width, height);
 
