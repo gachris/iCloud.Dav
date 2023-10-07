@@ -110,19 +110,23 @@ public class ContactGroupsResource
                 Filter = new Filters
                 {
                     Test = "anyof",
-                    PropFilters = [new PropFilter()
+                    PropFilters = new[]
                     {
-                        Name = "X-ADDRESSBOOKSERVER-KIND",
-                        TextMatches = [
-                            new TextMatch
+                        new PropFilter()
+                        {
+                            Name = "X-ADDRESSBOOKSERVER-KIND",
+                            TextMatches = new[]
                             {
-                                Collation = "i;unicode-casemap",
-                                NegateCondition = "no",
-                                MatchType = "equals",
-                                SearchText = "group"
+                                new TextMatch
+                                {
+                                    Collation = "i;unicode-casemap",
+                                    NegateCondition = "no",
+                                    MatchType = "equals",
+                                    SearchText = "group"
+                                }
                             }
-                            ]
-                    }]
+                        }
+                    }
                 },
                 Limit = new Limit()
                 {

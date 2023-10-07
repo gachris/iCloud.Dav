@@ -111,20 +111,24 @@ public class PeopleResource
                 Filter = new Filters
                 {
                     Test = "anyof",
-                    PropFilters = [new PropFilter()
+                    PropFilters = new[]
                     {
-                        Name = "X-ADDRESSBOOKSERVER-KIND",
-                        IsNotDefined = true,
-                        TextMatches = [
-                            new TextMatch
+                        new PropFilter()
+                        {
+                            Name = "X-ADDRESSBOOKSERVER-KIND",
+                            IsNotDefined = true,
+                            TextMatches = new[]
                             {
-                                Collation = "i;unicode-casemap",
-                                NegateCondition = "yes",
-                                MatchType = "equals",
-                                SearchText = "group"
+                                new TextMatch
+                                {
+                                    Collation = "i;unicode-casemap",
+                                    NegateCondition = "yes",
+                                    MatchType = "equals",
+                                    SearchText = "group"
+                                }
                             }
-                            ]
-                    }]
+                        }
+                    }
                 },
                 Limit = new Limit()
                 {
