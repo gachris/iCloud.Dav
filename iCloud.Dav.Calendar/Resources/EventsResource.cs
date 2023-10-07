@@ -296,7 +296,7 @@ public class EventsResource
                     SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
                     SyncToken = new WebDav.DataTypes.SyncToken()
                 },
-                Hrefs = EventIds.Select(eventId => new Href() { Value = Service.HttpClientInitializer.GetCalendarFullHref(CalendarId, eventId)).ToArray()
+                Hrefs = EventIds.Select(eventId => new Href() { Value = Service.HttpClientInitializer.GetCalendarFullHref(CalendarId, eventId) }).ToArray()
             };
         }
 
