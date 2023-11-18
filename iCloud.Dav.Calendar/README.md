@@ -27,24 +27,44 @@ For seamless authentication with iCloud.Dav.Calendar, refer to the [iCloud.Dav.A
 
 ### Get Calendars
 ```cs
-using iCloud.Dav.Calendar;
+using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Services;
+using System.Collections.Generic;
+using System.Linq;
 
-var calendarService = new CalendarService(initializer);
+CalendarService calendarService = new CalendarService(initializer);
+CalendarList calendarList = await calendarService.Calendars.List().Execute();
+IEnumerable<CalendarListEntry> calendarListEntries = calendarList.Items.Where(x => x.SupportedCalendarComponents.Contains("VEVENT"));
 ```
 
 ### Get Events
 ```cs
+using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Services;
+
+CalendarService calendarService = new CalendarService(initializer);
+Events events = calendarService.Events.List(calendarListEntry.Id).Execute();
 ```
 
 ### Get Reminder Lists
 ```cs
-using iCloud.Dav.Calendar;
+using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Services;
+using System.Collections.Generic;
+using System.Linq;
 
-var calendarService = new CalendarService(initializer);
+CalendarService calendarService = new CalendarService(initializer);
+CalendarList calendarList = await calendarService.Calendars.List().Execute();
+IEnumerable<CalendarListEntry> calendarListEntries = calendarList.Items.Where(x => x.SupportedCalendarComponents.Contains("VTODO"));
 ```
 
 ### Get Reminders
 ```cs
+using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Services;
+
+CalendarService calendarService = new CalendarService(initializer);
+Reminders reminders = calendarService.Reminders.List(calendarListEntry.Id).Execute();
 ```
 
 ## Contributing
