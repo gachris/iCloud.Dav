@@ -23,24 +23,7 @@ To use iCloud.Dav.People in your .NET project, you need to add a reference to th
 Here are examples of how to use iCloud.Dav.People:
 
 ### Authentication
-```cs
-using iCloud.Dav.Auth;
-using iCloud.Dav.Auth.Store;
-using iCloud.Dav.Core;
-using System.Net;
-using System.Threading;
-
-NetworkCredential networkCredential = new NetworkCredential("icloud-email", "app-specific-password");
-
-FileDataStore dataStore = new FileDataStore("folder-to-store-data");
-
-UserCredential userCredential = await AuthorizationBroker.AuthorizeAsync("file-to-store-user-credentials", networkCredential, dataStore, CancellationToken.None);
-
-BaseClientService.Initializer initializer = new BaseClientService.Initializer()
-{
-    HttpClientInitializer = userCredential,
-};
-```
+For seamless authentication with iCloud.Dav.People, refer to the [iCloud.Dav.Auth](../iCloud.Dav.Auth) module.
 
 ### Get Resource Name
 ```cs
@@ -106,4 +89,4 @@ SyncCollectionList syncCollectionList = syncCollectionRequest.Execute();
 Contributions to iCloud.Dav are welcome! If you want to contribute to the project, please fork the repository and create a pull request with your changes.
 
 ## License
-iCloud.Dav is licensed under the MIT license. See the [License](https://github.com/gachris/iCloud.Dav/blob/master/License) file for more information.
+iCloud.Dav is licensed under the MIT license. See the [License](../License) file for more information.

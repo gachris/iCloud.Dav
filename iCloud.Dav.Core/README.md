@@ -21,4 +21,4 @@ To manually install iCloud.Dav.Core, follow these steps:
 Contributions to iCloud.Dav are welcome! If you want to contribute to the project, please fork the repository and create a pull request with your changes.
 
 ## License
-iCloud.Dav is licensed under the MIT license. See the [License](https://github.com/gachris/iCloud.Dav/blob/master/License) file for more information.
+iCloud.Dav is licensed under the MIT license. See the [License](../License) file for more information.
