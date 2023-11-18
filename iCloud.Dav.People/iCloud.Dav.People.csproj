@@ -12,6 +12,7 @@
 		<Copyright>Copyright © 2022.</Copyright>
 		<PackageId>iCloud.Dav.People</PackageId>
 		<Product>iCloud.Dav.People</Product>
+		<Title>iCloud People</Title>
 		<Description>iCloud.Dav.People is a .NET library that allows you to interact with iCloud contacts and contact groups.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>3.1.0</Version>

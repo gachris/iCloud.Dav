@@ -12,6 +12,7 @@
 		<Copyright>Copyright © 2022.</Copyright>
 		<PackageId>iCloud.Dav.Calendar</PackageId>
 		<Product>iCloud.Dav.Calendar</Product>
+		<Title>iCloud Calendar</Title>
 		<Description>iCloud.Dav.Calendar is a .NET library that allows you to interact with iCloud calendars, events, reminder lists, and reminders.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>3.1.0</Version>

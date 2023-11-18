@@ -12,6 +12,7 @@
 		<Copyright>Copyright © 2022.</Copyright>
 		<PackageId>iCloud.Dav.Auth</PackageId>
 		<Product>iCloud.Dav.Auth</Product>
+		<Title>iCloud Authentication</Title>
 		<Description>iCloud.Dav.Auth is a .NET library that facilitates authentication and interaction with iCloud services.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>3.1.0</Version>

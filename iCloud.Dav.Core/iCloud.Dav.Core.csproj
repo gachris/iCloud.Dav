@@ -12,9 +12,10 @@
 		<Copyright>Copyright © 2022.</Copyright>
 		<PackageId>iCloud.Dav.Core</PackageId>
 		<Product>iCloud.Dav.Core</Product>
+		<Title>iCloud Core</Title>
 		<Description>iCloud.Dav.Core is a versatile .NET library that forms the foundation for interacting with iCloud services.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>3.1.0</Version>
+		<Version>3.1.1</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>icloud</PackageTags>
