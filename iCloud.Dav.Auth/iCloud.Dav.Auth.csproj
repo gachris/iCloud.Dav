@@ -12,12 +12,12 @@
 		<Copyright>Copyright © 2022.</Copyright>
 		<PackageId>iCloud.Dav.Auth</PackageId>
 		<Product>iCloud.Dav.Auth</Product>
-		<Description>Package for accessing contacts and calendars of the iCloud provider with the CalDav / CardDav protocol.</Description>
+		<Description>iCloud.Dav.Auth is a .NET library that facilitates authentication and interaction with iCloud services.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>3.1.0</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>icloud auth</PackageTags>
+		<PackageTags>iCloud auth</PackageTags>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 

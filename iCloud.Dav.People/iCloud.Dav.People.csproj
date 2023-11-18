@@ -12,12 +12,12 @@
 		<Copyright>Copyright © 2022.</Copyright>
 		<PackageId>iCloud.Dav.People</PackageId>
 		<Product>iCloud.Dav.People</Product>
-		<Description>Package for accessing contacts and calendars of the iCloud provider with the CalDav / CardDav protocol.</Description>
+		<Description>iCloud.Dav.People is a .NET library that allows you to interact with iCloud contacts and contact groups.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>3.1.0</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>icloud contact groups contacts</PackageTags>
+		<PackageTags>iCloud contact groups contacts</PackageTags>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
