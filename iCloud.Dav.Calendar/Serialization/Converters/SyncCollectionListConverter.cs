@@ -29,7 +29,7 @@ internal sealed class SyncCollectionListConverter : TypeConverter
         return new SyncCollectionList()
         {
             NextSyncToken = propStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
-            ETag = propStat?.Prop.GetETag.Value,
+            ETag = propStat?.Prop.GetETag?.Value,
             Items = items
         };
     }
