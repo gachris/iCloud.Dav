@@ -1,56 +1,72 @@
-﻿using iCloud.Dav.People.CardDav.Types;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Extensions;
+using iCloud.Dav.People.WebDav.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
-namespace iCloud.Dav.People.Serialization.Converters
+namespace iCloud.Dav.People.Serialization.Converters;
+
+internal sealed class IdentityCardListConverter : TypeConverter
 {
-    internal sealed class IdentityCardListConverter : TypeConverter
+    private const string ResourcesKind = "resources";
+
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        if (!CanConvertFrom(context, value.GetType()))
+            throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        var multiStatus = (MultiStatus)value;
+        var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection());
+        var propsStat = response?.GetSuccessPropStat();
+        var items = multiStatus.Responses.Except(new HashSet<Response>() { response }).Select(ToIdentityCard).ToList();
+
+        var identityCardList = new IdentityCardList()
         {
-            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+            Kind = ResourcesKind,
+            Items = items,
+        };
 
-            var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection") || !Path.HasExtension(x.Href.TrimEnd('/')));
-
-            var identityCardList = new IdentityCardList()
-            {
-                Kind = "resources",
-                ETag = collectionResponse?.Etag,
-                MeCard = Path.GetFileNameWithoutExtension(collectionResponse.MeCard?.Value?.TrimEnd('/')), 
-                NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                Items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse }).Select(ToIdentityCard).ToList(),
-            };
-
-            if (!identityCardList.Items.Any())
-            {
-                identityCardList.Items.Add(new IdentityCard()
-                {
-                    ETag = collectionResponse?.Etag,
-                    NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                });
-            }
-
-            return identityCardList;
+        if (propsStat != null)
+        {
+            identityCardList.ETag = propsStat.Prop.GetETag.Value;
+            identityCardList.MeCard = propsStat.Prop.MeCard?.Href.ExtractId();
+            identityCardList.NextSyncToken = propsStat.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value;
+        }
+        else
+        {
+            identityCardList.NextSyncToken = multiStatus.SyncToken?.Value;
         }
 
-        private static IdentityCard ToIdentityCard(Response response)
+        if (!identityCardList.Items.Any())
         {
-            return new IdentityCard()
+            identityCardList.Items.Add(new IdentityCard()
             {
-                ResourceName = Path.GetFileNameWithoutExtension(response.Href.TrimEnd('/')),
-                ETag = response.Etag,
-                NextSyncToken = response.SyncToken
-            };
+                ETag = propsStat?.Prop.GetETag.Value,
+                NextSyncToken = propsStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
+            });
         }
+
+        return identityCardList;
+    }
+
+    private static IdentityCard ToIdentityCard(Response response)
+    {
+        return response is null
+            ? throw new ArgumentNullException(nameof(response))
+            : !(response.GetSuccessPropStat() is PropStat propStat)
+            ? throw new ArgumentNullException(nameof(propStat))
+            : new IdentityCard()
+            {
+                ResourceName = response.Href.ExtractId(),
+                ETag = propStat.Prop.GetETag.Value,
+                NextSyncToken = propStat.Prop.SyncToken?.Value
+            };
     }
 }

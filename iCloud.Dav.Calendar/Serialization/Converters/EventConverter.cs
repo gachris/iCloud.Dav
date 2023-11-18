@@ -1,21 +1,18 @@
-﻿using iCloud.Dav.Calendar.Utils;
+﻿using iCloud.Dav.Calendar.Extensions;
 using System;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace iCloud.Dav.Calendar.Serialization.Converters
-{
-    internal sealed class EventConverter : TypeConverter
-    {
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);
+namespace iCloud.Dav.Calendar.Serialization.Converters;
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            return !CanConvertFrom(context, value.GetType()) 
-                ? throw GetConvertFromException(value)
-                : (object)((string)value).ToEvent();
-        }
+internal sealed class EventConverter : TypeConverter
+{
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    {
+        return !CanConvertFrom(context, value.GetType()) ? throw GetConvertFromException(value) : (object)((string)value).ToEvent();
     }
 }

@@ -1,27 +1,28 @@
 ﻿using iCloud.Dav.Core.Serialization;
-using iCloud.Dav.People.CardDav.Types;
 using iCloud.Dav.People.Serialization.Converters;
+using iCloud.Dav.People.WebDav.DataTypes;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace iCloud.Dav.People.DataTypes
+namespace iCloud.Dav.People.DataTypes;
+
+/// <summary>
+/// Represents a list of <see cref="ContactGroup"/> objects.
+/// </summary>
+[TypeConverter(typeof(ContactGroupListConverter))]
+[XmlDeserializeType(typeof(MultiStatus))]
+public class ContactGroupList
 {
     /// <summary>
-    /// Represents a strongly typed list of objects that can be accessed by index. Provides
-    /// methods to search, sort, and manipulate lists.
-    /// </summary>   
-    [TypeConverter(typeof(ContactGroupListConverter))]
-    [XmlDeserializeType(typeof(MultiStatus))]
-    public class ContactGroupList
-    {
-        /// <summary>
-        /// The list of groups that the requestor is connected to.
-        /// </summary>
-        public virtual IList<ContactGroup> Items { get; set; }
+    /// Gets or sets the list of contact group.
+    /// </summary>
+    public virtual IList<ContactGroup> Items { get; set; }
 
-        /// <summary>
-        /// Type of the collection ("people#groups").
-        /// </summary>
-        public virtual string Kind { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the type of the collection.
+    /// </summary>
+    /// <remarks>
+    /// The value is always "groups".
+    /// </remarks>
+    public virtual string Kind { get; set; }
 }

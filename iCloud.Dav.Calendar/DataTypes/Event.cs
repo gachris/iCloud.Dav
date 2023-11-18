@@ -5,46 +5,57 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace iCloud.Dav.Calendar.DataTypes
+namespace iCloud.Dav.Calendar.DataTypes;
+
+/// <summary>
+/// Represents a calendar event, a component that has a start time, end time, and an optional duration.
+/// </summary>
+[TypeConverter(typeof(EventConverter))]
+public class Event : CalendarEvent, IDirectResponseSchema, IUrlPath
 {
+    /// <summary>
+    /// A value that uniquely identifies the event. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+    /// </summary>
+    /// <remarks>The initial value of the Id property is the same as the <seealso cref="UniqueComponent.Uid"/>.</remarks>
+    public virtual string Id { get; set; }
+
     /// <inheritdoc/>
-    [TypeConverter(typeof(EventConverter))]
-    public class Event : CalendarEvent, IDirectResponseSchema, IUrlPath
+    public virtual string ETag { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Event"/> class.
+    /// </summary>
+    public Event() : base()
     {
-        /// <summary>
-        /// A value that uniquely identifies the Event. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
-        /// </summary>
-        /// <remarks>The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/></remarks>
-        public virtual string Id { get; set; }
+        EnsureProperties();
+    }
 
-        /// <inheritdoc/>
-        public virtual string ETag { get; set; }
+    /// <summary>
+    /// This method is called during deserialization to initialize the object before any deserialization is done.
+    /// </summary>
+    /// <param name="context">The context for the serialization or deserialization operation.</param>
+    protected override void OnDeserialized(StreamingContext context)
+    {
+        base.OnDeserialized(context);
 
-        public Event() : base() 
+        EnsureProperties();
+    }
+
+    /// <summary>
+    /// Ensures that the properties of the calendar list entry are set.
+    /// </summary>
+    private void EnsureProperties()
+    {
+        if (string.IsNullOrEmpty(Uid))
         {
-            EnsureProperties();
+            // Create a new UID for the component
+            Id = Uid = Guid.NewGuid().ToString();
         }
-
-        protected override void OnDeserialized(StreamingContext context)
+        if (Calendar is null)
         {
-            base.OnDeserialized(context);
-
-            EnsureProperties();
-        }
-
-        private void EnsureProperties()
-        {
-            if (string.IsNullOrEmpty(Uid))
-            {
-                // Create a new UID for the component
-                Id = Uid = Guid.NewGuid().ToString();
-            }
-            if (Calendar is null)
-            {
-                var calendar = new Ical.Net.Calendar();
-                calendar.Events.Add(this);
-                Parent = calendar;
-            }
+            var calendar = new Ical.Net.Calendar();
+            calendar.Events.Add(this);
+            Parent = calendar;
         }
     }
 }

@@ -1,8 +1,16 @@
-﻿namespace iCloud.Dav.Core
+﻿namespace iCloud.Dav.Core;
+
+/// <summary>
+/// Enumeration of possible home sets for a principal.
+/// </summary>
+public enum PrincipalHomeSet
 {
-    public enum PrincipalHomeSet
-    {
-        Calendar = 0,
-        AddressBook = 1
-    }
+    /// <summary>
+    /// The home set for a principal's calendar.
+    /// </summary>
+    Calendar = 0,
+    /// <summary>
+    /// The home set for a principal's address book.
+    /// </summary>
+    AddressBook = 1
 }

@@ -1,4 +1,5 @@
-﻿using iCloud.Dav.Core.Logger;
+﻿using iCloud.Dav.Core.Extensions;
+using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,234 +9,244 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace iCloud.Dav.Core.Request
+namespace iCloud.Dav.Core.Request;
+
+/// <summary>
+/// Represents an abstract, strongly typed request base class to make requests to a service.
+/// Supports a strongly typed response.
+/// </summary>
+/// <typeparam name="TResponse">The type of the response object</typeparam>
+public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TResponse>, IClientServiceRequest
 {
     /// <summary>
-    /// Represents an abstract, strongly typed request base class to make requests to a service.
-    /// Supports a strongly typed response.
+    /// The class logger.
     /// </summary>
-    /// <typeparam name="TResponse">The type of the response object</typeparam>
-    public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TResponse>, IClientServiceRequest
+    private static readonly ILogger _logger = ApplicationContext.Logger.ForType<ClientServiceRequest<TResponse>>();
+
+    private readonly Dictionary<string, IParameter> _requestParameters = new Dictionary<string, IParameter>();
+
+    /// <summary>
+    /// The service on which this request will be executed.
+    /// </summary>
+    private readonly IClientService _service;
+
+    /// <summary>
+    /// Defines whether the E-Tag will be used in a specified way or be ignored.
+    /// </summary>
+    public ETagAction ETagAction { get; set; }
+
+    /// <inheritdoc/>
+    public abstract string MethodName { get; }
+
+    /// <inheritdoc/>
+    public abstract string RestPath { get; }
+
+    /// <inheritdoc/>
+    public abstract string HttpMethod { get; }
+
+    /// <inheritdoc/>
+    public virtual string Depth { get; }
+
+    /// <inheritdoc/>
+    public virtual string ContentType { get; }
+
+    /// <inheritdoc/>
+    public IDictionary<string, IParameter> RequestParameters => _requestParameters;
+
+    /// <inheritdoc/>
+    public IClientService Service => _service;
+
+    /// <summary>Creates a new service request.</summary>
+    protected ClientServiceRequest(IClientService service)
     {
-        /// <summary>The class logger.</summary>
-        private static readonly ILogger _logger = ApplicationContext.Logger.ForType<ClientServiceRequest<TResponse>>();
+        _service = service;
+        InitParameters();
+    }
 
-        private readonly Dictionary<string, IParameter> _requestParameters = new Dictionary<string, IParameter>();
+    /// <summary>
+    /// Initializes request's parameters. Inherited classes MUST override this method to add parameters to the
+    /// <see cref="RequestParameters" /> dictionary.
+    /// </summary>
+    protected virtual void InitParameters()
+    {
+    }
 
-        /// <summary>The service on which this request will be executed.</summary>
-        private readonly IClientService _service;
-
-        /// <summary>Defines whether the E-Tag will be used in a specified way or be ignored.</summary>
-        public ETagAction ETagAction { get; set; }
-
-        /// <inheritdoc/>
-        public abstract string MethodName { get; }
-
-        /// <inheritdoc/>
-        public abstract string RestPath { get; }
-
-        /// <inheritdoc/>
-        public abstract string HttpMethod { get; }
-
-        /// <inheritdoc/>
-        public virtual string Depth { get; }
-
-        /// <inheritdoc/>
-        public virtual string ContentType { get; }
-
-        public IDictionary<string, IParameter> RequestParameters => _requestParameters;
-
-        public IClientService Service => _service;
-
-        /// <summary>Creates a new service request.</summary>
-        protected ClientServiceRequest(IClientService service)
+    /// <inheritdoc/>
+    public TResponse Execute()
+    {
+        try
         {
-            _service = service;
-            InitParameters();
+            using var result = ExecuteUnparsedAsync(CancellationToken.None).Result;
+            return ParseResponse(result).Result;
         }
-
-        /// <summary>
-        /// Initializes request's parameters. Inherited classes MUST override this method to add parameters to the
-        /// <see cref="RequestParameters" /> dictionary.
-        /// </summary>
-        protected virtual void InitParameters()
+        catch (AggregateException ex)
         {
+            throw ex.InnerException ?? ex;
         }
-
-        public TResponse Execute()
+        catch
         {
-            try
-            {
-                using (var result = ExecuteUnparsedAsync(CancellationToken.None).Result)
-                    return ParseResponse(result).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException ?? ex;
-            }
-            catch
-            {
-                throw;
-            }
+            throw;
         }
+    }
 
-        public Stream ExecuteAsStream()
+    /// <inheritdoc/>
+    public Stream ExecuteAsStream()
+    {
+        try
         {
-            try
-            {
-                return ExecuteUnparsedAsync(CancellationToken.None).Result.Content.ReadAsStreamAsync().Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException ?? ex;
-            }
-            catch
-            {
-                throw;
-            }
+            return ExecuteUnparsedAsync(CancellationToken.None).Result.Content.ReadAsStreamAsync().Result;
         }
-
-        public async Task<TResponse> ExecuteAsync() => await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
-
-        public async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
+        catch (AggregateException ex)
         {
-            TResponse response;
-            using (var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false))
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                response = await ParseResponse(httpResponseMessage).ConfigureAwait(false);
-            }
-            return response;
+            throw ex.InnerException ?? ex;
         }
-
-        public async Task<Stream> ExecuteAsStreamAsync() => await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
-
-        public async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
+        catch
         {
-            var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
+            throw;
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponse> ExecuteAsync() => await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
+
+    /// <inheritdoc/>
+    public async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
+    {
+        TResponse response;
+        using (var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false))
+        {
             cancellationToken.ThrowIfCancellationRequested();
-            return await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            response = await ParseResponse(httpResponseMessage).ConfigureAwait(false);
         }
+        return response;
+    }
 
-        /// <summary>Sync executes the request without parsing the result. </summary>
-        private async Task<HttpResponseMessage> ExecuteUnparsedAsync(CancellationToken cancellationToken)
+    /// <inheritdoc/>
+    public async Task<Stream> ExecuteAsStreamAsync() => await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
+
+    /// <inheritdoc/>
+    public async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
+    {
+        var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        return await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+    }
+
+    /// <summary>Sync executes the request without parsing the result. </summary>
+    private async Task<HttpResponseMessage> ExecuteUnparsedAsync(CancellationToken cancellationToken)
+    {
+        using var request = CreateRequest();
+        return await _service.HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Parses the response and deserialize the content into the requested response object. </summary>
+    private async Task<TResponse> ParseResponse(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
         {
-            using (var request = CreateRequest())
+            return await _service.DeserializeResponse<TResponse>(response).ConfigureAwait(false);
+        }
+        var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
+        var errorResponse = new ErrorResponse(response.ReasonPhrase, response.StatusCode, response.RequestMessage?.RequestUri?.AbsoluteUri, requestError);
+        throw new ICloudApiException(_service.Name, errorResponse.ToString());
+    }
+
+    /// <inheritdoc/>
+    public HttpRequestMessage CreateRequest()
+    {
+        var request = CreateBuilder().CreateRequest();
+        var body = GetBody();
+        request.SetHttpRequestDepth(Depth);
+        request.SetRequestSerializedContent(_service, body, ContentType);
+        AddETag(request);
+        return request;
+    }
+
+    /// <summary>
+    /// Creates the <see cref="RequestBuilder" /> which is used to generate a request.
+    /// </summary>
+    /// <returns>
+    /// A new builder instance which contains the HTTP method and the right Uri with its path and query parameters.
+    /// </returns>
+    private RequestBuilder CreateBuilder()
+    {
+        var requestBuilder = new RequestBuilder(new Uri(Service.BasePath), RestPath, HttpMethod);
+        var parameterDictionary = ParameterUtils.CreateParameterDictionary(this);
+        AddParameters(requestBuilder, ParameterCollection.FromDictionary(parameterDictionary));
+        return requestBuilder;
+    }
+
+    ///<summary>Returns the body of the request.</summary>
+    protected virtual object GetBody() => default;
+
+    /// <summary>
+    /// Adds the right ETag action (e.g. If-Match) header to the given HTTP request if the body contains ETag.
+    /// </summary>
+    private void AddETag(HttpRequestMessage request)
+    {
+        if (!(GetBody() is IDirectResponseSchema body) || string.IsNullOrEmpty(body.ETag)) return;
+        var etag = body.ETag;
+        var etagAction = ETagAction == ETagAction.Default ? GetDefaultETagAction(HttpMethod) : ETagAction;
+        try
+        {
+            if (etagAction != ETagAction.IfMatch)
             {
-                return await _service.HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                if (etagAction != ETagAction.IfNoneMatch) return;
+                request.Headers.IfNoneMatch.Add(new EntityTagHeaderValue(etag));
             }
+            else request.Headers.IfMatch.Add(new EntityTagHeaderValue(etag));
         }
-
-        /// <summary>Parses the response and deserialize the content into the requested response object. </summary>
-        private async Task<TResponse> ParseResponse(HttpResponseMessage response)
+        catch (FormatException ex)
         {
-            if (response.IsSuccessStatusCode)
+            _logger.Error(ex, "Can't set {0}. Etag is: {1}.", etagAction, etag);
+        }
+    }
+
+    /// <summary>Returns the default ETagAction for a specific HTTP verb.</summary>
+    public static ETagAction GetDefaultETagAction(string httpMethod)
+    {
+        return httpMethod is "GET"
+            ? ETagAction.IfNoneMatch
+            : httpMethod == "PUT" || httpMethod == "POST" || httpMethod == "PATCH" || httpMethod == "DELETE" ? ETagAction.IfMatch : ETagAction.Ignore;
+    }
+
+    /// <summary>Adds path and query parameters to the given <c>requestBuilder</c>.</summary>
+    private void AddParameters(RequestBuilder requestBuilder, ParameterCollection inputParameters)
+    {
+        inputParameters.ForEach(inputParameter =>
+        {
+            if (!RequestParameters.TryGetValue(inputParameter.Key, out var parameter))
+                throw new ICloudApiException(Service.Name, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
+
+            var defaultValue = inputParameter.Value;
+
+            if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
+                throw new ICloudApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
+
+            if (defaultValue == null)
             {
-                return await _service.DeserializeResponse<TResponse>(response).ConfigureAwait(false);
+                defaultValue = parameter.DefaultValue;
             }
-            var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
-            var errorResponse = new ErrorResponse(response.ReasonPhrase, response.StatusCode, response.RequestMessage?.RequestUri?.AbsoluteUri, requestError);
-            throw new ICloudApiException(_service.Name, errorResponse.ToString());
-        }
-
-        public HttpRequestMessage CreateRequest()
-        {
-            var request = CreateBuilder().CreateRequest();
-            var body = GetBody();
-            request.SetHttpRequestDepth(Depth);
-            request.SetRequestSerailizedContent(_service, body, ContentType);
-            AddETag(request);
-            return request;
-        }
-
-        /// <summary>
-        /// Creates the <see cref="RequestBuilder" /> which is used to generate a request.
-        /// </summary>
-        /// <returns>
-        /// A new builder instance which contains the HTTP method and the right Uri with its path and query parameters.
-        /// </returns>
-        private RequestBuilder CreateBuilder()
-        {
-            var requestBuilder = new RequestBuilder(new Uri(Service.BasePath), RestPath, HttpMethod);
-            var parameterDictionary = ParameterUtils.CreateParameterDictionary(this);
-            AddParameters(requestBuilder, ParameterCollection.FromDictionary(parameterDictionary));
-            return requestBuilder;
-        }
-
-        /// <summary>Generates the right URL for this request.</summary>
-        protected string GenerateRequestUri() => CreateBuilder().BuildUri().ToString();
-
-        ///<summary>Returns the body of the request.</summary>
-        protected virtual object GetBody() => default;
-
-        /// <summary>
-        /// Adds the right ETag action (e.g. If-Match) header to the given HTTP request if the body contains ETag.
-        /// </summary>
-        private void AddETag(HttpRequestMessage request)
-        {
-            if (!(GetBody() is IDirectResponseSchema body) || string.IsNullOrEmpty(body.ETag)) return;
-            var etag = body.ETag;
-            var etagAction = ETagAction == ETagAction.Default ? GetDefaultETagAction(HttpMethod) : ETagAction;
-            try
+            var parameterType = parameter.ParameterType;
+            if (!(parameterType == "path"))
             {
-                if (etagAction != ETagAction.IfMatch)
+                if (parameterType == "query")
                 {
-                    if (etagAction != ETagAction.IfNoneMatch) return;
-                    request.Headers.IfNoneMatch.Add(new EntityTagHeaderValue(etag));
+                    if (!Equals(defaultValue, parameter.DefaultValue) || parameter.IsRequired)
+                        requestBuilder.AddParameter(RequestParameterType.Query, inputParameter.Key, defaultValue);
                 }
-                else request.Headers.IfMatch.Add(new EntityTagHeaderValue(etag));
+                else throw new ICloudApiException(_service.Name,
+                                                  string.Format("Unsupported parameter type \"{0}\" for \"{1}\"",
+                                                                parameter.ParameterType,
+                                                                parameter.Name));
             }
-            catch (FormatException ex)
-            {
-                _logger.Error(ex, "Can't set {0}. Etag is: {1}.", etagAction, etag);
-            }
-        }
+            else requestBuilder.AddParameter(RequestParameterType.Path, inputParameter.Key, defaultValue);
+        });
 
-        /// <summary>Returns the default ETagAction for a specific HTTP verb.</summary>
-        public static ETagAction GetDefaultETagAction(string httpMethod)
+        RequestParameters.Values.ForEach(parameter =>
         {
-            if (httpMethod is "GET") return ETagAction.IfNoneMatch;
-            return httpMethod == "PUT" || httpMethod == "POST" || httpMethod == "PATCH" || httpMethod == "DELETE" ? ETagAction.IfMatch : ETagAction.Ignore;
-        }
-
-        /// <summary>Adds path and query parameters to the given <c>requestBuilder</c>.</summary>
-        private void AddParameters(RequestBuilder requestBuilder, ParameterCollection inputParameters)
-        {
-            inputParameters.ForEach(inputParameter =>
-            {
-                if (!RequestParameters.TryGetValue(inputParameter.Key, out var parameter))
-                    throw new ICloudApiException(Service.Name, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
-
-                var defaultValue = inputParameter.Value;
-
-                if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
-                    throw new ICloudApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
-
-                if (defaultValue == null)
-                {
-                    defaultValue = parameter.DefaultValue;
-                }
-                var parameterType = parameter.ParameterType;
-                if (!(parameterType == "path"))
-                {
-                    if (parameterType == "query")
-                    {
-                        if (!Equals(defaultValue, parameter.DefaultValue) || parameter.IsRequired)
-                            requestBuilder.AddParameter(RequestParameterType.Query, inputParameter.Key, defaultValue);
-                    }
-                    else throw new ICloudApiException(_service.Name,
-                                                      string.Format("Unsupported parameter type \"{0}\" for \"{1}\"",
-                                                                    parameter.ParameterType,
-                                                                    parameter.Name));
-                }
-                else requestBuilder.AddParameter(RequestParameterType.Path, inputParameter.Key, defaultValue);
-            });
-
-            RequestParameters.Values.ForEach(parameter =>
-            {
-                if (parameter.IsRequired && !inputParameters.ContainsKey(parameter.Name))
-                    throw new ICloudApiException(_service.Name, string.Format("Parameter \"{0}\" is missing", parameter.Name));
-            });
-        }
+            if (parameter.IsRequired && !inputParameters.ContainsKey(parameter.Name))
+                throw new ICloudApiException(_service.Name, string.Format("Parameter \"{0}\" is missing", parameter.Name));
+        });
     }
 }

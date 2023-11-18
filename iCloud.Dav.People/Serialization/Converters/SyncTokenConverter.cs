@@ -1,34 +1,34 @@
-﻿using iCloud.Dav.People.CardDav.Types;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.Extensions;
+using iCloud.Dav.People.WebDav.DataTypes;
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
-namespace iCloud.Dav.People.Serialization.Converters
+namespace iCloud.Dav.People.Serialization.Converters;
+
+internal sealed class SyncTokenConverter : TypeConverter
 {
-    internal sealed class SyncTokenConverter : TypeConverter
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        if (!CanConvertFrom(context, value.GetType()))
+            throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+        var multiStatus = (MultiStatus)value;
+        var response = multiStatus.Responses.FirstOrDefault(x => x.IsCollection() || x.IsAddressbook());
 
-            var multiStatus = (MultiStatus)value;
-            var collectionResponse = multiStatus.Responses.FirstOrDefault(x => (x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection")
-                                                                               || x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true
-                                                                               || !Path.HasExtension(x.Href.TrimEnd('/')));
-
-            return new SyncToken()
+        return response is null
+            ? throw new ArgumentNullException(nameof(response))
+            : !(response.GetSuccessPropStat() is PropStat propStat)
+            ? throw new ArgumentNullException(nameof(propStat))
+            : (object)new People.DataTypes.SyncToken()
             {
-                ETag = collectionResponse.Etag,
-                NextSyncToken = collectionResponse.SyncToken
+                ETag = propStat.Prop.GetETag.Value,
+                NextSyncToken = propStat.Prop.SyncToken.Value
             };
-        }
     }
-
 }

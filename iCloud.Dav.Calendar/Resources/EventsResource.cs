@@ -1,411 +1,486 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.DataTypes;
+﻿using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.Request;
-using iCloud.Dav.Calendar.Utils;
+using iCloud.Dav.Calendar.WebDav.DataTypes;
 using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
-using iCloud.Dav.Core.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace iCloud.Dav.Calendar.Resources
+namespace iCloud.Dav.Calendar.Resources;
+
+/// <summary>
+/// Represents a resource on iCloud for accessing iCloud events for the authenticated user.
+/// </summary>
+public class EventsResource
 {
+    private readonly IClientService _service;
+
     /// <summary>
-    /// The events collection of methods.
+    /// Initializes a new instance of the <see cref="EventsResource"/> class.
     /// </summary>
-    public class EventsResource
+    /// <param name="service">The client service used for making requests.</param>
+    public EventsResource(IClientService service) => _service = service;
+
+    /// <summary>
+    /// Creates a new <see cref="ListRequest"/> instance for retrieving the list of events.
+    /// </summary>
+    /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+    /// <returns>A new <see cref="ListRequest"/> instance for retrieving the list of events.</returns>
+    public virtual ListRequest List(string calendarId) => new ListRequest(_service, calendarId);
+
+    /// <summary>
+    /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific event by ID.
+    /// </summary>
+    /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+    /// <param name="eventId">The ID of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific event by ID.</returns>
+    public virtual GetRequest Get(string calendarId, string eventId) => new GetRequest(_service, calendarId, eventId);
+
+    /// <summary>
+    /// Creates a new <see cref="MultiGetRequest"/> instance for retrieving multiple events by ID.
+    /// </summary>
+    /// <param name="calendarId">The ID of the calendar where the events are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+    /// <param name="eventIds">The IDs of the events to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple events by ID.</returns>
+    public virtual MultiGetRequest MultiGet(string calendarId, params string[] eventIds) => new MultiGetRequest(_service, calendarId, eventIds);
+
+    /// <summary>
+    /// Creates a new <see cref="InsertRequest"/> instance that can insert a new event.
+    /// </summary>            
+    /// <param name="body">The event to insert.</param>
+    /// <param name="calendarId">The ID of the calendar where the event will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+    /// <returns>A new <see cref="InsertRequest"/> instance that can insert a new event.</returns>
+    public virtual InsertRequest Insert(Event body, string calendarId) => new InsertRequest(_service, body, calendarId);
+
+    /// <summary>
+    /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing event.
+    /// </summary>
+    /// <param name="body">The body of the request containing the updated event information.</param>
+    /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+    /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing event.</returns>
+    public virtual UpdateRequest Update(Event body, string calendarId) => new UpdateRequest(_service, body, calendarId);
+
+    /// <summary>
+    /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing event by ID.
+    /// </summary>
+    /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+    /// <param name="eventId">The ID of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
+    /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing event by ID.</returns>
+    public virtual DeleteRequest Delete(string calendarId, string eventId) => new DeleteRequest(_service, calendarId, eventId);
+
+    /// <summary>
+    /// Represents a request to retrieve a list of events from iCloud.
+    /// </summary>
+    public class ListRequest : CalendarBaseServiceRequest<Events>
+    {
+        private object _body;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListRequest"/> class.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        public ListRequest(IClientService service, string calendarId) : base(service)
+        {
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+        }
+
+        /// <summary>
+        /// Gets the calendar ID.
+        /// </summary>
+        [RequestParameter("calendarId", RequestParameterType.Path)]
+        public virtual string CalendarId { get; }
+
+        /// <summary>
+        /// Gets or sets the maximum time of the events to retrieve.
+        /// </summary>
+        public virtual DateTime? TimeMax { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum time of the events to retrieve.
+        /// </summary>
+        public virtual DateTime? TimeMin { get; set; }
+
+        /// <inheritdoc/>
+        public override string MethodName => "list";
+
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Report;
+
+        /// <inheritdoc/>
+        public override string RestPath => "{calendarId}";
+
+        /// <inheritdoc/>
+        public override string Depth => "1";
+
+        /// <inheritdoc/>
+        protected override object GetBody()
+        {
+            var timeMin = TimeMin.ToFilterTime();
+            var timeMax = TimeMax.ToFilterTime();
+
+            _body ??= new CalendarQuery()
+            {
+                Filter = new Filter(),
+                Prop = new Prop()
+                {
+                    CalendarColor = new CalendarColor(),
+                    CalendarData = new CalendarData(),
+                    CalendarDescription = new CalendarDescription(),
+                    CalendarHomeSet = new CalendarHomeSet(),
+                    CalendarOrder = new CalendarOrder(),
+                    CalendarTimezone = new CalendarTimezone(),
+                    CurrentUserPrincipal = new CurrentUserPrincipal(),
+                    CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                    DisplayName = new DisplayName(),
+                    GetCTag = new GetCTag(),
+                    GetETag = new GetETag(),
+                    ResourceType = new ResourceType(),
+                    SupportedReportSet = new SupportedReportSet(),
+                    SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                    SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                    SyncToken = new WebDav.DataTypes.SyncToken()
+                }
+            };
+
+            ((CalendarQuery)_body).Filter.Root = new CompFilter()
+            {
+                Name = "VCALENDAR",
+                Children = new List<IFilter>()
+                {
+                    new CompFilter()
+                    {
+                        Name = "VEVENT",
+                        Children = (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
+                        ? new List<IFilter>()
+                        {
+                            new TimeRange()
+                            {
+                                Start = timeMin,
+                                End = timeMax
+                            }
+                        } : null
+                    }
+                }
+            };
+
+            return _body;
+        }
+
+        /// <inheritdoc/>
+        protected override void InitParameters()
+        {
+            base.InitParameters();
+
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+        }
+    }
+
+    /// <summary>
+    /// Represents a request to get a single event by ID from iCloud.
+    /// </summary>
+    public class GetRequest : CalendarBaseServiceRequest<Event>
     {
         /// <summary>
-        /// The service which this resource belongs to.
+        /// Constructs a new <see cref="GetRequest"/> instance.
         /// </summary>
-        private readonly IClientService _service;
-
-        /// <summary>
-        /// Constructs a new resource.
-        /// </summary>
-        public EventsResource(IClientService service) => _service = service;
-
-        /// <summary>
-        /// Returns events on the specified calendar.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        public virtual ListRequest List(string calendarId) => new ListRequest(_service, calendarId);
-
-        /// <summary>
-        /// Returns an event.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventId">Event identifier. To retrieve event IDs call the <see cref="List"/> method.</param>
-        public virtual GetRequest Get(string calendarId, string eventId) => new GetRequest(_service, calendarId, eventId);
-
-        /// <summary>
-        /// Returns events on the specified calendar.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventIds">Event identifiers. To retrieve event IDs call the <see cref="List"/> method.</param>
-        public virtual MultiGetRequest MultiGet(string calendarId, params string[] eventIds) => new MultiGetRequest(_service, calendarId, eventIds);
-
-        /// <summary>
-        /// Creates an event.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="body">The body of the request.</param>
-        public virtual InsertRequest Insert(Event body, string calendarId) => new InsertRequest(_service, body, calendarId);
-
-        /// <summary>
-        /// Updates an event.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="body">The body of the request.</param>
-        public virtual UpdateRequest Update(Event body, string calendarId) => new UpdateRequest(_service, body, calendarId);
-
-        /// <summary>
-        /// Deletes an event.
-        /// </summary>
-        /// <param name="calendarId">Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventId">Event identifier.</param>
-        public virtual DeleteRequest Delete(string calendarId, string eventId) => new DeleteRequest(_service, calendarId, eventId);
-
-        /// <summary>
-        /// Returns events on the specified calendar.
-        /// </summary>
-        public class ListRequest : CalendarBaseServiceRequest<Events>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="eventId">The ID of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        public GetRequest(IClientService service, string calendarId, string eventId) : base(service)
         {
-            private CalendarQuery _body;
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            EventId = eventId.ThrowIfNullOrEmpty(nameof(Event.Id));
+        }
 
-            /// <summary>
-            /// Constructs a new List request.
-            /// </summary>
-            public ListRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+        /// <summary>
+        /// Gets the calendar ID.
+        /// </summary>
+        [RequestParameter("calendarId", RequestParameterType.Path)]
+        public virtual string CalendarId { get; }
 
-            /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
-            /// </summary>
-            [RequestParameter("calendarId", RequestParameterType.Path)]
-            public virtual string CalendarId { get; }
+        /// <summary>
+        /// Gets the event ID.
+        /// </summary>
+        [RequestParameter("eventId", RequestParameterType.Path)]
+        public virtual string EventId { get; }
 
-            /// <summary>
-            /// Upper bound (exclusive) for an event's start time to filter by. Optional. The default is not to
-            /// filter by start time. Milliseconds may be provided but are ignored. If timeMin is set, timeMax must be greater than timeMin.
-            /// </summary>
-            public virtual DateTime? TimeMax { get; set; }
+        /// <inheritdoc/>
+        public override string MethodName => "get";
 
-            /// <summary>
-            /// Lower bound (exclusive) for an event's end time to filter by. Optional. The default is not to
-            /// filter by end time. Milliseconds may be provided but are ignored. If timeMax is set, timeMin must be smaller than timeMax.
-            /// </summary>
-            public virtual DateTime? TimeMin { get; set; }
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Get;
 
-            /// <inheritdoc/>
-            public override string MethodName => "list";
+        /// <inheritdoc/>
+        public override string RestPath => "{calendarId}/{eventId}.ics";
 
-            /// <inheritdoc/>
-            public override string HttpMethod => Constants.Report;
+        /// <inheritdoc/>
+        public override string Depth => "1";
 
-            /// <inheritdoc/>
-            public override string RestPath => "{calendarId}";
+        /// <inheritdoc/>
+        protected override void InitParameters()
+        {
+            base.InitParameters();
 
-            /// <inheritdoc/>
-            public override string Depth => "1";
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
+        }
+    }
 
-            /// <inheritdoc/>
-            protected override object GetBody()
+    /// <summary>
+    /// Represents a request to retrieve multiple iCloud events by ID.
+    /// </summary>
+    public class MultiGetRequest : CalendarBaseServiceRequest<Events>
+    {
+        private object _body;
+
+        /// <summary>
+        /// Constructs a new <see cref="MultiGetRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="calendarId">The ID of the calendar where the events are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="eventIds">The IDs of the events to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        public MultiGetRequest(IClientService service, string calendarId, params string[] eventIds) : base(service)
+        {
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            EventIds = eventIds.ThrowIfNull(nameof(eventIds));
+        }
+
+        /// <summary>
+        /// Gets the calendar ID.
+        /// </summary>
+        [RequestParameter("calendarId", RequestParameterType.Path)]
+        public virtual string CalendarId { get; }
+
+        /// <summary>
+        /// Gets the event IDs.
+        /// </summary>
+        public virtual string[] EventIds { get; }
+
+        /// <inheritdoc/>
+        public override string MethodName => "get";
+
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Report;
+
+        /// <inheritdoc/>
+        public override string RestPath => "{calendarId}";
+
+        /// <inheritdoc/>
+        public override string Depth => "1";
+
+        /// <inheritdoc/>
+        protected override object GetBody()
+        {
+            return _body ??= new CalendarMultiget()
             {
-                if (_body == null)
+                Prop = new Prop()
                 {
-                    _body = new CalendarQuery() { CompFilter = new CompFilter("VCALENDAR") };
-                    _body.CompFilter.Child = new CompFilter("VEVENT");
-                }
+                    CalendarColor = new CalendarColor(),
+                    CalendarData = new CalendarData(),
+                    CalendarDescription = new CalendarDescription(),
+                    CalendarHomeSet = new CalendarHomeSet(),
+                    CalendarOrder = new CalendarOrder(),
+                    CalendarTimezone = new CalendarTimezone(),
+                    CurrentUserPrincipal = new CurrentUserPrincipal(),
+                    CurrentUserPrivilegeSet = new CurrentUserPrivilegeSet(),
+                    DisplayName = new DisplayName(),
+                    GetCTag = new GetCTag(),
+                    GetETag = new GetETag(),
+                    ResourceType = new ResourceType(),
+                    SupportedReportSet = new SupportedReportSet(),
+                    SupportedCalendarComponentSet = new SupportedCalendarComponentSet(),
+                    SupportedCalendarComponentSets = new SupportedCalendarComponentSets(),
+                    SyncToken = new WebDav.DataTypes.SyncToken()
+                },
+                Hrefs = EventIds.Select(eventId => new Href() { Value = Service.HttpClientInitializer.GetCalendarFullHref(CalendarId, eventId) }).ToArray()
+            };
+        }
 
-                var timeMin = TimeMin.ToFilterTime();
-                var timeMax = TimeMax.ToFilterTime();
+        /// <inheritdoc/>
+        protected override void InitParameters()
+        {
+            base.InitParameters();
 
-                if (!string.IsNullOrEmpty(timeMin) || !string.IsNullOrEmpty(timeMax))
-                    _body.CompFilter.Child.TimeRange = new TimeRange(timeMin, timeMax);
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+        }
+    }
 
-                return _body;
-            }
+    /// <summary>
+    /// Represents a request to insert a event into iCloud.
+    /// </summary>
+    public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
+    {
+        private object _body;
 
-            /// <inheritdoc/>
-            protected override void InitParameters()
-            {
-                base.InitParameters();
-
-                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
-            }
+        /// <summary>
+        /// Constructs a new <see cref="InsertRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="body">The event to insert.</param>
+        /// <param name="calendarId">The ID of the calendar where the event will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        public InsertRequest(IClientService service, Event body, string calendarId) : base(service)
+        {
+            Body = body.ThrowIfNull(nameof(Event));
+            EventId = body.Id.ThrowIfNull(nameof(Event.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
         }
 
         /// <summary>
-        /// Returns an event.
+        /// Event identifier.
         /// </summary>
-        public class GetRequest : CalendarBaseServiceRequest<Event>
+        [RequestParameter("eventId", RequestParameterType.Path)]
+        public virtual string EventId { get; }
+
+        /// <summary>
+        /// Gets the event ID.
+        /// </summary>
+        [RequestParameter("calendarId", RequestParameterType.Path)]
+        public virtual string CalendarId { get; }
+
+        /// <summary>
+        /// Gets the body of this request.
+        /// </summary>
+        private Event Body { get; }
+
+        /// <inheritdoc/>
+        public override string MethodName => "insert";
+
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Put;
+
+        /// <inheritdoc/>
+        public override string RestPath => "{calendarId}/{eventId}.ics";
+
+        /// <inheritdoc/>
+        public override string ContentType => Constants.TEXT_CALENDAR;
+
+        /// <inheritdoc/>
+        protected override object GetBody() => _body ??= Body.SerializeToString();
+
+        /// <inheritdoc/>
+        protected override void InitParameters()
         {
-            /// <summary>
-            /// Constructs a new Get request.
-            /// </summary>
-            public GetRequest(IClientService service, string calendarId, string eventId) : base(service)
-            {
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-                EventId = eventId.ThrowIfNullOrEmpty(nameof(Event.Id));
-            }
+            base.InitParameters();
 
-            /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
-            /// </summary>
-            [RequestParameter("calendarId", RequestParameterType.Path)]
-            public virtual string CalendarId { get; }
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
+        }
+    }
 
-            /// <summary>
-            /// Event identifier. To retrieve event IDs call the <see cref="List"/> method.
-            /// </summary>
-            [RequestParameter("eventId", RequestParameterType.Path)]
-            public virtual string EventId { get; }
+    /// <summary>
+    /// Represents a request to update an existing event in iCloud.
+    /// </summary>
+    public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
+    {
+        private object _body;
 
-            /// <inheritdoc/>
-            public override string MethodName => "get";
-
-            /// <inheritdoc/>
-            public override string HttpMethod => Constants.Get;
-
-            /// <inheritdoc/>
-            public override string RestPath => "{calendarId}/{eventId}.ics";
-
-            /// <inheritdoc/>
-            public override string Depth => "1";
-
-            /// <inheritdoc/>
-            protected override void InitParameters()
-            {
-                base.InitParameters();
-
-                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
-                RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
-            }
+        /// <summary>
+        /// Constructs a new <see cref="UpdateRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>  
+        /// <param name="body">The body of the request containing the updated event information.</param>
+        /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        public UpdateRequest(IClientService service, Event body, string calendarId) : base(service)
+        {
+            Body = body.ThrowIfNull(nameof(Event));
+            EventId = Body.Id.ThrowIfNullOrEmpty(nameof(Event.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
         }
 
         /// <summary>
-        /// Returns events on the specified calendar.
+        /// Gets the calendar ID.
         /// </summary>
-        public class MultiGetRequest : CalendarBaseServiceRequest<Events>
+        [RequestParameter("calendarId", RequestParameterType.Path)]
+        public virtual string CalendarId { get; }
+
+        /// <summary>
+        /// Gets the event ID.
+        /// </summary>
+        [RequestParameter("eventId", RequestParameterType.Path)]
+        public virtual string EventId { get; }
+
+        /// <summary>
+        /// Gets the body of this request.
+        /// </summary>
+        private Event Body { get; }
+
+        /// <inheritdoc/>
+        public override string MethodName => "update";
+
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Put;
+
+        /// <inheritdoc/>
+        public override string RestPath => "{calendarId}/{eventId}.ics";
+
+        /// <inheritdoc/>
+        public override string ContentType => Constants.TEXT_CALENDAR;
+
+        /// <inheritdoc/>
+        protected override object GetBody() => _body ??= Body.SerializeToString();
+
+        /// <inheritdoc/>
+        protected override void InitParameters()
         {
-            private CalendarMultiget _body;
+            base.InitParameters();
 
-            /// <summary>
-            /// Constructs a new MultiGet request.
-            /// </summary>
-            public MultiGetRequest(IClientService service, string calendarId, params string[] eventIds) : base(service)
-            {
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-                EventIds = eventIds.ThrowIfNull(nameof(eventIds));
-            }
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
+        }
+    }
 
-            /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
-            /// </summary>
-            [RequestParameter("calendarId", RequestParameterType.Path)]
-            public virtual string CalendarId { get; }
-
-            /// <summary>
-            /// Event identifiers. To retrieve event IDs call the <see cref="List"/> method.
-            /// </summary>
-            public virtual string[] EventIds { get; }
-
-            /// <inheritdoc/>
-            public override string MethodName => "get";
-
-            /// <inheritdoc/>
-            public override string HttpMethod => Constants.Report;
-
-            /// <inheritdoc/>
-            public override string RestPath => "{calendarId}";
-
-            /// <inheritdoc/>
-            public override string Depth => "1";
-
-            /// <inheritdoc/>
-            protected override object GetBody()
-            {
-                if (_body == null)
-                {
-                    _body = new CalendarMultiget();
-                }
-
-                _body.Href.Clear();
-                _body.Href.AddRange(EventIds.Select(eventId =>
-                new Uri(Service.HttpClientInitializer.GetUri(PrincipalHomeSet.Calendar), string.Concat(CalendarId, "/", eventId, ".ics")).AbsolutePath));
-
-                return _body;
-            }
-
-            /// <inheritdoc/>
-            protected override void InitParameters()
-            {
-                base.InitParameters();
-
-                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
-            }
+    /// <summary>
+    /// Represents a request to delete a event from iCloud.
+    /// </summary>
+    public class DeleteRequest : CalendarBaseServiceRequest<VoidResponse>
+    {
+        /// <summary>
+        /// Constructs a new <see cref="DeleteRequest"/> instance.
+        /// </summary>
+        /// <param name="service">The client service used for making requests.</param>
+        /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
+        /// <param name="eventId">The ID of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        public DeleteRequest(IClientService service, string calendarId, string eventId) : base(service)
+        {
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            EventId = eventId.ThrowIfNullOrEmpty(nameof(Event.Id));
         }
 
         /// <summary>
-        /// Creates an event.
+        /// Gets the calendar ID.
         /// </summary>
-        public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
-        {
-            /// <summary>
-            /// Constructs a new Insert request.
-            /// </summary>
-            public InsertRequest(IClientService service, Event body, string calendarId) : base(service)
-            {
-                Body = body.ThrowIfNull(nameof(Event));
-                EventId = body.Id.ThrowIfNull(nameof(Event.Id));
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-            }
-
-            /// <summary>
-            /// Event identifier.
-            /// </summary>
-            [RequestParameter("eventId", RequestParameterType.Path)]
-            public virtual string EventId { get; }
-
-            /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
-            /// </summary>
-            [RequestParameter("calendarId", RequestParameterType.Path)]
-            public virtual string CalendarId { get; }
-
-            /// <summary>
-            /// Gets the body of this request.
-            /// </summary>
-            private Event Body { get; }
-
-            /// <inheritdoc/>
-            public override string MethodName => "insert";
-
-            /// <inheritdoc/>
-            public override string HttpMethod => Constants.Put;
-
-            /// <inheritdoc/>
-            public override string RestPath => "{calendarId}/{eventId}.ics";
-
-            /// <inheritdoc/>
-            public override string ContentType => Constants.TEXT_CALENDAR;
-
-            /// <inheritdoc/>
-            protected override object GetBody() => Body.SerializeToString();
-
-            /// <inheritdoc/>
-            protected override void InitParameters()
-            {
-                base.InitParameters();
-
-                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
-                RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
-            }
-        }
+        [RequestParameter("calendarId", RequestParameterType.Path)]
+        public virtual string CalendarId { get; }
 
         /// <summary>
-        /// Updates an event.
+        /// Gets the event ID.
         /// </summary>
-        public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
+        [RequestParameter("eventId", RequestParameterType.Path)]
+        public virtual string EventId { get; }
+
+        /// <inheritdoc/>
+        public override string MethodName => "delete";
+
+        /// <inheritdoc/>
+        public override string HttpMethod => Constants.Delete;
+
+        /// <inheritdoc/>
+        public override string RestPath => "{calendarId}/{eventId}.ics";
+
+        /// <inheritdoc/>
+        public override string Depth => "1";
+
+        /// <inheritdoc/>
+        protected override void InitParameters()
         {
-            /// <summary>
-            /// Constructs a new Update request.
-            /// </summary>
-            public UpdateRequest(IClientService service, Event body, string calendarId) : base(service)
-            {
-                Body = body.ThrowIfNull(nameof(Event));
-                EventId = Body.Id.ThrowIfNullOrEmpty(nameof(Event.Id));
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-            }
+            base.InitParameters();
 
-            /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
-            /// </summary>
-            [RequestParameter("calendarId", RequestParameterType.Path)]
-            public virtual string CalendarId { get; }
-
-            /// <summary>
-            /// Event identifier. To retrieve event IDs call the <see cref="List"/> method.
-            /// </summary>
-            [RequestParameter("eventId", RequestParameterType.Path)]
-            public virtual string EventId { get; }
-
-            /// <summary>
-            /// Gets the body of this request.
-            /// </summary>
-            private Event Body { get; }
-
-            /// <inheritdoc/>
-            public override string MethodName => "update";
-
-            /// <inheritdoc/>
-            public override string HttpMethod => Constants.Put;
-
-            /// <inheritdoc/>
-            public override string RestPath => "{calendarId}/{eventId}.ics";
-
-            /// <inheritdoc/>
-            public override string ContentType => Constants.TEXT_CALENDAR;
-
-            /// <inheritdoc/>
-            protected override object GetBody() => Body.SerializeToString();
-
-            /// <inheritdoc/>
-            protected override void InitParameters()
-            {
-                base.InitParameters();
-
-                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
-                RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
-            }
-        }
-
-        /// <summary>
-        /// Deletes an event.
-        /// </summary>
-        public class DeleteRequest : CalendarBaseServiceRequest<VoidResponse>
-        {
-            /// <summary>
-            /// Constructs a new Delete request.
-            /// </summary>
-            public DeleteRequest(IClientService service, string calendarId, string eventId) : base(service)
-            {
-                CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-                EventId = eventId.ThrowIfNullOrEmpty(nameof(Event.Id));
-            }
-
-            /// <summary>
-            /// Calendar identifier. To retrieve calendar IDs call the <see cref="CalendarListResource.List"/> method.
-            /// </summary>
-            [RequestParameter("calendarId", RequestParameterType.Path)]
-            public virtual string CalendarId { get; }
-
-            /// <summary>
-            /// Event identifier. To retrieve event IDs call the <see cref="List"/> method.
-            /// </summary>
-            [RequestParameter("eventId", RequestParameterType.Path)]
-            public virtual string EventId { get; }
-
-            /// <inheritdoc/>
-            public override string MethodName => "delete";
-
-            /// <inheritdoc/>
-            public override string HttpMethod => Constants.Delete;
-
-            /// <inheritdoc/>
-            public override string RestPath => "{calendarId}/{eventId}.ics";
-
-            /// <inheritdoc/>
-            public override string Depth => "1";
-
-            /// <inheritdoc/>
-            protected override void InitParameters()
-            {
-                base.InitParameters();
-
-                RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
-                RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
-            }
+            RequestParameters.Add("calendarId", new Parameter("calendarId", "path", true));
+            RequestParameters.Add("eventId", new Parameter("eventId", "path", true));
         }
     }
 }

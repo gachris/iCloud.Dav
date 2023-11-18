@@ -1,34 +1,36 @@
-﻿using iCloud.Dav.Calendar.CalDav.Types;
-using iCloud.Dav.Calendar.DataTypes;
-using iCloud.Dav.Calendar.Utils;
+﻿using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.Extensions;
+using iCloud.Dav.Calendar.WebDav.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace iCloud.Dav.Calendar.Serialization.Converters
+namespace iCloud.Dav.Calendar.Serialization.Converters;
+
+internal sealed class CalendarListConverter : TypeConverter
 {
-    internal sealed class CalendarListConverter : TypeConverter
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        var multiStatus = (MultiStatus)value;
+        var collectionResponse = multiStatus.Responses.FirstOrDefault(x => x.IsCollection());
+        var propStat = collectionResponse?.GetSuccessPropStat();
+        var items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse })
+                                         .Select(x => x.ToCalendar())
+                                         .ToList();
+
+        return new CalendarList()
         {
-            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
-
-            var multiStatus = (MultiStatus)value;
-            var responses = multiStatus.Responses;
-            var collectionResponse = responses.FirstOrDefault(x => x.ResourceType?.Count == 1 && x.ResourceType?.FirstOrDefault()?.Name == "collection");
-
-            return new CalendarList()
-            {
-                NextSyncToken = collectionResponse?.SyncToken ?? multiStatus.SyncToken,
-                ETag = collectionResponse?.Etag,
-                Items = responses.Except(new HashSet<Response>() { collectionResponse }).Select(MappingExtensions.ToCalendar).ToList()
-            };
-        }
+            NextSyncToken = propStat?.Prop.SyncToken?.Value ?? multiStatus.SyncToken?.Value,
+            ETag = propStat?.Prop.GetETag?.Value,
+            Items = items
+        };
     }
 }

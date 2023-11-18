@@ -5,46 +5,57 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace iCloud.Dav.Calendar.DataTypes
+namespace iCloud.Dav.Calendar.DataTypes;
+
+/// <summary>
+/// Represents a Reminder, which is a type of Todo that has a due date and/or a location.
+/// </summary>
+[TypeConverter(typeof(ReminderConverter))]
+public class Reminder : Todo, IDirectResponseSchema, IUrlPath
 {
+    /// <summary>
+    /// A value that uniquely identifies the Reminder. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
+    /// </summary>
+    /// <remarks>The initial value of Id is the same as the <seealso cref="UniqueComponent.Uid"/>.</remarks>
+    public virtual string Id { get; set; }
+
     /// <inheritdoc/>
-    [TypeConverter(typeof(ReminderConverter))]
-    public class Reminder : Todo, IDirectResponseSchema, IUrlPath
+    public virtual string ETag { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Reminder"/> class.
+    /// </summary>
+    public Reminder() : base()
     {
-        /// <summary>
-        /// A value that uniquely identifies the Reminder. It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
-        /// </summary>
-        /// <remarks>The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/></remarks>
-        public virtual string Id { get; set; }
+        EnsureProperties();
+    }
 
-        /// <inheritdoc/>
-        public virtual string ETag { get; set; }
+    /// <summary>
+    /// This method is called during deserialization to initialize the object before any deserialization is done.
+    /// </summary>
+    /// <param name="context">The context for the serialization or deserialization operation.</param>
+    protected override void OnDeserialized(StreamingContext context)
+    {
+        base.OnDeserialized(context);
 
-        public Reminder() : base()
+        EnsureProperties();
+    }
+
+    /// <summary>
+    /// Ensures that the properties of the calendar list entry are set.
+    /// </summary>
+    private void EnsureProperties()
+    {
+        if (string.IsNullOrEmpty(Uid))
         {
-            EnsureProperties();
+            // Create a new UID for the component
+            Id = Uid = Guid.NewGuid().ToString();
         }
-
-        protected override void OnDeserialized(StreamingContext context)
+        if (Calendar is null)
         {
-            base.OnDeserialized(context);
-
-            EnsureProperties();
-        }
-
-        private void EnsureProperties()
-        {
-            if (string.IsNullOrEmpty(Uid))
-            {
-                // Create a new UID for the component
-                Id = Uid = Guid.NewGuid().ToString();
-            }
-            if (Calendar is null)
-            {
-                var calendar = new Ical.Net.Calendar();
-                calendar.Todos.Add(this);
-                Parent = calendar;
-            }
+            var calendar = new Ical.Net.Calendar();
+            calendar.Todos.Add(this);
+            Parent = calendar;
         }
     }
 }

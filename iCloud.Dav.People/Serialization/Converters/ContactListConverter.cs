@@ -1,46 +1,50 @@
-﻿using iCloud.Dav.People.CardDav.Types;
+﻿using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Extensions;
+using iCloud.Dav.People.WebDav.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 
-namespace iCloud.Dav.People.Serialization.Converters
+namespace iCloud.Dav.People.Serialization.Converters;
+
+internal sealed class ContactListConverter : TypeConverter
 {
-    internal sealed class ContactListConverter : TypeConverter
+    private const string ContactsKind = "contacts";
+
+    /// <inheritdoc/>
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+
+    /// <inheritdoc/>
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
     {
-        /// <inheritdoc/>
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(MultiStatus);
+        if (!CanConvertFrom(context, value.GetType()))
+            throw GetConvertFromException(value);
 
-        /// <inheritdoc/>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        var multiStatus = (MultiStatus)value;
+        var response = multiStatus.Responses.FirstOrDefault(x => x.IsAddressbook());
+        var items = multiStatus.Responses.Where(x => x.IsOK() && !x.IsGroup())
+                                         .Except(new HashSet<Response>() { response })
+                                         .Select(ToContact)
+                                         .ToList();
+
+        return new ContactList()
         {
-            if (!CanConvertFrom(context, value.GetType())) throw GetConvertFromException(value);
+            Kind = ContactsKind,
+            Items = items
+        };
+    }
 
-            var multiStatus = (MultiStatus)value;
-            var addressbook = multiStatus.Responses.FirstOrDefault(x => x.ResourceType?.Any(resourceType => resourceType.Name == "addressbook") == true || !Path.HasExtension(x.Href.TrimEnd('/')));
-            var responses = multiStatus.Responses.Where(response => !response.AddressData.Value.Contains("X-ADDRESSBOOKSERVER-KIND:group"));
+    private static Contact ToContact(Response response)
+    {
+        response.ThrowIfNull(nameof(response));
+        var propStat = response.GetSuccessPropStat().ThrowIfNull(nameof(PropStat));
 
-            return new ContactList()
-            {
-                Kind = "contacts",
-                Items = responses.Except(new HashSet<Response>() { addressbook }).Select(ToContact).ToList()
-            };
-        }
-
-        private static Contact ToContact(Response response)
-        {
-            var bytes = Encoding.UTF8.GetBytes(response.AddressData.Value);
-            using (var stream = new MemoryStream(bytes))
-            {
-                var contact = ContactDeserializer.Default.Deserialize(new StreamReader(stream, Encoding.UTF8)).First();
-                contact.ETag = response.Etag;
-                contact.Id = Path.GetFileNameWithoutExtension(response.Href);
-                return contact;
-            }
-        }
+        var contact = propStat.Prop.AddressData.Value.ToContact();
+        contact.ETag = propStat.Prop.GetETag.Value;
+        contact.Id = response.Href.ExtractId();
+        return contact;
     }
 }

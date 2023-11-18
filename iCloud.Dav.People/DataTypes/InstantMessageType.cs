@@ -1,28 +1,58 @@
-﻿namespace iCloud.Dav.People.DataTypes
-{
-    public enum InstantMessageType
-    {
-        /// <summary>Indicates a home instant message type.</summary>
-        Home = 1,
-        /// <summary>Indicates a work instant message type.</summary>
-        Work = 2,
-        /// <summary>Indicates an other instant message type.</summary>
-        Other = 3,
-        /// <summary>Indicates a custom instant message type.</summary>
-        Custom = 4,
-    }
+﻿namespace iCloud.Dav.People.DataTypes;
 
-    internal enum InstantMessageTypeInternal
-    {
-        /// <summary>Indicates a home instant message type.</summary>
-        Home = 1,
-        /// <summary>Indicates a work instant message type.</summary>
-        Work = 2,
-        /// <summary>Indicates an other instant message type.</summary>
-        Other = 4,
-        /// <summary>Indicates a custom instant message type.</summary>
-        Custom = 8,
-        /// <summary>Indicates a pref instant message type.</summary>
-        Pref = 8,
-    }
+/// <summary>
+/// Enumerates the types of instant messaging services that can be used for a contact.
+/// </summary>
+public enum InstantMessageType
+{
+    /// <summary>
+    /// Indicates a home instant messaging type.
+    /// </summary>
+    Home = 1,
+
+    /// <summary>
+    /// Indicates a work instant messaging type.
+    /// </summary>
+    Work = 2,
+
+    /// <summary>
+    /// Indicates an other instant messaging type.
+    /// </summary>
+    Other = 3,
+
+    /// <summary>
+    /// Indicates a custom instant messaging type.
+    /// </summary>
+    Custom = 4
+}
+
+/// <summary>
+/// Enumerates the internal types of instant messaging services that can be used for a contact.
+/// </summary>
+internal enum InstantMessageTypeInternal
+{
+    /// <summary>
+    /// Indicates a home instant messaging type.
+    /// </summary>
+    Home = 1,
+
+    /// <summary>
+    /// Indicates a work instant messaging type.
+    /// </summary>
+    Work = 2,
+
+    /// <summary>
+    /// Indicates an other instant messaging type.
+    /// </summary>
+    Other = 4,
+
+    /// <summary>
+    /// Indicates a custom instant messaging type.
+    /// </summary>
+    Custom = 8,
+
+    /// <summary>
+    /// Indicates a preferred instant messaging type.
+    /// </summary>
+    Pref = 8
 }

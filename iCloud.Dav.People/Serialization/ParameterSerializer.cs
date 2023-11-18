@@ -5,58 +5,80 @@ using System.Text;
 using vCard.Net;
 using vCard.Net.Serialization;
 
-namespace iCloud.Dav.People.Serialization
+namespace iCloud.Dav.People.Serialization;
+
+/// <summary>
+/// Serializes a <see cref="CardParameter"/> to a string representation, according to the vCard specification.
+/// </summary>
+public class ParameterSerializer : SerializerBase
 {
-    public class ParameterSerializer : SerializerBase
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ParameterSerializer"/> class.
+    /// </summary>
+    public ParameterSerializer() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ParameterSerializer"/> class with the specified <see cref="SerializationContext"/>.
+    /// </summary>
+    /// <param name="ctx">The <see cref="SerializationContext"/>.</param>
+    public ParameterSerializer(SerializationContext ctx) : base(ctx) { }
+
+    /// <summary>
+    /// Gets the Type that this <see cref="ParameterSerializer"/> can serialize and deserialize, which is <see cref="CardParameter"/>.
+    /// </summary>
+    public override Type TargetType => typeof(CardParameter);
+
+    /// <summary>
+    /// Converts a <see cref="CardParameter"/> to a string representation.
+    /// </summary>
+    /// <param name="obj">The <see cref="CardParameter"/> object to be serialized.</param>
+    /// <returns>A string representation of the <see cref="CardParameter"/> object.</returns>
+    public override string SerializeToString(object obj)
     {
-        public ParameterSerializer() { }
-
-        public ParameterSerializer(SerializationContext ctx) : base(ctx) { }
-
-        public override Type TargetType => typeof(CardParameter);
-
-        public override string SerializeToString(object obj)
+        if (!(obj is CardParameter p))
         {
-            if (!(obj is CardParameter p))
-            {
-                return null;
-            }
-
-            var builder = new StringBuilder();
-
-            if (p.Name.Equals("TYPE", StringComparison.OrdinalIgnoreCase))
-            {
-                var typeValues = p.Values.Select(type => string.Concat(p.Name, "=", type));
-                var values = string.Join(";", typeValues);
-
-                // Surround the parameter value with double quotes, if the value
-                // contains any problematic characters.
-                if (values.IndexOfAny(new[] { ':', ',' }) >= 0)
-                {
-                    values = "\"" + values + "\"";
-                }
-                builder.Append(values);
-            }
-            else
-            {
-                builder.Append(p.Name + "=");
-
-                // "Section 3.2:  Property parameter values MUST NOT contain the DQUOTE character."
-                // Therefore, let's strip any double quotes from the value.
-                var values = string.Join(",", p.Values).Replace("\"", string.Empty);
-
-                // Surround the parameter value with double quotes, if the value
-                // contains any problematic characters.
-                if (values.IndexOfAny(new[] { ';', ':', ',' }) >= 0)
-                {
-                    values = "\"" + values + "\"";
-                }
-                builder.Append(values);
-            }
-
-            return builder.ToString();
+            return null;
         }
 
-        public override object Deserialize(TextReader tr) => null;
+        var builder = new StringBuilder();
+
+        if (p.Name.Equals("TYPE", StringComparison.OrdinalIgnoreCase))
+        {
+            var typeValues = p.Values.Select(type => string.Concat(p.Name, "=", type));
+            var values = string.Join(";", typeValues);
+
+            // Surround the parameter value with double quotes, if the value
+            // contains any problematic characters.
+            if (values.IndexOfAny(new[] { ':', ',' }) >= 0)
+            {
+                values = "\"" + values + "\"";
+            }
+            builder.Append(values);
+        }
+        else
+        {
+            builder.Append(p.Name + "=");
+
+            // "Section 3.2:  Property parameter values MUST NOT contain the DQUOTE character."
+            // Therefore, let's strip any double quotes from the value.
+            var values = string.Join(",", p.Values).Replace("\"", string.Empty);
+
+            // Surround the parameter value with double quotes, if the value
+            // contains any problematic characters.
+            if (values.IndexOfAny(new[] { ';', ':', ',' }) >= 0)
+            {
+                values = "\"" + values + "\"";
+            }
+            builder.Append(values);
+        }
+
+        return builder.ToString();
     }
+
+    /// <summary>
+    /// This method is not implemented for the <see cref="ParameterSerializer"/> class.
+    /// </summary>
+    /// <param name="tr">The <see cref="TextReader"/>.</param>
+    /// <returns>null</returns>
+    public override object Deserialize(TextReader tr) => null;
 }
