@@ -32,7 +32,7 @@
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <HelpTitle>iCloud.Dav Documentation</HelpTitle>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
-    <NamingMethod>Guid</NamingMethod>
+    <NamingMethod>MemberName</NamingMethod>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <RootNamespaceContainer>False</RootNamespaceContainer>
     <NamespaceGrouping>True</NamespaceGrouping>
@@ -61,7 +61,7 @@
       <NamespaceSummaryItem name="iCloud.Dav.People.Serialization.DataTypes" isDocumented="True" />
       <NamespaceSummaryItem name="iCloud.Dav.People.Services" isDocumented="True" />
     </NamespaceSummaries>
-    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
+    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter, AutoDocumentDispose</MissingTags>
     <HtmlSdkLinkType>Msdn</HtmlSdkLinkType>
     <BinaryTOC>True</BinaryTOC>
     <IncludeFavorites>True</IncludeFavorites>

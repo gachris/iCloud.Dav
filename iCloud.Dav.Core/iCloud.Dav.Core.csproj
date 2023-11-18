@@ -15,7 +15,7 @@
 		<Title>iCloud Core</Title>
 		<Description>iCloud.Dav.Core is a versatile .NET library that forms the foundation for interacting with iCloud services.</Description>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>3.1.1</Version>
+		<Version>3.1.0.1</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>icloud</PackageTags>
