@@ -1,30 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>iCloud.Dav.People_SignAssembly_Key.snk</AssemblyOriginatorKeyFile>
-		<RepositoryUrl>https://github.com/gachris/iCloud.Dav</RepositoryUrl>
-		<Authors>gachris</Authors>
-		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav/tree/master/iCloud.Dav.People</PackageProjectUrl>
-		<Copyright>Copyright © 2022.</Copyright>
-		<PackageId>iCloud.Dav.People</PackageId>
-		<Product>iCloud.Dav.People</Product>
+	<PropertyGroup Label="Package Configuration">
 		<Title>iCloud People</Title>
-		<Description>iCloud.Dav.People is a .NET library that allows you to interact with iCloud contacts and contact groups.</Description>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>3.1.0.1</Version>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryType>git</RepositoryType>
+		<Description>$(MSBuildProjectName) is a .NET library that allows you to interact with iCloud contacts and contact groups.</Description>
 		<PackageTags>iCloud contact groups contacts</PackageTags>
-		<LangVersion>latest</LangVersion>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<None Remove="iCloud.dav.People_SignAssembly_Key.snk" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="README.md">
@@ -33,8 +14,9 @@
 		</None>
 	</ItemGroup>
 
+
 	<ItemGroup>
-	  <PackageReference Include="vCard.Net" Version="1.0.2" />
+		<PackageReference Include="vCard.Net" />
 	</ItemGroup>
 
 	<ItemGroup>
