@@ -1,6 +1,6 @@
 ﻿using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
 using System;
+using System.Globalization;
 using System.IO;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
@@ -44,7 +44,7 @@ public class DateSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        var value = date.DateTime.ToString();
+        var value = date.DateTime.ToString("yyyy-dd-MM");
 
         return Encode(date, value);
     }
@@ -74,7 +74,7 @@ public class DateSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        date.DateTime = DateTimeHelper.TryParseDate(value) ?? DateTime.MinValue;
+        date.DateTime = DateTime.TryParseExact(value, "yyyy-dd-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : (DateTime.TryParse(value, out result) ? result : DateTime.MinValue);
 
         return date;
     }
