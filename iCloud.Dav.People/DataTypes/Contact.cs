@@ -278,16 +278,10 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// </summary>
     private void EnsureProperties()
     {
-        var id = Guid.NewGuid().ToString();
-        if (string.IsNullOrEmpty(Id))
-        {
-            // Create a new UID for the component
-            Id = id;
-        }
         if (string.IsNullOrEmpty(Uid))
         {
             // Create a new UID for the component
-            Uid = id;
+            Id = Uid = Guid.NewGuid().ToString();
         }
     }
 
@@ -310,5 +304,11 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
         }
 
         return CompareTo(obj) == 0;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return Uid?.GetHashCode() ?? base.GetHashCode();
     }
 }

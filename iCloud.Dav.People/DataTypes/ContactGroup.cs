@@ -157,4 +157,10 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
 
         return CompareTo(obj) == 0;
     }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return Uid?.GetHashCode() ?? base.GetHashCode();
+    }
 }
