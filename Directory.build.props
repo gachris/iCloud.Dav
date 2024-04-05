@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup Label="Project Configuration">
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Package Configuration">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>3.1.0.1</Version>
+		<Authors>gachris</Authors>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>Copyright © 2022.</Copyright>
+		<PackageId>$(MSBuildProjectName)</PackageId>
+		<Product>$(MSBuildProjectName)</Product>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/gachris/iCloud.Dav</RepositoryUrl>
+		<PackageOutputPath>$(MSBuildThisFileDirectory)packages\$(Configuration)</PackageOutputPath>
+		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav/tree/master/src/$(MSBuildProjectName)</PackageProjectUrl>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Output">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Sign Assembly">
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)SignAssemblyKey.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+</Project>

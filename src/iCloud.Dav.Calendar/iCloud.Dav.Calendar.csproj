@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup Label="Package Configuration">
+		<Title>iCloud Calendar</Title>
+		<Description>$(MSBuildProjectName) is a .NET library that allows you to interact with iCloud calendars, events, reminder lists, and reminders.</Description>
+		<PackageTags>iCloud calendars events reminders</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="Ical.Net" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
+	</ItemGroup>
+
+</Project>

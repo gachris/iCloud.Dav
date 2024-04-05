@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup Label="Package Configuration">
+		<Title>iCloud People</Title>
+		<Description>$(MSBuildProjectName) is a .NET library that allows you to interact with iCloud contacts and contact groups.</Description>
+		<PackageTags>iCloud contact groups contacts</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="vCard.Net" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj" />
+	</ItemGroup>
+
+</Project>
