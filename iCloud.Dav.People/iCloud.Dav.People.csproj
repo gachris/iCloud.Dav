@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="vCard.Net" Version="1.0.2-alpha" />
+	  <PackageReference Include="vCard.Net" Version="1.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
