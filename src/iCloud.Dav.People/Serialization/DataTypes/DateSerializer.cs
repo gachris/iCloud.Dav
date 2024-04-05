@@ -44,7 +44,7 @@ public class DateSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        var value = date.DateTime.ToString("yyyy-dd-MM");
+        var value = date.DateTime.ToString("yyyy-MM-dd");
 
         return Encode(date, value);
     }
@@ -74,7 +74,7 @@ public class DateSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        date.DateTime = DateTime.TryParseExact(value, "yyyy-dd-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : (DateTime.TryParse(value, out result) ? result : DateTime.MinValue);
+        date.DateTime = DateTime.TryParseExact(value, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : (DateTime.TryParse(value, out result) ? result : DateTime.MinValue);
 
         return date;
     }
