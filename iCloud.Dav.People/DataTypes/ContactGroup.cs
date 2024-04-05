@@ -131,12 +131,30 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
             Id = Uid = Guid.NewGuid().ToString();
         }
 
-        if (Kind == null)
+        Kind ??= new Kind()
         {
-            Kind = new Kind()
-            {
-                CardKind = CardKind.Group
-            };
+            CardKind = CardKind.Group
+        };
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ContactGroup)obj));
+    }
+
+    /// <summary>
+    /// Determines whether the specified object is equal to the current object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
+    protected bool Equals(ContactGroup obj)
+    {
+        if (obj == null)
+        {
+            return false;
         }
+
+        return CompareTo(obj) == 0;
     }
 }

@@ -39,8 +39,8 @@ internal static class WebDavExtensions
             return false;
         }
 
-        return response.StatusCode is System.Net.HttpStatusCode.OK
-            || response.PropStat.Length > 0 && response.PropStat[0].StatusCode is System.Net.HttpStatusCode.OK;
+        return response.StatusCode is HttpStatusCode.OK
+            || response.PropStat.Length > 0 && response.PropStat[0].StatusCode is HttpStatusCode.OK;
     }
 
     public static bool HasExtension(this Response response)

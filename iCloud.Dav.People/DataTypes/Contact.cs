@@ -290,4 +290,25 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
             Uid = id;
         }
     }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Contact)obj));
+    }
+
+    /// <summary>
+    /// Determines whether the specified object is equal to the current object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
+    protected bool Equals(Contact obj)
+    {
+        if (obj == null)
+        {
+            return false;
+        }
+
+        return CompareTo(obj) == 0;
+    }
 }
