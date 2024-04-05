@@ -34,4 +34,20 @@ public class AuthorizationBroker
         var authorizationCodeInstalledApp = new AuthorizationCodeInstalledApp(authorizationCodeFlow, codeReceiver);
         return await authorizationCodeInstalledApp.AuthorizeAsync(user, networkCredentials, cancellationToken).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Authorizes a user asynchronously using Basic Authentication and retrieves the credentials from cache.
+    /// </summary>
+    /// <param name="user">The user's identifier.</param>
+    /// <param name="dataStore">The data store used for caching credentials (defaults to a <see cref="FileDataStore"/>).</param>
+    /// <param name="cancellationToken">Optional: A cancellation token to cancel the operation.</param>
+    /// <returns>The user's credentials retrieved from cache upon successful authorization.</returns>
+    public static async Task<UserCredential> AuthorizeFromCacheAsync(string user, IDataStore dataStore = null, CancellationToken cancellationToken = default)
+    {
+        var initializer = new AuthorizationCodeFlow.Initializer(dataStore ?? new FileDataStore(Folder, false));
+        var authorizationCodeFlow = new AuthorizationCodeFlow(initializer);
+        var codeReceiver = new CodeReceiver();
+        var authorizationCodeInstalledApp = new AuthorizationCodeInstalledApp(authorizationCodeFlow, codeReceiver);
+        return await authorizationCodeInstalledApp.AuthorizeAsync(user, cancellationToken).ConfigureAwait(false);
+    }
 }

@@ -46,4 +46,18 @@ public class AuthorizationCodeInstalledApp : IAuthorizationCodeInstalledApp
         }
         return new UserCredential(_flow, userId, token);
     }
+
+    /// <summary>Asynchronously authorizes the installed application to access user's protected data.</summary>
+    /// <param name="userId">User identifier</param>
+    /// <param name="taskCancellationToken">Cancellation token to cancel an operation</param>
+    /// <returns>The user's credential</returns>
+    public async Task<UserCredential> AuthorizeAsync(string userId, CancellationToken taskCancellationToken)
+    {
+        var token = await Flow.LoadTokenAsync(userId, taskCancellationToken).ConfigureAwait(false);
+        if (token == null)
+        {
+            throw new TokenException("User is not signed in.");
+        }
+        return new UserCredential(_flow, userId, token);
+    }
 }
