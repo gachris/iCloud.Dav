@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Auth", "iCloud.Dav.Auth\iCloud.Dav.Auth.csproj", "{729FB11E-E019-451B-B67D-7E5F2EEC04E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Core", "src\iCloud.Dav.Core\iCloud.Dav.Core.csproj", "{3BE92606-7460-4D9F-895A-E44A87AB2452}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar", "iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj", "{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Auth", "src\iCloud.Dav.Auth\iCloud.Dav.Auth.csproj", "{F4CEFEFD-3D18-4051-87C5-9EEC8F3040EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Core", "iCloud.Dav.Core\iCloud.Dav.Core.csproj", "{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar", "src\iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj", "{574A875D-6477-48DA-B6E9-F2E4AB04FCEA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.People", "iCloud.Dav.People\iCloud.Dav.People.csproj", "{406FFBB4-1168-4844-809B-047A695E12A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.People", "src\iCloud.Dav.People\iCloud.Dav.People.csproj", "{5DB44749-DABE-4068-99C4-01E7E9EA3600}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{729FB11E-E019-451B-B67D-7E5F2EEC04E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC7E1008-8DBD-44E3-A7AA-5CDC42DD19C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DDBCF67-55BC-411A-9A7F-E83C4C57CCBF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{406FFBB4-1168-4844-809B-047A695E12A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{406FFBB4-1168-4844-809B-047A695E12A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{406FFBB4-1168-4844-809B-047A695E12A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{406FFBB4-1168-4844-809B-047A695E12A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BE92606-7460-4D9F-895A-E44A87AB2452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BE92606-7460-4D9F-895A-E44A87AB2452}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BE92606-7460-4D9F-895A-E44A87AB2452}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE92606-7460-4D9F-895A-E44A87AB2452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4CEFEFD-3D18-4051-87C5-9EEC8F3040EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4CEFEFD-3D18-4051-87C5-9EEC8F3040EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4CEFEFD-3D18-4051-87C5-9EEC8F3040EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4CEFEFD-3D18-4051-87C5-9EEC8F3040EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{574A875D-6477-48DA-B6E9-F2E4AB04FCEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{574A875D-6477-48DA-B6E9-F2E4AB04FCEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{574A875D-6477-48DA-B6E9-F2E4AB04FCEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{574A875D-6477-48DA-B6E9-F2E4AB04FCEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB44749-DABE-4068-99C4-01E7E9EA3600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB44749-DABE-4068-99C4-01E7E9EA3600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB44749-DABE-4068-99C4-01E7E9EA3600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB44749-DABE-4068-99C4-01E7E9EA3600}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
