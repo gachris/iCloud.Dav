@@ -8,7 +8,7 @@
 
 	<PropertyGroup Label="Package Configuration">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>3.1.0.1</Version>
+		<Version>3.1.1</Version>
 		<Authors>gachris</Authors>
 		<RepositoryType>git</RepositoryType>
 		<Copyright>Copyright © 2022.</Copyright>
