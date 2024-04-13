@@ -127,8 +127,12 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
     {
         if (string.IsNullOrEmpty(Uid))
         {
-            // Create a new UID for the component
-            Id = Uid = Guid.NewGuid().ToString();
+            Uid = Guid.NewGuid().ToString();
+        }
+
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = Uid;
         }
 
         Kind ??= new Kind()

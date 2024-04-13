@@ -48,9 +48,14 @@ public class Reminder : Todo, IDirectResponseSchema, IUrlPath
     {
         if (string.IsNullOrEmpty(Uid))
         {
-            // Create a new UID for the component
-            Id = Uid = Guid.NewGuid().ToString();
+            Uid = Guid.NewGuid().ToString();
         }
+
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = Uid;
+        }
+
         if (Calendar is null)
         {
             var calendar = new Ical.Net.Calendar();
