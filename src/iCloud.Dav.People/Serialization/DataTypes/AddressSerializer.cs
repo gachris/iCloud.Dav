@@ -122,7 +122,6 @@ public class AddressSerializer : StringSerializer
             return null;
         }
 
-        var parts = value.Split(';');
         if (value != null && value.Length > 0)
         {
             string[] array = _reSplitSemiColon.Split(value);
