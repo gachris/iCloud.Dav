@@ -1,4 +1,5 @@
-﻿using Ical.Net.Serialization;
+﻿using System.Linq;
+using Ical.Net.Serialization;
 using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.Request;
@@ -6,7 +7,6 @@ using iCloud.Dav.Calendar.WebDav.DataTypes;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
-using System.Linq;
 
 namespace iCloud.Dav.Calendar.Resources;
 
@@ -275,19 +275,14 @@ public class CalendarListResource
                 SyncToken = new WebDav.DataTypes.SyncToken()
             };
 
-            if (string.IsNullOrEmpty(SyncToken))
-            {
-                _body = new PropFind() { Prop = prop };
-            }
-            else
-            {
-                _body = new SyncCollection()
+            _body = string.IsNullOrEmpty(SyncToken)
+                ? new PropFind() { Prop = prop }
+                : new SyncCollection()
                 {
                     SyncToken = new WebDav.DataTypes.SyncToken() { Value = SyncToken },
                     SyncLevel = new SyncLevel() { Value = "1" },
                     Prop = prop
                 };
-            }
 
             return _body;
         }

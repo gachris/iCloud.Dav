@@ -1,13 +1,13 @@
-﻿using iCloud.Dav.Calendar.DataTypes;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.Request;
 using iCloud.Dav.Calendar.WebDav.DataTypes;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace iCloud.Dav.Calendar.Resources;
 

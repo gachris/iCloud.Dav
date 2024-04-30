@@ -1,7 +1,7 @@
-﻿using iCloud.Dav.People.Extensions;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using iCloud.Dav.People.Extensions;
 
 namespace iCloud.Dav.People.Serialization.Converters;
 

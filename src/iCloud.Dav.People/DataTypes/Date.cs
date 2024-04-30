@@ -1,10 +1,10 @@
-﻿using iCloud.Dav.People.DataTypes.Mapping;
-using iCloud.Dav.People.Extensions;
-using iCloud.Dav.People.Serialization.DataTypes;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using iCloud.Dav.People.DataTypes.Mapping;
+using iCloud.Dav.People.Extensions;
+using iCloud.Dav.People.Serialization.DataTypes;
 using vCard.Net;
 using vCard.Net.DataTypes;
 

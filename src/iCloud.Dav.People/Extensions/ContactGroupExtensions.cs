@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Serialization;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Serialization;
 
 namespace iCloud.Dav.People.Extensions;
 

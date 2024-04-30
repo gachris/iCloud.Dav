@@ -1,8 +1,8 @@
-﻿using iCloud.Dav.People.WebDav.DataTypes;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using iCloud.Dav.People.WebDav.DataTypes;
 
 namespace iCloud.Dav.People.Extensions;
 

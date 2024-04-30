@@ -1,6 +1,6 @@
-﻿using iCloud.Dav.People.DataTypes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using iCloud.Dav.People.DataTypes;
 
 namespace iCloud.Dav.People.Serialization;
 

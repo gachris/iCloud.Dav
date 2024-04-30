@@ -1,11 +1,11 @@
-﻿using iCloud.Dav.Core;
+﻿using System.Linq;
+using iCloud.Dav.Core;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Requests;
 using iCloud.Dav.People.WebDav.DataTypes;
-using System.Linq;
 
 namespace iCloud.Dav.People.Resources;
 

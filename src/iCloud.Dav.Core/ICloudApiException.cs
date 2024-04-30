@@ -1,5 +1,5 @@
-﻿using iCloud.Dav.Core.Extensions;
-using System;
+﻿using System;
+using iCloud.Dav.Core.Extensions;
 
 namespace iCloud.Dav.Core;
 

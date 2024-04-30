@@ -1,7 +1,7 @@
-﻿using iCloud.Dav.Auth.Store;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using iCloud.Dav.Auth.Store;
 
 namespace iCloud.Dav.Auth;
 

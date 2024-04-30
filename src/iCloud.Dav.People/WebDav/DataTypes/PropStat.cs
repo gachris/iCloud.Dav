@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.People.Extensions;
-using System;
+﻿using System;
 using System.Net;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using iCloud.Dav.People.Extensions;
 
 namespace iCloud.Dav.People.WebDav.DataTypes;
 

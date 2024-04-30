@@ -1,9 +1,9 @@
-﻿using Ical.Net;
+﻿using System;
+using System.Collections.Generic;
+using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 using Ical.Net.Serialization;
-using System;
-using System.Collections.Generic;
 
 namespace iCloud.Dav.Calendar.Serialization;
 
