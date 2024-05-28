@@ -1,10 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+	</PropertyGroup>
+
 	<PropertyGroup Label="Package Configuration">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Title>iCloud Authentication</Title>
 		<Description>$(MSBuildProjectName) is a .NET library that facilitates authentication and interaction with iCloud services.</Description>
 		<PackageTags>iCloud auth</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Output">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -13,7 +22,6 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-
 
 	<ItemGroup>
 		<ProjectReference Include="..\iCloud.dav.Core\iCloud.Dav.Core.csproj" />

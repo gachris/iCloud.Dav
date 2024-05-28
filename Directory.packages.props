@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="Ical.Net" Version="4.2.0" />
+		<PackageVersion Include="vCard.Net" Version="1.0.2" />
+		<PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
 </Project>
