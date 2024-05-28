@@ -1,8 +1,8 @@
-﻿using iCloud.Dav.Core;
-using iCloud.Dav.Core.Logger;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using iCloud.Dav.Core;
+using iCloud.Dav.Core.Logger;
 
 namespace iCloud.Dav.Auth;
 
@@ -54,10 +54,6 @@ public class AuthorizationCodeInstalledApp : IAuthorizationCodeInstalledApp
     public async Task<UserCredential> AuthorizeAsync(string userId, CancellationToken taskCancellationToken)
     {
         var token = await Flow.LoadTokenAsync(userId, taskCancellationToken).ConfigureAwait(false);
-        if (token == null)
-        {
-            throw new TokenException("User is not signed in.");
-        }
-        return new UserCredential(_flow, userId, token);
+        return token == null ? throw new TokenException("User is not signed in.") : new UserCredential(_flow, userId, token);
     }
 }

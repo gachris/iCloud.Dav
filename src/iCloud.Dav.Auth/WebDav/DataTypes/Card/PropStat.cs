@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.Auth.Extensions;
-using System;
+﻿using System;
 using System.Net;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using iCloud.Dav.Auth.Extensions;
 
 namespace iCloud.Dav.Auth.WebDav.DataTypes.Card;
 

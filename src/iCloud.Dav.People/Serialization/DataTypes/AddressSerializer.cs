@@ -1,7 +1,7 @@
-﻿using iCloud.Dav.People.DataTypes;
-using System;
+﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 using vCard.Net.Utility;
@@ -122,7 +122,6 @@ public class AddressSerializer : StringSerializer
             return null;
         }
 
-        var parts = value.Split(';');
         if (value != null && value.Length > 0)
         {
             string[] array = _reSplitSemiColon.Split(value);

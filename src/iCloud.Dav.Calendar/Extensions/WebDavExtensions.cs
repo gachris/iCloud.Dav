@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.Calendar.DataTypes;
-using iCloud.Dav.Calendar.WebDav.DataTypes;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using iCloud.Dav.Calendar.DataTypes;
+using iCloud.Dav.Calendar.WebDav.DataTypes;
 
 namespace iCloud.Dav.Calendar.Extensions;
 
@@ -34,12 +34,9 @@ internal static class WebDavExtensions
 
     public static bool IsOK(this Response response)
     {
-        if (response.HasError())
-        {
-            return false;
-        }
-
-        return response.StatusCode is HttpStatusCode.OK
+        return response.HasError()
+            ? false
+            : response.StatusCode is HttpStatusCode.OK
             || response.PropStat.Length > 0 && response.PropStat[0].StatusCode is HttpStatusCode.OK;
     }
 
@@ -95,26 +92,12 @@ internal static class WebDavExtensions
 
     public static string FromRgb(this string color)
     {
-        if (color.Length == 7 && color[0] == '#')
-        {
-            return string.Concat(color, "FF");
-        }
-        else
-        {
-            return color;
-        }
+        return color.Length == 7 && color[0] == '#' ? string.Concat(color, "FF") : color;
     }
 
     public static string ToRgb(this string color)
     {
-        if (color.Length == 9 && color[0] == '#')
-        {
-            return color.Substring(0, 7);
-        }
-        else
-        {
-            return color;
-        }
+        return color.Length == 9 && color[0] == '#' ? color.Substring(0, 7) : color;
     }
 
     public static HttpStatusCode? ToHttpStatusCode(this string status)

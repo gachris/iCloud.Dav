@@ -1,10 +1,10 @@
-﻿using iCloud.Dav.Core;
-using iCloud.Dav.Core.Extensions;
-using iCloud.Dav.Core.Serialization;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using iCloud.Dav.Core;
+using iCloud.Dav.Core.Extensions;
+using iCloud.Dav.Core.Serialization;
 
 namespace iCloud.Dav.Auth;
 

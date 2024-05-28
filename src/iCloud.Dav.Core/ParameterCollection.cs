@@ -1,8 +1,8 @@
-﻿using iCloud.Dav.Core.Extensions;
-using iCloud.Dav.Core.Utils;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using iCloud.Dav.Core.Extensions;
+using iCloud.Dav.Core.Utils;
 
 namespace iCloud.Dav.Core;
 

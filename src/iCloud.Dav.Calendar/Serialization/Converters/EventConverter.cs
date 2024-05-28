@@ -1,7 +1,7 @@
-﻿using iCloud.Dav.Calendar.Extensions;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using iCloud.Dav.Calendar.Extensions;
 
 namespace iCloud.Dav.Calendar.Serialization.Converters;
 

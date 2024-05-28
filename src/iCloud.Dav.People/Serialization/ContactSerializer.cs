@@ -1,10 +1,10 @@
-﻿using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using iCloud.Dav.People.DataTypes;
+using iCloud.Dav.People.Utils;
 using vCard.Net;
 using vCard.Net.DataTypes;
 using vCard.Net.Serialization;

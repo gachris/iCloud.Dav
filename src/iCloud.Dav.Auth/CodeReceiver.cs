@@ -1,7 +1,7 @@
-﻿using iCloud.Dav.Core;
-using iCloud.Dav.Core.Logger;
-using System;
+﻿using System;
 using System.Net;
+using iCloud.Dav.Core;
+using iCloud.Dav.Core.Logger;
 
 namespace iCloud.Dav.Auth;
 

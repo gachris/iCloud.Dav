@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.Core;
-using iCloud.Dav.People.Serialization.Converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using iCloud.Dav.Core;
+using iCloud.Dav.People.Serialization.Converters;
 using vCard.Net;
 using vCard.Net.CardComponents;
 using vCard.Net.DataTypes;
@@ -302,12 +302,7 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
     protected bool Equals(Contact obj)
     {
-        if (obj == null)
-        {
-            return false;
-        }
-
-        return CompareTo(obj) == 0;
+        return obj == null ? false : CompareTo(obj) == 0;
     }
 
     /// <inheritdoc/>

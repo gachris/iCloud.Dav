@@ -1,11 +1,11 @@
-﻿using iCloud.Dav.Core.Extensions;
-using iCloud.Dav.Core.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using iCloud.Dav.Core.Extensions;
+using iCloud.Dav.Core.Logger;
 
 namespace iCloud.Dav.Core;
 

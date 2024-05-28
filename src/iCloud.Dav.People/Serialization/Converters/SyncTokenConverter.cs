@@ -1,9 +1,9 @@
-﻿using iCloud.Dav.People.Extensions;
-using iCloud.Dav.People.WebDav.DataTypes;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using iCloud.Dav.People.Extensions;
+using iCloud.Dav.People.WebDav.DataTypes;
 
 namespace iCloud.Dav.People.Serialization.Converters;
 

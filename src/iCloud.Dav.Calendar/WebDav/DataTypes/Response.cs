@@ -1,10 +1,10 @@
-﻿using iCloud.Dav.Calendar.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using iCloud.Dav.Calendar.Extensions;
 
 namespace iCloud.Dav.Calendar.WebDav.DataTypes;
 

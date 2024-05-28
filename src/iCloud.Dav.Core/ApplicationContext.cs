@@ -1,5 +1,5 @@
-﻿using iCloud.Dav.Core.Logger;
-using System;
+﻿using System;
+using iCloud.Dav.Core.Logger;
 
 namespace iCloud.Dav.Core;
 

@@ -1,10 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+	</PropertyGroup>
+
 	<PropertyGroup Label="Package Configuration">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Title>iCloud Core</Title>
 		<Description>$(MSBuildProjectName) is a versatile .NET library that forms the foundation for interacting with iCloud services.</Description>
 		<PackageTags>iCloud</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Output">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

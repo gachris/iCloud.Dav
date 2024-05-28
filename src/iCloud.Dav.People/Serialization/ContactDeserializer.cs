@@ -1,10 +1,10 @@
-﻿using iCloud.Dav.People.DataTypes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using iCloud.Dav.People.DataTypes;
 using vCard.Net;
 using vCard.Net.Serialization;
 

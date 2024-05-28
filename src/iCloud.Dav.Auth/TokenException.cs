@@ -1,5 +1,5 @@
-﻿using iCloud.Dav.Core;
-using System;
+﻿using System;
+using iCloud.Dav.Core;
 
 namespace iCloud.Dav.Auth;
 
