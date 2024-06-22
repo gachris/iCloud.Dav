@@ -1,13 +1,4 @@
-﻿
-/* Unmerged change from project 'iCloud.Dav.People (netstandard2.1)'
-Before:
-using iCloud.Dav.Core;
-After:
-using System;
-using System.Linq;
-using iCloud.Dav.Core;
-*/
-using System.Linq;
+﻿using System.Linq;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
