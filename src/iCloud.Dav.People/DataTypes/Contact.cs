@@ -76,9 +76,9 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <summary>
     /// Gets or sets the name associated with this contact.
     /// </summary>
-    public virtual Name N
+    public virtual StructuredName N
     {
-        get => Properties.Get<Name>("N");
+        get => Properties.Get<StructuredName>("N");
         set => Properties.Set("N", value);
     }
 

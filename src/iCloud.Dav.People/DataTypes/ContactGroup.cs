@@ -137,7 +137,7 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
 
         Kind ??= new Kind()
         {
-            CardKind = CardKind.Group
+            CardKind = KindType.Group
         };
     }
 

@@ -102,7 +102,7 @@ internal class ContactGroupDataTypeMapper
     /// <returns>true if the property allows multiple values; otherwise, false.</returns>
     public virtual bool GetPropertyAllowsMultipleValues(object obj)
     {
-        var p = obj as ICardProperty;
+        var p = obj as IVCardProperty;
         return !string.IsNullOrWhiteSpace(p?.Name)
             && _propertyMap.TryGetValue(p.Name, out var m)
             && m.AllowsMultipleValuesPerProperty;
@@ -115,7 +115,7 @@ internal class ContactGroupDataTypeMapper
     /// <returns>The .NET type that corresponds to the vCard property.</returns>
     public virtual Type GetPropertyMapping(object obj)
     {
-        var p = obj as ICardProperty;
+        var p = obj as IVCardProperty;
         return p?.Name == null
             ? null
             : !_propertyMap.TryGetValue(p.Name, out var m)

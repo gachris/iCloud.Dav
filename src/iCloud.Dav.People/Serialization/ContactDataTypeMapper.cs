@@ -42,7 +42,7 @@ internal class ContactDataTypeMapper
         AddPropertyMapping("URL", typeof(Website), true);
         AddPropertyMapping("REV", typeof(vCard.Net.DataTypes.IDateTime), false);
         AddPropertyMapping("BDAY", typeof(vCard.Net.DataTypes.IDateTime), false);
-        AddPropertyMapping("N", typeof(vCard.Net.DataTypes.Name), false);
+        AddPropertyMapping("N", typeof(vCard.Net.DataTypes.StructuredName), false);
         AddPropertyMapping("X-ABDATE", typeof(Date), true);
         AddPropertyMapping("X-ABRELATEDNAMES", typeof(RelatedNames), true);
         AddPropertyMapping("X-SOCIALPROFILE", typeof(SocialProfile), true);
@@ -115,7 +115,7 @@ internal class ContactDataTypeMapper
     /// <returns>true if the property allows multiple values; otherwise, false.</returns>
     public virtual bool GetPropertyAllowsMultipleValues(object obj)
     {
-        var p = obj as vCard.Net.ICardProperty;
+        var p = obj as vCard.Net.IVCardProperty;
         return !string.IsNullOrWhiteSpace(p?.Name)
             && _propertyMap.TryGetValue(p.Name, out var m)
             && m.AllowsMultipleValuesPerProperty;
@@ -128,7 +128,7 @@ internal class ContactDataTypeMapper
     /// <returns>The .NET type that corresponds to the vCard property.</returns>
     public virtual Type GetPropertyMapping(object obj)
     {
-        var p = obj as vCard.Net.ICardProperty;
+        var p = obj as vCard.Net.IVCardProperty;
         return p?.Name == null
             ? null
             : !_propertyMap.TryGetValue(p.Name, out var m)

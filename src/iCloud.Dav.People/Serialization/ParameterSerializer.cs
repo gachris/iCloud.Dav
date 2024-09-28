@@ -8,7 +8,7 @@ using vCard.Net.Serialization;
 namespace iCloud.Dav.People.Serialization;
 
 /// <summary>
-/// Serializes a <see cref="CardParameter"/> to a string representation, according to the vCard specification.
+/// Serializes a <see cref="VCardParameter"/> to a string representation, according to the vCard specification.
 /// </summary>
 public class ParameterSerializer : SerializerBase
 {
@@ -24,18 +24,18 @@ public class ParameterSerializer : SerializerBase
     public ParameterSerializer(SerializationContext ctx) : base(ctx) { }
 
     /// <summary>
-    /// Gets the Type that this <see cref="ParameterSerializer"/> can serialize and deserialize, which is <see cref="CardParameter"/>.
+    /// Gets the Type that this <see cref="ParameterSerializer"/> can serialize and deserialize, which is <see cref="VCardParameter"/>.
     /// </summary>
-    public override Type TargetType => typeof(CardParameter);
+    public override Type TargetType => typeof(VCardParameter);
 
     /// <summary>
-    /// Converts a <see cref="CardParameter"/> to a string representation.
+    /// Converts a <see cref="VCardParameter"/> to a string representation.
     /// </summary>
-    /// <param name="obj">The <see cref="CardParameter"/> object to be serialized.</param>
-    /// <returns>A string representation of the <see cref="CardParameter"/> object.</returns>
+    /// <param name="obj">The <see cref="VCardParameter"/> object to be serialized.</param>
+    /// <returns>A string representation of the <see cref="VCardParameter"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is CardParameter p))
+        if (obj is not VCardParameter p)
         {
             return null;
         }

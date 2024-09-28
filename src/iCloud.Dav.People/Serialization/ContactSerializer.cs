@@ -102,9 +102,9 @@ public class ContactSerializer : ComponentSerializer
 
                 // Get the list of parameters we'll be serializing
                 var parameterList = p.Parameters;
-                if (v is ICardDataType)
+                if (v is IVCardDataType)
                 {
-                    parameterList = (v as ICardDataType).Parameters;
+                    parameterList = (v as IVCardDataType).Parameters;
                 }
 
                 var stringBuilder = new StringBuilder();
@@ -116,8 +116,7 @@ public class ContactSerializer : ComponentSerializer
                 if (parameterList.Any())
                 {
                     // Get a serializer for parameters
-                    var parameterSerializer = sf.Build(typeof(CardParameter), SerializationContext) as IStringSerializer;
-                    if (parameterSerializer != null)
+                    if (sf.Build(typeof(VCardParameter), SerializationContext) is IStringSerializer parameterSerializer)
                     {
                         // Serialize each parameter
                         // Separate parameters with semicolons
@@ -173,7 +172,7 @@ public class ContactSerializer : ComponentSerializer
     /// <summary>
     /// Compares two ICardProperty objects based on their name, in a case-insensitive way.
     /// </summary>
-    public class PropertyComparer : IComparer<ICardProperty>
+    public class PropertyComparer : IComparer<IVCardProperty>
     {
         /// <summary>
         /// The default instance of PropertyComparer.
@@ -186,7 +185,7 @@ public class ContactSerializer : ComponentSerializer
         /// <param name="x">The first ICardProperty to compare.</param>
         /// <param name="y">The second ICardProperty to compare.</param>
         /// <returns>-1 if x is null, 1 if y is null, or the result of a case-insensitive string comparison of their names.</returns>
-        public int Compare(ICardProperty x, ICardProperty y)
+        public int Compare(IVCardProperty x, IVCardProperty y)
         {
             return x == y
                 ? 0

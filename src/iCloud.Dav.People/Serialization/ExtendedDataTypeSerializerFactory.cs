@@ -4,6 +4,14 @@ using iCloud.Dav.People.Serialization.DataTypes;
 using vCard.Net.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
+using Address = iCloud.Dav.People.DataTypes.Address;
+using AddressSerializer = iCloud.Dav.People.Serialization.DataTypes.AddressSerializer;
+using Email = iCloud.Dav.People.DataTypes.Email;
+using EmailSerializer = iCloud.Dav.People.Serialization.DataTypes.EmailSerializer;
+using Label = iCloud.Dav.People.DataTypes.Label;
+using LabelSerializer = iCloud.Dav.People.Serialization.DataTypes.LabelSerializer;
+using Photo = iCloud.Dav.People.DataTypes.Photo;
+using PhotoSerializer = iCloud.Dav.People.Serialization.DataTypes.PhotoSerializer;
 
 namespace iCloud.Dav.People.Serialization;
 

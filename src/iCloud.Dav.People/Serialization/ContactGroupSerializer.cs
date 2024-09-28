@@ -44,7 +44,7 @@ public class ContactGroupSerializer : ComponentSerializer
     /// <returns>The serialized string.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is ICardComponent c))
+        if (obj is not IVCardComponent c)
         {
             return null;
         }
