@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using iCloud.Dav.Core;
 using iCloud.Dav.People.Serialization.Converters;
@@ -16,6 +14,21 @@ namespace iCloud.Dav.People.DataTypes;
 [TypeConverter(typeof(ContactGroupConverter))]
 public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
 {
+    /// <inheritdoc/>
+    public override VCardVersion Version
+    {
+        get => base.Version;
+        set
+        {
+            if (value != VCardVersion.vCard3_0)
+            {
+                throw new InvalidOperationException("Invalid version specified. Please set 'Version' to 'v3', as this is the only version supported by iCloud.");
+            }
+
+            base.Version = value; // Optionally keep this line if needed for any base class functionality
+        }
+    }
+
     /// <summary>
     /// Gets or sets the e-tag associated with this contact group.
     /// </summary>
@@ -139,12 +152,14 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
         {
             CardKind = KindType.Group
         };
+
+        Version = VCardVersion.vCard3_0;
     }
 
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ContactGroup)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ContactGroup)obj));
     }
 
     /// <summary>
@@ -154,7 +169,7 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
     protected bool Equals(ContactGroup obj)
     {
-        return obj == null ? false : CompareTo(obj) == 0;
+        return obj != null && CompareTo(obj) == 0;
     }
 
     /// <inheritdoc/>

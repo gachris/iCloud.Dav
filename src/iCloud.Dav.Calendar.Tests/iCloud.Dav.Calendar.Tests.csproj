@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+		<SignAssembly>false</SignAssembly>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="NUnit" />
+		<PackageReference Include="NUnit.Analyzers">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="NUnit3TestAdapter" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\iCloud.Dav.Calendar\iCloud.Dav.Calendar.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="NUnit.Framework" />
+	</ItemGroup>
+
+</Project>

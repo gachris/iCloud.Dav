@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+		<SignAssembly>false</SignAssembly>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\MultipleContactGroup.vcf" />
+		<None Remove="Assets\Untitled Group 1.vcf" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Assets\MultipleContactGroup.vcf">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Assets\Untitled Group 1.vcf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="NUnit" />
+		<PackageReference Include="NUnit.Analyzers">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="NUnit3TestAdapter" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\iCloud.Dav.People\iCloud.Dav.People.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="NUnit.Framework" />
+	</ItemGroup>
+
+</Project>

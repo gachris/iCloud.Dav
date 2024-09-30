@@ -292,7 +292,7 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Contact)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Contact)obj));
     }
 
     /// <summary>
@@ -302,7 +302,7 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
     protected bool Equals(Contact obj)
     {
-        return obj == null ? false : CompareTo(obj) == 0;
+        return obj != null && CompareTo(obj) == 0;
     }
 
     /// <inheritdoc/>

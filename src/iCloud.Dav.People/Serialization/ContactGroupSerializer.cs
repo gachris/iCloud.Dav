@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Utils;
+using vCard.Net;
 using vCard.Net.CardComponents;
 using vCard.Net.Serialization;
 
@@ -52,13 +53,12 @@ public class ContactGroupSerializer : ComponentSerializer
         var sb = new StringBuilder();
         var upperName = c.Name.ToUpperInvariant();
         sb.Append(TextUtil.FoldLines($"BEGIN:{upperName}"));
-        sb.Append(TextUtil.FoldLines($"VERSION:3.0"));
 
         // Get a serializer factory
         var sf = GetService<ISerializerFactory>();
 
         // Sort the vCard properties in alphabetical order before serializing them!
-        var properties = c.Properties.OrderBy(p => p.Name).ToList();
+        var properties = c.Properties.OrderBy(p => p, PropertySorter).ToList();
 
         // Serialize properties
         foreach (var p in properties)

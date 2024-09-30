@@ -4,7 +4,7 @@
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 	</PropertyGroup>
 
-	<PropertyGroup Label="Package Configuration">
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Title>iCloud Core</Title>
 		<Description>$(MSBuildProjectName) is a versatile .NET library that forms the foundation for interacting with iCloud services.</Description>
