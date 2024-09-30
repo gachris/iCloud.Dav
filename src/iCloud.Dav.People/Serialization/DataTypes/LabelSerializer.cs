@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 
@@ -38,7 +36,7 @@ public class LabelSerializer : StringSerializer
     /// <returns>A string representation of the <see cref="Label"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        return !(obj is Label label) ? null : Encode(label, label.Value);
+        return obj is not Label label ? null : Encode(label, label.Value);
     }
 
     /// <summary>
@@ -53,7 +51,7 @@ public class LabelSerializer : StringSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is Label label))
+        if (CreateAndAssociate() is not Label label)
         {
             return null;
         }

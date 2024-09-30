@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -61,21 +58,13 @@ public class Website : EncodableDataType, IRelatedDataType
             var typeFromInternal = WebsiteTypeMapping.GetType(typeInternal);
             if (typeFromInternal is 0)
             {
-                switch (Label?.Value)
+                typeFromInternal = (Label?.Value) switch
                 {
-                    case HomePage:
-                        typeFromInternal = WebsiteType.HomePage;
-                        break;
-                    case School:
-                        typeFromInternal = WebsiteType.School;
-                        break;
-                    case Blog:
-                        typeFromInternal = WebsiteType.Blog;
-                        break;
-                    default:
-                        typeFromInternal = WebsiteType.Custom;
-                        break;
-                }
+                    HomePage => WebsiteType.HomePage,
+                    School => WebsiteType.School,
+                    Blog => WebsiteType.Blog,
+                    _ => WebsiteType.Custom,
+                };
             }
 
             return typeFromInternal;
@@ -88,7 +77,7 @@ public class Website : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(WebsiteTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -98,24 +87,13 @@ public class Website : EncodableDataType, IRelatedDataType
                 Parameters.Remove("TYPE");
             }
 
-            switch (value)
+            Label = value switch
             {
-                case WebsiteType.HomePage:
-                    Label = new Label() { Value = HomePage };
-                    break;
-                case WebsiteType.School:
-                    Label = new Label() { Value = School };
-                    break;
-                case WebsiteType.Blog:
-                    Label = new Label() { Value = Blog };
-                    break;
-                case WebsiteType.Custom:
-                    Label = new Label() { Value = Label?.Value };
-                    break;
-                default:
-                    Label = null;
-                    break;
-            }
+                WebsiteType.HomePage => new Label() { Value = School },
+                WebsiteType.Blog => new Label() { Value = Blog },
+                WebsiteType.Custom => new Label() { Value = Label?.Value },
+                _ => null,
+            };
         }
     }
 
@@ -201,7 +179,7 @@ public class Website : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Website)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Website)obj));
     }
 
     /// <summary>

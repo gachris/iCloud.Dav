@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Headers;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Utils;
@@ -184,7 +178,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     /// </summary>
     private void AddETag(HttpRequestMessage request)
     {
-        if (!(GetBody() is IDirectResponseSchema body) || string.IsNullOrEmpty(body.ETag)) return;
+        if (GetBody() is not IDirectResponseSchema body || string.IsNullOrEmpty(body.ETag)) return;
         var etag = body.ETag;
         var etagAction = ETagAction == ETagAction.Default ? GetDefaultETagAction(HttpMethod) : ETagAction;
         try
@@ -207,7 +201,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     {
         return httpMethod is "GET"
             ? ETagAction.IfNoneMatch
-            : httpMethod == "PUT" || httpMethod == "POST" || httpMethod == "PATCH" || httpMethod == "DELETE" ? ETagAction.IfMatch : ETagAction.Ignore;
+            : httpMethod is "PUT" or "POST" or "PATCH" or "DELETE" ? ETagAction.IfMatch : ETagAction.Ignore;
     }
 
     /// <summary>Adds path and query parameters to the given <c>requestBuilder</c>.</summary>

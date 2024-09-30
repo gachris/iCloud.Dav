@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// Interface for a configurable HTTP client credential initializer that can be used to set custom

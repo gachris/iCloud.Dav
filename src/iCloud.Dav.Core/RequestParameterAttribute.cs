@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// An attribute which is used to specially mark a property for reflective purposes,

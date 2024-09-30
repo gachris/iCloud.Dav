@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.People.DataTypes;
+﻿namespace iCloud.Dav.People.DataTypes;
 
 /// <summary>
 /// Represents the type of an address that can be used for a contact.

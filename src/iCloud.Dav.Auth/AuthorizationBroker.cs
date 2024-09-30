@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using iCloud.Dav.Auth.Store;
 
 namespace iCloud.Dav.Auth;

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 
@@ -38,7 +36,7 @@ public class X_ABAddressSerializer : StringSerializer
     /// <returns>A string representation of the <see cref="X_ABAddress"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        return !(obj is X_ABAddress aBAddress) ? null : Encode(aBAddress, aBAddress.Value);
+        return obj is not X_ABAddress aBAddress ? null : Encode(aBAddress, aBAddress.Value);
     }
 
     /// <summary>
@@ -53,7 +51,7 @@ public class X_ABAddressSerializer : StringSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is X_ABAddress aBAddress))
+        if (CreateAndAssociate() is not X_ABAddress aBAddress)
         {
             return null;
         }

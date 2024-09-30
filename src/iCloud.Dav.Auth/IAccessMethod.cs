@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace iCloud.Dav.Auth;
+﻿namespace iCloud.Dav.Auth;
 
 /// <summary>Method of presenting the access token to the resource server.</summary>
 public interface IAccessMethod

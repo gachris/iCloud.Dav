@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 
@@ -38,7 +36,7 @@ public class InstantMessageSerializer : EncodableDataTypeSerializer
     /// <returns>A string representation of the <see cref="InstantMessage"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is InstantMessage instantMessage))
+        if (obj is not InstantMessage instantMessage)
         {
             return null;
         }
@@ -88,7 +86,7 @@ public class InstantMessageSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is InstantMessage instantMessage))
+        if (CreateAndAssociate() is not InstantMessage instantMessage)
         {
             return null;
         }

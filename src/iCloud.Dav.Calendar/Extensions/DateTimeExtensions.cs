@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Calendar.Extensions;
+﻿namespace iCloud.Dav.Calendar.Extensions;
 
 internal static class DateTimeExtensions
 {

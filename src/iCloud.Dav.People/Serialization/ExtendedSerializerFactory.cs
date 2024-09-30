@@ -1,5 +1,4 @@
-﻿using System;
-using vCard.Net;
+﻿using vCard.Net;
 using vCard.Net.DataTypes;
 using vCard.Net.Serialization;
 

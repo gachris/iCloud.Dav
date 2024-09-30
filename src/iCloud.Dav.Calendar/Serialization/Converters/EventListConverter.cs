@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.WebDav.DataTypes;

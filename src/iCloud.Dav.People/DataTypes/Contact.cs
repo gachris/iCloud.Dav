@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using iCloud.Dav.Core;
 using iCloud.Dav.People.Serialization.Converters;

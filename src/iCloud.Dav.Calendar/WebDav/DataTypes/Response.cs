@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;

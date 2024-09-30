@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Response;
@@ -84,7 +80,7 @@ public abstract class BaseClientService : IClientService, IDisposable
     public void SetRequestSerializedContent(HttpRequestMessage request, object body) => request.SetRequestSerializedContent(this, body);
 
     /// <inheritdoc/>
-    public virtual string SerializeObject(object obj) => !(obj is string) ? Serializer.Serialize(obj) : (string)obj;
+    public virtual string SerializeObject(object obj) => obj is not string ? Serializer.Serialize(obj) : (string)obj;
 
     /// <inheritdoc/>
     public virtual async Task<T> DeserializeResponse<T>(HttpResponseMessage response)

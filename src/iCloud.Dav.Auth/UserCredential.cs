@@ -1,9 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Logger;
 
@@ -17,7 +13,7 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     /// <summary>Gets Logger.</summary>
     private static readonly ILogger _logger = ApplicationContext.Logger.ForType<UserCredential>();
 
-    private readonly object _lockObject = new object();
+    private readonly object _lockObject = new();
     private readonly IAuthorizationCodeFlow _flow;
     private readonly string _userId;
     private Token _token;
@@ -120,14 +116,11 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     /// <returns>Principal home set url.</returns>
     public Uri GetUri(PrincipalHomeSet principal)
     {
-        switch (principal)
+        return principal switch
         {
-            case PrincipalHomeSet.Calendar:
-                return new Uri(Token.CalendarPrincipal.CalendarHomeSet);
-            case PrincipalHomeSet.AddressBook:
-                return new Uri(Token.PeoplePrincipal.AddressBookHomeSet);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(PrincipalHomeSet));
-        }
+            PrincipalHomeSet.Calendar => new Uri(Token.CalendarPrincipal.CalendarHomeSet),
+            PrincipalHomeSet.AddressBook => new Uri(Token.PeoplePrincipal.AddressBookHomeSet),
+            _ => throw new ArgumentOutOfRangeException(nameof(PrincipalHomeSet)),
+        };
     }
 }

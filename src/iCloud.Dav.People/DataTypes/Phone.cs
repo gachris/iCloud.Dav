@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -56,18 +53,12 @@ public class Phone : EncodableDataType, IRelatedDataType
             var typeFromInternal = PhoneTypeMapping.GetType(typeInternal);
             if (typeFromInternal is 0)
             {
-                switch (Label?.Value)
+                typeFromInternal = (Label?.Value) switch
                 {
-                    case School:
-                        typeFromInternal = PhoneType.School;
-                        break;
-                    case AppleWatch:
-                        typeFromInternal = PhoneType.AppleWatch;
-                        break;
-                    default:
-                        typeFromInternal = PhoneType.Custom;
-                        break;
-                }
+                    School => PhoneType.School,
+                    AppleWatch => PhoneType.AppleWatch,
+                    _ => PhoneType.Custom,
+                };
             }
 
             return typeFromInternal;
@@ -80,7 +71,7 @@ public class Phone : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(PhoneTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -90,21 +81,13 @@ public class Phone : EncodableDataType, IRelatedDataType
                 Parameters.Remove("TYPE");
             }
 
-            switch (value)
+            Label = value switch
             {
-                case PhoneType.School:
-                    Label = new Label() { Value = School };
-                    break;
-                case PhoneType.AppleWatch:
-                    Label = new Label() { Value = AppleWatch };
-                    break;
-                case PhoneType.Custom:
-                    Label = new Label() { Value = Label?.Value };
-                    break;
-                default:
-                    Label = null;
-                    break;
-            }
+                PhoneType.School => new Label() { Value = School },
+                PhoneType.AppleWatch => new Label() { Value = AppleWatch },
+                PhoneType.Custom => new Label() { Value = Label?.Value },
+                _ => null,
+            };
         }
     }
 
@@ -187,7 +170,7 @@ public class Phone : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Phone)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Phone)obj));
     }
 
     /// <summary>

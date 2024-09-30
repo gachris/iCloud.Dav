@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using iCloud.Dav.Core.Serialization;
 using iCloud.Dav.People.Serialization.Converters;
 using iCloud.Dav.People.WebDav.DataTypes;

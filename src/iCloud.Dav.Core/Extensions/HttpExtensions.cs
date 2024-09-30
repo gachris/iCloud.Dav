@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 
 namespace iCloud.Dav.Core.Extensions;
 
@@ -16,16 +14,11 @@ internal static class HttpExtensions
     /// <returns><c>true</c> if the response contains one of the redirect status codes; otherwise, <c>false</c>.</returns>
     public static bool IsRedirectStatusCode(this HttpResponseMessage message)
     {
-        switch (message.StatusCode)
+        return message.StatusCode switch
         {
-            case HttpStatusCode.Moved:
-            case HttpStatusCode.Found:
-            case HttpStatusCode.RedirectMethod:
-            case HttpStatusCode.RedirectKeepVerb:
-                return true;
-            default:
-                return false;
-        }
+            HttpStatusCode.Moved or HttpStatusCode.Found or HttpStatusCode.RedirectMethod or HttpStatusCode.RedirectKeepVerb => true,
+            _ => false,
+        };
     }
 
     /// <summary>

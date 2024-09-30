@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -42,12 +39,10 @@ public class InstantMessage : EncodableDataType, IRelatedDataType
             var typeFromInternal = InstantMessageTypeMapping.GetType(typeInternal);
             if (typeFromInternal is 0)
             {
-                switch (Label?.Value)
+                typeFromInternal = (Label?.Value) switch
                 {
-                    default:
-                        typeFromInternal = InstantMessageType.Custom;
-                        break;
-                }
+                    _ => InstantMessageType.Custom,
+                };
             }
 
             return typeFromInternal;
@@ -60,7 +55,7 @@ public class InstantMessage : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(InstantMessageTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -70,15 +65,11 @@ public class InstantMessage : EncodableDataType, IRelatedDataType
                 Parameters.Remove("TYPE");
             }
 
-            switch (value)
+            Label = value switch
             {
-                case InstantMessageType.Custom:
-                    Label = new Label() { Value = Label?.Value };
-                    break;
-                default:
-                    Label = null;
-                    break;
-            }
+                InstantMessageType.Custom => new Label() { Value = Label?.Value },
+                _ => null,
+            };
         }
     }
 
@@ -174,7 +165,7 @@ public class InstantMessage : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((InstantMessage)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((InstantMessage)obj));
     }
 
     /// <summary>
