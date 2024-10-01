@@ -22,7 +22,7 @@ public class ContactGroupResourceTests
     }
 
     [Test]
-    public void List_ValidResponse_ReturnsExpectedResult()
+    public void List_Success()
     {
         // Arrange
         _mockContactGroupResource.Setup(x => x.List(It.IsAny<string>()))
@@ -34,7 +34,7 @@ public class ContactGroupResourceTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Kind, Is.EqualTo("group"));
-        Assert.That(result.Items.Count, Is.EqualTo(2));
+        Assert.That(result.Items, Has.Count.EqualTo(2));
         Assert.That(result.Items[0], Is.EqualTo(_fixture.TestContactGroupList.Items[0]));
 
         // Verify mock method was called once
@@ -42,37 +42,34 @@ public class ContactGroupResourceTests
     }
 
     [Test]
-    public void Get_ValidTargetId_ReturnsCorrectData()
+    public void Get_Success()
     {
-        //// Arrange
-        //var response = new VoidResponse();
+        // Arrange
+        var response = new VoidResponse();
 
-        //_mockContactGroupResource.Setup(x => x.Get(It.IsAny<ServerAccessKeys>(), TARGET_ID))
-        //                       .Returns(response);
+        _mockContactGroupResource.Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>()))
+                                 .Returns(_fixture.TestContactGroup);
 
-        //// Act
-        //var result = _mockContactGroupResource.Object.Get(_mockServerAccessKeys, TARGET_ID);
+        // Act
+        var result = _mockContactGroupResource.Object.Get(It.IsAny<string>(), It.IsAny<string>());
 
-        //// Assert
-        //Assert.That(result, Is.Not.Null);
-        //Assert.That(result.TransactionId, Is.EqualTo(TRANSACTION_ID));
-        //Assert.That(result.ResultCode, Is.EqualTo(VuforiaBaseResponse.ResultCodeEnum.Success));
-        //Assert.That(result.Status, Is.EqualTo(VuforiaRetrieveResponse.StatusEnum.Success));
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        // Check individual properties
+        Assert.That(result.Id, Is.EqualTo(_fixture.TestContactGroup.Id));
+        Assert.That(result.Uid, Is.EqualTo(_fixture.TestContactGroup.Uid));
+        Assert.That(result.FormattedName, Is.EqualTo(_fixture.TestContactGroup.FormattedName));
+        Assert.That(result.N, Is.EqualTo(_fixture.TestContactGroup.N));
 
-        //// Assert TargetRecord properties
-        //var targetRecord = result.TargetRecord;
-        //Assert.That(targetRecord, Is.Not.Null);
-        //Assert.That(targetRecord.TargetId, Is.EqualTo(TARGET_ID));
-        //Assert.That(targetRecord.ActiveFlag, Is.EqualTo("true"));
-        //Assert.That(targetRecord.TrackingRating, Is.EqualTo(5));
-        //Assert.That(targetRecord.Width, Is.EqualTo(1));
+        // Assert full object equality last (after checking important fields)
+        Assert.That(result, Is.EqualTo(_fixture.TestContactGroup));
 
-        //// Verify mock method was called once
-        //_mockContactGroupResource.Verify(x => x.Get(_mockServerAccessKeys, TARGET_ID), Times.Once);
+        // Verify mock method was called once
+        _mockContactGroupResource.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Test]
-    public void Insert_ValidRequest_CallsInsertOnce()
+    public void Insert_Success()
     {
         //// Arrange
         //var request = CreatePostTrackableRequest();
@@ -95,7 +92,7 @@ public class ContactGroupResourceTests
     }
 
     [Test]
-    public void Update_ValidRequest_CallsUpdateOnce()
+    public void Update_Success()
     {
         //// Arrange
         //var request = CreateUpdateTrackableRequest();
@@ -117,7 +114,7 @@ public class ContactGroupResourceTests
     }
 
     [Test]
-    public void Delete_ValidTargetId_CallsDeleteOnce()
+    public void Delete_Success()
     {
         // Arrange
         var response = new VoidResponse();
@@ -148,56 +145,4 @@ public class ContactGroupResourceTests
         // Verify the Get method was called once
         _mockContactGroupResource.Verify(x => x.Get(TARGET_ID, RESOURCE_NAME), Times.Once);
     }
-
-    //// Helper methods to create responses
-    //private static VuforiaGetAllResponse CreateValidContactGroupList()
-    //{
-    //    return new VuforiaGetAllResponse
-    //    {
-    //        TransactionId = TRANSACTION_ID,
-    //        ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success,
-    //        Results = [TARGET_ID]
-    //    };
-    //}
-
-    //private static VuforiaRetrieveResponse CreateValidRetrieveResponse()
-    //{
-    //    return new VuforiaRetrieveResponse
-    //    {
-    //        Status = VuforiaRetrieveResponse.StatusEnum.Success,
-    //        TargetRecord = new TargetRecordModel
-    //        {
-    //            ActiveFlag = "true",
-    //            TrackingRating = 5,
-    //            TargetId = TARGET_ID,
-    //            Width = 1
-    //        },
-    //        TransactionId = TRANSACTION_ID,
-    //        ResultCode = VuforiaBaseResponse.ResultCodeEnum.Success
-    //    };
-    //}
-
-    //private static PostTrackableRequest CreatePostTrackableRequest()
-    //{
-    //    return new PostTrackableRequest
-    //    {
-    //        ActiveFlag = true,
-    //        ApplicationMetadata = "Target Metadata",
-    //        Image = "/9j/4AAQSkZJRgABAQEAAAAAAAD...",
-    //        Name = "Sample Target",
-    //        Width = 1
-    //    };
-    //}
-
-    //private static UpdateTrackableRequest CreateUpdateTrackableRequest()
-    //{
-    //    return new UpdateTrackableRequest
-    //    {
-    //        ActiveFlag = true,
-    //        ApplicationMetadata = "Target Metadata",
-    //        Image = "/9j/4AAQSkZJRgABAQEAAAAAAAD...",
-    //        Name = "Sample Target",
-    //        Width = 1
-    //    };
-    //}
 }

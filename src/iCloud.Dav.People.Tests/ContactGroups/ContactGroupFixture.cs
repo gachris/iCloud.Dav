@@ -19,7 +19,7 @@ public class ContactGroupFixture
         TestContactGroup = TestContactGroupList.Items[0];
     }
 
-    private ContactGroupList CreateTestContactGroupList()
+    private static ContactGroupList CreateTestContactGroupList()
     {
         var contactGroup = new ContactGroup
         {

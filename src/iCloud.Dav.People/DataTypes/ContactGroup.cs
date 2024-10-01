@@ -14,7 +14,14 @@ namespace iCloud.Dav.People.DataTypes;
 [TypeConverter(typeof(ContactGroupConverter))]
 public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets or sets the version of the vCard.
+    /// Only vCard version 3.0 is supported for iCloud.
+    /// </summary>
+    /// <remarks>
+    /// iCloud exclusively supports vCard 3.0, so setting this property
+    /// to any other version will result in an InvalidOperationException.
+    /// </remarks>
     public override VCardVersion Version
     {
         get => base.Version;
@@ -25,7 +32,7 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
                 throw new InvalidOperationException("Invalid version specified. Please set 'Version' to 'v3', as this is the only version supported by iCloud.");
             }
 
-            base.Version = value; // Optionally keep this line if needed for any base class functionality
+            base.Version = value;
         }
     }
 
@@ -143,17 +150,12 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
             Uid = Guid.NewGuid().ToString();
         }
 
-        if (string.IsNullOrEmpty(Id))
-        {
-            Id = Uid;
-        }
-
+        Id = Uid;
+        Version = VCardVersion.vCard3_0;
         Kind ??= new Kind()
         {
             CardKind = KindType.Group
         };
-
-        Version = VCardVersion.vCard3_0;
     }
 
     /// <inheritdoc/>
@@ -169,12 +171,32 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
     protected bool Equals(ContactGroup obj)
     {
-        return obj != null && CompareTo(obj) == 0;
+        return string.Equals(Id, obj.Id, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Version, obj.Version)
+               && string.Equals(FormattedName, obj.FormattedName, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(N, obj.N, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(ProductId, obj.ProductId)
+               && object.Equals(RevisionDate, obj.RevisionDate)
+               && string.Equals(Uid, obj.Uid, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Kind, obj.Kind)
+               && CollectionHelpers.Equals(Members, obj.Members);
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return Uid?.GetHashCode() ?? base.GetHashCode();
+        unchecked
+        {
+            var hashCode = Id != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Id) : 0;
+            hashCode = hashCode * 23 + Uid != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Uid) : 0;
+            hashCode = hashCode * 23 + StringComparer.OrdinalIgnoreCase.GetHashCode(Version.ToString());
+            hashCode = hashCode * 23 + FormattedName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(FormattedName) : 0;
+            hashCode = hashCode * 23 + N != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(N) : 0;
+            hashCode = hashCode * 23 + ProductId != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(ProductId) : 0;
+            hashCode = hashCode * 23 + (RevisionDate?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Kind?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Members != null ? CollectionHelpers.GetHashCode(Members) : 0);
+            return hashCode;
+        }
     }
 }

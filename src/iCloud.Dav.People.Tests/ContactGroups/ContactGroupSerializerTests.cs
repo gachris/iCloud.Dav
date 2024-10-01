@@ -66,6 +66,7 @@ public class ContactGroupSerializerTests
         var deserializedCard = ContactGroupDeserializer.Default.Deserialize(reader).First();
 
         // Check individual properties
+        Assert.That(deserializedCard.Id, Is.EqualTo(_fixture.TestContactGroup.Id));
         Assert.That(deserializedCard.Uid, Is.EqualTo(_fixture.TestContactGroup.Uid));
         Assert.That(deserializedCard.FormattedName, Is.EqualTo(_fixture.TestContactGroup.FormattedName));
         Assert.That(deserializedCard.N, Is.EqualTo(_fixture.TestContactGroup.N));
@@ -75,7 +76,7 @@ public class ContactGroupSerializerTests
     }
 
     [Test]
-    public void Deserialize_Contacts_Success()
+    public void Deserialize_Multiple_Success()
     {
         // Prepare the path to the vCard file
         var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\MultipleContactGroup.vcf");

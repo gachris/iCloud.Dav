@@ -128,12 +128,15 @@ public abstract class BaseClientService : IClientService, IDisposable
             throw new ICloudApiException(Name, $"Failed to parse response from server [{responseContentString}]", ex);
         }
 
-        if (obj is IUrlPath url)
+        if (obj is IUrlPath urlPath)
         {
-            url.Id = Path.GetFileNameWithoutExtension(response.RequestMessage.RequestUri.OriginalString.TrimEnd('/'));
+            urlPath.Id = Path.GetFileNameWithoutExtension(response.RequestMessage.RequestUri.OriginalString.TrimEnd('/'));
         }
 
-        if (obj is IDirectResponseSchema directResponseSchema && string.IsNullOrEmpty(response.Headers.ETag?.Tag) == false) directResponseSchema.ETag = response.Headers.ETag?.Tag;
+        if (obj is IDirectResponseSchema directResponseSchema && !string.IsNullOrEmpty(response.Headers.ETag?.Tag))
+        {
+            directResponseSchema.ETag = response.Headers.ETag?.Tag;
+        }
 
         return (T)obj;
     }
