@@ -66,7 +66,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     }
 
     /// <inheritdoc/>
-    public TResponse Execute()
+    public virtual TResponse Execute()
     {
         try
         {
@@ -84,7 +84,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     }
 
     /// <inheritdoc/>
-    public Stream ExecuteAsStream()
+    public virtual Stream ExecuteAsStream()
     {
         try
         {
@@ -101,10 +101,10 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     }
 
     /// <inheritdoc/>
-    public async Task<TResponse> ExecuteAsync() => await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
+    public virtual async Task<TResponse> ExecuteAsync() => await ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
+    public virtual async Task<TResponse> ExecuteAsync(CancellationToken cancellationToken)
     {
         TResponse response;
         using (var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false))
@@ -116,10 +116,10 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     }
 
     /// <inheritdoc/>
-    public async Task<Stream> ExecuteAsStreamAsync() => await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
+    public virtual async Task<Stream> ExecuteAsStreamAsync() => await ExecuteAsStreamAsync(CancellationToken.None).ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
+    public virtual async Task<Stream> ExecuteAsStreamAsync(CancellationToken cancellationToken)
     {
         var httpResponseMessage = await ExecuteUnparsedAsync(cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();

@@ -22,7 +22,7 @@ internal sealed class ReminderListConverter : TypeConverter
         var multiStatus = (MultiStatus)value;
         var response = multiStatus.Responses.FirstOrDefault(x => x.IsCalendar());
         var propsStat = response?.GetSuccessPropStat();
-        var items = multiStatus.Responses.Except(new HashSet<Response>() { response })
+        var items = multiStatus.Responses.Except([response])
                                          .Select(ToReminder)
                                          .ToList();
 

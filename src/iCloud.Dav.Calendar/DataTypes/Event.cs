@@ -50,10 +50,7 @@ public class Event : CalendarEvent, IDirectResponseSchema, IUrlPath
             Uid = Guid.NewGuid().ToString();
         }
 
-        if (string.IsNullOrEmpty(Id))
-        {
-            Id = Uid;
-        }
+        Id = Uid;
 
         if (Calendar is null)
         {

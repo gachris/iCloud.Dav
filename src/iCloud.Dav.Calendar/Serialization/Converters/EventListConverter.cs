@@ -22,7 +22,7 @@ internal sealed class EventListConverter : TypeConverter
 
         var multiStatus = (MultiStatus)value;
         var response = multiStatus.Responses.FirstOrDefault(x => x.IsCalendar());
-        var items = multiStatus.Responses.Except(new HashSet<Response>() { response })
+        var items = multiStatus.Responses.Except([response])
                                          .Select(ToEvent)
                                          .ToList();
         var propsStat = response?.GetSuccessPropStat();

@@ -296,11 +296,7 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
             Uid = Guid.NewGuid().ToString();
         }
 
-        if (string.IsNullOrEmpty(Id))
-        {
-            Id = Uid;
-        }
-
+        Id = Uid;
         Version = VCardVersion.vCard3_0;
     }
 

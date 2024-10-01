@@ -19,7 +19,7 @@ internal sealed class CalendarListConverter : TypeConverter
         var multiStatus = (MultiStatus)value;
         var collectionResponse = multiStatus.Responses.FirstOrDefault(x => x.IsCollection());
         var propStat = collectionResponse?.GetSuccessPropStat();
-        var items = multiStatus.Responses.Except(new HashSet<Response>() { collectionResponse })
+        var items = multiStatus.Responses.Except([collectionResponse])
                                          .Select(x => x.ToCalendar())
                                          .ToList();
 

@@ -163,14 +163,14 @@ public abstract class BaseClientService : IClientService, IDisposable
         /// Gets or sets the factory for creating <see cref="System.Net.Http.HttpClient" /> instance. If this
         /// property is not set the service uses a new <see cref="Core.HttpClientFactory" /> instance.
         /// </summary>
-        public IHttpClientFactory HttpClientFactory { get; set; }
+        public virtual IHttpClientFactory HttpClientFactory { get; set; }
 
         /// <summary>
         /// Gets or sets a HTTP client initializer which is able to customize properties on
         /// <see cref="ConfigurableHttpClient" /> and
         /// <see cref="ConfigurableMessageHandler" />.
         /// </summary>
-        public IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; set; }
+        public virtual IConfigurableHttpClientCredentialInitializer HttpClientInitializer { get; set; }
 
         /// <summary>
         /// Get or sets the exponential back-off policy used by the service. Default value is
@@ -181,23 +181,23 @@ public abstract class BaseClientService : IClientService, IDisposable
         /// <see cref="IConfigurableHttpClientInitializer" /> to set a specific back-off
         /// implementation (using <see cref="BackOffHandler" />).
         /// </summary>
-        public ExponentialBackOffPolicy DefaultExponentialBackOffPolicy { get; set; }
+        public virtual ExponentialBackOffPolicy DefaultExponentialBackOffPolicy { get; set; }
 
         /// <summary>
         /// Gets or sets the serializer. Default value is <see cref="XmlObjectSerializer" />.
         /// </summary>
-        public ISerializer Serializer { get; set; }
+        public virtual ISerializer Serializer { get; set; }
 
         /// <summary>
         /// Gets or sets Application name to be used in the User-Agent header. Default value is <c>null</c>.
         /// </summary>
-        public string ApplicationName { get; set; }
+        public virtual string ApplicationName { get; set; }
 
         /// <summary>
         /// Maximum allowed length of a URL string for GET requests. Default value is <c>2048</c>. If the value is
         /// set to <c>0</c>, requests will never be modified due to URL string length.
         /// </summary>
-        public uint MaxUrlLength { get; set; }
+        public virtual uint MaxUrlLength { get; set; }
 
         /// <summary>
         /// Constructs a new initializer with default values.
