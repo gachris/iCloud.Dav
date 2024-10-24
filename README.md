@@ -41,7 +41,7 @@ To use the **iCloud.Dav** libraries in your .NET project, add a reference to the
 
 ## Examples
 
-You can find detailed examples for all major operations in the [`examples/`](examples/) directory of this repository.
+You can find detailed examples for all major operations in the [`examples/`](https://github.com/gachris/iCloud.Dav/tree/master/examples) directory of this repository.
 
 ## Contributing
 
@@ -49,4 +49,4 @@ Contributions to **iCloud.Dav** are welcome! If you want to contribute to the pr
 
 ## License
 
-**iCloud.Dav** is licensed under the MIT license. See the [License](LICENSE.txt) file for more information.
+**iCloud.Dav** is licensed under the MIT license. See the [License](https://github.com/gachris/iCloud.Dav/tree/master/LICENSE.txt) file for more information.
