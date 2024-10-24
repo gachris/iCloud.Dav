@@ -4,7 +4,7 @@
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 	</PropertyGroup>
 
-	<PropertyGroup Label="Package Configuration">
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Title>iCloud Authentication</Title>
 		<Description>$(MSBuildProjectName) is a .NET library that facilitates authentication and interaction with iCloud services.</Description>
