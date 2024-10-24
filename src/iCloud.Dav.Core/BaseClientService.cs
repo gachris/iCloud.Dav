@@ -84,62 +84,79 @@ public abstract class BaseClientService : IClientService, IDisposable
     public void SetRequestSerializedContent(HttpRequestMessage request, object body) => request.SetRequestSerializedContent(this, body);
 
     /// <inheritdoc/>
-    public virtual string SerializeObject(object obj) => !(obj is string) ? Serializer.Serialize(obj) : (string)obj;
+    public virtual string SerializeObject(object obj) => obj is not string ? Serializer.Serialize(obj) : (string)obj;
 
     /// <inheritdoc/>
     public virtual async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
     {
         var responseContentString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        if (typeof(T).BaseType == typeof(VoidResponse) || typeof(T) == typeof(VoidResponse)) return (T)Activator.CreateInstance(typeof(VoidResponse));
-        if (Equals(typeof(T), typeof(string))) return (T)(object)responseContentString;
-
-        var obj = default(object);
         try
         {
+            if (typeof(T).IsAssignableFrom(typeof(VoidResponse)))
+            {
+                return (T)Activator.CreateInstance(typeof(VoidResponse));
+            }
+
+            if (typeof(T).IsAssignableFrom(typeof(HeaderMetadataResponse)))
+            {
+                var headersResponse = (HeaderMetadataResponse)Activator.CreateInstance(typeof(HeaderMetadataResponse));
+
+                headersResponse.ETag = response.Headers.ETag?.Tag;
+
+                return (T)(object)headersResponse;
+            }
+
+            if (typeof(T).Equals(typeof(string)))
+            {
+                return (T)(object)responseContentString;
+            }
+
+            object deserializedObject;
+
             var converter = TypeDescriptor.GetConverter(typeof(T));
             var xmlDeserializeType = (XmlDeserializeTypeAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(XmlDeserializeTypeAttribute));
-            if (xmlDeserializeType != null)
+
+            if (xmlDeserializeType != null
+                && Serializer.Deserialize(responseContentString, xmlDeserializeType.Type) is object result
+                && converter?.CanConvertFrom(result.GetType()) == true)
             {
-                var result = Serializer.Deserialize(responseContentString, xmlDeserializeType.Type);
-                if (converter != null)
-                {
-                    var canConvert = converter.CanConvertFrom(result.GetType());
-                    if (canConvert) obj = converter.ConvertFrom(result);
-                }
+                deserializedObject = converter.ConvertFrom(result);
             }
-            else if (converter != null)
+            else if (converter?.CanConvertFrom(responseContentString.GetType()) == true)
             {
-                var canConvert = converter.CanConvertFrom(responseContentString.GetType());
-                if (canConvert) obj = converter.ConvertFrom(responseContentString);
+                deserializedObject = converter.ConvertFrom(responseContentString);
             }
             else
             {
-                obj = Serializer.Deserialize<T>(responseContentString);
+                deserializedObject = Serializer.Deserialize<T>(responseContentString);
             }
 
-            if (obj is null && typeof(T).Equals(typeof(byte[])))
+            if (deserializedObject is null && typeof(T).Equals(typeof(byte[])))
             {
-                obj = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                deserializedObject = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
+
+            if (deserializedObject is IUrlPath url)
+            {
+                url.Id = Path.GetFileNameWithoutExtension(response.RequestMessage.RequestUri.OriginalString.TrimEnd('/'));
+            }
+
+            if (deserializedObject is IDirectResponseSchema directResponseSchema && string.IsNullOrEmpty(response.Headers.ETag?.Tag) == false)
+            {
+                directResponseSchema.ETag = response.Headers.ETag?.Tag;
+            }
+
+            return (T)deserializedObject;
         }
         catch (InvalidCastException ex)
         {
-            throw new ICloudApiException(Name, $"Failed to cast response.", ex);
+            throw new ICloudApiException(Name, 0, $"Failed to cast response.", ex);
         }
         catch (Exception ex)
         {
-            throw new ICloudApiException(Name, $"Failed to parse response from server [{responseContentString}]", ex);
+            throw new ICloudApiException(Name, 0, $"Failed to parse response from server [{responseContentString}]", ex);
         }
-
-        if (obj is IUrlPath url)
-        {
-            url.Id = Path.GetFileNameWithoutExtension(response.RequestMessage.RequestUri.OriginalString.TrimEnd('/'));
-        }
-
-        if (obj is IDirectResponseSchema directResponseSchema && string.IsNullOrEmpty(response.Headers.ETag?.Tag) == false) directResponseSchema.ETag = response.Headers.ETag?.Tag;
-
-        return (T)obj;
     }
 
     /// <inheritdoc/>

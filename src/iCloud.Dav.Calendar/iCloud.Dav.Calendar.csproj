@@ -4,7 +4,7 @@
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 	</PropertyGroup>
 
-	<PropertyGroup Label="Package Configuration">
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Title>iCloud Calendar</Title>
 		<Description>$(MSBuildProjectName) is a .NET library that allows you to interact with iCloud calendars, events, reminder lists, and reminders.</Description>
@@ -17,14 +17,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+		<PackageReference Include="Ical.Net" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ical.Net" />
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>

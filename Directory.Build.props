@@ -5,8 +5,8 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Label="Package Configuration">
-		<Version>3.1.3</Version>
+	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
+		<Version>3.1.4</Version>
 		<Authors>gachris</Authors>
 		<RepositoryType>git</RepositoryType>
 		<Copyright>Copyright © 2022.</Copyright>
@@ -14,8 +14,8 @@
 		<Product>$(MSBuildProjectName)</Product>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/gachris/iCloud.Dav</RepositoryUrl>
-		<PackageOutputPath>$(MSBuildThisFileDirectory)packages\$(Configuration)</PackageOutputPath>
 		<PackageProjectUrl>https://github.com/gachris/iCloud.Dav/tree/master/src/$(MSBuildProjectName)</PackageProjectUrl>
+		<PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Sign Assembly">

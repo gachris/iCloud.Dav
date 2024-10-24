@@ -1,17 +1,52 @@
-## iCloud.Dav
-iCloud.Dav is a .NET library that allows you to interact with various iCloud data, including contacts, contact groups, calendars, events, reminder lists, and reminders.
+
+# iCloud.Dav
+
+## Description
+**iCloud.Dav** is a .NET library that allows developers to interact with various iCloud services, including **Contacts**, **Calendars**, **Events**, **Reminder Lists**, and **Reminders**. The library integrates seamlessly with .NET projects and supports easy authentication using **iCloud.Dav.Auth**.
+
+## Installation
+
+You can install **iCloud.Dav** packages using the **NuGet** package manager, or by downloading and building the source code manually.
+
+### NuGet Installation
+
+To install the iCloud.Dav libraries via NuGet, use the following commands:
+
+- To install **iCloud.Dav.Core**, run:
+  ```bash
+  Install-Package iCloud.Dav.Core
+  ```
+- To install **iCloud.Dav.Auth**, run:
+  ```bash
+  Install-Package iCloud.Dav.Auth
+  ```
+- To install **iCloud.Dav.Calendar**, run:
+  ```bash
+  Install-Package iCloud.Dav.Calendar
+  ```
+- To install **iCloud.Dav.People**, run:
+  ```bash
+  Install-Package iCloud.Dav.People
+  ```
+
+### Manual Installation
+
+1. Download the source code from this repository.
+2. Open the solution file (`.sln`) in Visual Studio.
+3. Build the solution.
 
 ## Usage
-To use iCloud.Dav.Core in your .NET project, see [here](src/iCloud.Dav.Core).
 
-To use iCloud.Dav.Auth in your .NET project, see [here](src/iCloud.Dav.Auth).
+To use the **iCloud.Dav** libraries in your .NET project, add a reference to the respective assembly (either via **NuGet** or by referencing the built assembly directly).
 
-To use iCloud.Dav.People in your .NET project, see [here](src/iCloud.Dav.People).
+## Examples
 
-To use iCloud.Dav.Calendar in your .NET project, see [here](src/iCloud.Dav.Calendar).
+You can find detailed examples for all major operations in the [`examples/`](examples/) directory of this repository.
 
 ## Contributing
-Contributions to iCloud.Dav are welcome! If you want to contribute to the project, please fork the repository and create a pull request with your changes.
+
+Contributions to **iCloud.Dav** are welcome! If you want to contribute to the project, please fork the repository, create a new branch, and open a pull request with your changes.
 
 ## License
-iCloud.Dav is licensed under the MIT license. See the [License](License) file for more information.
+
+**iCloud.Dav** is licensed under the MIT license. See the [License](LICENSE.txt) file for more information.

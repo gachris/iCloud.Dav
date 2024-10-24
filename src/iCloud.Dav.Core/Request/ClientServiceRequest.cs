@@ -148,7 +148,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         }
         var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
         var errorResponse = new ErrorResponse(response.ReasonPhrase, response.StatusCode, response.RequestMessage?.RequestUri?.AbsoluteUri, requestError);
-        throw new ICloudApiException(_service.Name, errorResponse.ToString());
+        throw new ICloudApiException(_service.Name, response.StatusCode, errorResponse.ToString());
     }
 
     /// <inheritdoc/>
@@ -184,7 +184,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     /// </summary>
     private void AddETag(HttpRequestMessage request)
     {
-        if (!(GetBody() is IDirectResponseSchema body) || string.IsNullOrEmpty(body.ETag)) return;
+        if (GetBody() is not IDirectResponseSchema body || string.IsNullOrEmpty(body.ETag)) return;
         var etag = body.ETag;
         var etagAction = ETagAction == ETagAction.Default ? GetDefaultETagAction(HttpMethod) : ETagAction;
         try
@@ -207,7 +207,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
     {
         return httpMethod is "GET"
             ? ETagAction.IfNoneMatch
-            : httpMethod == "PUT" || httpMethod == "POST" || httpMethod == "PATCH" || httpMethod == "DELETE" ? ETagAction.IfMatch : ETagAction.Ignore;
+            : httpMethod is "PUT" or "POST" or "PATCH" or "DELETE" ? ETagAction.IfMatch : ETagAction.Ignore;
     }
 
     /// <summary>Adds path and query parameters to the given <c>requestBuilder</c>.</summary>
@@ -216,17 +216,15 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         inputParameters.ForEach(inputParameter =>
         {
             if (!RequestParameters.TryGetValue(inputParameter.Key, out var parameter))
-                throw new ICloudApiException(Service.Name, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
+                throw new ICloudApiException(Service.Name, 0, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
 
             var defaultValue = inputParameter.Value;
 
             if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
-                throw new ICloudApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
+                throw new ICloudApiException(Service.Name, 0, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
 
-            if (defaultValue == null)
-            {
-                defaultValue = parameter.DefaultValue;
-            }
+            defaultValue ??= parameter.DefaultValue;
+
             var parameterType = parameter.ParameterType;
             if (!(parameterType == "path"))
             {
@@ -235,7 +233,8 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
                     if (!Equals(defaultValue, parameter.DefaultValue) || parameter.IsRequired)
                         requestBuilder.AddParameter(RequestParameterType.Query, inputParameter.Key, defaultValue);
                 }
-                else throw new ICloudApiException(_service.Name,
+                else throw new ICloudApiException(_service.Name, 
+                                                  0,
                                                   string.Format("Unsupported parameter type \"{0}\" for \"{1}\"",
                                                                 parameter.ParameterType,
                                                                 parameter.Name));
@@ -246,7 +245,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         RequestParameters.Values.ForEach(parameter =>
         {
             if (parameter.IsRequired && !inputParameters.ContainsKey(parameter.Name))
-                throw new ICloudApiException(_service.Name, string.Format("Parameter \"{0}\" is missing", parameter.Name));
+                throw new ICloudApiException(_service.Name, 0, string.Format("Parameter \"{0}\" is missing", parameter.Name));
         });
     }
 }
