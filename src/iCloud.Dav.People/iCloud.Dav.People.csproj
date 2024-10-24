@@ -17,14 +17,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+		<PackageReference Include="vCard.Net" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="vCard.Net" />
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>

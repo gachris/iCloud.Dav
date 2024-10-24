@@ -16,27 +16,10 @@ internal static class HttpExtensions
     /// <returns><c>true</c> if the response contains one of the redirect status codes; otherwise, <c>false</c>.</returns>
     public static bool IsRedirectStatusCode(this HttpResponseMessage message)
     {
-        switch (message.StatusCode)
+        return message.StatusCode switch
         {
-            case HttpStatusCode.Moved:
-            case HttpStatusCode.Found:
-            case HttpStatusCode.RedirectMethod:
-            case HttpStatusCode.RedirectKeepVerb:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /// <summary>
-    /// A utility method for setting an empty HTTP content.
-    /// </summary>
-    /// <param name="request">The HTTP request message for which to set an empty content.</param>
-    /// <returns>The empty HTTP content that was set.</returns>
-    public static HttpContent SetEmptyContent(this HttpRequestMessage request)
-    {
-        request.Content = new ByteArrayContent(Array.Empty<byte>());
-        request.Content.Headers.ContentLength = new long?(0L);
-        return request.Content;
+            HttpStatusCode.Moved or HttpStatusCode.Found or HttpStatusCode.RedirectMethod or HttpStatusCode.RedirectKeepVerb => true,
+            _ => false,
+        };
     }
 }
