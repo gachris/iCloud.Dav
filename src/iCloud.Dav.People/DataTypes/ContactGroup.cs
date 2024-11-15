@@ -174,12 +174,32 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
     protected bool Equals(ContactGroup obj)
     {
-        return obj == null ? false : CompareTo(obj) == 0;
+        return string.Equals(Id, obj.Id, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Version, obj.Version)
+               && string.Equals(FormattedName, obj.FormattedName, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(N, obj.N, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(ProductId, obj.ProductId)
+               && object.Equals(RevisionDate, obj.RevisionDate)
+               && string.Equals(Uid, obj.Uid, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Kind, obj.Kind)
+               && CollectionHelpers.Equals(Members, obj.Members);
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return Uid?.GetHashCode() ?? base.GetHashCode();
+        unchecked
+        {
+            var hashCode = Id != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Id) : 0;
+            hashCode = hashCode * 23 + Uid != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Uid) : 0;
+            hashCode = hashCode * 23 + StringComparer.OrdinalIgnoreCase.GetHashCode(Version.ToString());
+            hashCode = hashCode * 23 + FormattedName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(FormattedName) : 0;
+            hashCode = hashCode * 23 + N != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(N) : 0;
+            hashCode = hashCode * 23 + ProductId != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(ProductId) : 0;
+            hashCode = hashCode * 23 + (RevisionDate?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Kind?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Members != null ? CollectionHelpers.GetHashCode(Members) : 0);
+            return hashCode;
+        }
     }
 }

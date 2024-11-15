@@ -1,6 +1,16 @@
 ﻿using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Serialization.DataTypes;
+using vCard.Net.DataTypes;
 using vCard.Net.Serialization;
+using vCard.Net.Serialization.DataTypes;
+using Address = iCloud.Dav.People.DataTypes.Address;
+using AddressSerializer = iCloud.Dav.People.Serialization.DataTypes.AddressSerializer;
+using Email = iCloud.Dav.People.DataTypes.Email;
+using EmailSerializer = iCloud.Dav.People.Serialization.DataTypes.EmailSerializer;
+using Label = iCloud.Dav.People.DataTypes.Label;
+using LabelSerializer = iCloud.Dav.People.Serialization.DataTypes.LabelSerializer;
+using Photo = iCloud.Dav.People.DataTypes.Photo;
+using PhotoSerializer = iCloud.Dav.People.Serialization.DataTypes.PhotoSerializer;
 
 namespace iCloud.Dav.People.Serialization;
 
@@ -63,9 +73,9 @@ internal class ExtendedDataTypeSerializerFactory : DataTypeSerializerFactory, IS
         {
             s = new X_ABAddressSerializer(ctx);
         }
-        else if (typeof(vCard.Net.DataTypes.IDateTime).IsAssignableFrom(objectType))
+        else if (typeof(IDateTime).IsAssignableFrom(objectType))
         {
-            s = new vCard.Net.Serialization.DataTypes.DateTimeSerializer(ctx);
+            s = new DateTimeSerializer(ctx);
         }
 
         return s ?? base.Build(objectType, ctx);

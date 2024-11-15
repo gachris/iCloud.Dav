@@ -1,4 +1,5 @@
 ﻿using vCard.Net;
+using vCard.Net.DataTypes;
 using vCard.Net.Serialization;
 
 namespace iCloud.Dav.People.Serialization;
@@ -29,7 +30,7 @@ internal class ExtendedSerializerFactory : SerializerFactory, ISerializerFactory
         {
             s = new ParameterSerializer(ctx);
         }
-        else if (typeof(vCard.Net.DataTypes.IVCardDataType).IsAssignableFrom(objectType))
+        else if (typeof(IVCardDataType).IsAssignableFrom(objectType))
         {
             s = _mDataTypeSerializerFactory.Build(objectType, ctx);
         }

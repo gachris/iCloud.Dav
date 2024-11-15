@@ -323,12 +323,66 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <returns><see langword = "true" /> if the specified object is equal to the current object; otherwise, <see langword = "false" />.</returns>
     protected bool Equals(Contact obj)
     {
-        return obj == null ? false : CompareTo(obj) == 0;
+        return string.Equals(Id, obj.Id, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Version, obj.Version)
+               && string.Equals(FormattedName, obj.FormattedName, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(N, obj.N)
+               && string.Equals(ProductId, obj.ProductId)
+               && object.Equals(RevisionDate, obj.RevisionDate)
+               && string.Equals(Uid, obj.Uid, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Kind, obj.Kind)
+               && string.Equals(PhoneticLastName, obj.PhoneticLastName, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(PhoneticFirstName, obj.PhoneticFirstName, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(Nickname, obj.Nickname, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(Title, obj.Title, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(PhoneticOrganization, obj.PhoneticOrganization, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Organization, obj.Organization)
+               && object.Equals(Birthdate, obj.Birthdate)
+               && string.Equals(Notes, obj.Notes, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(ShowAs, obj.ShowAs, StringComparison.OrdinalIgnoreCase)
+               && object.Equals(Photo, obj.Photo)
+               && CollectionHelpers.Equals(Websites, obj.Websites)
+               && CollectionHelpers.Equals(Telephones, obj.Telephones)
+               && CollectionHelpers.Equals(SocialProfiles, obj.SocialProfiles)
+               && CollectionHelpers.Equals(Addresses, obj.Addresses)
+               && CollectionHelpers.Equals(RelatedNames, obj.RelatedNames)
+               && CollectionHelpers.Equals(Dates, obj.Dates)
+               && CollectionHelpers.Equals(Emails, obj.Emails)
+               && CollectionHelpers.Equals(InstantMessages, obj.InstantMessages);
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return Uid?.GetHashCode() ?? base.GetHashCode();
+        unchecked
+        {
+            var hashCode = Id != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Id) : 0;
+            hashCode = hashCode * 23 + (Uid != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Uid) : 0);
+            hashCode = hashCode * 23 + StringComparer.OrdinalIgnoreCase.GetHashCode(Version.ToString());
+            hashCode = hashCode * 23 + (FormattedName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(FormattedName) : 0);
+            hashCode = hashCode * 23 + (N?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (ProductId != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(ProductId) : 0);
+            hashCode = hashCode * 23 + (RevisionDate?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Kind?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (PhoneticLastName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(PhoneticLastName) : 0);
+            hashCode = hashCode * 23 + (PhoneticFirstName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(PhoneticFirstName) : 0);
+            hashCode = hashCode * 23 + (Nickname != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Nickname) : 0);
+            hashCode = hashCode * 23 + (Title != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Title) : 0);
+            hashCode = hashCode * 23 + (PhoneticOrganization != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(PhoneticOrganization) : 0);
+            hashCode = hashCode * 23 + (Organization?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Birthdate?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Notes != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Notes) : 0);
+            hashCode = hashCode * 23 + (ShowAs != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(ShowAs) : 0);
+            hashCode = hashCode * 23 + (Photo?.GetHashCode() ?? 0);
+            hashCode = hashCode * 23 + (Websites != null ? CollectionHelpers.GetHashCode(Websites) : 0);
+            hashCode = hashCode * 23 + (Telephones != null ? CollectionHelpers.GetHashCode(Telephones) : 0);
+            hashCode = hashCode * 23 + (SocialProfiles != null ? CollectionHelpers.GetHashCode(SocialProfiles) : 0);
+            hashCode = hashCode * 23 + (Addresses != null ? CollectionHelpers.GetHashCode(Addresses) : 0);
+            hashCode = hashCode * 23 + (RelatedNames != null ? CollectionHelpers.GetHashCode(RelatedNames) : 0);
+            hashCode = hashCode * 23 + (Dates != null ? CollectionHelpers.GetHashCode(Dates) : 0);
+            hashCode = hashCode * 23 + (Emails != null ? CollectionHelpers.GetHashCode(Emails) : 0);
+            hashCode = hashCode * 23 + (InstantMessages != null ? CollectionHelpers.GetHashCode(InstantMessages) : 0);
+            return hashCode;
+        }
     }
 }
