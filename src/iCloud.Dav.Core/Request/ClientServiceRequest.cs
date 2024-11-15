@@ -142,7 +142,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         }
         var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
         var errorResponse = new ErrorResponse(response.ReasonPhrase, response.StatusCode, response.RequestMessage?.RequestUri?.AbsoluteUri, requestError);
-        throw new ICloudApiException(_service.Name, errorResponse.ToString());
+        throw new ICloudApiException(_service.Name, "Error occurred while processing the request.", errorResponse, response);
     }
 
     /// <inheritdoc/>
@@ -217,10 +217,8 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
             if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
                 throw new ICloudApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
 
-            if (defaultValue == null)
-            {
-                defaultValue = parameter.DefaultValue;
-            }
+            defaultValue ??= parameter.DefaultValue;
+
             var parameterType = parameter.ParameterType;
             if (!(parameterType == "path"))
             {

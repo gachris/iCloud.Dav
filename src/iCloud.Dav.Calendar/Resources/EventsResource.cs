@@ -309,7 +309,7 @@ public class EventsResource
     /// <summary>
     /// Represents a request to insert a event into iCloud.
     /// </summary>
-    public class InsertRequest : CalendarBaseServiceRequest<VoidResponse>
+    public class InsertRequest : CalendarBaseServiceRequest<HeaderMetadataResponse>
     {
         private object _body;
 
@@ -371,7 +371,7 @@ public class EventsResource
     /// <summary>
     /// Represents a request to update an existing event in iCloud.
     /// </summary>
-    public class UpdateRequest : CalendarBaseServiceRequest<VoidResponse>
+    public class UpdateRequest : CalendarBaseServiceRequest<HeaderMetadataResponse>
     {
         private object _body;
 

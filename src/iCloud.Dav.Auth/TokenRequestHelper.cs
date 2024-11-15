@@ -6,8 +6,8 @@ namespace iCloud.Dav.Auth;
 
 internal static class TokenRequestHelper
 {
-    private const string iCloudContactsBaseUrl = "https://contacts.icloud.com";
-    private const string iCloudCalendarBaseUrl = "https://caldav.icloud.com";
+    private const string ContactsBaseUrl = "https://contacts.icloud.com";
+    private const string CalendarBaseUrl = "https://caldav.icloud.com";
 
     /// <summary>
     /// Executes the token request in order to receive a
@@ -27,8 +27,8 @@ internal static class TokenRequestHelper
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {code}");
         httpClient.DefaultRequestHeaders.Add("Depth", "0");
 
-        var peopleServer = await httpClient.GetCardDavServer(iCloudContactsBaseUrl, cancellationToken);
-        var calendarServer = await httpClient.GetCalDavServer(iCloudCalendarBaseUrl, cancellationToken);
+        var peopleServer = await httpClient.GetCardDavServer(ContactsBaseUrl, cancellationToken);
+        var calendarServer = await httpClient.GetCalDavServer(CalendarBaseUrl, cancellationToken);
         var peoplePrincipal = await httpClient.GetPeoplePrincipal(peopleServer.Url, cancellationToken);
         var calendarPrincipal = await httpClient.GetCalendarPrincipal(calendarServer.Url, cancellationToken);
 

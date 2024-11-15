@@ -28,11 +28,7 @@ public class ErrorResponse
     public string ErrorDescription { get; }
 
     /// <inheritdoc/>
-    public override string ToString() => string.Format("ReasonPhrase:\"{0}\", HttpStatusCode:\"{1}\", Uri:\"{2}\", ErrorDescription:\"{3}\"",
-                                                       ReasonPhrase,
-                                                       HttpStatusCode,
-                                                       ErrorUri,
-                                                       ErrorDescription);
+    public override string ToString() => $"Error Response: [Reason Phrase: \"{ReasonPhrase}\", Status Code: \"{HttpStatusCode}\", Error URI: \"{ErrorUri}\", Description: \"{ErrorDescription}\"]";
 
     /// <summary>
     /// Constructs a new error response.

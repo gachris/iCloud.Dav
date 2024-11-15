@@ -20,16 +20,4 @@ internal static class HttpExtensions
             _ => false,
         };
     }
-
-    /// <summary>
-    /// A utility method for setting an empty HTTP content.
-    /// </summary>
-    /// <param name="request">The HTTP request message for which to set an empty content.</param>
-    /// <returns>The empty HTTP content that was set.</returns>
-    public static HttpContent SetEmptyContent(this HttpRequestMessage request)
-    {
-        request.Content = new ByteArrayContent(Array.Empty<byte>());
-        request.Content.Headers.ContentLength = new long?(0L);
-        return request.Content;
-    }
 }

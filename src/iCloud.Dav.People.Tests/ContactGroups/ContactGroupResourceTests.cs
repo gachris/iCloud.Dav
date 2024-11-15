@@ -147,7 +147,7 @@ public class ContactGroupResourceTests
     {
         // Arrange
         _mockPeopleService.Setup(x => x.ContactGroups.Insert(It.IsAny<ContactGroup>(), It.IsAny<string>()).Execute())
-                          .Returns(new VoidResponse());
+                          .Returns(new HeaderMetadataResponse());
 
         // Act
         var result = _mockPeopleService.Object.ContactGroups.Insert(It.IsAny<ContactGroup>(), It.IsAny<string>()).Execute();
@@ -164,7 +164,7 @@ public class ContactGroupResourceTests
     {
         // Arrange
         _mockPeopleService.Setup(x => x.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>()).Execute())
-                          .Returns(new VoidResponse());
+                          .Returns(new HeaderMetadataResponse());
 
         // Act
         var result = _mockPeopleService.Object.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>()).Execute();

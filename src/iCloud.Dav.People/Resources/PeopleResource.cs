@@ -256,7 +256,7 @@ public class PeopleResource
     /// <summary>
     /// Represents a request to insert a contact into iCloud.
     /// </summary>
-    public class InsertRequest : PeopleBaseServiceRequest<VoidResponse>
+    public class InsertRequest : PeopleBaseServiceRequest<HeaderMetadataResponse>
     {
         private object _body;
 
@@ -319,7 +319,7 @@ public class PeopleResource
     /// <summary>
     /// Represents a request to update an existing contact in iCloud.
     /// </summary>
-    public class UpdateRequest : PeopleBaseServiceRequest<VoidResponse>
+    public class UpdateRequest : PeopleBaseServiceRequest<HeaderMetadataResponse>
     {
         private object _body;
 
