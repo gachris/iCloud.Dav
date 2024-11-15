@@ -1,8 +1,6 @@
 ﻿using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Serialization.DataTypes;
-using vCard.Net.DataTypes;
 using vCard.Net.Serialization;
-using vCard.Net.Serialization.DataTypes;
 
 namespace iCloud.Dav.People.Serialization;
 
@@ -65,9 +63,9 @@ internal class ExtendedDataTypeSerializerFactory : DataTypeSerializerFactory, IS
         {
             s = new X_ABAddressSerializer(ctx);
         }
-        else if (typeof(IDateTime).IsAssignableFrom(objectType))
+        else if (typeof(vCard.Net.DataTypes.IDateTime).IsAssignableFrom(objectType))
         {
-            s = new DateTimeSerializer(ctx);
+            s = new vCard.Net.Serialization.DataTypes.DateTimeSerializer(ctx);
         }
 
         return s ?? base.Build(objectType, ctx);
