@@ -2,11 +2,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup Label="Project Configuration">
+		<AssemblyVersion>3.1.5.0</AssemblyVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
-		<Version>3.1.4</Version>
+		<Version>$(AssemblyVersion)</Version>
 		<Authors>gachris</Authors>
 		<RepositoryType>git</RepositoryType>
 		<Copyright>Copyright © 2022.</Copyright>
