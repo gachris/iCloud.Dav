@@ -149,11 +149,7 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
             Uid = Guid.NewGuid().ToString();
         }
 
-        if (string.IsNullOrEmpty(Id))
-        {
-            Id = Uid;
-        }
-
+        Id = Uid;
         Version = VCardVersion.vCard3_0;
         Kind ??= new Kind()
         {
@@ -178,7 +174,7 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
                && object.Equals(Version, obj.Version)
                && string.Equals(FormattedName, obj.FormattedName, StringComparison.OrdinalIgnoreCase)
                && string.Equals(N, obj.N, StringComparison.OrdinalIgnoreCase)
-               && object.Equals(ProductId, obj.ProductId)
+               && string.Equals(ProductId, obj.ProductId)
                && object.Equals(RevisionDate, obj.RevisionDate)
                && string.Equals(Uid, obj.Uid, StringComparison.OrdinalIgnoreCase)
                && object.Equals(Kind, obj.Kind)
