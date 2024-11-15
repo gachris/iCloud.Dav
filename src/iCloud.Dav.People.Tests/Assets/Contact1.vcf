@@ -1,0 +1,121 @@
+﻿BEGIN:VCARD
+VERSION:3.0
+N:Gkatzos;Christos;Junior;Mr;S.
+FN:Mr Christos Gkatzos S.
+X-PHONETIC-FIRST-NAME:C
+X-PHONETIC-LAST-NAME:G
+ORG:Microsoft;Power Automate
+X-PHONETIC-ORG:Microsoft
+NICKNAME:gachris
+BDAY;X-APPLE-OMIT-YEAR=1604;VALUE=date:1604-08-03
+TITLE:Developer
+NOTE:Mia wraia mera!\nKi alli mia wraia mera!
+item1.ADR;TYPE=HOME;TYPE=pref:;;Arkesilaou 4\nArkesilaou\nOrfeos\nDervenaki
+ on;Athens;greece;11743;Greece
+item1.X-ABADR:gr
+item2.ADR;TYPE=WORK:;;dqwqfw;fqwqwd;fqwqwqw;fqwfqwfwqf;United States
+item2.X-ABADR:gr
+item3.ADR:;;school school school\nschool school;school school;school school
+ ;school school;United States
+item3.X-ABLABEL:_$!<School>!$_
+item3.X-ABADR:gr
+item4.ADR;TYPE=OTHER:;;Other\nOther\nOther\nOther;Other;Other;Other;United 
+ States
+item4.X-ABADR:gr
+item5.ADR:;;fweffew\nfewfewf\nweqfqwe\nfewgqwe;gwqeg;wege;wgewqgw;Greece
+item5.X-ABLABEL:custom
+item5.X-ABADR:gr
+TEL;TYPE=IPHONE;TYPE=CELL;TYPE=pref;TYPE=VOICE:iphone
+item6.TEL:applewatch
+item6.X-ABLABEL:APPLE WATCH
+TEL;TYPE=HOME;TYPE=VOICE:home
+TEL;TYPE=WORK;TYPE=VOICE:work
+item7.TEL:school
+item7.X-ABLABEL:_$!<School>!$_
+TEL;TYPE=MAIN:main
+TEL;TYPE=HOME;TYPE=FAX:homefax
+TEL;TYPE=WORK;TYPE=FAX:workfax
+TEL;TYPE=PAGER:pager
+TEL;TYPE=OTHER;TYPE=VOICE:othe
+TEL;TYPE=CELL;TYPE=VOICE:mobile
+item8.TEL:applewatch2
+item8.X-ABLABEL:APPLE WATCH
+TEL;TYPE=OTHER;TYPE=VOICE:other2
+TEL;TYPE=CELL;TYPE=VOICE:mobile2
+TEL;TYPE=MAIN:main2
+TEL;TYPE=WORK;TYPE=FAX:workfax2
+item9.TEL:hrththrt
+item9.X-ABLABEL:thtrht
+TEL;TYPE=OTHER;TYPE=VOICE:grgrgr
+TEL;TYPE=OTHER;TYPE=VOICE:berbreb
+item10.X-ABRELATEDNAMES;TYPE=pref:Spyros
+item10.X-ABLABEL:_$!<Father>!$_
+item11.X-ABRELATEDNAMES:Antonia
+item11.X-ABLABEL:_$!<Mother>!$_
+item12.X-ABRELATEDNAMES:custom
+item12.X-ABLABEL:custom
+URL;TYPE=HOME;TYPE=pref:https://www.homepage.com
+item13.URL:http://www.home.com
+item13.X-ABLABEL:_$!<HomePage>!$_
+URL;TYPE=WORK:http://www.work.com
+item14.URL:http://www.school.com
+item14.X-ABLABEL:_$!<School>!$_
+item15.URL:http://www.blog.com
+item15.X-ABLABEL:BLOG
+URL;TYPE=OTHER:http://www.other.com
+item16.URL:http://www.custom-url.com
+item16.X-ABLABEL:custom-url
+IMPP;X-SERVICE-TYPE=facebook;TYPE=OTHER;TYPE=pref:xmpp:home-facebook
+IMPP;X-SERVICE-TYPE=facebook;TYPE=WORK:xmpp:work-facebook
+IMPP;X-SERVICE-TYPE=facebook;TYPE=OTHER:xmpp:other-facebook
+item17.IMPP;X-SERVICE-TYPE=facebook:xmpp:custom-facebook
+item17.X-ABLABEL:custom
+X-AIM;TYPE=HOME;TYPE=pref:home-aim
+IMPP;X-SERVICE-TYPE=aim;TYPE=HOME:aim:home-aim
+X-AIM;TYPE=WORK;TYPE=pref:work-aim
+IMPP;X-SERVICE-TYPE=aim;TYPE=WORK:aim:work-aim
+X-AIM;TYPE=OTHER;TYPE=pref:other-aim
+IMPP;X-SERVICE-TYPE=aim;TYPE=OTHER:aim:other-aim
+item18.X-AIM;TYPE=pref:custom-aim
+item18.X-ABLABEL:custom
+item19.IMPP;X-SERVICE-TYPE=aim:aim:custom-aim
+item19.X-ABLABEL:custom
+IMPP;X-SERVICE-TYPE=gadugadu;TYPE=HOME:x-apple:home-gadu-gadu
+IMPP;X-SERVICE-TYPE=gadugadu;TYPE=WORK:x-apple:work-gadu-gadu
+IMPP;X-SERVICE-TYPE=gadugadu;TYPE=OTHER:x-apple:other-gadu-gadu
+item20.IMPP;X-SERVICE-TYPE=gadugadu:x-apple:custom-gadu-gadu
+item20.X-ABLABEL:custom
+item21.X-AIM;TYPE=pref:custom-aim-2
+item21.X-ABLABEL:custom-2
+item22.IMPP;X-SERVICE-TYPE=aim:aim:custom-aim-2
+item22.X-ABLABEL:custom-2
+EMAIL;TYPE=WORK;TYPE=pref;TYPE=INTERNET:christosgatzos@gmail.com
+EMAIL;TYPE=HOME;TYPE=INTERNET:christosgatzos@hotmail.com
+item23.EMAIL;TYPE=INTERNET:christosgatzos@microsoft.com
+item23.X-ABLABEL:_$!<School>!$_
+EMAIL;TYPE=OTHER;TYPE=INTERNET:christosgatzos@nb.com
+item24.EMAIL;TYPE=INTERNET:christosgatzos@custom.com
+item24.X-ABLABEL:Custom-mail
+item25.EMAIL;TYPE=INTERNET:hrthrthtr
+item25.X-ABLABEL:hthtrh
+X-ABDATE;TYPE=OTHER;TYPE=pref:2005-05-08
+item26.X-ABDATE:5 Ιουνίου 2021
+item26.X-ABLABEL:_$!<Anniversary>!$_
+item27.X-ABDATE:1999-03-08
+item27.X-ABLABEL:custom
+X-SOCIALPROFILE;X-USER=twitter;TYPE=twitter:https://twitter.com/twitter
+X-SOCIALPROFILE;X-USER=facebook;TYPE=facebook:https://www.facebook.com/face
+ book
+X-SOCIALPROFILE;X-USER=linkedin;TYPE=linkedin:https://www.linkedin.com/in/l
+ inkedin
+X-SOCIALPROFILE;X-USER=flickr;TYPE=flickr:https://www.flickr.com/photos/fli
+ ckr/
+X-SOCIALPROFILE;X-USER=myspace;TYPE=myspace:https://www.myspace.com/myspace
+X-SOCIALPROFILE;X-USER=sinaweibo;TYPE=sinaweibo:https://www.weibo.com/n/sin
+ aweibo
+X-SOCIALPROFILE;X-USER=twitter2;TYPE=twitter:https://twitter.com/twitter2
+item28.X-SOCIALPROFILE;X-USER=custom-profile:x-apple:custom-profile
+item28.X-ABLABEL:custom-profile
+PRODID:-//Apple Inc.//iCloud Web Address Book 2428B27//EN
+REV:2024-11-15T20:28:15Z
+END:VCARD
