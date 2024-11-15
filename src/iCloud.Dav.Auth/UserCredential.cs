@@ -13,7 +13,7 @@ public class UserCredential : ICredential, IConfigurableHttpClientCredentialInit
     /// <summary>Gets Logger.</summary>
     private static readonly ILogger _logger = ApplicationContext.Logger.ForType<UserCredential>();
 
-    private readonly object _lockObject = new object();
+    private readonly object _lockObject = new();
     private readonly IAuthorizationCodeFlow _flow;
     private readonly string _userId;
     private Token _token;

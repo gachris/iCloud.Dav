@@ -138,9 +138,9 @@ public abstract class BaseClientService : IClientService, IDisposable
                 url.Id = Path.GetFileNameWithoutExtension(response.RequestMessage.RequestUri.OriginalString.TrimEnd('/'));
             }
 
-            if (deserializedObject is IDirectResponseSchema directResponseSchema && string.IsNullOrEmpty(response.Headers.ETag?.Tag) == false)
+            if (deserializedObject is IDirectResponseSchema directResponseSchema && !string.IsNullOrEmpty(response.Headers.ETag?.Tag))
             {
-                directResponseSchema.ETag = response.Headers.ETag?.Tag;
+                directResponseSchema.ETag = response.Headers.ETag.Tag;
             }
 
             return (T)deserializedObject;

@@ -6,9 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{541F1D36-E012-4425-8D35-0EC27193051F}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Directory.build.props = Directory.build.props
-		Directory.build.targets = Directory.build.targets
-		Directory.packages.props = Directory.packages.props
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Core", "src\iCloud.Dav.Core\iCloud.Dav.Core.csproj", "{3BE92606-7460-4D9F-895A-E44A87AB2452}"
