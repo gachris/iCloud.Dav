@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -51,15 +48,11 @@ public class Date : EncodableDataType, IRelatedDataType
             var typeFromInternal = DateTypeMapping.GetType(typeInternal);
             if (typeFromInternal is 0)
             {
-                switch (Label?.Value)
+                typeFromInternal = (Label?.Value) switch
                 {
-                    case Anniversary:
-                        typeFromInternal = DateType.Anniversary;
-                        break;
-                    default:
-                        typeFromInternal = DateType.Custom;
-                        break;
-                }
+                    Anniversary => DateType.Anniversary,
+                    _ => DateType.Custom,
+                };
             }
 
             return typeFromInternal;
@@ -72,7 +65,7 @@ public class Date : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(DateTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -82,15 +75,11 @@ public class Date : EncodableDataType, IRelatedDataType
                 Parameters.Remove("TYPE");
             }
 
-            switch (value)
+            Label = value switch
             {
-                case DateType.Anniversary:
-                    Label = new Label() { Value = Anniversary };
-                    break;
-                default:
-                    Label = null;
-                    break;
-            }
+                DateType.Anniversary => new Label() { Value = Anniversary },
+                _ => null,
+            };
         }
     }
 
@@ -173,7 +162,7 @@ public class Date : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Date)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Date)obj));
     }
 
     /// <summary>

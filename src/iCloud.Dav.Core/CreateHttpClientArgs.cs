@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// Arguments for creating a HTTP client.

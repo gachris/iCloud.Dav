@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Response;

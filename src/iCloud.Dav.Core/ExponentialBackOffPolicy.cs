@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// An enumeration that represents the exponential back-off policy for retries.

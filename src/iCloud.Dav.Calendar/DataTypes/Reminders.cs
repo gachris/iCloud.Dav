@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using iCloud.Dav.Calendar.Serialization.Converters;
 using iCloud.Dav.Calendar.WebDav.DataTypes;
 using iCloud.Dav.Core;

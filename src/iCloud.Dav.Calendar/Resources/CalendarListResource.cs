@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Ical.Net.Serialization;
+﻿using Ical.Net.Serialization;
 using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.Request;

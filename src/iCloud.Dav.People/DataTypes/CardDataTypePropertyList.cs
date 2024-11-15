@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using vCard.Net;
+﻿using vCard.Net;
 using vCard.Net.Collections;
 
 namespace iCloud.Dav.People.DataTypes;

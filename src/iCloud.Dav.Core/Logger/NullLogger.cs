@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core.Logger;
+﻿namespace iCloud.Dav.Core.Logger;
 
 /// <summary>
 /// Provides a logger implementation that discards all log messages and does not log any information.

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 
@@ -38,7 +36,7 @@ public class EmailSerializer : EncodableDataTypeSerializer
     /// <returns>A string representation of the <see cref="Email"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is Email email))
+        if (obj is not Email email)
         {
             return null;
         }
@@ -60,7 +58,7 @@ public class EmailSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is Email email))
+        if (CreateAndAssociate() is not Email email)
         {
             return null;
         }

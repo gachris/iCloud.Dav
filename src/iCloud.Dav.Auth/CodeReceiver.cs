@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using iCloud.Dav.Core;
 using iCloud.Dav.Core.Logger;
 

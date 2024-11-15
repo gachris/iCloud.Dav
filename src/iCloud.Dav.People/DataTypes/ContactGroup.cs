@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using iCloud.Dav.Core;
 using iCloud.Dav.People.Serialization.Converters;
@@ -144,7 +142,7 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ContactGroup)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ContactGroup)obj));
     }
 
     /// <summary>

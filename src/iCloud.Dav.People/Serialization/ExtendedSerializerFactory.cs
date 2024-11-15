@@ -1,5 +1,4 @@
-﻿using System;
-using vCard.Net;
+﻿using vCard.Net;
 using vCard.Net.Serialization;
 
 namespace iCloud.Dav.People.Serialization;

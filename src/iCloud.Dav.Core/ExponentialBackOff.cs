@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// Implementation of <see cref="IBackOff" /> that increases the back-off period for each retry attempt using a
@@ -49,7 +47,7 @@ public class ExponentialBackOff : IBackOff
     {
         if (deltaBackOff < TimeSpan.Zero || deltaBackOff > TimeSpan.FromSeconds(1.0))
             throw new ArgumentOutOfRangeException(nameof(deltaBackOff));
-        if (maximumNumOfRetries < 0 || maximumNumOfRetries > MaxAllowedNumRetries)
+        if (maximumNumOfRetries is < 0 or > MaxAllowedNumRetries)
             throw new ArgumentOutOfRangeException(nameof(deltaBackOff));
         _deltaBackOff = deltaBackOff;
         _maxNumOfRetries = maximumNumOfRetries;

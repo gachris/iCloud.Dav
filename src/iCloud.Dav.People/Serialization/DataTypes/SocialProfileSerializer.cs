@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 
@@ -38,7 +36,7 @@ public class SocialProfileSerializer : EncodableDataTypeSerializer
     /// <returns>A string representation of the <see cref="SocialProfile"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is SocialProfile socialProfile))
+        if (obj is not SocialProfile socialProfile)
         {
             return null;
         }
@@ -60,7 +58,7 @@ public class SocialProfileSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is SocialProfile socialProfile))
+        if (CreateAndAssociate() is not SocialProfile socialProfile)
         {
             return null;
         }

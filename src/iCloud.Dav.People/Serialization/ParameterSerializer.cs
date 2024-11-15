@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using vCard.Net;
 using vCard.Net.Serialization;
 
@@ -35,7 +32,7 @@ public class ParameterSerializer : SerializerBase
     /// <returns>A string representation of the <see cref="CardParameter"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is CardParameter p))
+        if (obj is not CardParameter p)
         {
             return null;
         }

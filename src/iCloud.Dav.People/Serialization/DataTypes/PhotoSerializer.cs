@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using iCloud.Dav.People.DataTypes;
+﻿using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
 
@@ -39,7 +36,7 @@ public class PhotoSerializer : EncodableDataTypeSerializer
     /// <returns>A string representation of the <see cref="Photo"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is Photo photo))
+        if (obj is not Photo photo)
         {
             return null;
         }
@@ -80,7 +77,7 @@ public class PhotoSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is Photo photo))
+        if (CreateAndAssociate() is not Photo photo)
         {
             return null;
         }

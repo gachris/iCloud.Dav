@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net;
 using iCloud.Dav.Core.Logger;
 
 namespace iCloud.Dav.Core;
@@ -104,7 +100,7 @@ public class BackOffHandler : IHttpUnsuccessfulResponseHandler, IHttpExceptionHa
         /// </summary>
         public static readonly Func<Exception, bool> DefaultHandleExceptionFunc = ex =>
         {
-            return !(ex is TaskCanceledException) ? !(ex is OperationCanceledException) : false;
+            return ex is not TaskCanceledException ? ex is not OperationCanceledException : false;
         };
 
         /// <summary>Gets the back-off policy used by this back-off handler.</summary>

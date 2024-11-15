@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.People.DataTypes;
+﻿namespace iCloud.Dav.People.DataTypes;
 
 /// <summary>
 /// Enumerates the types of websites that can be used for a contact.

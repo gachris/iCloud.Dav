@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -51,15 +48,11 @@ public class Address : EncodableDataType, IRelatedDataType
             var typeFromInternal = AddressTypeMapping.GetType(typeInternal);
             if (typeFromInternal is 0)
             {
-                switch (Label?.Value)
+                typeFromInternal = (Label?.Value) switch
                 {
-                    case School:
-                        typeFromInternal = AddressType.School;
-                        break;
-                    default:
-                        typeFromInternal = AddressType.Custom;
-                        break;
-                }
+                    School => AddressType.School,
+                    _ => AddressType.Custom,
+                };
             }
 
             return typeFromInternal;
@@ -72,7 +65,7 @@ public class Address : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(AddressTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -82,18 +75,12 @@ public class Address : EncodableDataType, IRelatedDataType
                 Parameters.Remove("TYPE");
             }
 
-            switch (value)
+            Label = value switch
             {
-                case AddressType.School:
-                    Label = new Label() { Value = School };
-                    break;
-                case AddressType.Custom:
-                    Label = new Label() { Value = Label?.Value };
-                    break;
-                default:
-                    Label = null;
-                    break;
-            }
+                AddressType.School => new Label() { Value = School },
+                AddressType.Custom => new Label() { Value = Label?.Value },
+                _ => null,
+            };
         }
     }
 
@@ -228,7 +215,7 @@ public class Address : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Address)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Address)obj));
     }
 
     /// <summary>

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.People.Serialization;
+﻿namespace iCloud.Dav.People.Serialization;
 
 /// <summary>
 /// Represents a delegate that resolves the .NET type that corresponds to a vCard property.

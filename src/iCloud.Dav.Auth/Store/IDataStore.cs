@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace iCloud.Dav.Auth.Store;
+﻿namespace iCloud.Dav.Auth.Store;
 
 /// <summary>
 /// An interface representing a data store that can be used to store and retrieve objects of various types.

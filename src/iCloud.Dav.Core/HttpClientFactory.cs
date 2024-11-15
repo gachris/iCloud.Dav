@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using iCloud.Dav.Core.Extensions;
+﻿using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Logger;
 
 namespace iCloud.Dav.Core;

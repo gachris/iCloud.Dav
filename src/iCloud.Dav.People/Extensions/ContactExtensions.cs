@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Serialization;
 

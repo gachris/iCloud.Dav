@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Utils;
 
@@ -117,7 +115,7 @@ public class ParameterCollection : List<KeyValuePair<string, string>>
         var parameterCollection = new ParameterCollection();
         foreach (var keyValuePair in dictionary)
         {
-            if (!(keyValuePair.Value is string) && keyValuePair.Value is IEnumerable enumerable)
+            if (keyValuePair.Value is not string and IEnumerable enumerable)
             {
                 foreach (var o in enumerable)
                     parameterCollection.Add(keyValuePair.Key, Utilities.ConvertToString(o));

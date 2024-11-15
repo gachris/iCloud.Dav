@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -101,45 +98,21 @@ public class RelatedNames : EncodableDataType, IRelatedDataType
             var typeFromInternal = RelatedNamesMapping.GetType(typeInternal);
             if (typeFromInternal is 0)
             {
-                switch (Label?.Value)
+                typeFromInternal = (Label?.Value) switch
                 {
-                    case Father:
-                        typeFromInternal = RelatedNamesType.Father;
-                        break;
-                    case Mother:
-                        typeFromInternal = RelatedNamesType.Mother;
-                        break;
-                    case Parent:
-                        typeFromInternal = RelatedNamesType.Parent;
-                        break;
-                    case Brother:
-                        typeFromInternal = RelatedNamesType.Brother;
-                        break;
-                    case Sister:
-                        typeFromInternal = RelatedNamesType.Sister;
-                        break;
-                    case Child:
-                        typeFromInternal = RelatedNamesType.Child;
-                        break;
-                    case Friend:
-                        typeFromInternal = RelatedNamesType.Friend;
-                        break;
-                    case Spouse:
-                        typeFromInternal = RelatedNamesType.Spouse;
-                        break;
-                    case Partner:
-                        typeFromInternal = RelatedNamesType.Partner;
-                        break;
-                    case Assistant:
-                        typeFromInternal = RelatedNamesType.Assistant;
-                        break;
-                    case Manager:
-                        typeFromInternal = RelatedNamesType.Manager;
-                        break;
-                    default:
-                        typeFromInternal = RelatedNamesType.Custom;
-                        break;
-                }
+                    Father => RelatedNamesType.Father,
+                    Mother => RelatedNamesType.Mother,
+                    Parent => RelatedNamesType.Parent,
+                    Brother => RelatedNamesType.Brother,
+                    Sister => RelatedNamesType.Sister,
+                    Child => RelatedNamesType.Child,
+                    Friend => RelatedNamesType.Friend,
+                    Spouse => RelatedNamesType.Spouse,
+                    Partner => RelatedNamesType.Partner,
+                    Assistant => RelatedNamesType.Assistant,
+                    Manager => RelatedNamesType.Manager,
+                    _ => RelatedNamesType.Custom,
+                };
             }
 
             return typeFromInternal;
@@ -152,7 +125,7 @@ public class RelatedNames : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(RelatedNamesTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -162,46 +135,21 @@ public class RelatedNames : EncodableDataType, IRelatedDataType
                 Parameters.Remove("TYPE");
             }
 
-            switch (value)
+            Label = value switch
             {
-                case RelatedNamesType.Father:
-                    Label = new Label() { Value = Father };
-                    break;
-                case RelatedNamesType.Mother:
-                    Label = new Label() { Value = Mother };
-                    break;
-                case RelatedNamesType.Parent:
-                    Label = new Label() { Value = Parent };
-                    break;
-                case RelatedNamesType.Brother:
-                    Label = new Label() { Value = Brother };
-                    break;
-                case RelatedNamesType.Sister:
-                    Label = new Label() { Value = Sister };
-                    break;
-                case RelatedNamesType.Child:
-                    Label = new Label() { Value = Child };
-                    break;
-                case RelatedNamesType.Friend:
-                    Label = new Label() { Value = Friend };
-                    break;
-                case RelatedNamesType.Spouse:
-                    Label = new Label() { Value = Spouse };
-                    break;
-                case RelatedNamesType.Partner:
-                    Label = new Label() { Value = Partner };
-                    break;
-                case RelatedNamesType.Assistant:
-                    Label = new Label() { Value = Assistant };
-                    break;
-                case RelatedNamesType.Manager:
-                    Label = new Label() { Value = Manager };
-                    break;
-                default:
-                    Label = null;
-                    break;
-            }
-
+                RelatedNamesType.Father => new Label() { Value = Father },
+                RelatedNamesType.Mother => new Label() { Value = Mother },
+                RelatedNamesType.Parent => new Label() { Value = Parent },
+                RelatedNamesType.Brother => new Label() { Value = Brother },
+                RelatedNamesType.Sister => new Label() { Value = Sister },
+                RelatedNamesType.Child => new Label() { Value = Child },
+                RelatedNamesType.Friend => new Label() { Value = Friend },
+                RelatedNamesType.Spouse => new Label() { Value = Spouse },
+                RelatedNamesType.Partner => new Label() { Value = Partner },
+                RelatedNamesType.Assistant => new Label() { Value = Assistant },
+                RelatedNamesType.Manager => new Label() { Value = Manager },
+                _ => null,
+            };
         }
     }
 
@@ -284,7 +232,7 @@ public class RelatedNames : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((RelatedNames)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((RelatedNames)obj));
     }
 
     /// <summary>

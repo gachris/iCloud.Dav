@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Ical.Net;
+﻿using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 using Ical.Net.Serialization;
@@ -63,14 +61,14 @@ internal class ExtendedDataTypeMapper
 
     protected Type ResolveStatusProperty(object context)
     {
-        if (!(context is ICalendarObject calendarObject))
+        if (context is not ICalendarObject calendarObject)
         {
             return null;
         }
 
         var parent = calendarObject.Parent;
-        return !(parent is CalendarEvent)
-            ? !(parent is Todo) ? parent is Journal ? typeof(JournalStatus) : null : typeof(TodoStatus)
+        return parent is not CalendarEvent
+            ? parent is not Todo ? parent is Journal ? typeof(JournalStatus) : null : typeof(TodoStatus)
             : typeof(EventStatus);
     }
 
@@ -118,7 +116,7 @@ internal class ExtendedDataTypeMapper
 
     public virtual Type GetPropertyMapping(object obj)
     {
-        return !(obj is ICalendarProperty calendarProperty) || calendarProperty.Name == null
+        return obj is not ICalendarProperty calendarProperty || calendarProperty.Name == null
             ? null
             : !_propertyMap.TryGetValue(calendarProperty.Name, out var value)
             ? null

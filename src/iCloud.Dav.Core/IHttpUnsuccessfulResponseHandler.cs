@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// Unsuccessful response handler which is invoked when an abnormal HTTP response is returned when sending a HTTP

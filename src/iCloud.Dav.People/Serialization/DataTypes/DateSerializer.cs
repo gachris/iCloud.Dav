@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
@@ -39,7 +37,7 @@ public class DateSerializer : EncodableDataTypeSerializer
     /// <returns>A string representation of the <see cref="Date"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is Date date))
+        if (obj is not Date date)
         {
             return null;
         }
@@ -61,7 +59,7 @@ public class DateSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is Date date))
+        if (CreateAndAssociate() is not Date date)
         {
             return null;
         }

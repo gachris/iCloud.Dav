@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.Drawing;
 using iCloud.Dav.People.Serialization.DataTypes;
 using vCard.Net;
 using vCard.Net.DataTypes;
@@ -81,7 +78,7 @@ public class Photo : EncodableDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Photo)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Photo)obj));
     }
 
     /// <summary>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Utils;
 using vCard.Net;
@@ -47,7 +43,7 @@ public class ContactSerializer : ComponentSerializer
     /// <returns>The serialized string.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is Contact c))
+        if (obj is not Contact c)
         {
             return null;
         }
@@ -116,8 +112,7 @@ public class ContactSerializer : ComponentSerializer
                 if (parameterList.Any())
                 {
                     // Get a serializer for parameters
-                    var parameterSerializer = sf.Build(typeof(CardParameter), SerializationContext) as IStringSerializer;
-                    if (parameterSerializer != null)
+                    if (sf.Build(typeof(CardParameter), SerializationContext) is IStringSerializer parameterSerializer)
                     {
                         // Serialize each parameter
                         // Separate parameters with semicolons
