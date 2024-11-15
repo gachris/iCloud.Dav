@@ -6,6 +6,7 @@ using System.Linq;
 using iCloud.Dav.Calendar.DataTypes;
 using iCloud.Dav.Calendar.Extensions;
 using iCloud.Dav.Calendar.WebDav.DataTypes;
+using iCloud.Dav.Core.Extensions;
 
 namespace iCloud.Dav.Calendar.Serialization.Converters;
 
@@ -25,7 +26,8 @@ internal sealed class ReminderListConverter : TypeConverter
         var multiStatus = (MultiStatus)value;
         var response = multiStatus.Responses.FirstOrDefault(x => x.IsCalendar());
         var propsStat = response?.GetSuccessPropStat();
-        var items = multiStatus.Responses.Except(new HashSet<Response>() { response })
+        var items = multiStatus.Responses.Where(x => x.IsOK())
+                                         .Except(new HashSet<Response>() { response })
                                          .Select(ToReminder)
                                          .ToList();
 
@@ -40,10 +42,8 @@ internal sealed class ReminderListConverter : TypeConverter
 
     private static Reminder ToReminder(Response response)
     {
-        if (response is null)
-            throw new ArgumentNullException(nameof(response));
-        if (!(response.GetSuccessPropStat() is PropStat propStat))
-            throw new ArgumentNullException(nameof(propStat));
+        response.ThrowIfNull(nameof(response));
+        var propStat = response.GetSuccessPropStat().ThrowIfNull(nameof(PropStat));
 
         var calendarReminder = propStat.Prop.CalendarData.Value.ToReminder();
         calendarReminder.ETag = propStat.Prop.GetETag.Value;
