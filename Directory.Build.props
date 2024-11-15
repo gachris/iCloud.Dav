@@ -12,7 +12,7 @@
 		<Version>$(AssemblyVersion)</Version>
 		<Authors>gachris</Authors>
 		<RepositoryType>git</RepositoryType>
-		<Copyright>Copyright © 2022.</Copyright>
+		<Copyright>Copyright © 2024.</Copyright>
 		<PackageId>$(MSBuildProjectName)</PackageId>
 		<Product>$(MSBuildProjectName)</Product>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
