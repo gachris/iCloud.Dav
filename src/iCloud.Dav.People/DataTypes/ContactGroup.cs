@@ -15,6 +15,27 @@ namespace iCloud.Dav.People.DataTypes;
 public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
 {
     /// <summary>
+    /// Gets or sets the vCard version. Only vCard 3.0 is supported by iCloud.
+    /// </summary>
+    /// <remarks>
+    /// iCloud exclusively supports vCard 3.0, so setting this property
+    /// to any other version will result in an InvalidOperationException.
+    /// </remarks>
+    public override VCardVersion Version
+    {
+        get => base.Version;
+        set
+        {
+            if (value != VCardVersion.vCard3_0)
+            {
+                throw new InvalidOperationException("Invalid version specified. Please set 'Version' to 'v3', as this is the only version supported by iCloud.");
+            }
+
+            base.Version = value; // Optionally keep this line if needed for any base class functionality
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the e-tag associated with this contact group.
     /// </summary>
     /// <remarks>
@@ -133,9 +154,10 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IUrlPath
             Id = Uid;
         }
 
+        Version = VCardVersion.vCard3_0;
         Kind ??= new Kind()
         {
-            CardKind = CardKind.Group
+            CardKind = KindType.Group
         };
     }
 

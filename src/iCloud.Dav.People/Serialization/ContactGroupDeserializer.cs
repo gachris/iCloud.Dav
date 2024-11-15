@@ -131,7 +131,7 @@ public class ContactGroupDeserializer
         }
     }
 
-    private CardProperty ParseContentLine(SerializationContext context, string input)
+    private VCardProperty ParseContentLine(SerializationContext context, string input)
     {
         var match = _contentLineRegex.Match(input);
         if (!match.Success)
@@ -143,7 +143,7 @@ public class ContactGroupDeserializer
         var paramNames = match.Groups[_paramNameGroup].Captures;
         var paramValues = match.Groups[_paramValueGroup].Captures;
 
-        var property = new CardProperty(name.ToUpperInvariant());
+        var property = new VCardProperty(name.ToUpperInvariant());
         context.Push(property);
         SetPropertyParameters(property, paramNames, paramValues);
         SetPropertyValue(context, property, value);
@@ -151,13 +151,13 @@ public class ContactGroupDeserializer
         return property;
     }
 
-    private static void SetPropertyParameters(CardProperty property, CaptureCollection paramNames, CaptureCollection paramValues)
+    private static void SetPropertyParameters(VCardProperty property, CaptureCollection paramNames, CaptureCollection paramValues)
     {
         var paramValueIndex = 0;
         for (var paramNameIndex = 0; paramNameIndex < paramNames.Count; paramNameIndex++)
         {
             var paramName = paramNames[paramNameIndex].Value;
-            var parameter = new CardParameter(paramName);
+            var parameter = new VCardParameter(paramName);
             var nextParamIndex = paramNameIndex + 1 < paramNames.Count ? paramNames[paramNameIndex + 1].Index : int.MaxValue;
             while (paramValueIndex < paramValues.Count && paramValues[paramValueIndex].Index < nextParamIndex)
             {
@@ -169,7 +169,7 @@ public class ContactGroupDeserializer
         }
     }
 
-    private void SetPropertyValue(SerializationContext context, CardProperty property, string value)
+    private void SetPropertyValue(SerializationContext context, VCardProperty property, string value)
     {
         var type = _dataTypeMapper.GetPropertyMapping(property) ?? typeof(string);
         var serializer = (SerializerBase)_serializerFactory.Build(type, context);
