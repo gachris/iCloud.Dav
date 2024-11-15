@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core.Serialization;
+﻿namespace iCloud.Dav.Core.Serialization;
 
 /// <summary>
 /// Specifies the type to be used when deserializing an object from XML format.

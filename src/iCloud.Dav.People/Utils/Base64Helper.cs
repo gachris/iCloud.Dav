@@ -1,6 +1,4 @@
-﻿using System;
-
-internal static class Base64Helper
+﻿internal static class Base64Helper
 {
     public static bool TryFromBase64String(this string base64String, out byte[] bytes)
     {

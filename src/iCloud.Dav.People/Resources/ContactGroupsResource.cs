@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using iCloud.Dav.Core;
+﻿using iCloud.Dav.Core;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Response;
 using iCloud.Dav.People.DataTypes;

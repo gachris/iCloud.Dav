@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.WebDav.DataTypes;
@@ -40,7 +37,7 @@ internal sealed class ContactGroupListConverter : TypeConverter
     {
         if (response is null)
             throw new ArgumentNullException(nameof(response));
-        if (!(response.GetSuccessPropStat() is PropStat propStat))
+        if (response.GetSuccessPropStat() is not PropStat propStat)
             throw new ArgumentNullException(nameof(propStat));
 
         var contactGroup = propStat.Prop.AddressData.Value.ToContactGroup();

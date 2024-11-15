@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Auth;
+﻿namespace iCloud.Dav.Auth;
 
 /// <summary>Clock wrapper for getting the current time.</summary>
 public interface IClock

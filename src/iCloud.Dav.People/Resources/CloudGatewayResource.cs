@@ -1,5 +1,4 @@
-﻿using System;
-using iCloud.Dav.Core;
+﻿using iCloud.Dav.Core;
 using iCloud.Dav.People.Requests;
 
 namespace iCloud.Dav.People.Resources;

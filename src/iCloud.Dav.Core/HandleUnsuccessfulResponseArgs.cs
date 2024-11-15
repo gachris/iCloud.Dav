@@ -1,7 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// Argument class to <see cref="IHttpUnsuccessfulResponseHandler.HandleResponseAsync(HandleUnsuccessfulResponseArgs)" />.

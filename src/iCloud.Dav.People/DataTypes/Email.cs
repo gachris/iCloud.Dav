@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -51,15 +48,11 @@ public class Email : EncodableDataType, IRelatedDataType
             var typeFromInternal = EmailTypeMapping.GetType(typeInternal);
             if (typeFromInternal is 0)
             {
-                switch (Label?.Value)
+                typeFromInternal = (Label?.Value) switch
                 {
-                    case School:
-                        typeFromInternal = EmailType.School;
-                        break;
-                    default:
-                        typeFromInternal = EmailType.Custom;
-                        break;
-                }
+                    School => EmailType.School,
+                    _ => EmailType.Custom,
+                };
             }
 
             return typeFromInternal;
@@ -72,7 +65,7 @@ public class Email : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(EmailTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -82,18 +75,12 @@ public class Email : EncodableDataType, IRelatedDataType
                 Parameters.Remove("TYPE");
             }
 
-            switch (value)
+            Label = value switch
             {
-                case EmailType.School:
-                    Label = new Label() { Value = School };
-                    break;
-                case EmailType.Custom:
-                    Label = new Label() { Value = Label?.Value };
-                    break;
-                default:
-                    Label = null;
-                    break;
-            }
+                EmailType.School => new Label() { Value = School },
+                EmailType.Custom => new Label() { Value = Label?.Value },
+                _ => null,
+            };
         }
     }
 
@@ -176,7 +163,7 @@ public class Email : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Email)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Email)obj));
     }
 
     /// <summary>

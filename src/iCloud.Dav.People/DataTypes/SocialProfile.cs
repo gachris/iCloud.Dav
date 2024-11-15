@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.People.DataTypes.Mapping;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.DataTypes;
@@ -94,7 +91,7 @@ public class SocialProfile : EncodableDataType, IRelatedDataType
                 typeInternal = typeInternal.AddFlags(SocialProfileTypeInternal.Pref);
             }
 
-            if (!(typeInternal is 0))
+            if (typeInternal is not 0)
             {
                 Parameters.Remove("TYPE");
                 Parameters.Set("TYPE", typeInternal.StringArrayFlags().Select(x => x.ToUpperInvariant()));
@@ -258,7 +255,7 @@ public class SocialProfile : EncodableDataType, IRelatedDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((SocialProfile)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((SocialProfile)obj));
     }
 
     /// <summary>

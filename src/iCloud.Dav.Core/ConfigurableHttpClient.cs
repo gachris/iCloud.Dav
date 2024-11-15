@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <inheritdoc/>
 public class ConfigurableHttpClient : HttpClient

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core.Extensions;
+﻿namespace iCloud.Dav.Core.Extensions;
 
 /// <summary>
 /// Provides extension methods for performing argument validation checks.

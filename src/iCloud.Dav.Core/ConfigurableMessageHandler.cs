@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Utils;
@@ -134,7 +128,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         get => _numTries;
         set
         {
-            if (value > 20 || value < 1)
+            if (value is > 20 or < 1)
                 throw new ArgumentOutOfRangeException(nameof(NumTries));
             _numTries = value;
         }
@@ -149,7 +143,7 @@ public class ConfigurableMessageHandler : DelegatingHandler
         get => _numRedirects;
         set
         {
-            if (value > 20 || value < 1)
+            if (value is > 20 or < 1)
                 throw new ArgumentOutOfRangeException(nameof(NumRedirects));
             _numRedirects = value;
         }

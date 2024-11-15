@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace iCloud.Dav.People.Extensions;
+﻿namespace iCloud.Dav.People.Extensions;
 
 internal static class ParameterExtensions
 {

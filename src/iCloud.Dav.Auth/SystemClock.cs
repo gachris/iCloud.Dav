@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Auth;
+﻿namespace iCloud.Dav.Auth;
 
 /// <summary>A default clock implementation that wraps the <see cref="DateTime.Now" /> property.</summary>
 public class SystemClock : IClock

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using iCloud.Dav.People.Serialization.DataTypes;
+﻿using iCloud.Dav.People.Serialization.DataTypes;
 using vCard.Net;
 using vCard.Net.DataTypes;
 
@@ -44,7 +42,7 @@ public class Label : EncodableDataType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        return !(obj is null) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Label)obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Label)obj));
     }
 
     /// <summary>

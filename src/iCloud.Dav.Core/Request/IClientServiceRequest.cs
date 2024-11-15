@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace iCloud.Dav.Core.Request;
+﻿namespace iCloud.Dav.Core.Request;
 
 /// <summary>
 /// Represents a client service request which supports both synchronous and asynchronous execution to get the stream.

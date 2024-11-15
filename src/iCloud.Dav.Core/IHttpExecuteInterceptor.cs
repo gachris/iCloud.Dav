@@ -1,8 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// HTTP request execute interceptor to intercept a <see cref="HttpRequestMessage" /> before it has

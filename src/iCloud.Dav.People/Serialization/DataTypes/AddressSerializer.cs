@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using iCloud.Dav.People.DataTypes;
 using vCard.Net.Serialization;
 using vCard.Net.Serialization.DataTypes;
@@ -45,7 +43,7 @@ public class AddressSerializer : StringSerializer
     /// <returns>A semicolon-separated string representation of the <see cref="Address"/> object.</returns>
     public override string SerializeToString(object obj)
     {
-        if (!(obj is Address address))
+        if (obj is not Address address)
         {
             return null;
         }
@@ -109,7 +107,7 @@ public class AddressSerializer : StringSerializer
             return null;
         }
 
-        if (!(CreateAndAssociate() is Address address))
+        if (CreateAndAssociate() is not Address address)
         {
             return null;
         }

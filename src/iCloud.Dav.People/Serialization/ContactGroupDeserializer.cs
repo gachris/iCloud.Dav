@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using iCloud.Dav.People.DataTypes;
@@ -207,7 +204,7 @@ public class ContactGroupDeserializer
                 continue;
             }
 
-            if (nextLine[0] is ' ' || nextLine[0] is '\t')
+            if (nextLine[0] is ' ' or '\t')
             {
                 currentLine.Append(nextLine, 1, nextLine.Length - 1);
             }

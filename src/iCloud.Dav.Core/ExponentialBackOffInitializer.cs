@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// An initializer which adds exponential back-off as exception handler and \ or unsuccessful response handler by

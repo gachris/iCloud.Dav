@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using iCloud.Dav.People.DataTypes;
 using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.WebDav.DataTypes;
@@ -60,7 +57,7 @@ internal sealed class IdentityCardListConverter : TypeConverter
     {
         return response is null
             ? throw new ArgumentNullException(nameof(response))
-            : !(response.GetSuccessPropStat() is PropStat propStat)
+            : response.GetSuccessPropStat() is not PropStat propStat
             ? throw new ArgumentNullException(nameof(propStat))
             : new IdentityCard()
             {

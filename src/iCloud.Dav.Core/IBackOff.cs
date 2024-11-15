@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core;
+﻿namespace iCloud.Dav.Core;
 
 /// <summary>
 /// Strategy interface to control back-off between retry attempts.

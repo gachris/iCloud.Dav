@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.Core.Logger;
+﻿namespace iCloud.Dav.Core.Logger;
 
 /// <summary>
 /// Provides a logging interface for logging various levels of messages such as info, warning, debug, and error.

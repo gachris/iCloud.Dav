@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Headers;
 using iCloud.Dav.Core.Extensions;
 using iCloud.Dav.Core.Logger;
 using iCloud.Dav.Core.Utils;
@@ -233,7 +227,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
                     if (!Equals(defaultValue, parameter.DefaultValue) || parameter.IsRequired)
                         requestBuilder.AddParameter(RequestParameterType.Query, inputParameter.Key, defaultValue);
                 }
-                else throw new ICloudApiException(_service.Name, 
+                else throw new ICloudApiException(_service.Name,
                                                   0,
                                                   string.Format("Unsupported parameter type \"{0}\" for \"{1}\"",
                                                                 parameter.ParameterType,

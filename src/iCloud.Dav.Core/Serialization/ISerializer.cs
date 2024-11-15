@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace iCloud.Dav.Core.Serialization;
+﻿namespace iCloud.Dav.Core.Serialization;
 
 /// <summary>
 /// Defines an interface for serializing and deserializing objects to and from different formats.

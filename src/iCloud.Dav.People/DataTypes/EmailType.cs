@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iCloud.Dav.People.DataTypes;
+﻿namespace iCloud.Dav.People.DataTypes;
 
 /// <summary>
 /// Enumerates the types of email addresses that can be used in a person's contact information.
