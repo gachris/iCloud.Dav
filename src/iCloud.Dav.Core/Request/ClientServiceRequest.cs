@@ -142,7 +142,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         }
         var requestError = await _service.DeserializeError(response).ConfigureAwait(false);
         var errorResponse = new ErrorResponse(response.ReasonPhrase, response.StatusCode, response.RequestMessage?.RequestUri?.AbsoluteUri, requestError);
-        throw new ICloudApiException(_service.Name, response.StatusCode, errorResponse.ToString());
+        throw new ICloudApiException(_service.Name, "Error occurred while processing the request.", errorResponse, response);
     }
 
     /// <inheritdoc/>
@@ -210,12 +210,12 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         inputParameters.ForEach(inputParameter =>
         {
             if (!RequestParameters.TryGetValue(inputParameter.Key, out var parameter))
-                throw new ICloudApiException(Service.Name, 0, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
+                throw new ICloudApiException(Service.Name, string.Format("Invalid parameter \"{0}\" was specified", inputParameter.Key));
 
             var defaultValue = inputParameter.Value;
 
             if (!ParameterValidator.ValidateParameter(parameter, defaultValue))
-                throw new ICloudApiException(Service.Name, 0, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
+                throw new ICloudApiException(Service.Name, string.Format("Parameter validation failed for \"{0}\"", parameter.Name));
 
             defaultValue ??= parameter.DefaultValue;
 
@@ -228,7 +228,6 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
                         requestBuilder.AddParameter(RequestParameterType.Query, inputParameter.Key, defaultValue);
                 }
                 else throw new ICloudApiException(_service.Name,
-                                                  0,
                                                   string.Format("Unsupported parameter type \"{0}\" for \"{1}\"",
                                                                 parameter.ParameterType,
                                                                 parameter.Name));
@@ -239,7 +238,7 @@ public abstract class ClientServiceRequest<TResponse> : IClientServiceRequest<TR
         RequestParameters.Values.ForEach(parameter =>
         {
             if (parameter.IsRequired && !inputParameters.ContainsKey(parameter.Name))
-                throw new ICloudApiException(_service.Name, 0, string.Format("Parameter \"{0}\" is missing", parameter.Name));
+                throw new ICloudApiException(_service.Name, string.Format("Parameter \"{0}\" is missing", parameter.Name));
         });
     }
 }
