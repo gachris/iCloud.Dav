@@ -41,7 +41,7 @@ internal sealed class ContactListConverter : TypeConverter
 
         var contact = propStat.Prop.AddressData.Value.ToContact();
         contact.ETag = propStat.Prop.GetETag.Value;
-        contact.Id = response.Href.ExtractId();
+        contact.Href = response.Href.Value;
         return contact;
     }
 }

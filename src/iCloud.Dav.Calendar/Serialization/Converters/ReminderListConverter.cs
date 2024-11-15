@@ -44,7 +44,7 @@ internal sealed class ReminderListConverter : TypeConverter
 
         var calendarReminder = propStat.Prop.CalendarData.Value.ToReminder();
         calendarReminder.ETag = propStat.Prop.GetETag.Value;
-        calendarReminder.Id = response.Href.ExtractId();
+        calendarReminder.Href = response.Href.Value;
         return calendarReminder;
     }
 }

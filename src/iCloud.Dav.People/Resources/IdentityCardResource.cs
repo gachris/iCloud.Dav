@@ -51,7 +51,7 @@ public class IdentityCardResource
     /// Creates a new <see cref="SetMeCardRequest"/> instance that can update the me-card property.
     /// </summary>
     /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="List"/> method.</param>
-    /// <param name="contactId">The ID of the contact to set as me-card. To retrieve contact IDs, call the <see cref="PeopleResource.List"/> method.</param>
+    /// <param name="contactId">The <see cref="Contact.Id"/> of the contact to set as me-card. To retrieve contact IDs, call the <see cref="PeopleResource.List"/> method.</param>
     /// <returns>A new <see cref="SetMeCardRequest"/> instance that can update the me-card property.</returns>
     public virtual SetMeCardRequest SetMeCard(string resourceName, string contactId) => new SetMeCardRequest(_service, resourceName, contactId);
 
@@ -69,7 +69,7 @@ public class IdentityCardResource
         /// <param name="resourceName">The name of the resource where the contacts or contact groups are stored. To retrieve resource names, call the <see cref="List"/> method.</param>
         public GetSyncTokenRequest(IClientService service, string resourceName) : base(service)
         {
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ public class IdentityCardResource
         /// <param name="resourceName">The name of the resource where the contacts or contact groups are stored. To retrieve resource names, call the <see cref="List"/> method.</param>
         public SyncCollectionRequest(IClientService service, string resourceName) : base(service)
         {
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
         }
 
         /// <summary>
@@ -258,11 +258,11 @@ public class IdentityCardResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="resourceName">The name of the resource where the contact is located. To retrieve resource names, call the <see cref="List"/> method.</param>
-        /// <param name="contactId">The ID of the contact to set as me-card. To retrieve contact IDs, call the <see cref="PeopleResource.List"/> method.</param>
+        /// <param name="contactId">The <see cref="Contact.Id"/> of the contact to set as me-card. To retrieve contact IDs, call the <see cref="PeopleResource.List"/> method.</param>
         public SetMeCardRequest(IClientService service, string resourceName, string contactId) : base(service)
         {
             ContactId = contactId.ThrowIfNull(nameof(contactId));
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
         }
 
         /// <summary>

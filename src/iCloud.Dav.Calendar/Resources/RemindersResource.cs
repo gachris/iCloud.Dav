@@ -32,7 +32,7 @@ public class RemindersResource
     /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific reminder by ID.
     /// </summary>
     /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-    /// <param name="reminderId">The ID of the reminder to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+    /// <param name="reminderId">The <see cref="Reminder.Id"/> of the reminder to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific reminder by ID.</returns>
     public virtual GetRequest Get(string calendarId, string reminderId) => new GetRequest(_service, calendarId, reminderId);
 
@@ -40,9 +40,9 @@ public class RemindersResource
     /// Creates a new <see cref="MultiGetRequest"/> instance for retrieving multiple reminders by ID.
     /// </summary>
     /// <param name="calendarId">The ID of the calendar where the reminders are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-    /// <param name="reminderIds">The IDs of the reminders to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+    /// <param name="reminderIds">The <see cref="Reminder.Id"/> array of the reminders to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple reminders by ID.</returns>
-    public virtual MultiGetRequest MultiGet(string calendarId, params string[] reminderIds) => new MultiGetRequest(_service, calendarId, reminderIds);
+    public virtual MultiGetRequest MultiGet(string calendarId, string[] reminderIds) => new MultiGetRequest(_service, calendarId, reminderIds);
 
     /// <summary>
     /// Creates a new <see cref="InsertRequest"/> instance that can insert a new reminder.
@@ -56,15 +56,16 @@ public class RemindersResource
     /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing reminder.
     /// </summary>
     /// <param name="body">The body of the request containing the updated reminder information.</param>
+    /// <param name="reminderId">The <see cref="Reminder.Id"/> of the reminder to update. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
     /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
     /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing reminder.</returns>
-    public virtual UpdateRequest Update(Reminder body, string calendarId) => new UpdateRequest(_service, body, calendarId);
+    public virtual UpdateRequest Update(Reminder body, string reminderId, string calendarId) => new UpdateRequest(_service, body, reminderId, calendarId);
 
     /// <summary>
     /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing reminder by ID.
     /// </summary>
     /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-    /// <param name="reminderId">The ID of the reminder to delete. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+    /// <param name="reminderId">The <see cref="Reminder.Id"/> of the reminder to delete. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing reminder by ID.</returns>
     public virtual DeleteRequest Delete(string calendarId, string reminderId) => new DeleteRequest(_service, calendarId, reminderId);
 
@@ -82,7 +83,7 @@ public class RemindersResource
         /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
         public ListRequest(IClientService service, string calendarId) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -185,11 +186,11 @@ public class RemindersResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="reminderId">The ID of the reminder to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+        /// <param name="reminderId">The <see cref="Reminder.Id"/> of the reminder to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
         public GetRequest(IClientService service, string calendarId, string reminderId) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-            ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(Reminder.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(reminderId));
         }
 
         /// <summary>
@@ -238,10 +239,10 @@ public class RemindersResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar where the reminders are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="reminderIds">The IDs of the reminders to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
-        public MultiGetRequest(IClientService service, string calendarId, params string[] reminderIds) : base(service)
+        /// <param name="reminderIds">The <see cref="Reminder.Id"/> array of the reminders to retrieve. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+        public MultiGetRequest(IClientService service, string calendarId, string[] reminderIds) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             ReminderIds = reminderIds;
         }
 
@@ -320,9 +321,9 @@ public class RemindersResource
         /// <param name="calendarId">The ID of the calendar where the reminder will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
         public InsertRequest(IClientService service, Reminder body, string calendarId) : base(service)
         {
-            Body = body.ThrowIfNull(nameof(Reminder));
-            ReminderId = body.Id.ThrowIfNull(nameof(Reminder.Id));
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            Body = body.ThrowIfNull(nameof(body));
+            ReminderId = !string.IsNullOrEmpty(body.Id) ? body.Id : Guid.NewGuid().ToString();
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -379,12 +380,13 @@ public class RemindersResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>  
         /// <param name="body">The body of the request containing the updated reminder information.</param>
+        /// <param name="reminderId">The <see cref="Reminder.Id"/> of the reminder to update. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
         /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        public UpdateRequest(IClientService service, Reminder body, string calendarId) : base(service)
+        public UpdateRequest(IClientService service, Reminder body, string reminderId, string calendarId) : base(service)
         {
-            Body = body.ThrowIfNull(nameof(Reminder));
-            ReminderId = Body.Id.ThrowIfNullOrEmpty(nameof(Reminder.Id));
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            Body = body.ThrowIfNull(nameof(body));
+            ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(reminderId));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -439,11 +441,11 @@ public class RemindersResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar where the reminder is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="reminderId">The ID of the reminder to delete. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
+        /// <param name="reminderId">The <see cref="Reminder.Id"/> of the reminder to delete. To retrieve reminder IDs, call the <see cref="List"/> method.</param>
         public DeleteRequest(IClientService service, string calendarId, string reminderId) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-            ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(Reminder.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            ReminderId = reminderId.ThrowIfNullOrEmpty(nameof(reminderId));
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ internal sealed class ContactGroupListConverter : TypeConverter
 
         var contactGroup = propStat.Prop.AddressData.Value.ToContactGroup();
         contactGroup.ETag = propStat.Prop.GetETag.Value;
-        contactGroup.Id = response.Href.ExtractId();
+        contactGroup.Href = response.Href.Value;
         return contactGroup;
     }
 }

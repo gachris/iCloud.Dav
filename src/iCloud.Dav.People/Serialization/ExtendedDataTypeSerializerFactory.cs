@@ -77,6 +77,10 @@ internal class ExtendedDataTypeSerializerFactory : DataTypeSerializerFactory, IS
         {
             s = new DateTimeSerializer(ctx);
         }
+        else if (typeof(Member).IsAssignableFrom(objectType))
+        {
+            s = new MemberSerializer(ctx);
+        }
 
         return s ?? base.Build(objectType, ctx);
     }

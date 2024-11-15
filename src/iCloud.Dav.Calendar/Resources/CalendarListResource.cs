@@ -72,8 +72,9 @@ public class CalendarListResource
     /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing calendar.
     /// </summary>
     /// <param name="body">The body of the request containing the updated calendar information.</param>
+    /// <param name="calendarId">The ID of the calendar to update. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing calendar.</returns>
-    public virtual UpdateRequest Update(CalendarListEntry body) => new UpdateRequest(_service, body);
+    public virtual UpdateRequest Update(CalendarListEntry body, string calendarId) => new UpdateRequest(_service, body, calendarId);
 
     /// <summary>
     /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing calendar by ID.
@@ -301,7 +302,7 @@ public class CalendarListResource
         /// <param name="calendarId">The ID of the calendar to retrieve. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
         public GetRequest(IClientService service, string calendarId) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -372,8 +373,8 @@ public class CalendarListResource
         /// <param name="body">The calendar to insert.</param>
         public InsertRequest(IClientService service, CalendarListEntry body) : base(service)
         {
-            Body = body.ThrowIfNull(nameof(CalendarListEntry));
-            CalendarId = Body.Id.ThrowIfNull(nameof(CalendarListEntry.Id));
+            Body = body.ThrowIfNull(nameof(body));
+            CalendarId = !string.IsNullOrEmpty(body.Id) ? body.Id : Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -454,10 +455,11 @@ public class CalendarListResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="body">The body of the request containing the updated calendar information.</param>
-        public UpdateRequest(IClientService service, CalendarListEntry body) : base(service)
+        /// <param name="calendarId">The ID of the calendar to update. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
+        public UpdateRequest(IClientService service, CalendarListEntry body, string calendarId) : base(service)
         {
-            Body = body.ThrowIfNull(nameof(CalendarListEntry));
-            CalendarId = body.Id.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            Body = body.ThrowIfNull(nameof(body));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -513,7 +515,10 @@ public class CalendarListResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar to delete. To retrieve calendar IDs, call the <see cref="List"/> method.</param>
-        public DeleteRequest(IClientService service, string calendarId) : base(service) => CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+        public DeleteRequest(IClientService service, string calendarId) : base(service)
+        {
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+        }
 
         /// <summary>
         /// Gets the calendar ID.
