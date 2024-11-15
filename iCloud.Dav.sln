@@ -19,12 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.People", "src\iCloud.Dav.People\iCloud.Dav.People.csproj", "{5DB44749-DABE-4068-99C4-01E7E9EA3600}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.People.Tests", "src\iCloud.Dav.People.Tests\iCloud.Dav.People.Tests.csproj", "{F6C5B824-7763-4906-A513-F64F7281BAAD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCloud.Dav.Calendar.Tests", "src\iCloud.Dav.Calendar.Tests\iCloud.Dav.Calendar.Tests.csproj", "{BBB0FEFE-B07C-4ABB-B533-344814815DED}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A2F1DE6A-68DB-4821-BE84-32E376412285}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,21 +41,9 @@ Global
 		{5DB44749-DABE-4068-99C4-01E7E9EA3600}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DB44749-DABE-4068-99C4-01E7E9EA3600}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DB44749-DABE-4068-99C4-01E7E9EA3600}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F6C5B824-7763-4906-A513-F64F7281BAAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6C5B824-7763-4906-A513-F64F7281BAAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F6C5B824-7763-4906-A513-F64F7281BAAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6C5B824-7763-4906-A513-F64F7281BAAD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBB0FEFE-B07C-4ABB-B533-344814815DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBB0FEFE-B07C-4ABB-B533-344814815DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBB0FEFE-B07C-4ABB-B533-344814815DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBB0FEFE-B07C-4ABB-B533-344814815DED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{F6C5B824-7763-4906-A513-F64F7281BAAD} = {A2F1DE6A-68DB-4821-BE84-32E376412285}
-		{BBB0FEFE-B07C-4ABB-B533-344814815DED} = {A2F1DE6A-68DB-4821-BE84-32E376412285}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F1A95244-02F6-4521-A76A-67E543384CFA}
