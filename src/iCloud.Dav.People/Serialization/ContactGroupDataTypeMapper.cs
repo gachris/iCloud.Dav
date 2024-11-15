@@ -1,4 +1,5 @@
-﻿using vCard.Net;
+﻿using iCloud.Dav.People.DataTypes;
+using vCard.Net;
 using vCard.Net.DataTypes;
 
 namespace iCloud.Dav.People.Serialization;
@@ -35,6 +36,7 @@ internal class ContactGroupDataTypeMapper
     {
         AddPropertyMapping("REV", typeof(IDateTime), false);
         AddPropertyMapping("X-ADDRESSBOOKSERVER-KIND", typeof(Kind), false);
+        AddPropertyMapping("X-ADDRESSBOOKSERVER-MEMBER", typeof(Member), true);
     }
 
     /// <summary>

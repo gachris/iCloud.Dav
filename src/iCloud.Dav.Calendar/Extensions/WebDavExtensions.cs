@@ -53,10 +53,15 @@ internal static class WebDavExtensions
         return response.IsOK() && response.PropStat.Length > 0 ? response.PropStat[0] : null;
     }
 
+    public static string ExtractId(this string href)
+    {
+        var value = href.TrimEnd('/');
+        return Path.GetFileNameWithoutExtension(value);
+    }
+
     public static string ExtractId(this Href href)
     {
-        var value = href.Value.TrimEnd('/');
-        return Path.GetFileNameWithoutExtension(value);
+        return ExtractId(href.Value);
     }
 
     public static CalendarListEntry ToCalendar(this Response response)

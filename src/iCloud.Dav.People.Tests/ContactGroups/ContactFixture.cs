@@ -24,7 +24,6 @@ public class ContactFixture
         var contact = new Contact
         {
             Version = VCardVersion.vCard3_0,
-            Id = "D2D76F16-A8CA-4697-8309-C67741BD44F0",
             Uid = "D2D76F16-A8CA-4697-8309-C67741BD44F0",
             N = new StructuredName()
             {
@@ -39,7 +38,6 @@ public class ContactFixture
         var contact2 = new Contact
         {
             Version = VCardVersion.vCard3_0,
-            Id = "B1D7BAF3-6B3E-40DA-9919-FD4CFC575380",
             Uid = "B1D7BAF3-6B3E-40DA-9919-FD4CFC575380",
             N = new StructuredName()
             {

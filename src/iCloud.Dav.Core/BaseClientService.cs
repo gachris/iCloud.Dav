@@ -133,9 +133,9 @@ public abstract class BaseClientService : IClientService, IDisposable
                 deserializedObject = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
 
-            if (deserializedObject is IUrlPath url)
+            if (deserializedObject is IResource resource)
             {
-                url.Id = Path.GetFileNameWithoutExtension(response.RequestMessage.RequestUri.OriginalString.TrimEnd('/'));
+                resource.Href = response.RequestMessage.RequestUri.AbsolutePath;
             }
 
             if (deserializedObject is IDirectResponseSchema directResponseSchema && !string.IsNullOrEmpty(response.Headers.ETag?.Tag))

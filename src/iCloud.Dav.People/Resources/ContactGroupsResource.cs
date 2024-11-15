@@ -31,7 +31,7 @@ public class ContactGroupsResource
     /// <summary>
     /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific contact group by ID.
     /// </summary>
-    /// <param name="contactGroupId">The ID of the contact group to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+    /// <param name="contactGroupId">The <see cref="ContactGroup.Id"/> of the contact group to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
     /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
     /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific contact group by ID.</returns>
     public virtual GetRequest Get(string contactGroupId, string resourceName) => new GetRequest(_service, contactGroupId, resourceName);
@@ -40,7 +40,7 @@ public class ContactGroupsResource
     /// Creates a new <see cref="MultiGetRequest"/> instance for retrieving multiple contact groups by ID.
     /// </summary>
     /// <param name="resourceName">The name of the resource where the contact groups are located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
-    /// <param name="contactGroupIds">The IDs of the contact groups to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+    /// <param name="contactGroupIds">The <see cref="ContactGroup.Id"/> array of the contact groups to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple contact groups by ID.</returns>
     public virtual MultiGetRequest MultiGet(string resourceName, string[] contactGroupIds) => new MultiGetRequest(_service, resourceName, contactGroupIds);
 
@@ -56,14 +56,15 @@ public class ContactGroupsResource
     /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing contact group.
     /// </summary>
     /// <param name="body">The body of the request containing the updated contact group information.</param>
+    /// <param name="contactGroupId">The <see cref="ContactGroup.Id"/> of the contact group to update. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
     /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
     /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing contact group.</returns>
-    public virtual UpdateRequest Update(ContactGroup body, string resourceName) => new UpdateRequest(_service, body, resourceName);
+    public virtual UpdateRequest Update(ContactGroup body, string contactGroupId, string resourceName) => new UpdateRequest(_service, body, contactGroupId, resourceName);
 
     /// <summary>
     /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing contact group by ID.
     /// </summary>
-    /// <param name="contactGroupId">The ID of the contact group to delete. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+    /// <param name="contactGroupId">The <see cref="ContactGroup.Id"/> of the contact group to delete. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
     /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
     /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing contact group by ID.</returns>
     public virtual DeleteRequest Delete(string contactGroupId, string resourceName) => new DeleteRequest(_service, contactGroupId, resourceName);
@@ -109,13 +110,13 @@ public class ContactGroupsResource
                 Filter = new Filters
                 {
                     Test = "anyof",
-                    PropFilters = new[]
-                    {
+                    PropFilters =
+                    [
                         new PropFilter()
                         {
                             Name = "X-ADDRESSBOOKSERVER-KIND",
-                            TextMatches = new[]
-                            {
+                            TextMatches =
+                            [
                                 new TextMatch
                                 {
                                     Collation = "i;unicode-casemap",
@@ -123,9 +124,9 @@ public class ContactGroupsResource
                                     MatchType = "equals",
                                     SearchText = "group"
                                 }
-                            }
+                            ]
                         }
-                    }
+                    ]
                 },
                 Limit = new Limit()
                 {
@@ -152,12 +153,12 @@ public class ContactGroupsResource
         /// Constructs a new <see cref="GetRequest"/> instance.
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
-        /// <param name="contactGroupId">The ID of the contact group to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+        /// <param name="contactGroupId">The <see cref="ContactGroup.Id"/> of the contact group to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
         /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
         public GetRequest(IClientService service, string contactGroupId, string resourceName) : base(service)
         {
-            ContactGroupId = contactGroupId.ThrowIfNullOrEmpty(nameof(ContactGroup.Id));
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            ContactGroupId = contactGroupId.ThrowIfNullOrEmpty(nameof(contactGroupId));
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
         }
 
         /// <summary>
@@ -203,11 +204,11 @@ public class ContactGroupsResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="resourceName">The name of the resource where the contact groups are located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
-        /// <param name="contactGroupIds">The IDs of the contact groups to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+        /// <param name="contactGroupIds">The <see cref="ContactGroup.Id"/> arra of the contact groups to retrieve. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
         public MultiGetRequest(IClientService service, string resourceName, string[] contactGroupIds) : base(service)
         {
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             ContactGroupIds = contactGroupIds.ThrowIfNull(nameof(contactGroupIds));
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
         }
 
         /// <summary>
@@ -267,9 +268,9 @@ public class ContactGroupsResource
         /// <param name="resourceName">The name of the resource where the contact group will be stored. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
         public InsertRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
         {
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
-            Body = body.ThrowIfNull(nameof(ContactGroup));
-            ContactGroupId = body.Id.ThrowIfNull(nameof(ContactGroup.Id));
+            Body = body.ThrowIfNull(nameof(body));
+            ContactGroupId = !string.IsNullOrEmpty(body.Id) ? body.Id : Guid.NewGuid().ToString();
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             ETagAction = ETagAction.IfMatch;
         }
 
@@ -327,12 +328,13 @@ public class ContactGroupsResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="body">The body of the request containing the updated contact group information.</param>
+        /// <param name="contactGroupId">The <see cref="ContactGroup.Id"/> of the contact group to update. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
         /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
-        public UpdateRequest(IClientService service, ContactGroup body, string resourceName) : base(service)
+        public UpdateRequest(IClientService service, ContactGroup body, string contactGroupId, string resourceName) : base(service)
         {
-            Body = body.ThrowIfNull(nameof(ContactGroup));
-            ContactGroupId = body.Id.ThrowIfNullOrEmpty(nameof(ContactGroup.Id));
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            Body = body.ThrowIfNull(nameof(body));
+            ContactGroupId = contactGroupId.ThrowIfNullOrEmpty(nameof(contactGroupId));
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
             ETagAction = ETagAction.IfMatch;
         }
 
@@ -387,12 +389,12 @@ public class ContactGroupsResource
         /// Constructs a new <see cref="DeleteRequest"/> instance.
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
-        /// <param name="contactGroupId">The identifier of the contact group to delete. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
+        /// <param name="contactGroupId">The <see cref="ContactGroup.Id"/> of the contact group to delete. To retrieve contact group IDs, call the <see cref="List"/> method.</param>
         /// <param name="resourceName">The name of the resource where the contact group is located. To retrieve resource names, call the <see cref="IdentityCardResource.List"/> method.</param>
         public DeleteRequest(IClientService service, string contactGroupId, string resourceName) : base(service)
         {
-            ContactGroupId = contactGroupId.ThrowIfNullOrEmpty(nameof(ContactGroup.Id));
-            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(IdentityCard.ResourceName));
+            ContactGroupId = contactGroupId.ThrowIfNullOrEmpty(nameof(contactGroupId));
+            ResourceName = resourceName.ThrowIfNullOrEmpty(nameof(resourceName));
         }
 
         /// <summary>

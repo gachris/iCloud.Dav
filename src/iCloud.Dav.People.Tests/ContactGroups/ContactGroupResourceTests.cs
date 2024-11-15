@@ -64,7 +64,7 @@ public class ContactGroupResourceTests
                                 .Returns(mockInsertRequest.Object);
 
         var mockUpdateRequest = new Mock<ContactGroupsResource.UpdateRequest>(_mockPeopleService.Object, _fixture.TestContactGroup, RESOURCE_NAME);
-        mockContactGroupResource.Setup(x => x.Update(It.IsAny<ContactGroup>(), It.IsAny<string>()))
+        mockContactGroupResource.Setup(x => x.Update(It.IsAny<ContactGroup>(), It.IsAny<string>(), It.IsAny<string>()))
                                 .Returns(mockUpdateRequest.Object);
 
         var mockDeleteRequest = new Mock<ContactGroupsResource.DeleteRequest>(_mockPeopleService.Object, CONTACT_GROUP_ID, RESOURCE_NAME);
@@ -163,17 +163,17 @@ public class ContactGroupResourceTests
     public void Update_Success()
     {
         // Arrange
-        _mockPeopleService.Setup(x => x.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>()).Execute())
+        _mockPeopleService.Setup(x => x.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>(), It.IsAny<string>()).Execute())
                           .Returns(new HeaderMetadataResponse());
 
         // Act
-        var result = _mockPeopleService.Object.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>()).Execute();
+        var result = _mockPeopleService.Object.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>(), It.IsAny<string>()).Execute();
 
         // Assert
         Assert.That(result, Is.Not.Null);
 
         // Verify the Update method was called once
-        _mockPeopleService.Verify(x => x.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>()).Execute(), Times.Once);
+        _mockPeopleService.Verify(x => x.ContactGroups.Update(It.IsAny<ContactGroup>(), It.IsAny<string>(), It.IsAny<string>()).Execute(), Times.Once);
     }
 
     [Test]
