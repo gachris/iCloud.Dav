@@ -89,7 +89,8 @@ public class Website : EncodableDataType, IRelatedDataType
 
             Label = value switch
             {
-                WebsiteType.HomePage => new Label() { Value = School },
+                WebsiteType.HomePage => new Label() { Value = HomePage },
+                WebsiteType.School => new Label() { Value = School },
                 WebsiteType.Blog => new Label() { Value = Blog },
                 WebsiteType.Custom => new Label() { Value = Label?.Value },
                 _ => null,
