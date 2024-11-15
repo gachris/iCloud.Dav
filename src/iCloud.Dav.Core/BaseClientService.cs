@@ -147,11 +147,11 @@ public abstract class BaseClientService : IClientService, IDisposable
         }
         catch (InvalidCastException ex)
         {
-            throw new ICloudApiException(Name, 0, $"Failed to cast response.", ex);
+            throw new ICloudApiException(Name, $"Failed to cast response.", ex);
         }
         catch (Exception ex)
         {
-            throw new ICloudApiException(Name, 0, $"Failed to parse response from server [{responseContentString}]", ex);
+            throw new ICloudApiException(Name, $"Failed to parse response from server.", ex);
         }
     }
 

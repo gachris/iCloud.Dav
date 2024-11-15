@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using System.Runtime.Serialization;
 using iCloud.Dav.Core.Extensions;
 
 namespace iCloud.Dav.Core;
@@ -14,36 +14,67 @@ public class ICloudApiException : Exception
     public string ServiceName { get; }
 
     /// <summary>
-    /// Gets the HTTP status code related to this exception.
+    /// Gets the error response associated with this exception.
     /// </summary>
-    public HttpStatusCode HttpStatusCode { get; }
+    public ErrorResponse ErrorResponse { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ICloudApiException"/> class with the specified service name, message, and inner exception.
+    /// Gets the HTTP response message associated with this exception.
     /// </summary>
-    /// <param name="serviceName">The name of the service that caused the exception.</param>
-    /// <param name="httpStatusCode">The HTTP status code related to this exception.</param>
-    /// <param name="message">The message that describes the error.</param>
-    /// <param name="inner">The exception that is the cause of the current exception.</param>
-    public ICloudApiException(string serviceName, HttpStatusCode httpStatusCode, string message, Exception inner) : base(message, inner)
+    public HttpResponseMessage ResponseMessage { get; }
+
+    /// <summary>
+    /// Constructs a new instance of <see cref="ICloudApiException"/> with a service name and message.
+    /// </summary>
+    public ICloudApiException(string serviceName, string message) : base(message)
     {
         ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
-        HttpStatusCode = httpStatusCode;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ICloudApiException"/> class with the specified service name, message, and HTTP status code.
+    /// Constructs a new instance of <see cref="ICloudApiException"/> with a service name, message, and error response.
     /// </summary>
-    /// <param name="serviceName">The name of the service that caused the exception.</param>
-    /// <param name="httpStatusCode">The HTTP status code related to this exception.</param>
-    /// <param name="message">The message that describes the error.</param>
-    public ICloudApiException(string serviceName, HttpStatusCode httpStatusCode, string message) : this(serviceName, httpStatusCode, message, null)
+    public ICloudApiException(string serviceName, string message, ErrorResponse errorResponse) : base(message)
     {
+        ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
+        ErrorResponse = errorResponse;
     }
 
     /// <summary>
-    /// Returns a string that represents the current exception.
+    /// Constructs a new instance of <see cref="ICloudApiException"/> with a service name, message, error response, and response message.
     /// </summary>
-    /// <returns>A string that represents the current exception, including the service name and the base exception message.</returns>
-    public override string ToString() => string.Format("The service {1} has thrown an exception: {0}", base.ToString(), ServiceName);
+    public ICloudApiException(string serviceName, string message, ErrorResponse errorResponse, HttpResponseMessage responseMessage) : base(message)
+    {
+        ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
+        ErrorResponse = errorResponse;
+        ResponseMessage = responseMessage;
+    }
+
+    /// <summary>
+    /// Constructs a new instance of <see cref="ICloudApiException"/> with a service name, message, and inner exception.
+    /// </summary>
+    public ICloudApiException(string serviceName, string message, Exception inner) : base(message, inner)
+    {
+        ServiceName = serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
+    }
+
+    /// <summary>
+    /// Constructs a new instance of <see cref="ICloudApiException"/> for serialization purposes.
+    /// </summary>
+    protected ICloudApiException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+        ServiceName = info.GetString(nameof(ServiceName));
+        ErrorResponse = (ErrorResponse)info.GetValue(nameof(ErrorResponse), typeof(ErrorResponse));
+    }
+
+    /// <inheritdoc/>
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        base.GetObjectData(info, context);
+        info.AddValue(nameof(ServiceName), ServiceName);
+        info.AddValue(nameof(ErrorResponse), ErrorResponse);
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => $"The service {ServiceName} has thrown an exception: {base.ToString()}";
 }
