@@ -44,7 +44,7 @@ internal sealed class EventListConverter : TypeConverter
 
         var calendarEvent = propStat.Prop.CalendarData.Value.ToEvent();
         calendarEvent.ETag = propStat.Prop.GetETag.Value;
-        calendarEvent.Id = response.Href.ExtractId();
+        calendarEvent.Href = response.Href.Value;
         return calendarEvent;
     }
 }

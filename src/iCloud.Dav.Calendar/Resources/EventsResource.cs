@@ -32,7 +32,7 @@ public class EventsResource
     /// Creates a new <see cref="GetRequest"/> instance for retrieving a specific event by ID.
     /// </summary>
     /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-    /// <param name="eventId">The ID of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+    /// <param name="eventId">The <see cref="Event.Id"/> of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="GetRequest"/> instance for retrieving a specific event by ID.</returns>
     public virtual GetRequest Get(string calendarId, string eventId) => new GetRequest(_service, calendarId, eventId);
 
@@ -42,7 +42,7 @@ public class EventsResource
     /// <param name="calendarId">The ID of the calendar where the events are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
     /// <param name="eventIds">The IDs of the events to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="MultiGetRequest"/> instance for retrieving multiple events by ID.</returns>
-    public virtual MultiGetRequest MultiGet(string calendarId, params string[] eventIds) => new MultiGetRequest(_service, calendarId, eventIds);
+    public virtual MultiGetRequest MultiGet(string calendarId, string[] eventIds) => new MultiGetRequest(_service, calendarId, eventIds);
 
     /// <summary>
     /// Creates a new <see cref="InsertRequest"/> instance that can insert a new event.
@@ -56,15 +56,16 @@ public class EventsResource
     /// Creates a new <see cref="UpdateRequest"/> instance that can update an existing event.
     /// </summary>
     /// <param name="body">The body of the request containing the updated event information.</param>
+    /// <param name="eventId">The <see cref="Event.Id"/> of the event to update. To retrieve event IDs, call the <see cref="List"/> method.</param>
     /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
     /// <returns>A new <see cref="UpdateRequest"/> instance that can update an existing event.</returns>
-    public virtual UpdateRequest Update(Event body, string calendarId) => new UpdateRequest(_service, body, calendarId);
+    public virtual UpdateRequest Update(Event body, string eventId, string calendarId) => new UpdateRequest(_service, body, eventId, calendarId);
 
     /// <summary>
     /// Creates a new <see cref="DeleteRequest"/> instance that can delete an existing event by ID.
     /// </summary>
     /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-    /// <param name="eventId">The ID of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
+    /// <param name="eventId">The <see cref="Event.Id"/> of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
     /// <returns>A new <see cref="DeleteRequest"/> instance that can delete an existing event by ID.</returns>
     public virtual DeleteRequest Delete(string calendarId, string eventId) => new DeleteRequest(_service, calendarId, eventId);
 
@@ -82,7 +83,7 @@ public class EventsResource
         /// <param name="calendarId">The ID of the calendar to retrieve the list from. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
         public ListRequest(IClientService service, string calendarId) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -186,11 +187,11 @@ public class EventsResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventId">The ID of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        /// <param name="eventId">The <see cref="Event.Id"/> of the event to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
         public GetRequest(IClientService service, string calendarId, string eventId) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-            EventId = eventId.ThrowIfNullOrEmpty(nameof(Event.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            EventId = eventId.ThrowIfNullOrEmpty(nameof(eventId));
         }
 
         /// <summary>
@@ -239,10 +240,10 @@ public class EventsResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar where the events are located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventIds">The IDs of the events to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
-        public MultiGetRequest(IClientService service, string calendarId, params string[] eventIds) : base(service)
+        /// <param name="eventIds">The <see cref="Event.Id"/> array of the events to retrieve. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        public MultiGetRequest(IClientService service, string calendarId, string[] eventIds) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
             EventIds = eventIds.ThrowIfNull(nameof(eventIds));
         }
 
@@ -321,9 +322,9 @@ public class EventsResource
         /// <param name="calendarId">The ID of the calendar where the event will be stored. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
         public InsertRequest(IClientService service, Event body, string calendarId) : base(service)
         {
-            Body = body.ThrowIfNull(nameof(Event));
-            EventId = body.Id.ThrowIfNull(nameof(Event.Id));
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            Body = body.ThrowIfNull(nameof(body));
+            EventId = !string.IsNullOrEmpty(body.Id) ? body.Id : Guid.NewGuid().ToString();
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -380,12 +381,13 @@ public class EventsResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>  
         /// <param name="body">The body of the request containing the updated event information.</param>
+        /// <param name="eventId">The <see cref="Event.Id"/> of the event to update. To retrieve event IDs, call the <see cref="List"/> method.</param>
         /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        public UpdateRequest(IClientService service, Event body, string calendarId) : base(service)
+        public UpdateRequest(IClientService service, Event body, string eventId, string calendarId) : base(service)
         {
-            Body = body.ThrowIfNull(nameof(Event));
-            EventId = Body.Id.ThrowIfNullOrEmpty(nameof(Event.Id));
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
+            Body = body.ThrowIfNull(nameof(body));
+            EventId = eventId.ThrowIfNullOrEmpty(nameof(eventId));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
         }
 
         /// <summary>
@@ -440,11 +442,11 @@ public class EventsResource
         /// </summary>
         /// <param name="service">The client service used for making requests.</param>
         /// <param name="calendarId">The ID of the calendar where the event is located. To retrieve calendar IDs, call the <see cref="CalendarListResource.List"/> method.</param>
-        /// <param name="eventId">The ID of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
+        /// <param name="eventId">The <see cref="Event.Id"/> of the event to delete. To retrieve event IDs, call the <see cref="List"/> method.</param>
         public DeleteRequest(IClientService service, string calendarId, string eventId) : base(service)
         {
-            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(CalendarListEntry.Id));
-            EventId = eventId.ThrowIfNullOrEmpty(nameof(Event.Id));
+            CalendarId = calendarId.ThrowIfNullOrEmpty(nameof(calendarId));
+            EventId = eventId.ThrowIfNullOrEmpty(nameof(eventId));
         }
 
         /// <summary>

@@ -3,10 +3,10 @@
 /// <summary>
 /// Interface for an object representing a URL path segment, which typically contains an identifier.
 /// </summary>
-public interface IUrlPath
+public interface IResource
 {
     /// <summary>
-    /// Gets or sets the identifier of the URL path segment.
+    /// Gets or sets the URL of the resource.
     /// </summary>
-    string Id { get; set; }
+    string Href { get; set; }
 }

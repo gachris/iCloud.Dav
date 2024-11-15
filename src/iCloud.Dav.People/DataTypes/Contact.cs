@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using iCloud.Dav.Core;
+using iCloud.Dav.People.Extensions;
 using iCloud.Dav.People.Serialization.Converters;
 using vCard.Net;
 using vCard.Net.CardComponents;
@@ -12,7 +13,7 @@ namespace iCloud.Dav.People.DataTypes;
 /// A class that represents a vCard contact object.
 /// </summary>
 [TypeConverter(typeof(ContactConverter))]
-public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
+public class Contact : UniqueComponent, IDirectResponseSchema, IResource
 {
     /// <summary>
     /// Gets or sets the vCard version. Only vCard 3.0 is supported by iCloud.
@@ -40,19 +41,25 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     /// </summary>
     /// <remarks>
     /// Will be set by the service deserialization method,
-    /// or the by xml response parser if implemented on service.
+    /// or by the XML response parser if implemented on the service.
     /// </remarks>
     public virtual string ETag { get; set; }
 
     /// <summary>
-    /// Gets or sets the id associated with this contact.
+    /// Gets or sets the href (resource URL) of this contact.
     /// </summary>
     /// <remarks>
-    /// A value that uniquely identifies the vCard. 
-    /// It is used for requests and in most cases has the same value as the <seealso cref="UniqueComponent.Uid"/>.
-    /// The initial value of Id is same as the <seealso cref="UniqueComponent.Uid"/>
+    /// The href is assigned by the response from the service.
     /// </remarks>
-    public virtual string Id { get; set; }
+    public virtual string Href { get; set; }
+
+    /// <summary>
+    /// Gets the unique identifier of this contact.
+    /// </summary>
+    /// <remarks>
+    /// If the href is not set, the Uid is used as the identifier.
+    /// </remarks>
+    public virtual string Id => string.IsNullOrEmpty(Href) ? Uid : Href.ExtractId();
 
     /// <summary>
     /// Gets or sets the product identifier associated with this contact.
@@ -302,11 +309,6 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
             Uid = Guid.NewGuid().ToString();
         }
 
-        if (string.IsNullOrEmpty(Id))
-        {
-            Id = Uid;
-        }
-
         Version = VCardVersion.vCard3_0;
     }
 
@@ -356,8 +358,7 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
     {
         unchecked
         {
-            var hashCode = Id != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Id) : 0;
-            hashCode = hashCode * 23 + (Uid != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Uid) : 0);
+            var hashCode = (Uid != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Uid) : 0);
             hashCode = hashCode * 23 + StringComparer.OrdinalIgnoreCase.GetHashCode(Version.ToString());
             hashCode = hashCode * 23 + (FormattedName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(FormattedName) : 0);
             hashCode = hashCode * 23 + (N?.GetHashCode() ?? 0);
