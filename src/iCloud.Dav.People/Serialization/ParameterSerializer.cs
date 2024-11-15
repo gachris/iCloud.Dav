@@ -46,7 +46,7 @@ public class ParameterSerializer : SerializerBase
 
             // Surround the parameter value with double quotes, if the value
             // contains any problematic characters.
-            if (values.IndexOfAny(new[] { ':', ',' }) >= 0)
+            if (values.IndexOfAny([':', ',']) >= 0)
             {
                 values = "\"" + values + "\"";
             }
@@ -62,7 +62,7 @@ public class ParameterSerializer : SerializerBase
 
             // Surround the parameter value with double quotes, if the value
             // contains any problematic characters.
-            if (values.IndexOfAny(new[] { ';', ':', ',' }) >= 0)
+            if (values.IndexOfAny([';', ':', ',']) >= 0)
             {
                 values = "\"" + values + "\"";
             }

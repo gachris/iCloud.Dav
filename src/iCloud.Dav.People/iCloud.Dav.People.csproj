@@ -5,11 +5,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Label="Package Configuration" Condition="'$(Configuration)' == 'Release'">
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Title>iCloud People</Title>
 		<Description>$(MSBuildProjectName) is a .NET library that allows you to interact with iCloud contacts and contact groups.</Description>
 		<PackageTags>iCloud contact groups contacts</PackageTags>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Output">

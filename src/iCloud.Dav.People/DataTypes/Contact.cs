@@ -14,7 +14,13 @@ namespace iCloud.Dav.People.DataTypes;
 [TypeConverter(typeof(ContactConverter))]
 public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets or sets the vCard version. Only vCard 3.0 is supported by iCloud.
+    /// </summary>
+    /// <remarks>
+    /// iCloud exclusively supports vCard 3.0, so setting this property
+    /// to any other version will result in an InvalidOperationException.
+    /// </remarks>
     public override VCardVersion Version
     {
         get => base.Version;
@@ -296,7 +302,11 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IUrlPath
             Uid = Guid.NewGuid().ToString();
         }
 
-        Id = Uid;
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = Uid;
+        }
+
         Version = VCardVersion.vCard3_0;
     }
 
