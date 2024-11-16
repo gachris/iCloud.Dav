@@ -1,7 +1,7 @@
 using System.Text;
 using iCloud.Dav.People.Serialization;
 
-namespace iCloud.Dav.People.Tests.ContactGroups;
+namespace iCloud.Dav.People.Tests.Contacts;
 
 [TestFixture]
 public class ContactSerializerTests
@@ -26,7 +26,7 @@ public class ContactSerializerTests
     [Test]
     public void SerializeToString_Success()
     {
-        var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\Contact1.vcf");
+        var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\John Smith.vcf");
 
         // Assert that the vCard file exists
         Assert.That(File.Exists(dataFilePath), Is.True, $"File not found: {dataFilePath}");
@@ -49,7 +49,7 @@ public class ContactSerializerTests
     public void Deserialize_Success()
     {
         // Prepare the path to the vCard file
-        var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\Contact1.vcf");
+        var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\John Smith.vcf");
 
         // Assert that the vCard file exists
         Assert.That(File.Exists(dataFilePath), Is.True, $"File not found: {dataFilePath}");
@@ -82,7 +82,7 @@ public class ContactSerializerTests
     public void Deserialize_Multiple_Success()
     {
         // Prepare the path to the vCard file
-        var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\MultipleContactGroup.vcf");
+        var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\MultipleContacts.vcf");
 
         // Assert that the vCard file exists
         Assert.That(File.Exists(dataFilePath), Is.True, $"File not found: {dataFilePath}");

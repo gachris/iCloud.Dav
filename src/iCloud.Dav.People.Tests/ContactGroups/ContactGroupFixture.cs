@@ -32,7 +32,7 @@ public class ContactGroupFixture
                 CardKind = KindType.Group
             },
             RevisionDate = new VCardDateTime(2024, 09, 30, 22, 10, 06),
-            Members = [new Member("18C30708-99D5-4737-9945-0FF75EAB2B9B"), new Member() { Uid = "CF580921-1CC1-4AD6-ACE2-99426B054831" }],
+            Members = [new Member() { Uid = "18C30708-99D5-4737-9945-0FF75EAB2B9B" }, new Member() { Uid = "CF580921-1CC1-4AD6-ACE2-99426B054831" }],
             ProductId = "-//Apple Inc.//iCloud Web Address Book 2302B34//EN"
         };
 
@@ -47,7 +47,7 @@ public class ContactGroupFixture
                 CardKind = KindType.Group
             },
             RevisionDate = new VCardDateTime(2024, 09, 30, 22, 10, 06),
-            Members = [new Member("18C30708-99D5-4737-9945-0FF75EAB2B9B"), new Member() { Uid = "CF580921-1CC1-4AD6-ACE2-99426B054831" }],
+            Members = [new Member() { Uid = "18C30708-99D5-4737-9945-0FF75EAB2B9B" }, new Member() { Uid = "CF580921-1CC1-4AD6-ACE2-99426B054831" }],
             ProductId = "-//Apple Inc.//iCloud Web Address Book 2302B34//EN"
         };
 

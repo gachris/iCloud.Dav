@@ -1,0 +1,30 @@
+﻿BEGIN:VCARD
+VERSION:3.0
+N:Smith;John;Junior;Mr;E.
+FN:Mr John Smith E.
+X-PHONETIC-FIRST-NAME:J
+X-PHONETIC-LAST-NAME:S
+ORG:Microsoft;HR
+X-PHONETIC-ORG:MS
+NICKNAME:Mr
+BDAY;VALUE=date:1996-08-05
+TITLE:HR Manager
+NOTE:Lorem ipsum dolor sit amet\, consectetur adipiscing elit. Quisque luc
+ t us fermentum arcu id molestie. Praesent condimentum ex ac sodales accum
+ san.
+item1.ADR;TYPE=HOME;TYPE=pref:;;2701-2899 Wrangler Dr;Irving;;75060;Ηνωμένε
+ ς Πολιτείες
+item1.X-ABADR:us
+TEL;TYPE=CELL;TYPE=pref;TYPE=VOICE:+1 (555) 123-4567
+item2.X-ABRELATEDNAMES;TYPE=pref:Patrik
+item2.X-ABLABEL:_$!<Father>!$_
+IMPP;X-SERVICE-TYPE=FACEBOOK;TYPE=facebook;TYPE=pref:xmpp:johnsm
+EMAIL;TYPE=HOME;TYPE=pref;TYPE=INTERNET:john@outlook.com
+item3.X-ABDATE;TYPE=pref:2024-04-08
+item3.X-ABLABEL:_$!<Anniversary>!$_
+X-SOCIALPROFILE;X-USER=johnsm;TYPE=linkedin:https://www.linkedin.com/in/joh
+ nsm
+PRODID:-//Apple Inc.//iCloud Web Address Book 2428B27//EN
+REV:2024-11-16T07:38:58Z
+UID:D2D76F16-A8CA-4697-8309-C67741BD44F0
+END:VCARD

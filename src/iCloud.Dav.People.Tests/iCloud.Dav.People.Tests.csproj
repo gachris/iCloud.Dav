@@ -8,16 +8,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\Contact1.vcf" />
+		<None Remove="Assets\John Smith.vcf" />
 		<None Remove="Assets\MultipleContactGroup.vcf" />
+		<None Remove="Assets\MultipleContacts.vcf" />
 		<None Remove="Assets\Untitled Group 1.vcf" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="Assets\MultipleContacts.vcf">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Content Include="Assets\MultipleContactGroup.vcf">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Assets\Contact1.vcf">
+		<Content Include="Assets\John Smith.vcf">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Assets\Untitled Group 1.vcf">

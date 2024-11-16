@@ -1,0 +1,25 @@
+﻿BEGIN:VCARD
+VERSION:3.0
+BDAY;VALUE=date:1998-08-03
+FN:John Smith
+N:Smith;John;;;
+NOTE:Lorem ipsum dolor sit amet\, consectetur adipiscing elit. Quisque luc
+ t us fermentum arcu id molestie. Praesent condimentum ex ac sodales accum
+ san.
+PRODID:-//Apple Inc.//iCloud Web Address Book 2428B27//EN
+REV:2024-11-16T00:30:11Z
+UID:D2D76F16-A8CA-4697-8309-C67741BD44F0
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+ADR;TYPE=HOME:;;123 Elm Street;Springfield;IL;62701;USA
+BDAY;VALUE=date:1998-08-03
+EMAIL;TYPE=INTERNET;TYPE=HOME:emily.johnson@example.com
+FN:Emily Johnson
+N:Johnson;Emily;;;
+NOTE:Emily is a software engineer with a passion for open-source projects.
+PRODID:-//Apple Inc.//iCloud Web Address Book 2302B34//EN
+REV:2024-10-10T18:45:00Z
+TEL;TYPE=CELL;TYPE=VOICE:+1-555-123-4567
+UID:B1D7BAF3-6B3E-40DA-9919-FD4CFC575380
+END:VCARD
