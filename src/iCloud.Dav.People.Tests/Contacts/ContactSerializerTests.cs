@@ -24,6 +24,31 @@ public class ContactSerializerTests
     }
 
     [Test]
+    public void IMPPTest_Success()
+    {
+        // Prepare the path to the vCard file
+        var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\IMPPTest.vcf");
+
+        // Assert that the vCard file exists
+        Assert.That(File.Exists(dataFilePath), Is.True, $"File not found: {dataFilePath}");
+
+        // Read the vCard data from file
+        var vCardData = File.ReadAllText(dataFilePath);
+
+        // Ensure that the vCard data is not empty or null
+        Assert.That(string.IsNullOrWhiteSpace(vCardData), Is.False, "The vCard data is empty.");
+
+        // Deserialize vCard data
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(vCardData));
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        var deserializedCard = ContactDeserializer.Default.Deserialize(reader).First();
+
+        // Serialize vCard object
+        var serializer = new ContactSerializer();
+        var vCardAsString = serializer.SerializeToString(deserializedCard);
+    }
+
+    [Test]
     public void SerializeToString_Success()
     {
         var dataFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Assets\John Smith.vcf");

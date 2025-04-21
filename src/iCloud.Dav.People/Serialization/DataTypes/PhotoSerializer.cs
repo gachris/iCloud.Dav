@@ -41,7 +41,7 @@ public class PhotoSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        var value = photo.Url?.ToString() ?? Convert.ToBase64String(photo.Data ?? Array.Empty<byte>());
+        var value = photo.Url?.ToString() ?? Convert.ToBase64String(photo.Data ?? []);
 
         if (string.IsNullOrEmpty(value))
         {
