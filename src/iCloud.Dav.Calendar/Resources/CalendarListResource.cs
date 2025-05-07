@@ -410,7 +410,7 @@ public class CalendarListResource
                     Prop = new Prop()
                     {
                         DisplayName = new DisplayName() { Value = Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)) },
-                        CalendarColor = new CalendarColor() { Value = Body.Color.FromRgb() },
+                        CalendarColor = new CalendarColor() { Value = Body.Color },
                         CalendarOrder = new CalendarOrder() { Value = Body.Order.ToString() }
                     }
                 };
@@ -490,7 +490,7 @@ public class CalendarListResource
                 Prop = new Prop()
                 {
                     DisplayName = new DisplayName() { Value = Body.Summary.ThrowIfNull(nameof(CalendarListEntry.Summary)) },
-                    CalendarColor = new CalendarColor() { Value = Body.Color.FromRgb() },
+                    CalendarColor = new CalendarColor() { Value = Body.Color },
                     CalendarOrder = new CalendarOrder() { Value = Body.Order.ToString() }
                 }
             };

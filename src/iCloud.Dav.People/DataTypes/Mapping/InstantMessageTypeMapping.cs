@@ -12,7 +12,7 @@ internal class InstantMessageTypeMapping
     private static readonly TypeMapping<InstantMessageTypeInternal, InstantMessageType>[] _typeMappings =
     [
         Home,
-        Work,
+        Work,        
         Facebook,
         Other,
     ];

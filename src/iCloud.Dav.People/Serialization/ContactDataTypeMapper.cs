@@ -1,5 +1,4 @@
 ﻿using iCloud.Dav.People.DataTypes;
-using iCloud.Dav.People.Serialization.DataTypes;
 
 namespace iCloud.Dav.People.Serialization;
 
@@ -39,7 +38,7 @@ internal class ContactDataTypeMapper
         AddPropertyMapping("ORG", typeof(vCard.Net.DataTypes.Organization), false);
         AddPropertyMapping("PHOTO", typeof(Photo), false);
         AddPropertyMapping("URL", typeof(Website), true);
-        AddPropertyMapping("REV", typeof(vCard.Net.DataTypes.IDateTime), false);
+        AddPropertyMapping("REV", typeof(vCard.Net.DataTypes.IDateTime), false); 
         AddPropertyMapping("BDAY", typeof(Birthdate), false);
         AddPropertyMapping("N", typeof(vCard.Net.DataTypes.StructuredName), false);
         AddPropertyMapping("X-ABDATE", typeof(Date), true);
