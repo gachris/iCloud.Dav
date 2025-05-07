@@ -41,7 +41,7 @@ public class PhotoSerializer : EncodableDataTypeSerializer
             return null;
         }
 
-        var value = photo.Url?.ToString() ?? Convert.ToBase64String(photo.Data ?? Array.Empty<byte>());
+        var value = photo.Url?.ToString() ?? Convert.ToBase64String(photo.Data ?? []);
 
         if (string.IsNullOrEmpty(value))
         {
@@ -103,7 +103,7 @@ public class PhotoSerializer : EncodableDataTypeSerializer
 
         var rectangleSubProperty = x_abCrop_rectangle
                 .Replace("ABClipRect_", string.Empty)
-                .Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(['&'], StringSplitOptions.RemoveEmptyEntries)
                 .Take(5)
                 .Select(property => Convert.ToInt32(property)).ToArray();
 
