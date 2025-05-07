@@ -31,5 +31,6 @@ Contact contact = peopleService.People.Get("contact-id", identityCard.ResourceNa
 contact.N.GivenName = "Updated name";
 contact.RevisionDate = new CardDateTime(DateTime.Now);
 
+// #0 Use the contact's 'Id' property, not the 'Uid' property, when interacting with requests.
 // #1 Alternatively, you can use the string "card" instead of identityCard.ResourceName
-HeaderMetadataResponse response = peopleService.People.Update(contact, identityCard.ResourceName).Execute();
+HeaderMetadataResponse response = peopleService.People.Update(contact, "contact-id", identityCard.ResourceName).Execute();

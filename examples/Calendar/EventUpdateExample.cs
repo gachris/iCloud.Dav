@@ -20,8 +20,9 @@ BaseClientService.Initializer initializer = new BaseClientService.Initializer()
 
 CalendarService calendarService = new CalendarService(initializer);
 
-// #1 Use the event's 'Id' property, not the 'Uid' property, when interacting with requests.
+// #0 Use the event's 'Id' property, not the 'Uid' property, when interacting with requests.
 Event eventItem = calendarService.Events.Get("calendar-id", "event-id").Execute();
 eventItem.Summary = "Updated event title";
 
-HeaderMetadataResponse response = calendarService.Events.Update(eventItem, "calendar-id").Execute();
+// #1 Use the event's 'Id' property, not the 'Uid' property, when interacting with requests.
+HeaderMetadataResponse response = calendarService.Events.Update(eventItem, "event-id", "calendar-id").Execute();

@@ -36,7 +36,6 @@ public class Member : VCardDataType
             return;
         }
 
-        // Deserialize the string value using MemberSerializer and copy properties from the deserialized object.
         var serializer = new MemberSerializer();
         CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
     }
@@ -50,17 +49,17 @@ public class Member : VCardDataType
     /// <returns><see langword="true"/> if the specified object is equal to the current object; otherwise, <see langword="false"/>.</returns>
     public override bool Equals(object obj)
     {
-        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Member)obj));
+        return obj is Member member && Equals(member);
     }
 
     /// <summary>
     /// Determines whether the specified <see cref="Member"/> instance is equal to the current instance.
     /// </summary>
-    /// <param name="obj">The <see cref="Member"/> instance to compare with the current instance.</param>
+    /// <param name="other">The <see cref="Member"/> instance to compare with the current instance.</param>
     /// <returns><see langword="true"/> if the specified instance is equal to the current instance; otherwise, <see langword="false"/>.</returns>
-    protected bool Equals(Member obj)
+    protected bool Equals(Member other)
     {
-        return string.Equals(Uid, obj.Uid, StringComparison.OrdinalIgnoreCase);
+        return string.Equals(Uid, other.Uid, StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
@@ -69,10 +68,7 @@ public class Member : VCardDataType
     /// <returns>A hash code for the current object.</returns>
     public override int GetHashCode()
     {
-        unchecked
-        {
-            return 17 * 23 + (Uid != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Uid) : 0);
-        }
+        return StringComparer.OrdinalIgnoreCase.GetHashCode(Uid ?? string.Empty);
     }
 
     #endregion

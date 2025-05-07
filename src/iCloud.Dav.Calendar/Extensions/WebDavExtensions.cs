@@ -92,11 +92,6 @@ internal static class WebDavExtensions
         return calendarListEntry;
     }
 
-    public static string FromRgb(this string color)
-    {
-        return color.Length == 7 && color[0] == '#' ? string.Concat(color, "FF") : color;
-    }
-
     public static string ToRgb(this string color)
     {
         return color.Length == 9 && color[0] == '#' ? color.Substring(0, 7) : color;

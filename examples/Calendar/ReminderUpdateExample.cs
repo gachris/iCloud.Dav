@@ -20,8 +20,9 @@ BaseClientService.Initializer initializer = new BaseClientService.Initializer()
 
 CalendarService calendarService = new CalendarService(initializer);
 
-// #1 Use the reminder's 'Id' property, not the 'Uid' property, when interacting with requests.
+// #0 Use the reminder's 'Id' property, not the 'Uid' property, when interacting with requests.
 Reminder reminder = calendarService.Reminders.Get("calendar-id", "reminder-id").Execute();
 reminder.Summary = "Updated reminder title";
 
-HeaderMetadataResponse response = calendarService.Reminders.Update(reminder, "calendar-id").Execute();
+// #1 Use the reminder's 'Id' property, not the 'Uid' property, when interacting with requests.
+HeaderMetadataResponse response = calendarService.Reminders.Update(reminder, "reminder-id", "calendar-id").Execute();

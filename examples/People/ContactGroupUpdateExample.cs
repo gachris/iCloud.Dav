@@ -31,5 +31,6 @@ ContactGroup contactGroup = peopleService.ContactGroups.Get("contact-group-id", 
 contactGroup.N = "Updated name";
 contactGroup.RevisionDate = new CardDateTime(DateTime.Now);
 
+// #0 Use the contactGroup's 'Id' property, not the 'Uid' property, when interacting with requests.
 // #1 Alternatively, you can use the string "card" instead of identityCard.ResourceName
-HeaderMetadataResponse response = peopleService.ContactGroups.Update(contactGroup, identityCard.ResourceName).Execute();
+HeaderMetadataResponse response = peopleService.ContactGroups.Update(contactGroup, "contact-group-id", identityCard.ResourceName).Execute();

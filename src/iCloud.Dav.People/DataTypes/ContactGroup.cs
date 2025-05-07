@@ -111,7 +111,7 @@ public class ContactGroup : UniqueComponent, IDirectResponseSchema, IResource
     /// <summary>
     /// Gets or sets the kind associated with this contact group.
     /// </summary>
-    public Kind Kind
+    public virtual Kind Kind
     {
         get => Properties.Get<Kind>("X-ADDRESSBOOKSERVER-KIND");
         set => Properties.Set("X-ADDRESSBOOKSERVER-KIND", value);
