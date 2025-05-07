@@ -20,5 +20,5 @@ BaseClientService.Initializer initializer = new BaseClientService.Initializer()
 
 CalendarService calendarService = new CalendarService(initializer);
 
-// #1 Use the event's 'Id' property, not the 'Uid' property, when interacting with requests.
+// #0 Use the event's 'Id' property, not the 'Uid' property, when interacting with requests.
 Event eventItem = calendarService.Events.Get("calendar-id", "event-id").Execute();

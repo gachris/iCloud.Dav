@@ -22,4 +22,4 @@ CalendarService calendarService = new CalendarService(initializer);
 CalendarListEntry calendarListEntry = calendarService.Calendars.Get("calendar-id").Execute();
 calendarListEntry.Summary = "Updated calendar title";
 
-calendarService.Calendars.Update(calendarListEntry).Execute();
+calendarService.Calendars.Update(calendarListEntry, "calendar-id").Execute();
