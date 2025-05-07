@@ -38,8 +38,8 @@ internal class ContactDataTypeMapper
         AddPropertyMapping("ORG", typeof(vCard.Net.DataTypes.Organization), false);
         AddPropertyMapping("PHOTO", typeof(Photo), false);
         AddPropertyMapping("URL", typeof(Website), true);
-        AddPropertyMapping("REV", typeof(vCard.Net.DataTypes.IDateTime), false);
-        AddPropertyMapping("BDAY", typeof(vCard.Net.DataTypes.IDateTime), false);
+        AddPropertyMapping("REV", typeof(vCard.Net.DataTypes.IDateTime), false); 
+        AddPropertyMapping("BDAY", typeof(Birthdate), false);
         AddPropertyMapping("N", typeof(vCard.Net.DataTypes.StructuredName), false);
         AddPropertyMapping("X-ABDATE", typeof(Date), true);
         AddPropertyMapping("X-ABRELATEDNAMES", typeof(RelatedNames), true);

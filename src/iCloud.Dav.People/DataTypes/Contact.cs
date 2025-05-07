@@ -174,9 +174,9 @@ public class Contact : UniqueComponent, IDirectResponseSchema, IResource
     /// <summary>
     /// Gets or sets the birthdate associated with this contact.
     /// </summary>
-    public virtual IDateTime Birthdate
+    public virtual Birthdate Birthdate
     {
-        get => Properties.Get<IDateTime>("BDAY");
+        get => Properties.Get<Birthdate>("BDAY");
         set => Properties.Set("BDAY", value);
     }
 
