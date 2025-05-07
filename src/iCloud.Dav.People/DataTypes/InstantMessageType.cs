@@ -16,19 +16,25 @@ public enum InstantMessageType
     Work = 2,
 
     /// <summary>
+    /// Indicates a facebook instant messaging type.
+    /// </summary>
+    Facebook = 3,
+
+    /// <summary>
     /// Indicates an other instant messaging type.
     /// </summary>
-    Other = 3,
+    Other = 4,
 
     /// <summary>
     /// Indicates a custom instant messaging type.
     /// </summary>
-    Custom = 4
+    Custom = 5
 }
 
 /// <summary>
 /// Enumerates the internal types of instant messaging services that can be used for a contact.
 /// </summary>
+[Flags]
 internal enum InstantMessageTypeInternal
 {
     /// <summary>
@@ -42,17 +48,22 @@ internal enum InstantMessageTypeInternal
     Work = 2,
 
     /// <summary>
+    /// Indicates a facebook instant messaging type.
+    /// </summary>
+    Facebook = 4,
+
+    /// <summary>
     /// Indicates an other instant messaging type.
     /// </summary>
-    Other = 4,
+    Other = 8,
 
     /// <summary>
     /// Indicates a custom instant messaging type.
     /// </summary>
-    Custom = 8,
+    Custom = 16,
 
     /// <summary>
     /// Indicates a preferred instant messaging type.
     /// </summary>
-    Pref = 8
+    Pref = 32
 }
