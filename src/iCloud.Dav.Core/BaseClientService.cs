@@ -123,14 +123,13 @@ public abstract class BaseClientService : IClientService, IDisposable
             {
                 deserializedObject = converter.ConvertFrom(responseContentString);
             }
+            else if (typeof(T).Equals(typeof(byte[])))
+            {
+                deserializedObject = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+            }
             else
             {
                 deserializedObject = Serializer.Deserialize<T>(responseContentString);
-            }
-
-            if (deserializedObject is null && typeof(T).Equals(typeof(byte[])))
-            {
-                deserializedObject = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
 
             if (deserializedObject is IResource resource)
